@@ -1,0 +1,27 @@
+Specification:
+
+School scheduling
+Students will log in to access their calendar.
+They will be able to enrol in courses adding specific in-class times to their calendar.
+They will add tasks with a specified number of hours they would like to spend working on it, how long a work session should be, and a time/date by which they would like it to be complete.
+A calendar will algorithmically schedule
+
+Entities:
+Student
+Course
+Calendar (daily, weekly, monthly)
+Task (assignment, reading, etc)
+
+Use Cases:
+StudentManager - manage student entityi, login status, changing names, student info
+CourseManager - make new course entity, delete course entity, change a course
+CalendarManager - check if adding course is viable, add courses, to calendar, add assignments to calendar, add tasks to calendar, change display to weekly calendar, daily calendar
+TaskManager - creating and changing tasks
+
+Controller
+MainConroller - run main program (HTML, or consol, communicate to other controllers to initialize, open gateway to first read from JSON file)
+IO controller
+Gateway: JSON
+
+Command Line Interface:
+Format: console initially, HTML/CSS implementation
