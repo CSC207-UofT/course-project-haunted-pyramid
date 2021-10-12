@@ -9,7 +9,6 @@ public class Event{
     private String name;
     //private Course course; TODO courses are a thing
 
-
     /**
      * constructor sets the ID, name, start and end times of the Event
      * @param ID the id for this event and events related to it (repetition etc)
