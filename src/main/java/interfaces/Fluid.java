@@ -1,3 +1,7 @@
+package interfaces;
+
+import interfaces.AutoSchedule;
+
 import java.util.*;
 public interface Fluid {
     float getFluidHours();

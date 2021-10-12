@@ -1,3 +1,5 @@
+package usecases;
+
 import entities.OurCalendar;
 
 import java.util.*;
@@ -9,7 +11,7 @@ public class CalendarManager {
     private List<OurCalendar> pastCalendar; //  List of calendar object for the next three months
 
     /**
-     *  Initialize the CalendarManager
+     *  Initialize the usecases.CalendarManager
      */
     public CalendarManager(){
         Date today = new Date();

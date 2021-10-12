@@ -1,6 +1,12 @@
+package usecases;
+
 import java.util.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import entities.Event;
+import interfaces.AutoSchedule;
+import interfaces.Repeated;
+import interfaces.Fluid;
 
 public class EventManager {
     private Map<String, Event> eventMap;
@@ -88,7 +94,7 @@ public class EventManager {
         return sorted;
     }
 
-    //TODO replace Event with subclass of Event for free slots - implements repeatable - list of events under one name
+    //TODO replace entities.Event with subclass of entities.Event for free slots - implements repeatable - list of events under one name
     public ArrayList<Event> freeSlots(LocalDateTime start, LocalDateTime end, ArrayList<Event> events){
         events = timeOrder(events);
         ArrayList<Event> freeSlots = new ArrayList<Event>();
