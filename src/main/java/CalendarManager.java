@@ -14,7 +14,8 @@ public class CalendarManager {
         int month = cal.get(Calendar.MONTH);
         int year = cal.get(Calendar.YEAR);
 
-        this.currentCalendar = new OurCalendar(year, month);
+
+        this.currentCalendar = new OurCalendar(year, month + 1);
 
         cal.add(Calendar.MONTH, 1);
         int firstNextMonth = cal.get(Calendar.MONTH);
@@ -28,9 +29,10 @@ public class CalendarManager {
         int thirdNextMonth = cal.get(Calendar.MONTH);
         int thirdNextYear = cal.get(Calendar.YEAR);
 
-        OurCalendar firstFuture = new OurCalendar(firstNextYear, firstNextMonth);
-        OurCalendar secondFuture = new OurCalendar(secondNextYear, secondNextMonth);
-        OurCalendar thirdFuture = new OurCalendar(thirdNextYear, thirdNextMonth);
+
+        OurCalendar firstFuture = new OurCalendar(firstNextYear, firstNextMonth + 1);
+        OurCalendar secondFuture = new OurCalendar(secondNextYear, secondNextMonth + 1);
+        OurCalendar thirdFuture = new OurCalendar(thirdNextYear, thirdNextMonth + 1);
 
         this.futureCalendar = new ArrayList<>(){
             {
@@ -56,9 +58,9 @@ public class CalendarManager {
         int thirdPreviousMonth = c.get(Calendar.MONTH);
         int thirdPreviousYear = c.get(Calendar.YEAR);
 
-        OurCalendar firstPast = new OurCalendar(firstPreviousYear, firstPreviousMonth);
-        OurCalendar secondPast = new OurCalendar(secondPreviousYear, secondPreviousMonth);
-        OurCalendar thirdPast = new OurCalendar(thirdPreviousYear, thirdPreviousMonth);
+        OurCalendar firstPast = new OurCalendar(firstPreviousYear, firstPreviousMonth + 1);
+        OurCalendar secondPast = new OurCalendar(secondPreviousYear, secondPreviousMonth + 1);
+        OurCalendar thirdPast = new OurCalendar(thirdPreviousYear, thirdPreviousMonth + 1);
 
         this.pastCalendar = new ArrayList<>(){
             {
@@ -74,13 +76,28 @@ public class CalendarManager {
         return this.currentCalendar.getCalendarMap();
     }
 
-    public Map<Integer, List<Object>> getWeeklyCalendar(){
-        Date t = new Date();
-        Calendar d = Calendar.getInstance();
-        int day = d.get(Calendar.DATE);
-        int start = day - 1;
-        int end = start + 7;
+//    public Map<Integer, List<Object>> getWeeklyCalendar(){
+//        Date t = new Date();
+//        Calendar d = Calendar.getInstance();
+//        int day = d.get(Calendar.DATE);
+//        int start = day - 1;
+//        int end = start + 7;
+//
+//        return this.currentCalendar.getCalendarMap();
+//    }
 
-        return this.currentCalendar.getCalendarMap();
+    public static void main(String[] args) {
+        Date today = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(today);
+
+        int year = cal.get(Calendar.YEAR);
+        System.out.println(year);
+        int checkMonth = cal.get(Calendar.MONTH);
+        System.out.println(checkMonth);
+
+        CalendarManager cm = new CalendarManager();
+        System.out.println(cm.getMonthlyCalendar());
+
     }
 }
