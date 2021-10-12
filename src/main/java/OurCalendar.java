@@ -52,11 +52,29 @@ public class OurCalendar {
     public boolean isConflict(){
         return this.conflict;
     }
+
+    /**
+     * get conflictObject
+     * @return conflictObject
+     */
     public List<Object> getConflictObject(){
         return this.conflictObject;
     }
-    public List<Integer> getCurrentDate(){
+
+    /**
+     * get dateInfo
+     * @return dateInfo
+     */
+    public List<Integer> getDateInfo(){
         return this.dateInfo;
+    }
+
+    /**
+     * get calendarMap
+     * @return calendarMap
+     */
+    public Map<Integer, List<Object>> getCalendarMap(){
+        return this.calendarMap;
     }
 
     /**
@@ -106,15 +124,14 @@ public class OurCalendar {
         this.calendarMap.get(date).remove(event);
     }
 
+
     public static void main(String[] args) {
         OurCalendar a = new OurCalendar();
-        System.out.println(a.conflict); // should give false
-        System.out.println(a.calendarMap); // should create a map of calendar for a month
-        System.out.println(a.conflictObject); // should give an empty list
-        System.out.println(a.dateInfo); // should return a list of [year, month, # of dates]
+        System.out.println(a.getCalendarMap()); // should create a map of calendar for a month
         System.out.println(a.isConflict()); // should return false
         System.out.println(a.getConflictObject()); // should return empty list
-        System.out.println(a.getCurrentDate()); // should return a list of [year, month, # of dates]
+        System.out.println(a.getDateInfo()); // should return a list of [year, month, # of dates]
+
         String b = "hello"; // you can add any object for now (will be changed to Event only once implemented
         a.addEventForDate(b, 20);
         System.out.println(a.calendarMap); // should return a map with "hello" as a value of the key 20
