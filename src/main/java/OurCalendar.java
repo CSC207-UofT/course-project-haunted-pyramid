@@ -81,8 +81,8 @@ public class OurCalendar {
         else {
             // check all the start time and end time of the events
             for (Object item : this.calendarMap.get(date)){
-                if ((item.startTime <= event.startTime <= item.endTime) || (item.startTime <= event.endTime
-                        <= item.endTime)){
+                if ((item.getStartTime() <= event.getStartTime() <= item.getEndTime()) ||
+                (item.getStartTime() <= event.getEndTime() <= item.getEndTime())){
                     this.conflict = true;
                     if (!this.conflictObject.contains(item)){
                         this.conflictObject.add(item);
