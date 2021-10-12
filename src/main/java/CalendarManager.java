@@ -17,7 +17,7 @@ public class CalendarManager {
         int month = cal.get(Calendar.MONTH);
         int year = cal.get(Calendar.YEAR);
 
-
+        // Create a calendar of the current month
         this.currentCalendar = new OurCalendar(year, month + 1);
 
         cal.add(Calendar.MONTH, 1);
@@ -32,7 +32,7 @@ public class CalendarManager {
         int thirdNextMonth = cal.get(Calendar.MONTH);
         int thirdNextYear = cal.get(Calendar.YEAR);
 
-
+        // Create a calendar of the future 3 months calendar
         OurCalendar firstFuture = new OurCalendar(firstNextYear, firstNextMonth + 1);
         OurCalendar secondFuture = new OurCalendar(secondNextYear, secondNextMonth + 1);
         OurCalendar thirdFuture = new OurCalendar(thirdNextYear, thirdNextMonth + 1);
@@ -61,6 +61,7 @@ public class CalendarManager {
         int thirdPreviousMonth = c.get(Calendar.MONTH);
         int thirdPreviousYear = c.get(Calendar.YEAR);
 
+        // Create a calendar of the past 3 months calendar
         OurCalendar firstPast = new OurCalendar(firstPreviousYear, firstPreviousMonth + 1);
         OurCalendar secondPast = new OurCalendar(secondPreviousYear, secondPreviousMonth + 1);
         OurCalendar thirdPast = new OurCalendar(thirdPreviousYear, thirdPreviousMonth + 1);
@@ -125,10 +126,13 @@ public class CalendarManager {
      * if first element of the list is false, second and third elements are empty
      */
     public List<Object> notifyConflict() {
+        // initialize all the variables
         boolean conflictCheck = false;
         ArrayList<Object> conflictEvent = new ArrayList<>();
         ArrayList<Integer> monthCollection = new ArrayList<>();
+        // check the future calendars
         for (OurCalendar ourCalendar : this.futureCalendar) {
+            // if any of the calendar has conflict, make appropriate changes
             if (ourCalendar.isConflict()) {
                 conflictCheck = true;
                 monthCollection.add(ourCalendar.getDateInfo().get(1));
@@ -139,6 +143,7 @@ public class CalendarManager {
                 }
             }
         }
+        // check the current calendar and do the same if conflicted
         if (this.currentCalendar.isConflict()) {
             conflictCheck = true;
             monthCollection.add(this.currentCalendar.getDateInfo().get(1));
@@ -148,6 +153,7 @@ public class CalendarManager {
                 }
             }
         }
+        // combine them
         boolean finalConflictCheck = conflictCheck;
         return new ArrayList<>() {
             {
