@@ -15,7 +15,7 @@ Task (assignment, reading, etc)
 Use Cases:
 StudentManager - manage student entityi, login status, changing names, student info
 CourseManager - make new course entity, delete course entity, change a course
-CalendarManager - check if adding course is viable, add courses, to calendar, add assignments to calendar, add tasks to calendar, change display to weekly calendar, daily calendar
+use_cases.CalendarManager - check if adding course is viable, add courses, to calendar, add assignments to calendar, add tasks to calendar, change display to weekly calendar, daily calendar
 TaskManager - creating and changing tasks
 
 Controller

@@ -1,3 +1,5 @@
+package entities;
+
 import java.util.*;
 import java.time.YearMonth;
 // Object will be changed to Event
