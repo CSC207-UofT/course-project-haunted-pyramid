@@ -1,3 +1,5 @@
+package use_cases;
+
 import java.time.LocalDateTime;
 
 public interface AutoSchedule {
