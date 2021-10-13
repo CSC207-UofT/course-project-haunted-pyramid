@@ -5,8 +5,8 @@ import java.time.Duration;
 public class Event{
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private int ID;
-    private String name;
+    private final int ID;
+    private final String name;
     //private Course course; TODO courses are a thing
 
     /**
@@ -24,6 +24,25 @@ public class Event{
     }
 
     /**
+     * a constructor for single day events
+     * @param ID the event id
+     * @param name name of event
+     * @param year year (integer)
+     * @param month month (integer)
+     * @param day day (integer)
+     * @param startHour hour event starts (integer)
+     * @param endHour hour event ends (integer)
+     * @param startMin minute event starts (integer)
+     * @param endMin minute event ends (integer)
+     */
+    public Event(int ID, String name, int year, int month, int day, int startHour, int endHour, int startMin,
+                 int endMin){
+        this.name = name;
+        this.ID = ID;
+        this.startTime = LocalDateTime.of(year, month, day, startHour, startMin , 0);
+        this.endTime = LocalDateTime.of(year, month, day, endHour, endMin , 0);
+    }
+    /**
      *
      * @return LocalDateTime startTime
      */
@@ -33,12 +52,36 @@ public class Event{
 
     /**
      *
+     * @return String of start date in form YYYY-MM-DD TT:TT
+     */
+    public String getStartString(){return this.startTime.toLocalDate().toString() + " " +
+            this.startTime;}
+
+    /**
+     *
+     * @return the hour of the start time in 100's plus the minutes
+     */
+    public int startTimeInt(){return this.startTime.getHour()*100 + startTime.getMinute();}
+    /**
+     *
      * @return LocalDateTime endTime
      */
     public LocalDateTime getEndTime() {
         return this.endTime;
     }
 
+    /**
+     *
+     * @return String of end date in form YYYY-MM-DD TT:TT
+     */
+    public String getEndString(){return this.endTime.toLocalDate().toString() + " " +
+            this.endTime.toLocalTime().toString();}
+
+    /**
+     *
+     * @return the hour of the end time in 100's plus the minutes
+     */
+    public int endTimeInt(){return this.endTime.getHour()*100 + endTime.getMinute();}
     /**
      *
      * @return int name
@@ -111,6 +154,7 @@ public class Event{
                 0), LocalDateTime.of(2020, 1, 1, 3, 30, 0));
         System.out.println(event.getLength());
         System.out.println(event.conflicts(event2));
+        System.out.println(event.getStartString());
     }
 
 }
