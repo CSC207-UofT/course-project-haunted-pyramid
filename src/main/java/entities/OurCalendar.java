@@ -111,11 +111,11 @@ public class OurCalendar {
 
     /**
      * check if there is any conflict in the calendar (monthly)
-     * if there is any conflict, return true and update conflictEvent with conflicted events
+     * if there is any conflict, update conflictEvent with conflicted events
      * also change conflict attribute to true
-     * @return true if there exists any conflict within the calendar
+     * otherwise, reset conflict related attributes to default
      */
-    public boolean checkConflict(){
+    public void updateConflict(){
         // collection of checks for each day in the month
         List<Boolean> checkCollection = new ArrayList<>();
         // iterate each day
@@ -169,14 +169,12 @@ public class OurCalendar {
         // if there is any kind of conflict return true
         if (checkCollection.contains(true)){
             this.conflict = true;
-            return true;
         }
         // if there is no conflict at all
         // return false and set the conflict related attributes to default
         else {
             this.conflict = false;
             this.conflictEvent = new ArrayList<>();
-            return false;
         }
     }
 
