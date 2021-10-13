@@ -1,3 +1,5 @@
+package entities;
+
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.Duration;
@@ -10,7 +12,7 @@ public class Event{
     //private Course course; TODO courses are a thing
 
     /**
-     * constructor sets the ID, name, start and end times of the Event
+     * constructor sets the ID, name, start and end times of the entities.Event
      * @param ID the id for this event and events related to it (repetition etc)
      * @param name the name of the event
      * @param startTime start time of the event
@@ -148,9 +150,9 @@ public class Event{
     }
 
     public static void main(String[] Args){
-        Event event = new Event(1, "My Event", LocalDateTime.of(2020, 1, 1, 1, 0,
+        Event event = new Event(1, "My entities.Event", LocalDateTime.of(2020, 1, 1, 1, 0,
                 0), LocalDateTime.of(2020, 1, 1, 3, 30, 0));
-        Event event2 = new Event(1, "My Event", LocalDateTime.of(2020, 1, 1, 1, 0,
+        Event event2 = new Event(1, "My entities.Event", LocalDateTime.of(2020, 1, 1, 1, 0,
                 0), LocalDateTime.of(2020, 1, 1, 3, 30, 0));
         System.out.println(event.getLength());
         System.out.println(event.conflicts(event2));

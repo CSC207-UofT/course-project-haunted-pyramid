@@ -1,6 +1,8 @@
+package entities;
+
 import java.util.*;
 import java.time.YearMonth;
-// Object will be changed to Event
+// Object will be changed to entities.Event
 
 public class OurCalendar {
 
@@ -132,7 +134,7 @@ public class OurCalendar {
         System.out.println(a.getConflictObject()); // should return empty list
         System.out.println(a.getDateInfo()); // should return a list of [year, month, # of dates]
 
-        String b = "hello"; // you can add any object for now (will be changed to Event only once implemented
+        String b = "hello"; // you can add any object for now (will be changed to entities.Event only once implemented
         a.addEventForDate(b, 20);
         System.out.println(a.calendarMap); // should return a map with "hello" as a value of the key 20
         a.removeEventForDate(b, 20);
