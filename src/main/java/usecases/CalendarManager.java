@@ -1,6 +1,7 @@
 package usecases;
 
 import entities.OurCalendar;
+import entities.Event;
 
 import java.util.*;
 
@@ -84,7 +85,7 @@ public class CalendarManager {
      * When there is no argument, return the current month calendar
      * @return Map of the current month calendar
      */
-    public Map<Integer, List<Object>> getMonthlyCalendar(){
+    public Map<Integer, List<Event>> getMonthlyCalendar(){
         return this.currentCalendar.getCalendarMap();
     }
 
@@ -98,7 +99,7 @@ public class CalendarManager {
      *              -3 <= index <= 3
      * @return Map of the chosen month calendar
      */
-    public Map<Integer, List<Object>> getMonthlyCalendar(int index){
+    public Map<Integer, List<Event>> getMonthlyCalendar(int index){
         if (index == 0){
             return this.currentCalendar.getCalendarMap();
         }
@@ -131,7 +132,7 @@ public class CalendarManager {
     public List<Object> notifyConflict() {
         // initialize all the variables
         boolean conflictCheck = false;
-        ArrayList<Object> conflictEvent = new ArrayList<>();
+        ArrayList<Event> conflictEvent = new ArrayList<>();
         ArrayList<Integer> monthCollection = new ArrayList<>();
         // check the future calendars
         for (OurCalendar ourCalendar : this.futureCalendar) {
@@ -139,7 +140,7 @@ public class CalendarManager {
             if (ourCalendar.isConflict()) {
                 conflictCheck = true;
                 monthCollection.add(ourCalendar.getDateInfo().get(1));
-                for (Object item : ourCalendar.getConflictObject()) {
+                for (Event item : ourCalendar.getConflictEvent()) {
                     if (!conflictEvent.contains(item)) {
                         conflictEvent.add(item);
                     }
@@ -150,7 +151,7 @@ public class CalendarManager {
         if (this.currentCalendar.isConflict()) {
             conflictCheck = true;
             monthCollection.add(this.currentCalendar.getDateInfo().get(1));
-            for (Object item : this.currentCalendar.getConflictObject()) {
+            for (Event item : this.currentCalendar.getConflictEvent()) {
                 if (!conflictEvent.contains(item)) {
                     conflictEvent.add(item);
                 }
