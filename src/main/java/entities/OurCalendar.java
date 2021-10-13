@@ -3,7 +3,6 @@ package entities;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.time.YearMonth;
-import java.time.LocalDateTime;
 
 
 public class OurCalendar {
@@ -106,20 +105,62 @@ public class OurCalendar {
     }
 
     public void checkConflict(){
-        List<List<Double>> timeInfo = new ArrayList<>();
         for (int i = 0; i < this.dateInfo.get(2); i++){
+            List<List<Double>> timeInfo = new ArrayList<>();
             for (Event item :this.calendarMap.get(i)) {
                 List<Double> individualTimeInfo = new ArrayList<>();
-                individualTimeInfo.add(item.startTimeDouble());
-                individualTimeInfo.add(item.startTimeDouble() + item.getLength() * 100);
+                if (!(Integer.parseInt(item.getStartString().substring(8, 10)) == i)
+                        && !(Integer.parseInt(item.getEndString().substring(8, 10)) == i)) {
+                    individualTimeInfo.add(0.0);
+                    individualTimeInfo.add(2400.0);
+                }
+                else if (!(Integer.parseInt(item.getStartString().substring(8, 10)) == i)) {
+                    individualTimeInfo.add(0.0);
+                    individualTimeInfo.add(item.endTimeDouble());
+                }
+                else {
+                    individualTimeInfo.add(item.startTimeDouble());
+                    individualTimeInfo.add(item.startTimeDouble() + item.getLength() * 100);
+                }
+                timeInfo.add(individualTimeInfo);
+            }
+            for (int j = 0; j < (timeInfo.size() - 1); j++){
+                for (List<Double> timePair : timeInfo.subList(j + 1, timeInfo.size())){
+                    boolean check = OurCalendar.isOverlapped(timeInfo.get(j), timePair);
+                    if (check){
+                        this.conflict = true;
+                        if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j)))){
+                            this.conflictEvent.add(this.calendarMap.get(i).get(j));
+                        }
+                        if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j + 1)))){
+                            this.conflictEvent.add(this.calendarMap.get(i).get(j + 1));
+                        }
+                    }
+                }
             }
         }
+    }
+
+    private static boolean isOverlapped(List<Double> ex1, List<Double> ex2){
+        if ((ex1.get(0) <= ex2.get(0)) && (ex2.get(0) <= ex1.get(1))){
+            return true;
+        }
+        else return (ex1.get(0) <= ex2.get(1)) && (ex2.get(1) <= ex1.get(1));
     }
     /**
      * Remove an event
      * If there is no such event, do nothing
      * @param event event that will be removed
      */
+    public void removeEvent(Event event){
+        for (int i = 0; i < this.dateInfo.get(2); i++){
+            for (Event item :this.calendarMap.get(i)){
+                if (item == event){
+                    this.calendarMap.get(i).remove(event);
+                }
+            }
+        }
+    }
 
 
 
@@ -133,7 +174,7 @@ public class OurCalendar {
         Event b = new Event(1, "My entities.Event",
                 LocalDateTime.of(2020, 1, 1, 1, 0, 0),
                 LocalDateTime.of(2020, 1, 1, 3, 30, 0));
-        // you can add any object for now (will be changed to entities.Event only once implemented
+        // tests to be added
 
     }
 }
