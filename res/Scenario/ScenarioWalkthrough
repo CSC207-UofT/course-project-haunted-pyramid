@@ -1,0 +1,4 @@
+Scenario walkthrough:
+Presenter prompts username. IO controller reads username, passes to StudentManager which selects student from map by username and passes student to Controller, which sets as current User.
+CalendarManager creates a new empty calendar and stores it. Passes it to controller to set as current calendar. Presenter prompts 1. Add test, 2. Add assignment, 3. Add Event. IO controller reads user input number (1) and runs create event in Controller [maybe pass to EventController?]. IO prompts input for course name, event name, event start time, event end time. Passes course to EventManager, creates and stores generic Event with this information. Passes to CourseManager. If course name exists, adds this event to the course.
+ Controller requests CalendarPresenter to format calendar then passes formatted calender to IOcontroller to display. 
