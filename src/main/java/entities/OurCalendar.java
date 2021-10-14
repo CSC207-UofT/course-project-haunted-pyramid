@@ -2,7 +2,7 @@ package entities;
 
 import java.util.*;
 import java.time.YearMonth;
-
+import helpers.IsOverlapped;
 
 public class OurCalendar {
 
@@ -149,9 +149,9 @@ public class OurCalendar {
             // compare if any of the start time, end time overlaps within the day
             for (int j = 0; j < (timeInfo.size() - 1); j++){
                 for (List<Double> timePair : timeInfo.subList(j + 1, timeInfo.size())){
-                    boolean check = OurCalendar.isOverlapped(timeInfo.get(j), timePair);
+                    IsOverlapped check = new IsOverlapped(timeInfo.get(j), timePair);
                     // if overlaps store the information needed
-                    if (check){
+                    if (check.getResult()){
                         checkCollection.add(true);
                         if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j)))){
                             this.conflictEvent.add(this.calendarMap.get(i).get(j));
@@ -178,23 +178,6 @@ public class OurCalendar {
         }
     }
 
-    /**
-     * a helper method for checkConflict() method
-     * returns true if any of the elements in one list belong in between the elements of the other list
-     *
-     * == Representation Invariant ==
-     * ex1.get(0) <= ex1.get(1)
-     * ex2.get(0) <= ex2.get(1)
-     * @param ex1 a list that consists of doubles
-     * @param ex2 a list that consists of doubles
-     * @return true if any of the elements in one list belong in between the elements of the other list
-     */
-    private static boolean isOverlapped(List<Double> ex1, List<Double> ex2){
-        if ((ex1.get(0) <= ex2.get(0)) && (ex2.get(0) <= ex1.get(1))){
-            return true;
-        }
-        else return (ex1.get(0) <= ex2.get(1)) && (ex2.get(1) <= ex1.get(1));
-    }
     /**
      * Remove an event
      * If there is no such event, do nothing
