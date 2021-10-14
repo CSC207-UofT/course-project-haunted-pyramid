@@ -1,9 +1,10 @@
 package entities;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class User {
-    private int id;
+    private UUID id;
     private String name;
     private Date birthDay;
     private String email;
@@ -11,7 +12,7 @@ public class User {
     private String homeAddress;
 
 
-    public User(String name, Date birthDay, int id) {
+    public User(String name, Date birthDay, UUID id) {
         this.name = name;
         this.birthDay = birthDay;
         this.id = id;
@@ -62,7 +63,7 @@ public class User {
         return phoneNumber;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 }
