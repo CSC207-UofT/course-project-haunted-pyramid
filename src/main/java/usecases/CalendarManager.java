@@ -288,6 +288,34 @@ public class CalendarManager {
         };
     }
 
+    /**
+     * Add event to calendar
+     * @param event The Event object which is to be added to the calendar
+     */
+    public void addToCalendar(Event event){
+        // Gets the month as an int from event start time (month)
+        String m = event.getStartString().split("-")[1];
+        int month = Integer.parseInt(m);
+
+        if (month == this.currentMonth){
+            this.currentCalendar.addEvent(event);
+            this.currentCalendar.updateConflict();
+        }
+        else if (month == this.currentMonth + 1){
+            this.futureCalendar.get(0).addEvent(event);
+            this.futureCalendar.get(0).updateConflict();
+        }
+        else if (month == this.currentMonth + 2){
+            this.futureCalendar.get(1).addEvent(event);
+            this.futureCalendar.get(1).updateConflict();
+        }
+        else if (month == this.currentMonth + 3){
+            this.futureCalendar.get(2).addEvent(event);
+            this.futureCalendar.get(2).updateConflict();
+        }
+
+    }
+
     public static void main(String[] args) {
         CalendarManager cm = new CalendarManager();
         System.out.println(cm.currentDate);
@@ -314,6 +342,13 @@ public class CalendarManager {
         System.out.println(cm.getDailyCalendar(2022, 1, 3));
         System.out.println(cm.getWeeklyCalendar(2021, 12, 29));
         System.out.println(cm.getMonthlyCalendar(2022,1));
+        Event e2 = new Event(1, "T", LocalDateTime.of(2021, 10, 1,
+                1, 0), LocalDateTime.of(2021, 10, 1, 3, 30, 0));
+        System.out.println(e2.getStartString());
+        System.out.println(cm.currentCalendar.getDateInfo());
+        cm.addToCalendar(e2);
+        System.out.println(cm.getMonthlyCalendar(2021, 10));
+
     }
 
 }
