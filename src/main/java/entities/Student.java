@@ -1,13 +1,14 @@
 package entities;
 
 import java.util.Date;
+import java.util.UUID;
 
-public class Student extends User{
+public class Student extends User {
 
     private int numberOfCourses;
     private Course[] courseEnrolled;
 
-    public Student(String name, Date birthDay, int id) {
+    public Student(String name, Date birthDay, UUID id) {
         super(name, birthDay, id);
         this.numberOfCourses = 0;
         this.courseEnrolled = new Course[numberOfCourses];

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.Duration;
 
-public class Event{
+public class Event {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private final int ID;

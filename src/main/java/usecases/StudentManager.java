@@ -4,20 +4,35 @@ import entities.Course;
 import entities.Student;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class StudentManager {
 
     private HashMap<Student, Course[]> studentMap;
-    private HashMap<Integer, Student> studentInfo;
+    private HashMap<UUID, Student> studentInfo;
 
     public StudentManager(ArrayList<Student> students){
-        HashMap<Student, Course[]> studentToCourses = new HashMap<>();
-        HashMap<Integer, Student> idToStudents = new HashMap<>();
+        this.studentMap = new HashMap<>();
+        this.studentInfo = new HashMap<>();
         for(Student student : students){
-            studentToCourses.put(student, student.getCourseEnrolled());
-            idToStudents.put(student.getId(), student);
+            this.studentMap.put(student, student.getCourseEnrolled());
+            this.studentInfo.put(student.getId(), student);
         }
+    }
+
+    public void addNewStudent(String name, Date birthDay, UUID id) {
+        Student student = new Student(name, birthDay, id);
+        this.studentInfo.put(student.getId(), student);
+    }
+
+    public HashMap<UUID, Student> getStudentInfo() {
+        return this.studentInfo;
+    }
+
+    public HashMap<Student, Course[]> getStudentMap() {
+        return this.studentMap;
     }
 
     // In the CRC cards, its written 'Store student information to studentInfo', but students info
