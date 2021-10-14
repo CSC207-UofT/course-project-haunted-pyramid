@@ -293,6 +293,7 @@ public class CalendarManager {
      * @param event The Event object which is to be added to the calendar
      */
     public void addToCalendar(Event event){
+        // Gets the month as an int from event start time (month)
         String m = event.getStartString().split("-")[1];
         int month = Integer.parseInt(m);
 
