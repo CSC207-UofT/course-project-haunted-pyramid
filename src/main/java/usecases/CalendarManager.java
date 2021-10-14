@@ -289,16 +289,10 @@ public class CalendarManager {
     }
 
     public static void main(String[] args) {
-        Date today = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(today);
-
-        int year = cal.get(Calendar.YEAR);
-        System.out.println(year);
-        int checkMonth = cal.get(Calendar.MONTH) + 1;
-        System.out.println(checkMonth);
-
         CalendarManager cm = new CalendarManager();
+        System.out.println(cm.currentDate);
+        System.out.println(cm.currentMonth);
+        System.out.println(cm.currentYear);
         System.out.println("current month info " + cm.currentCalendar.getDateInfo());
         System.out.println("one month after info " + cm.futureCalendar.get(0).getDateInfo());
         System.out.println("two month after info " + cm.futureCalendar.get(1).getDateInfo());
