@@ -179,7 +179,7 @@ public class CalendarPresenter {
             result.append("\n").append("|");
             for (int x = 0; x < startIndex; x++) {
                 String contentDiv = " ".repeat(this.DATES.get(x).length() + 24);
-                result.append(contentDiv).append("|a");
+                result.append(contentDiv).append("|");
             }
         }
     }
