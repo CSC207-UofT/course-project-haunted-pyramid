@@ -5,11 +5,14 @@ import controllers.MainController;
 public class ProgramRun {
     /**
      * Main run function that launches the calendar program.
-     * @param args
      */
     public static void main(String[] args) {
         MainController controller = new MainController();
-        controller.displayScreen();
+        controller.displayInitScreen();
+        System.out.println(controller.displayCalendar());
+        controller.generateEvent();
+        System.out.println(controller.displayCalendar());
+        controller.saveAndExitProgram();
     }
 }
 

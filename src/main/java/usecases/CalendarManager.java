@@ -3,7 +3,6 @@ package usecases;
 import entities.OurCalendar;
 import entities.Event;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class CalendarManager {
@@ -244,31 +243,38 @@ public class CalendarManager {
      * Observe the chosen calendar to see if there is any conflict
      * @return a list of Events to show the events that are conflicted
      */
-    public List<Event> notifyConflict(int year, int month) {
+    public List<String> notifyConflict(int year, int month) {
         if (year > this.currentYear){
             month = month + 12;
         }
         else if (year < this.currentYear){
             month = month - 12;
         }
+        List<String> eventName = new ArrayList<>();
         // check the chosen calendar
         if (month == this.currentMonth){
             if (this.currentCalendar.isConflict()){
-                return this.currentCalendar.getConflictEvent();
+                for (Event event : this.currentCalendar.getConflictEvent()){
+                    eventName.add(event.getName());
+                }
             }
         }
         else if (month > this.currentMonth && this.currentMonth + 4 > month){
             if (this.futureCalendar.get(month - this.currentMonth - 1).isConflict()){
-                return this.futureCalendar.get(month - this.currentMonth - 1).getConflictEvent();
+                for (Event event : this.futureCalendar.get(month - this.currentMonth - 1).getConflictEvent()){
+                    eventName.add(event.getName());
+                }
             }
         }
 
         else if (month < this.currentMonth && month + 4 > this.currentMonth) {
             if (this.pastCalendar.get(this.currentMonth - month - 1).isConflict()){
-                return this.pastCalendar.get(this.currentMonth - month - 1).getConflictEvent();
+                for (Event event : this.pastCalendar.get(this.currentMonth - month - 1).getConflictEvent()){
+                    eventName.add(event.getName());
+                }
             }
         }
-        return new ArrayList<>();
+        return eventName;
     }
 
     /**
@@ -359,6 +365,113 @@ public class CalendarManager {
             this.pastCalendar.get(i).removeEvent(event);
             this.pastCalendar.get(i).updateConflict();
         }
+    }
+
+
+    public List<String> getEventNames(int year, int month, int date) {
+        if (year == this.currentYear + 1) {
+            month = month + 12;
+        } else if (year == this.currentYear - 1) {
+            month = month - 12;
+        }
+        List<String> nameList = new ArrayList<>();
+        if (month == this.currentMonth) {
+            for (Event item : this.currentCalendar.getCalendarMap().get(date)) {
+                nameList.add(item.getName());
+            }
+        } else if (month == this.currentMonth + 1) {
+            for (Event item : this.futureCalendar.get(0).getCalendarMap().get(date)) {
+                nameList.add(item.getName());
+            }
+        } else if (month == this.currentMonth + 2) {
+            for (Event item : this.futureCalendar.get(1).getCalendarMap().get(date)) {
+                nameList.add(item.getName());
+            }
+        } else if (month == this.currentMonth + 3) {
+            for (Event item : this.futureCalendar.get(2).getCalendarMap().get(date)) {
+                nameList.add(item.getName());
+            }
+        } else if (month == this.currentMonth - 1) {
+            for (Event item : this.pastCalendar.get(0).getCalendarMap().get(date)) {
+                nameList.add(item.getName());
+            }
+        } else if (month == this.currentMonth - 2) {
+            for (Event item : this.pastCalendar.get(1).getCalendarMap().get(date)) {
+                nameList.add(item.getName());
+            }
+        } else if (month == this.currentMonth - 3) {
+            for (Event item : this.pastCalendar.get(2).getCalendarMap().get(date)) {
+                nameList.add(item.getName());
+            }
+        }
+        return nameList;
+    }
+
+    public List<StringBuilder> getEventTimes(int year, int month, int date) {
+        if (year == this.currentYear + 1) {
+            month = month + 12;
+        } else if (year == this.currentYear - 1) {
+            month = month - 12;
+        }
+        List<StringBuilder> timeList = new ArrayList<>();
+        if (month == this.currentMonth) {
+            for (Event item : this.currentCalendar.getCalendarMap().get(date)) {
+                StringBuilder tempString = new StringBuilder();
+                tempString.append(item.getStartString(), 11, 16);
+                tempString.append(" - ");
+                tempString.append(item.getEndString(), 11, 16);
+                timeList.add(tempString);
+            }
+        } else if (month == this.currentMonth + 1) {
+            for (Event item : this.futureCalendar.get(0).getCalendarMap().get(date)) {
+                StringBuilder tempString = new StringBuilder();
+                tempString.append(item.getStartString(), 11, 16);
+                tempString.append(" - ");
+                tempString.append(item.getEndString(), 11, 16);
+                timeList.add(tempString);
+            }
+        } else if (month == this.currentMonth + 2) {
+            for (Event item : this.futureCalendar.get(1).getCalendarMap().get(date)) {
+                StringBuilder tempString = new StringBuilder();
+                tempString.append(item.getStartString(), 11, 16);
+                tempString.append(" - ");
+                tempString.append(item.getEndString(), 11, 16);
+                timeList.add(tempString);
+            }
+        } else if (month == this.currentMonth + 3) {
+            for (Event item : this.futureCalendar.get(2).getCalendarMap().get(date)) {
+                StringBuilder tempString = new StringBuilder();
+                tempString.append(item.getStartString(), 11, 16);
+                tempString.append(" - ");
+                tempString.append(item.getEndString(), 11, 16);
+                timeList.add(tempString);
+            }
+        } else if (month == this.currentMonth - 1) {
+            for (Event item : this.pastCalendar.get(0).getCalendarMap().get(date)) {
+                StringBuilder tempString = new StringBuilder();
+                tempString.append(item.getStartString(), 11, 16);
+                tempString.append(" - ");
+                tempString.append(item.getEndString(), 11, 16);
+                timeList.add(tempString);
+            }
+        } else if (month == this.currentMonth - 2) {
+            for (Event item : this.pastCalendar.get(1).getCalendarMap().get(date)) {
+                StringBuilder tempString = new StringBuilder();
+                tempString.append(item.getStartString(), 11, 16);
+                tempString.append(" - ");
+                tempString.append(item.getEndString(), 11, 16);
+                timeList.add(tempString);
+            }
+        } else if (month == this.currentMonth - 3) {
+            for (Event item : this.pastCalendar.get(2).getCalendarMap().get(date)) {
+                StringBuilder tempString = new StringBuilder();
+                tempString.append(item.getStartString(), 11, 16);
+                tempString.append(" - ");
+                tempString.append(item.getEndString(), 11, 16);
+                timeList.add(tempString);
+            }
+        }
+        return timeList;
     }
 
     /**
