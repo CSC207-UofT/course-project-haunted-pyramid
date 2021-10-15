@@ -1,6 +1,5 @@
 package controllers;
 
-import entities.Student;
 import gateways.IOSerializable;
 import presenters.CalendarPresenter;
 import usecases.CalendarManager;
@@ -20,10 +19,13 @@ public class MainController {
     public MainController() {
         //Instantiation of the IOSerializable
         this.ioSerializable = new IOSerializable();
-        this.studentController = new StudentController(this.ioSerializable.hasSavedData());
+        this.studentController = new StudentController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.loginController = new LoginController(this.studentController);
         this.calendarPresenter = new CalendarPresenter(this.calendarManager);
         this.displayInitScreen();
+        this.calendarPresenter.testPresenter();
+
+        this.saveAndExitProgram();
     }
 
     /**
@@ -60,7 +62,7 @@ public class MainController {
      * Save and exit the program. Only save students into students.ser for now.
      */
     public void saveAndExitProgram() { //save just students for now
-        this.ioSerializable.studentsWriteToSerializable(this.studentController.getStudentManager().getAllStudent());
+        this.ioSerializable.studentsWriteToSerializable(this.studentController.getStudentManager().getAllStudents());
         System.exit(0);
     }
 

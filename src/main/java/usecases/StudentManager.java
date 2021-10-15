@@ -4,7 +4,6 @@ import entities.Course;
 import entities.Student;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -22,13 +21,22 @@ public class StudentManager {
         }
     }
 
-    public void addNewStudent(String name, Date birthDay, UUID id) {
-        Student student = new Student(name, birthDay, id);
+    public void addNewStudent(UUID id, String name, String username, String password) {
+        Student student = new Student(id, name, username, password);
         this.studentInfo.put(student.getId(), student);
     }
 
-    public ArrayList<Student> getAllStudent() {
+    public ArrayList<Student> getAllStudents() {
         return new ArrayList<>(this.studentInfo.values());
+    }
+
+    public boolean checkUsernameAndPassword(String username, String password) {
+        for (Student student : this.getAllStudents()) {
+            if (student.getUsername().equals(username) && student.getPassword().equals(password)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public HashMap<UUID, Student> getStudentInfo() {
