@@ -1,69 +1,44 @@
 package entities;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
     private UUID id;
     private String name;
-    private Date birthDay;
+    private String username;
+    private String password;
+    private LocalDate birthDate;
     private String email;
     private String phoneNumber;
     private String homeAddress;
 
-
-    public User(String name, Date birthDay, UUID id) {
-        this.name = name;
-        this.birthDay = birthDay;
+    public User(UUID id, String name, String username, String password) {
         this.id = id;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setBirthDay(Date birthDay) {
-        this.birthDay = birthDay;
-    }
-
-    public void setName(String name) {
         this.name = name;
+        this.username = username;
+        this.password = password;
     }
 
-    public void setHomeAddress(String homeAddress) {
-        this.homeAddress = homeAddress;
-    }
+    public UUID getId() { return this.id; }
+    public String getName() { return this.name; }
+    public String getUsername() { return this.username; }
+    public String getPassword() { return this.password; }
+    public LocalDate getBirthDate() { return this.birthDate; }
+    public String getEmail() {return this.email; }
+    public String getPhoneNumber() { return this.phoneNumber; }
+    public String getHomeAddress() { return this.homeAddress; }
 
-    public int getAge(){
-        Date date = new Date();
-        return date.getYear() - this.birthDay.getYear();
-    }
+    public int getAge(){ return LocalDate.now().getYear() - this.birthDate.getYear(); }
 
-    public Date getBirthDay() {
-        return birthDay;
-    }
+    public void setId(UUID id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setUsername(String username) {this.username = username; }
+    public void setPassword(String password) { this.password = password; }
+    public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setHomeAddress(String homeAddress) { this.homeAddress = homeAddress; }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getHomeAddress() {
-        return homeAddress;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public UUID getId() {
-        return id;
-    }
 }

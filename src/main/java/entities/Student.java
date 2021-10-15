@@ -1,15 +1,15 @@
 package entities;
 
-import java.util.Date;
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Student extends User {
+public class Student extends User implements Serializable {
 
     private int numberOfCourses;
     private Course[] courseEnrolled;
 
-    public Student(String name, Date birthDay, UUID id) {
-        super(name, birthDay, id);
+    public Student(UUID id, String name, String username, String password) {
+        super(id, name, username, password);
         this.numberOfCourses = 0;
         this.courseEnrolled = new Course[numberOfCourses];
     }
@@ -36,6 +36,6 @@ public class Student extends User {
     }
 
     public Course[] getCourseEnrolled() {
-        return courseEnrolled;
+        return this.courseEnrolled;
     }
 }
