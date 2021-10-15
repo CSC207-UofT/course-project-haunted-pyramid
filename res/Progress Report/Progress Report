@@ -11,7 +11,32 @@ Repeatable is implemented by event types such as lecture, to allow scheduling of
 Fluid is implemented by event types such as assignment, to assign non-scheduled hours that can be autoscheduled by the program (work sessions)
 - Entities: Event [children: Lecture, Reading, Lab, Test, Assignment, Tutorial, Other], Course, Student, OurCalendar. These are listed by Parent class
 at the top, followed by its children. 
-- 
+- Use Cases: CalendarManager, EventManager, StudentManager, CourseManager
+each is responsible for getting information about each, storing and creating instances of these objects, 
+and organizing them
+- Controllers: MainController, LoginController
+Maincontroller instantiates all other controllers, LoginController tracks login status as program runs 
+and controls login process
+- Gateways:
+IOSerializable serializes/deserializes files storing student info, course info, event and calendar info
+We implemented the maincontroller with the intention of delegating some of its tasks to an EventController in the future, as well as several other controllers such as 
+StudentController, CourseController, and CalendarController as the functionaliy of our program expands to include more complex interaction with these entities, in order to better satisfy
+the single responsibility principle. 
+Our scenario uses a main controller, a login controller, the basic Event entity, the OurCalendar Entity, the Student Entity, and each of the student, event, and calendar managers. 
+it also uses the calendarPresenter.
+It follows the user signing up through the login controller and text IO, having an empty calendar displayed by the controller using the calendarPresenter. The are prompted to add an 
+event by the controller, which takes input and passes it to the EventManager to add a new event, then passes the event to the Calendar Manager which adds the event. The controller then 
+Accesses calendarPresesnter again to re-display the calendar with the event added.
+Our skeleton program allows a user to log in, access a new (not stored) calendar, input basic events with start and end times, and be notified of conflicts.
+We have implemented the basic controller to run the scenario, and have created all the major entities and defined the basic Interfaces for special Events. There is one main class for runnning the program, 
+and one presenter for formatting calendars, which is used in the scenario.
+Sean has been working on the CalendarManager, Calendar, and CalendarPresenter classes with Shameel. They have created a system for creating, adding events to calendars, and displaying monthly calendars
+as is used in the scenario, as well as furthering the functionality with weekly and daily calendars. They will be continuing to develop the calendar related classes to do more complex scheduling,
+such as for repeating nd 
+# write more about skeleton code
+
+
+
 
 your specification? - Taite
 
