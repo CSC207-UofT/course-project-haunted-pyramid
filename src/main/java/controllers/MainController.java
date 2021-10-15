@@ -1,30 +1,30 @@
 package controllers;
 
+import entities.Event; // Needs to be removed after implementing EventController/EventManager
 import gateways.IOSerializable;
 import presenters.CalendarPresenter;
 import usecases.CalendarManager;
-import usecases.EventManager;
 
-import java.time.LocalDate;
+import java.lang.reflect.Array;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class MainController {
 
-    private CalendarManager calendarManager;//DELETE AFTER - this is only temporary for Phase 0
-    private EventManager eventManager;
+    private CalendarManager calendarManager; //May be updated to CalendarController
     private CalendarPresenter calendarPresenter;
     private LoginController loginController;
     private StudentController studentController;
-    private EventController eventController;
 
     private IOSerializable ioSerializable;
     private Scanner scanner = new Scanner(System.in);
+    private int iD = 1;
 
     public MainController() {
         //Instantiation of the IOSerializable
         this.ioSerializable = new IOSerializable();
-        this.eventManager = new EventManager();
-        this.calendarManager = new CalendarManager();
         this.studentController = new StudentController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.loginController = new LoginController(this.studentController);
         this.displayInitScreen();
@@ -58,6 +58,8 @@ public class MainController {
         }
     }
 
+
+
     /**
      * Display the main screen. Used at and only at launch after initialization via login/signup.
      * Temporary for now since the presenter isn't fully implemented.
@@ -77,7 +79,6 @@ public class MainController {
             } else {
                 System.out.println("Invalid input! Try again.");
             }
-            System.out.println(this.calendarPresenter.showMonthCalendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
         }
     }
 

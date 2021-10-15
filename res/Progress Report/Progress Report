@@ -1,0 +1,28 @@
+Has your group provided a brief summary of:
+ 
+Our project is a Scheduling program that allows students to create different kinds of events such as tests, assignments, repeating lectures and other more generic events and
+and track them in a calendar. The program will also automatically schedule work periods associated with events based on the input work time of the user. 
+The main entities of the program are the Student, Event, Calendar and Course, each with their own allocated use case Manager class. The main controllers are the MainController, 
+EventController, Login Controler, and IOSerializable controller. The MainController instantiates all the other controllers, while the EventController handled scheduling of 
+events, the login controller handles student information and login status. We are using text based interface for now, and plan to extend to use JavaFX.
+Our CRC model includes 
+- Interfaces: Repeatable, Fluid
+Repeatable is implemented by event types such as lecture, to allow scheduling of lists of events of the same name
+Fluid is implemented by event types such as assignment, to assign non-scheduled hours that can be autoscheduled by the program (work sessions)
+- Entities: Event [children: Lecture, Reading, Lab, Test, Assignment, Tutorial, Other], Course, Student, OurCalendar. These are listed by Parent class
+at the top, followed by its children. 
+- 
+
+your specification? - Taite
+
+your CRC model? - Sean
+
+your scenario walk-through? - Sebin
+
+your skeleton program? - Malik
+
+what each group member has been working on and plans to work on next? - Teddy
+
+what has worked well so far with your design as you have started implementing the code? - Shameel
+
+Have you clearly indicated at least one open question your group is struggling with, so that your TA can address it in their feedback for phase 0?

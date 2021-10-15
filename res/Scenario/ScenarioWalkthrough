@@ -10,7 +10,7 @@ controller which runs log in, prompting user for username and password. User ent
 and password, login controller finds this student exists in student manager, login controller sets logged in
 to true. main controller requests calendarPresenter show the empty calendar assigned to this student.
 ....
-controller runs main program - prompts user to enter 'add event', 'remove event', 'exit'
+controller runs main program - prompts user to enter 'add event', 'exit'
 User enter 'add event', controller runs add event through EventController
 EventController prompts user to enter name of event, year of event, month, day, start time, end time. Passes
 to EventManager to create event, and CalendarManager to add event to User's calendar.

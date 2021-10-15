@@ -1,9 +1,7 @@
 package presenters;
-import entities.OurCalendar;
 import usecases.CalendarManager;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.*;
 import java.util.*;
 
@@ -28,9 +26,6 @@ public class CalendarPresenter {
         this.calendarManager = cm;
 
     }
-    /*
-     TODO replace Event Object to EventManager or EventController Object
-     */
 
     /**
      * display the monthly calendar for the given year, month according to the information stored in CalendarManager
