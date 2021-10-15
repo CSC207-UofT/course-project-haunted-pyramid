@@ -27,10 +27,12 @@ public class MainController {
         this.calendarManager = new CalendarManager();
         this.studentController = new StudentController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.loginController = new LoginController(this.studentController);
+        this.displayInitScreen();
         this.calendarPresenter = new CalendarPresenter(this.calendarManager);
         this.eventController = new EventController(new EventManager(), this.calendarManager);
+        this.displayScreen();
         //TODO after phase 0, EventManager and CalendarManager specific to student - saved data
-        this.displayInitScreen();
+
         // this.calendarPresenter.testPresenter();
         // this.saveAndExitProgram();
     }
@@ -54,7 +56,6 @@ public class MainController {
                 System.out.println("Invalid input! Try again.");
             }
         }
-        this.displayScreen();
     }
 
     /**
