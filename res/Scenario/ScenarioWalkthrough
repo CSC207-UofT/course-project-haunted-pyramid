@@ -15,4 +15,3 @@ User enter 'add event', controller runs add event through EventController
 EventController prompts user to enter name of event, year of event, month, day, start time, end time. Passes
 to EventManager to create event, and CalendarManager to add event to User's calendar.
 maincontroller requests CalendarPresenter present calendar again with addition of new event.
-user

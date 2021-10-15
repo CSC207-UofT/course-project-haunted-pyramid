@@ -29,9 +29,9 @@ public class MainController {
         this.loginController = new LoginController(this.studentController);
         this.displayInitScreen();
         this.calendarPresenter = new CalendarPresenter(this.calendarManager);
-        this.eventController = new EventController(new EventManager(), this.calendarManager);
+        this.eventController = new EventController(this.eventManager, this.calendarManager);
         this.displayScreen();
-        //TODO after phase 0, EventManager and CalendarManager specific to student - saved data
+        //TODO after phase 0, EventManager and CalendarManager specific to student - saved data - move to controllers
 
         // this.calendarPresenter.testPresenter();
         // this.saveAndExitProgram();
@@ -69,7 +69,7 @@ public class MainController {
             String SUorLI = scanner.nextLine();
             if (SUorLI.equalsIgnoreCase("add")) {
                 this.eventController.schedule();
-            } else if (SUorLI.equalsIgnoreCase("Log In")) {
+            } else if (SUorLI.equalsIgnoreCase("Log out")) {
                 this.loginController.logout();
                 this.displayInitScreen();
             } else if (SUorLI.equalsIgnoreCase("Exit")) {
