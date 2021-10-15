@@ -27,7 +27,7 @@ public class MainController {
         this.calendarManager = new CalendarManager();
         this.studentController = new StudentController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.loginController = new LoginController(this.studentController);
-        this.calendarPresenter = new CalendarPresenter(this.calendarManager, this.eventManager);
+        this.calendarPresenter = new CalendarPresenter(this.calendarManager);
         this.eventController = new EventController(new EventManager(), this.calendarManager);
         //TODO after phase 0, EventManager and CalendarManager specific to student - saved data
         this.displayInitScreen();
