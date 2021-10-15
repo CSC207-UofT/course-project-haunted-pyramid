@@ -296,7 +296,10 @@ public class CalendarManager {
         // Gets the month as an int from event start time (month)
         String m = event.getStartString().split("-")[1];
         int month = Integer.parseInt(m);
-
+        int year = Integer.parseInt(event.getStartString().split("-")[0]);
+        if (year == this.currentYear + 1){
+            month = month + 12;
+        }
         if (month == this.currentMonth){
             this.currentCalendar.addEvent(event);
             this.currentCalendar.updateConflict();
@@ -315,6 +318,90 @@ public class CalendarManager {
         }
 
     }
+
+    /**
+     * remove an event from a specific date
+     * @param event event to be removed
+     * @param year the year that event will be removed from
+     * @param month the month that event will be removed from
+     * @param date the date that event will be removed from
+     */
+    public void removeFromCalendar(Event event, int year, int month, int date){
+        if (year == this.currentYear + 1){
+            month = month + 12;
+        }
+        else if (year == this.currentYear - 1){
+            month = month - 12;
+        }
+        if (month == this.currentMonth){
+            this.currentCalendar.removeEvent(event, date);
+            this.currentCalendar.updateConflict();
+        }
+        else if (month == this.currentMonth + 1){
+            this.futureCalendar.get(0).removeEvent(event, date);
+            this.futureCalendar.get(0).updateConflict();
+        }
+        else if (month == this.currentMonth + 2){
+            this.futureCalendar.get(1).removeEvent(event, date);
+            this.futureCalendar.get(1).updateConflict();
+        }
+        else if (month == this.currentMonth + 3){
+            this.futureCalendar.get(2).removeEvent(event, date);
+            this.futureCalendar.get(2).updateConflict();
+        }
+        else if (month == this.currentMonth - 1){
+            this.pastCalendar.get(0).removeEvent(event, date);
+            this.pastCalendar.get(0).updateConflict();
+        }
+        else if (month == this.currentMonth - 2){
+            this.pastCalendar.get(1).removeEvent(event, date);
+            this.pastCalendar.get(1).updateConflict();
+        }
+        else if (month == this.currentMonth - 3){
+            this.pastCalendar.get(2).removeEvent(event, date);
+            this.pastCalendar.get(2).updateConflict();
+        }
+    }
+
+    /**
+     * remove the event from the entire calendar
+     * @param event event to be removed
+     */
+    public void removeFromCalendar(Event event){
+        for (int i = 0; i < 3; i++){
+            this.currentCalendar.removeEvent(event);
+            this.currentCalendar.updateConflict();
+            this.futureCalendar.get(i).removeEvent(event);
+            this.futureCalendar.get(i).updateConflict();
+            this.pastCalendar.get(i).removeEvent(event);
+            this.pastCalendar.get(i).updateConflict();
+        }
+    }
+
+    /**
+     * getter for currentDate
+     * @return currentDate
+     */
+    public int getCurrentDate(){
+        return this.currentDate;
+    }
+
+    /**
+     * getter for currentMonth
+     * @return currentMonth
+     */
+    public int getCurrentMonth(){
+        return this.currentMonth;
+    }
+
+    /**
+     * getter for currentYear
+     * @return currentYear
+     */
+    public int getCurrentYear(){
+        return this.currentYear;
+    }
+
 
     public static void main(String[] args) {
         CalendarManager cm = new CalendarManager();
@@ -348,7 +435,8 @@ public class CalendarManager {
         System.out.println(cm.currentCalendar.getDateInfo());
         cm.addToCalendar(e2);
         System.out.println(cm.getMonthlyCalendar(2021, 10));
-
+        cm.removeFromCalendar(e2);
+        System.out.println(cm.getMonthlyCalendar(2021, 10));
     }
 
 }

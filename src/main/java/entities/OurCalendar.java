@@ -188,5 +188,14 @@ public class OurCalendar {
             this.calendarMap.get(i).removeIf(item -> item == event);
         }
     }
+
+    /**
+     * Remove an event for the specific date
+     * @param event event that will be removed
+     * @param date date that the event will be removed from
+     */
+    public void removeEvent(Event event, int date){
+        this.calendarMap.get(date).removeIf(item -> item == event);
+    }
 }
 
