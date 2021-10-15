@@ -8,13 +8,12 @@ import usecases.CalendarManager;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.util.UUID;
+
 
 public class MainController {
 
-    private CalendarManager calendarManager;
+    private CalendarManager calendarManager; //May be updated to CalendarController
     private CalendarPresenter calendarPresenter;
     private LoginController loginController;
     private StudentController studentController;
