@@ -1,4 +1,6 @@
 import java.time.LocalDateTime;
+import entities.Event;
+import interfaces.AutoSchedule;
 
 public class session extends Event implements AutoSchedule{
     /**

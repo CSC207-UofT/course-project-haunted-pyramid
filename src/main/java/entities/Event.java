@@ -44,6 +44,7 @@ public class Event{
         this.startTime = LocalDateTime.of(year, month, day, startHour, startMin , 0);
         this.endTime = LocalDateTime.of(year, month, day, endHour, endMin , 0);
     }
+
     /**
      *
      * @return LocalDateTime startTime

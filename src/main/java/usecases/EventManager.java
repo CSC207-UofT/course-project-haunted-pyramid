@@ -62,12 +62,40 @@ public class EventManager {
         return eventMap.get(name);
     }
 
+    /**
+     * removes an event from the set
+     * @param name the name to be removed
+     * @return the event just removed
+     */
     public Event removeEvent(String name){
         return eventMap.remove(name);
     }
 
-    public void addEvent(Event event){
-        eventMap.put(event.getName(),event);
+    /**
+     *
+     * @param year year of event
+     * @param month month of event
+     * @param day date of event
+     * @param startHour time event starts (form HHMM)
+     * @param endHour time event ends (form HHMM)
+     * @param startMin start minute
+     * @param endMin end minute
+     */
+    public void addEvent(String name, int year, int month, int day, int startHour, int startMin, int endHour,
+                         int endMin){
+        eventMap.put(name, new Event(1, name, year, month, day, startHour, endHour, startMin, endMin));
+    }
+
+    public String getName(Event event){
+        return event.getName();
+    }
+
+    public StringBuilder getAllNames(){
+        StringBuilder list = new StringBuilder();
+        for (String name: eventMap.keySet()){
+            list.append(name);
+        }
+        return list;
     }
 
     public float totalHours(List<Event> events){
