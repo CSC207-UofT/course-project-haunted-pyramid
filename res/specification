@@ -13,15 +13,22 @@ Calendar (daily, weekly, monthly)
 Event (assignment, reading, etc)
 
 Use Cases:
-StudentManager - manage student entityi, login status, changing names, student info
+StudentManager - manage student entity, changing names, student login info
 CourseManager - make new course entity, delete course entity, change a course
-use_cases.usecases.CalendarManager - check if adding course is viable, add courses, to calendar, add assignments to calendar, add tasks to calendar, change display to weekly calendar, daily calendar
-TaskManager - creating and changing tasks
+CalendarManager - add courses, to calendar, add Events to calendar, change to weekly calendar, daily calendar,
+analyse conflicts in calendar
+EventManager - creating, storing, returning information, and changing Events
 
-Controller
-MainConroller - run main program (HTML, or consol, communicate to other controllers to initialize, open gateway to first read from JSON file)
-IO controller
+Controllers
+MainConroller - run main program (HTML, or consol, communicate to other controllers to initialize,
+open gateway to first read from JSON file)
+EventController - for scheduling - runs scheduling methods and calls on CalendarManager and EventManager to add
+and schedule events
+LoginController - runs login process
+
+
 Gateway: JSON
+- IOSerializable - serializes / deserializes info stored in file about students, their events and calendars
 
 Command Line Interface:
 Format: console initially, HTML/CSS implementation
