@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.Duration;
 
-public class Event{
+public class Event {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private final int ID;
@@ -58,13 +58,14 @@ public class Event{
      * @return String of start date in form YYYY-MM-DD TT:TT
      */
     public String getStartString(){return this.startTime.toLocalDate().toString() + " " +
-            this.startTime;}
+            this.startTime.toLocalTime().toString();}
 
     /**
      *
      * @return the hour of the start time in 100's plus the minutes
      */
-    public int startTimeInt(){return this.startTime.getHour()*100 + startTime.getMinute();}
+    public double startTimeDouble()
+    {return this.startTime.getHour()*100 + ((float)this.startTime.getMinute() * 100/60) ;}
     /**
      *
      * @return LocalDateTime endTime
@@ -84,7 +85,8 @@ public class Event{
      *
      * @return the hour of the end time in 100's plus the minutes
      */
-    public int endTimeInt(){return this.endTime.getHour()*100 + endTime.getMinute();}
+    public double endTimeDouble()
+    {return this.endTime.getHour()*100 + ((float)this.endTime.getMinute() * 100/60);}
     /**
      *
      * @return int name
@@ -129,10 +131,10 @@ public class Event{
      *
      * @return the length of the event in hours (as a float)
      */
-    public float getLength(){
+    public double getLength(){
         Duration duration = Duration.between(this.startTime, this.endTime);
-        float whole_hours = duration.toHoursPart();
-        float partHour =  duration.toMinutesPart();
+        double whole_hours = duration.toHoursPart();
+        double partHour =  duration.toMinutesPart();
         partHour = partHour/60;
         return whole_hours + partHour;
     }
@@ -158,6 +160,7 @@ public class Event{
         System.out.println(event.getLength());
         System.out.println(event.conflicts(event2));
         System.out.println(event.getStartString());
+        System.out.println(event.endTimeDouble());
     }
 
 }

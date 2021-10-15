@@ -2,14 +2,14 @@ package entities;
 
 import java.util.*;
 import java.time.YearMonth;
-// Object will be changed to entities.Event
+import helpers.IsOverlapped;
 
 public class OurCalendar {
 
-    private List<Object> conflictObject; // All the objects that are conflicting
+    private List<Event> conflictEvent; // All the objects that are conflicting
     private boolean conflict;  // if the calendar has any conflicted information
-    private Map<Integer, List<Object>> calendarMap; // map of calendar
-    private List<Integer> dateInfo; //in the form of [year, month, # of days in the month]
+    private final Map<Integer, List<Event>> calendarMap; // map of calendar
+    private final List<Integer> dateInfo; //in the form of [year, month, # of days in the month]
 
 
     // if provided a year and month and date, create a calendar that matches that year and month
@@ -28,10 +28,10 @@ public class OurCalendar {
         // no conflict because empty
         this.conflict = false;
         // empty list of conflicted object to start with
-        this.conflictObject = new ArrayList<>();
+        this.conflictEvent = new ArrayList<>();
         // create an empty calendar map with keys of days and values of list of events (empty to start with) for the
         // provided year and month
-        Map<Integer, List<Object>> tempMap = new HashMap<>();
+        Map<Integer, List<Event>> tempMap = new HashMap<>();
         for (int i = 1; i <= daysInMonth; i++) {
             tempMap.put(i, new ArrayList<>());
         }
@@ -41,7 +41,7 @@ public class OurCalendar {
     public OurCalendar(){
         GregorianCalendar temp = new GregorianCalendar();
         OurCalendar tempCalendar = new OurCalendar(temp.get(Calendar.YEAR), temp.get(Calendar.MONTH) + 1);
-        this.conflictObject = tempCalendar.conflictObject;
+        this.conflictEvent = tempCalendar.conflictEvent;
         this.conflict = tempCalendar.conflict;
         this.calendarMap = tempCalendar.calendarMap;
         this.dateInfo = tempCalendar.dateInfo;
@@ -59,8 +59,8 @@ public class OurCalendar {
      * get conflictObject
      * @return conflictObject
      */
-    public List<Object> getConflictObject(){
-        return this.conflictObject;
+    public List<Event> getConflictEvent(){
+        return this.conflictEvent;
     }
 
     /**
@@ -75,70 +75,127 @@ public class OurCalendar {
      * get calendarMap
      * @return calendarMap
      */
-    public Map<Integer, List<Object>> getCalendarMap(){
+    public Map<Integer, List<Event>> getCalendarMap(){
         return this.calendarMap;
     }
 
     /**
-     * Add the event to a calendar.
-     * If the adding results in a conflict, change conflict attribute to true
-     * Also add the conflicted objects to the conflictObject
+     * Add the event to a calendar for the appropriate dates
+     *
+     * == Representation Invariant ==
+     *
+     * the event is set up for the same month as the schedule
+     *
      * @param event the event that wants to be added
-     * @param date the date of the event
      */
-    public void addEventForDate(Object event, int date){
-        // If there is no event for the day, add the event
-        if (this.calendarMap.get(date).equals(new ArrayList<>())){
-            this.calendarMap.put(date, new ArrayList<>(){
-                {
-                    add(event);
-                }
-            });
-        }
-        // otherwise, add the event for the date and check the conflict
-        // if conflicted, apply the changes necessary
-        /* uncommented because event.startTime, event.endTime not imported yet
-        else {
-            // check all the start time and end time of the events
-            for (Object item : this.calendarMap.get(date)){
-                if ((item.getStartTime() <= event.getStartTime() <= item.getEndTime()) ||
-                (item.getStartTime() <= event.getEndTime() <= item.getEndTime())){
-                    this.conflict = true;
-                    if (!this.conflictObject.contains(item)){
-                        this.conflictObject.add(item);
-                    }
-                    this.conflictObject.add(event);
-                }
-                this.calendarMap.get(date).add(event);  // add the event to the value list of the given date
-            }
-        }
 
-         */
+    public void addEvent(Event event){
+        // get starting timeline info
+        String startInfo = event.getStartString();
+        // get ending timeline info
+        String endInfo = event.getEndString();
+        // extract start date and convert it to int
+        int startDate = Integer.parseInt(startInfo.substring(8, 10));
+        // extract end date and convert it to int
+        int endDate = Integer.parseInt(endInfo.substring(8, 10));
+        // collect all dates that the event will happen
+        List<Integer> applicableDates = new ArrayList<>();
+        for (int i = startDate; i <= endDate; i++){
+            applicableDates.add(i);
+        }
+        // add the event to all dates that apply
+        for (int dates : applicableDates){
+            this.calendarMap.get(dates).add(event);
+        }
     }
 
     /**
-     * Remove an event for the given date
-     * If there is no such event, do nothing
-     * @param event event that will be removed
-     * @param date the date that the event needs to be removed from
+     * check if there is any conflict in the calendar (monthly)
+     * if there is any conflict, update conflictEvent with conflicted events
+     * also change conflict attribute to true
+     * otherwise, reset conflict related attributes to default
      */
-    public void removeEventForDate(Object event, int date){
-        this.calendarMap.get(date).remove(event);
+    public void updateConflict(){
+        // collection of checks for each day in the month
+        List<Boolean> checkCollection = new ArrayList<>();
+        // iterate each day
+        for (int i = 1; i <= this.dateInfo.get(2); i++){
+            // create a temporary list to store [start time, end time] info
+            List<List<Double>> timeInfo = new ArrayList<>();
+            // iterate each event in the list
+            for (Event item :this.calendarMap.get(i)) {
+                // store start time and end time of the event as a list
+                List<Double> individualTimeInfo = new ArrayList<>();
+                // if the start date & end date are not the same as the event happening
+                // it means the event happens all day
+                if (!(Integer.parseInt(item.getStartString().substring(8, 10)) == i)
+                        && !(Integer.parseInt(item.getEndString().substring(8, 10)) == i)) {
+                    individualTimeInfo.add(0.0);
+                    individualTimeInfo.add(2400.0);
+                }
+                // if the event's start date is not the same but end date is the same
+                // event happens from 0 (start of the day) to the end time
+                else if (!(Integer.parseInt(item.getStartString().substring(8, 10)) == i)) {
+                    individualTimeInfo.add(0.0);
+                    individualTimeInfo.add(item.endTimeDouble());
+                }
+                // else is the same day event
+                else {
+                    individualTimeInfo.add(item.startTimeDouble());
+                    individualTimeInfo.add(item.startTimeDouble() + item.getLength() * 100);
+                }
+                timeInfo.add(individualTimeInfo);
+            }
+            // compare if any of the start time, end time overlaps within the day
+            for (int j = 0; j < (timeInfo.size() - 1); j++){
+                for (List<Double> timePair : timeInfo.subList(j + 1, timeInfo.size())){
+                    IsOverlapped check = new IsOverlapped(timeInfo.get(j), timePair);
+                    // if overlaps store the information needed
+                    if (check.getResult()){
+                        checkCollection.add(true);
+                        if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j)))){
+                            this.conflictEvent.add(this.calendarMap.get(i).get(j));
+                        }
+                        if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j + 1)))){
+                            this.conflictEvent.add(this.calendarMap.get(i).get(j + 1));
+                        }
+                    }
+                    else {
+                        checkCollection.add(false);
+                    }
+                }
+            }
+        }
+        // if there is any kind of conflict return true
+        if (checkCollection.contains(true)){
+            this.conflict = true;
+        }
+        // if there is no conflict at all
+        // return false and set the conflict related attributes to default
+        else {
+            this.conflict = false;
+            this.conflictEvent = new ArrayList<>();
+        }
     }
 
+    /**
+     * Remove an event
+     * If there is no such event, do nothing
+     * @param event event that will be removed
+     */
+    public void removeEvent(Event event) {
+        for (int i = 1; i <= this.dateInfo.get(2); i++) {
+            this.calendarMap.get(i).removeIf(item -> item == event);
+        }
+    }
 
-    public static void main(String[] args) {
-        OurCalendar a = new OurCalendar();
-        System.out.println(a.getCalendarMap()); // should create a map of calendar for a month
-        System.out.println(a.isConflict()); // should return false
-        System.out.println(a.getConflictObject()); // should return empty list
-        System.out.println(a.getDateInfo()); // should return a list of [year, month, # of dates]
-
-        String b = "hello"; // you can add any object for now (will be changed to entities.Event only once implemented
-        a.addEventForDate(b, 20);
-        System.out.println(a.calendarMap); // should return a map with "hello" as a value of the key 20
-        a.removeEventForDate(b, 20);
-        System.out.println(a.calendarMap); // should return a map with "hello" removed from the key 20
+    /**
+     * Remove an event for the specific date
+     * @param event event that will be removed
+     * @param date date that the event will be removed from
+     */
+    public void removeEvent(Event event, int date){
+        this.calendarMap.get(date).removeIf(item -> item == event);
     }
 }
 
