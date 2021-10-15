@@ -8,11 +8,6 @@ public class ProgramRun {
      */
     public static void main(String[] args) {
         MainController controller = new MainController();
-        controller.displayInitScreen();
-        System.out.println(controller.displayCalendar());
-        controller.generateEvent();
-        System.out.println(controller.displayCalendar());
-        controller.saveAndExitProgram();
     }
 }
 

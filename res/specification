@@ -10,7 +10,7 @@ Entities:
 Student
 Course
 Calendar (daily, weekly, monthly)
-Task (assignment, reading, etc)
+Event (assignment, reading, etc)
 
 Use Cases:
 StudentManager - manage student entityi, login status, changing names, student info

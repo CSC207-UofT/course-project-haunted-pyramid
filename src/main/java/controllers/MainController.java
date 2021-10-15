@@ -4,6 +4,7 @@ import entities.Event; // Needs to be removed after implementing EventController
 import gateways.IOSerializable;
 import presenters.CalendarPresenter;
 import usecases.CalendarManager;
+import usecases.EventManager;
 
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
@@ -13,6 +14,8 @@ import java.util.Scanner;
 
 public class MainController {
 
+    private EventController eventController;
+    private EventManager eventManager;
     private CalendarManager calendarManager; //May be updated to CalendarController
     private CalendarPresenter calendarPresenter;
     private LoginController loginController;
@@ -27,8 +30,14 @@ public class MainController {
         this.ioSerializable = new IOSerializable();
         this.studentController = new StudentController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.loginController = new LoginController(this.studentController);
-        this.calendarManager = new CalendarManager();
+        this.displayInitScreen();
         this.calendarPresenter = new CalendarPresenter(this.calendarManager);
+        this.eventController = new EventController(this.eventManager, this.calendarManager);
+        this.displayScreen();
+        //TODO after phase 0, EventManager and CalendarManager specific to student - saved data - move to controllers
+
+        // this.calendarPresenter.testPresenter();
+        // this.saveAndExitProgram();
     }
 
     /**
@@ -58,42 +67,20 @@ public class MainController {
      * Display the main screen. Used at and only at launch after initialization via login/signup.
      * Temporary for now since the presenter isn't fully implemented.
      */
-    public String displayCalendar() {
-        return this.calendarPresenter.showMonthCalendar(this.calendarManager.getCurrentYear(),
-                this.calendarManager.getCurrentMonth());
-    }
-
-    public void generateEvent() {
-        String check = "N";
-        while (check.equals("N")) {
-
-            System.out.println("Please select the Event's name");
-            String eventName = scanner.nextLine();
-            System.out.println("Please choose a date");
-            System.out.println("Type a number between 1 - 31 (depending on the month)");
-            String chosenDate = scanner.nextLine();
-            while (!(1 <= Integer.parseInt(chosenDate) && Integer.parseInt(chosenDate) <= 31)){
-                System.out.println("Invalid Input please try again");
-                System.out.println("Type a number between 1 - 31 (depending on the month)");
-                chosenDate = scanner.nextLine();
-            }
-            System.out.println("Print select the Event's start time");
-            System.out.println("In the form of hh:mm");
-            String eventStartTime = scanner.nextLine();
-            System.out.println("Print select the Event's end time");
-            System.out.println("In the form of hh:mm");
-            String eventEndTime = scanner.nextLine();
-            Event event = new Event(this.iD, eventName, this.calendarManager.getCurrentYear(),
-                    this.calendarManager.getCurrentMonth(), Integer.parseInt(chosenDate),
-                    Integer.parseInt(eventStartTime.substring(0, 2)), Integer.parseInt(eventEndTime.substring(0, 2)),
-                    Integer.parseInt(eventStartTime.substring(3, 5)), Integer.parseInt(eventEndTime.substring(3, 5)));
-            this.iD = this.iD + 1;
-            this.calendarManager.addToCalendar(event);
-            System.out.println("Would you like to add more event to the calendar?");
-            System.out.println("Y/N");
-            String answer = scanner.nextLine();
-            if (answer.equals("N")){
-                check = "Y";
+    public void displayScreen() {
+        while (this.loginController.isLoggedIn()) {
+            System.out.println("Type 'add' to add an event to the calendar");
+            System.out.println("Type 'Exit' to exit this program.");
+            String SUorLI = scanner.nextLine();
+            if (SUorLI.equalsIgnoreCase("add")) {
+                this.eventController.schedule();
+            } else if (SUorLI.equalsIgnoreCase("Log out")) {
+                this.loginController.logout();
+                this.displayInitScreen();
+            } else if (SUorLI.equalsIgnoreCase("Exit")) {
+                this.saveAndExitProgram();
+            } else {
+                System.out.println("Invalid input! Try again.");
             }
         }
     }
