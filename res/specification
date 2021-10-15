@@ -26,7 +26,6 @@ EventController - for scheduling - runs scheduling methods and calls on Calendar
 and schedule events
 LoginController - runs login process
 
-
 Gateway: JSON
 - IOSerializable - serializes / deserializes info stored in file about students, their events and calendars
 
