@@ -72,6 +72,11 @@ public class MainController {
             System.out.println("Please choose a date");
             System.out.println("Type a number between 1 - 31 (depending on the month)");
             String chosenDate = scanner.nextLine();
+            while (!(1 <= Integer.parseInt(chosenDate) && Integer.parseInt(chosenDate) <= 31)){
+                System.out.println("Invalid Input please try again");
+                System.out.println("Type a number between 1 - 31 (depending on the month)");
+                chosenDate = scanner.nextLine();
+            }
             System.out.println("Print select the Event's start time");
             System.out.println("In the form of hh:mm");
             String eventStartTime = scanner.nextLine();
