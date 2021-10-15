@@ -9,7 +9,8 @@ import java.util.*;
 
 
 public class CalendarPresenter {
-    private final CalendarManager calendarManager;
+    private final CalendarManager calendarManager; // CalendarManager to show
+    // set up constants
     private final ArrayList<String> DATES = new ArrayList<>(){
         {
             add("SUNDAY");
@@ -22,11 +23,18 @@ public class CalendarPresenter {
         }
     };
 
+    // initialize by calling a CalendarManager
     public CalendarPresenter(CalendarManager cm) {
         this.calendarManager = cm;
 
     }
 
+    /**
+     * display the monthly calendar for the given year, month according to the information stored in CalendarManager
+     * @param year chosen year
+     * @param month chosen month
+     * @return calendar diagram that shows information stored in CalendarManager
+     */
     public String showMonthCalendar(int year, int month){
         return convertMonthlyMapToPicture(this.calendarManager.getMonthlyCalendar(year, month), year, month);
     }
@@ -36,6 +44,14 @@ public class CalendarPresenter {
 
      */
 
+    /**
+     * helper method for showMonthlyCalendar
+     * converts the map input to desired diagram.
+     * @param mapObject map obeject input that will be used to display
+     * @param year chosen year
+     * @param month chosen month
+     * @return diagram converted from the map object
+     */
     private String convertMonthlyMapToPicture(Map<Integer, List<Event>> mapObject, int year, int month){
         StringBuilder result = new StringBuilder();
         result.append("Calendar for ").append(year).append("/").append(month).append("\n");
@@ -103,6 +119,14 @@ public class CalendarPresenter {
         return result.toString();
     }
 
+    /**
+     * Helper method for convertMonthlyMapToPicture method. Add contents (time, name) of the events to the appropriate
+     * dates
+     * @param mapObject MapObject to play with (with the information of events)
+     * @param result the result string (diagram) that will be added on
+     * @param startingDayOfWeek the starting day of week to add content with
+     * @param usedKeys days that will be added on
+     */
     private void addContentsToCalendar(Map<Integer, List<Event>> mapObject,
                                        StringBuilder result, String startingDayOfWeek, List<Integer> usedKeys) {
         result.append("\n").append("|");
@@ -149,6 +173,15 @@ public class CalendarPresenter {
         }
     }
 
+    /**
+     * helper method for convertMonthlyMapToPicture method
+     * adds date to the diagram
+     * @param result resulting diagram that will be added on
+     * @param keyList dates that will be used to add on the diagram
+     * @param startingDayOfWeek the starting day of week that dates will be added on
+     * @param usedKeys all the dates that are already placed
+     * @param appliedDays all the day of weeks that dates have been placed on
+     */
     private void addDatesToCalendar(StringBuilder result, List<Integer> keyList,
                                     String startingDayOfWeek, List<Integer> usedKeys, List<String> appliedDays) {
         if (keyList.size() == 0){
@@ -205,6 +238,16 @@ public class CalendarPresenter {
         }
     }
 
+    /**
+     * helper method to assist addDatesToCalendar method
+     * provides appropriate blank spaces to make the diagram beautiful
+     * @param result resulting diagram that will be added on
+     * @param keyList the dates that are being used to put on the diagram
+     * @param usedKeys the dates that have been put on the diagram already
+     * @param appliedDays the day of weeks for the dates that are used already
+     * @param i index representing the starting day of week
+     * @param j index representing remaining day of week
+     */
     private void dateSpaceEditor(StringBuilder result, List<Integer> keyList, List<Integer> usedKeys,
                              List<String> appliedDays, int i, int j) {
         String tempDiv;

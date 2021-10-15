@@ -401,43 +401,5 @@ public class CalendarManager {
     public int getCurrentYear(){
         return this.currentYear;
     }
-
-
-    public static void main(String[] args) {
-        CalendarManager cm = new CalendarManager();
-        System.out.println(cm.currentDate);
-        System.out.println(cm.currentMonth);
-        System.out.println(cm.currentYear);
-        System.out.println("current month info " + cm.currentCalendar.getDateInfo());
-        System.out.println("one month after info " + cm.futureCalendar.get(0).getDateInfo());
-        System.out.println("two month after info " + cm.futureCalendar.get(1).getDateInfo());
-        System.out.println("three month after info " + cm.futureCalendar.get(2).getDateInfo());
-        System.out.println("one month before info " + cm.pastCalendar.get(0).getDateInfo());
-        System.out.println("two month before info " + cm.pastCalendar.get(1).getDateInfo());
-        System.out.println("three month before info " + cm.pastCalendar.get(2).getDateInfo());
-        System.out.println("this shows the current month calendar map " + cm.getMonthlyCalendar());
-        System.out.println("this shows the calendar map of January " + cm.getMonthlyCalendar(2022,1));
-        System.out.println("this shows the calendar map of November " + cm.getMonthlyCalendar(2021,11));
-        System.out.println("this shows the calendar map of July " + cm.getMonthlyCalendar(2021,7));
-        System.out.println(cm.getWeeklyCalendar());
-        System.out.println(cm.getWeeklyCalendar(2021, 10, 5));
-        System.out.println(cm.getWeeklyCalendar(2021, 10, 14));
-        System.out.println(cm.getDailyCalendar(2022, 1, 15));
-        Event event = new Event(1, "My entities.Event", LocalDateTime.of(2022, 1, 3, 1, 0,
-                0), LocalDateTime.of(2022, 1, 3, 3, 30, 0));
-        cm.futureCalendar.get(2).addEvent(event);
-        System.out.println(cm.getDailyCalendar(2022, 1, 3));
-        System.out.println(cm.getWeeklyCalendar(2021, 12, 29));
-        System.out.println(cm.getMonthlyCalendar(2022,1));
-        Event e2 = new Event(1, "T", LocalDateTime.of(2021, 10, 1,
-                1, 0), LocalDateTime.of(2021, 10, 1, 3, 30, 0));
-        System.out.println(e2.getStartString());
-        System.out.println(cm.currentCalendar.getDateInfo());
-        cm.addToCalendar(e2);
-        System.out.println(cm.getMonthlyCalendar(2021, 10));
-        cm.removeFromCalendar(e2);
-        System.out.println(cm.getMonthlyCalendar(2021, 10));
-    }
-
 }
 
