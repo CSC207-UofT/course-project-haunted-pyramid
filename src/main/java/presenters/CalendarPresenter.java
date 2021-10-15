@@ -28,6 +28,9 @@ public class CalendarPresenter {
         this.calendarManager = cm;
 
     }
+    /*
+     TODO replace Event Object to EventManager or EventController Object
+     */
 
     /**
      * display the monthly calendar for the given year, month according to the information stored in CalendarManager
@@ -36,12 +39,20 @@ public class CalendarPresenter {
      * @return calendar diagram that shows information stored in CalendarManager
      */
     public String showMonthCalendar(int year, int month){
-        return convertMonthlyMapToPicture(this.calendarManager.getMonthlyCalendar(year, month), year, month);
+        String result = convertMonthlyMapToPicture(this.calendarManager.getMonthlyCalendar(year, month), year, month);
+        if (this.calendarManager.notifyConflict(year, month).size() == 0){
+            return result + "There is no conflict for this month's events";
+        }
+        else {
+            StringBuilder temp = new StringBuilder("");
+            for (Event item : this.calendarManager.notifyConflict(year, month)){
+                temp.append(item.getName()).append("; ");
+            }
+            return result + "Following Events have conflicts" + "\n" + temp;
+        }
     }
 
-
-    /* TODO replace Event Object to EventManager or EventController Object
-
+    /* TODO build showWeeklyCalendar and showDailyCalendar
      */
 
     /**
@@ -149,7 +160,7 @@ public class CalendarPresenter {
                         Event chosenEvent = mapObject.get(usedKeys.get(y)).get(z);
                         size = chosenEvent.getName().length() + 12;
                         if (size < this.DATES.get(startIndex + y).length() + 21) {
-                            result.append(" ").append(chosenEvent.getName()).append("; ");
+                            result.append(" ").append(chosenEvent.getName()).append(": ");
                             result.append(chosenEvent.getStartString(), 11, 16);
                             result.append(" - ");
                             result.append(chosenEvent.getEndString(), 11, 16);
@@ -273,7 +284,7 @@ public class CalendarPresenter {
         Event event = new Event(1, "test", LocalDateTime.of(2021, 12, 2, 3, 0,
                 0), LocalDateTime.of(2021, 12, 2, 6, 30, 0));
         cm.addToCalendar(event);
-        Event event1 = new Event(2, "test2", LocalDateTime.of(2021, 12, 2, 7, 0,
+        Event event1 = new Event(2, "test2", LocalDateTime.of(2021, 12, 2, 5, 0,
                 0), LocalDateTime.of(2021, 12, 2, 9, 30, 0));
         cm.addToCalendar(event1);
         Event event2 = new Event(3, "test3", LocalDateTime.of(2021, 12, 2, 12, 0,

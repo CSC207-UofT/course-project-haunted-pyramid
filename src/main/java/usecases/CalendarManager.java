@@ -242,50 +242,34 @@ public class CalendarManager {
     }
 
     /**
-     * Observe the future calendars and the current calendar to see if there is any conflict
-     * Also check what months contain conflict AND
-     * check what are the events that are involved in the conflict
-     * @return a list of (boolean, list of Events, list of months) to show
-     * if there is a conflict, what events are involved, and what months are involved respectively
-     * if first element of the list is false, second and third elements are empty
+     * Observe the chosen calendar to see if there is any conflict
+     * @return a list of Events to show the events that are conflicted
      */
-    public List<Object> notifyConflict() {
-        // initialize all the variables
-        boolean conflictCheck = false;
-        ArrayList<Event> conflictEvent = new ArrayList<>();
-        ArrayList<Integer> monthCollection = new ArrayList<>();
-        // check the future calendars
-        for (OurCalendar ourCalendar : this.futureCalendar) {
-            // if any of the calendar has conflict, make appropriate changes
-            if (ourCalendar.isConflict()) {
-                conflictCheck = true;
-                monthCollection.add(ourCalendar.getDateInfo().get(1));
-                for (Event item : ourCalendar.getConflictEvent()) {
-                    if (!conflictEvent.contains(item)) {
-                        conflictEvent.add(item);
-                    }
-                }
+    public List<Event> notifyConflict(int year, int month) {
+        if (year > this.currentYear){
+            month = month + 12;
+        }
+        else if (year < this.currentYear){
+            month = month - 12;
+        }
+        // check the chosen calendar
+        if (month == this.currentMonth){
+            if (this.currentCalendar.isConflict()){
+                return this.currentCalendar.getConflictEvent();
             }
         }
-        // check the current calendar and do the same if conflicted
-        if (this.currentCalendar.isConflict()) {
-            conflictCheck = true;
-            monthCollection.add(this.currentCalendar.getDateInfo().get(1));
-            for (Event item : this.currentCalendar.getConflictEvent()) {
-                if (!conflictEvent.contains(item)) {
-                    conflictEvent.add(item);
-                }
+        else if (month > this.currentMonth && this.currentMonth + 4 > month){
+            if (this.futureCalendar.get(month - this.currentMonth - 1).isConflict()){
+                return this.futureCalendar.get(month - this.currentMonth - 1).getConflictEvent();
             }
         }
-        // combine them
-        boolean finalConflictCheck = conflictCheck;
-        return new ArrayList<>() {
-            {
-                add(finalConflictCheck);
-                add(conflictEvent);
-                add(monthCollection);
+
+        else if (month < this.currentMonth && month + 4 > this.currentMonth) {
+            if (this.pastCalendar.get(this.currentMonth - month - 1).isConflict()){
+                return this.pastCalendar.get(this.currentMonth - month - 1).getConflictEvent();
             }
-        };
+        }
+        return new ArrayList<>();
     }
 
     /**
