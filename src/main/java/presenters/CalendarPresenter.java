@@ -26,9 +26,6 @@ public class CalendarPresenter {
         this.calendarManager = cm;
 
     }
-    /*
-     TODO replace Event Object to EventManager or EventController Object
-     */
 
     /**
      * display the monthly calendar for the given year, month according to the information stored in CalendarManager
