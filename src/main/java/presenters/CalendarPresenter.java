@@ -1,5 +1,5 @@
 package presenters;
-import entities.Event;
+import entities.Event; // THIS NEEDS TO BE CHANGED TO EventManager or EventController
 import usecases.CalendarManager;
 
 import java.time.LocalDate;
