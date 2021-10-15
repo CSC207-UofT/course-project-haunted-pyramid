@@ -10,7 +10,8 @@ import java.util.Scanner;
 
 public class MainController {
 
-    private CalendarManager calendarManager; //DELETE AFTER - this is only temporary for Phase 0
+    private CalendarManager calendarManager;//DELETE AFTER - this is only temporary for Phase 0
+    private EventManager eventManager;
     private CalendarPresenter calendarPresenter;
     private LoginController loginController;
     private StudentController studentController;
@@ -22,10 +23,11 @@ public class MainController {
     public MainController() {
         //Instantiation of the IOSerializable
         this.ioSerializable = new IOSerializable();
+        this.eventManager = new EventManager();
         this.calendarManager = new CalendarManager();
         this.studentController = new StudentController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.loginController = new LoginController(this.studentController);
-        this.calendarPresenter = new CalendarPresenter(this.calendarManager);
+        this.calendarPresenter = new CalendarPresenter(this.calendarManager, this.eventManager);
         this.eventController = new EventController(new EventManager(), this.calendarManager);
         //TODO after phase 0, EventManager and CalendarManager specific to student - saved data
         this.displayInitScreen();

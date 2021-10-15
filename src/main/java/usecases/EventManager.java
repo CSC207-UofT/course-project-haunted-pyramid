@@ -111,6 +111,8 @@ public class EventManager {
     public String getName(Event event){
         return event.getName();
     }
+    public String getStart(Event event) {return event.getStartString();}
+    public String getEnd(Event event) {return event.getEndString();}
 
     public StringBuilder getAllNames(){
         StringBuilder list = new StringBuilder();

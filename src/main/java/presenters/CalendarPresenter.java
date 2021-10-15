@@ -1,8 +1,7 @@
 package presenters;
-import entities.Event;
 import usecases.CalendarManager;
 import usecases.EventManager;
-
+import entities.Event;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.*;
@@ -11,6 +10,7 @@ import java.util.*;
 
 public class CalendarPresenter {
     private final CalendarManager calendarManager; // CalendarManager to show
+    private final EventManager eventManager; //Events to draw from
     // set up constants
     private final ArrayList<String> DATES = new ArrayList<>(){
         {
@@ -25,9 +25,9 @@ public class CalendarPresenter {
     };
 
     // initialize by calling a CalendarManager
-    public CalendarPresenter(CalendarManager cm) {
+    public CalendarPresenter(CalendarManager cm, EventManager em) {
         this.calendarManager = cm;
-
+        this.eventManager = em;
     }
     /*
      TODO replace Event Object to EventManager or EventController Object
@@ -159,13 +159,13 @@ public class CalendarPresenter {
                 if (usedKeys.size() > y) {
                     if (mapObject.get(usedKeys.get(y)).size() > z) {
                         Event chosenEvent = mapObject.get(usedKeys.get(y)).get(z);
-                        size = chosenEvent.getName().length() + 12;
+                        size = this.eventManager.getName(chosenEvent).length() + 12;
                         if (size < this.DATES.get(startIndex + y).length() + 21) {
-                            result.append(" ").append(chosenEvent.getName()).append(": ");
-                            result.append(chosenEvent.getStartString(), 11, 16);
+                            result.append(" ").append(this.eventManager.getName(chosenEvent)).append(": ");
+                            result.append(this.eventManager.getStart(chosenEvent), 11, 16);
                             result.append(" - ");
-                            result.append(chosenEvent.getEndString(), 11, 16);
-                            size = chosenEvent.getName().length() + 16;
+                            result.append(this.eventManager.getEnd(chosenEvent), 11, 16);
+                            size = this.eventManager.getName(chosenEvent).length() + 16;
                         }
                     }
                 }
@@ -281,8 +281,9 @@ public class CalendarPresenter {
 
 
     public void testPresenter() {
-        CalendarManager cm = new CalendarManager();
         EventManager em = new EventManager();
+        CalendarManager cm = new CalendarManager();
+
         em.addEvent("test", "test1", 2021, 12, 2, 3, 0, 6, 30);
         cm.addToCalendar(em.getEvent("test1"));
         em.addEvent("test", "test2", 2021, 12, 2, 5, 0, 9, 30);
@@ -291,7 +292,7 @@ public class CalendarPresenter {
         cm.addToCalendar(em.getEvent("test3"));
         em.addEvent("test", "test4", 2021, 12, 24, 7, 0, 9, 30);
         cm.addToCalendar(em.getEvent("test4"));
-        CalendarPresenter cp = new CalendarPresenter(cm);
+        CalendarPresenter cp = new CalendarPresenter(cm, em);
         System.out.println(cp.showMonthCalendar(2021,12));
     }
 }
