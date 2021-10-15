@@ -1,5 +1,5 @@
 package presenters;
-import entities.Event; // THIS NEEDS TO BE CHANGED TO EventManager or EventController
+import entities.OurCalendar;
 import usecases.CalendarManager;
 
 import java.time.LocalDate;
@@ -39,14 +39,14 @@ public class CalendarPresenter {
      * @return calendar diagram that shows information stored in CalendarManager
      */
     public String showMonthCalendar(int year, int month){
-        String result = convertMonthlyMapToPicture(this.calendarManager.getMonthlyCalendar(year, month), year, month);
+        String result = convertMonthlyMapToPicture(this.calendarManager, year, month);
         if (this.calendarManager.notifyConflict(year, month).size() == 0){
             return result + "There is no conflict for this month's events";
         }
         else {
             StringBuilder temp = new StringBuilder();
-            for (Event item : this.calendarManager.notifyConflict(year, month)){
-                temp.append(item.getName()).append("; ");
+            for (String item : this.calendarManager.notifyConflict(year, month)){
+                temp.append(item).append("; ");
             }
             return result + "Following Events have conflicts" + "\n" + temp;
         }
@@ -58,12 +58,12 @@ public class CalendarPresenter {
     /**
      * helper method for showMonthlyCalendar
      * converts the map input to desired diagram.
-     * @param mapObject map obeject input that will be used to display
+     * @param calendarManager CalendarManager input that will be used to display
      * @param year chosen year
      * @param month chosen month
      * @return diagram converted from the map object
      */
-    private String convertMonthlyMapToPicture(Map<Integer, List<Event>> mapObject, int year, int month){
+    private String convertMonthlyMapToPicture(CalendarManager calendarManager, int year, int month){
         StringBuilder result = new StringBuilder();
         result.append("Calendar for ").append(year).append("/").append(month).append("\n");
         String div = "-".repeat(224);
@@ -75,7 +75,7 @@ public class CalendarPresenter {
         result.append("|").append("\n");
         result.append(" ").append(div).append("\n");
         result.append("|");
-        List<Integer> keyList = new ArrayList<>(mapObject.keySet());
+        List<Integer> keyList = new ArrayList<>(calendarManager.getMonthlyCalendar(year, month).keySet());
         Collections.sort(keyList);
 
         String startingDayOfWeek = LocalDate.parse(keyList.get(0) + "/" + month
@@ -108,7 +108,8 @@ public class CalendarPresenter {
         List<Integer> usedKeys = new ArrayList<>();
         List<String> appliedDays = new ArrayList<>();
         addDatesToCalendar(result, keyList, startingDayOfWeek, usedKeys, appliedDays);
-        addContentsToCalendar(mapObject, result, startingDayOfWeek, usedKeys);
+        addContentsToCalendar(calendarManager, result, startingDayOfWeek, usedKeys,
+                year, month);
 
 
         int iterate = 4;
@@ -121,7 +122,8 @@ public class CalendarPresenter {
             usedKeys = new ArrayList<>();
             appliedDays = new ArrayList<>();
             addDatesToCalendar(result, keyList, "SUNDAY", usedKeys, appliedDays);
-            addContentsToCalendar(mapObject, result, "SUNDAY", usedKeys);
+            addContentsToCalendar(calendarManager, result,
+                    "SUNDAY", usedKeys, year ,month);
         }
 
         result.append("\n").append(" ").append(div).append("\n");
@@ -133,13 +135,14 @@ public class CalendarPresenter {
     /**
      * Helper method for convertMonthlyMapToPicture method. Add contents (time, name) of the events to the appropriate
      * dates
-     * @param mapObject MapObject to play with (with the information of events)
+     * @param calendarManager CalendarManager input that will be used to display (with the information of events)
      * @param result the result string (diagram) that will be added on
      * @param startingDayOfWeek the starting day of week to add content with
      * @param usedKeys days that will be added on
      */
-    private void addContentsToCalendar(Map<Integer, List<Event>> mapObject,
-                                       StringBuilder result, String startingDayOfWeek, List<Integer> usedKeys) {
+    private void addContentsToCalendar(CalendarManager calendarManager,
+                                       StringBuilder result, String startingDayOfWeek, List<Integer> usedKeys,
+                                       int year, int month) {
         result.append("\n").append("|");
         int startIndex = this.DATES.indexOf(startingDayOfWeek);
         for (int x = 0; x < startIndex; x++) {
@@ -147,24 +150,22 @@ public class CalendarPresenter {
             result.append(contentDiv).append("|");
         }
         int longestSizeEvent = 0;
-        for (int keys : mapObject.keySet()){
-            if (longestSizeEvent < mapObject.get(keys).size()- 1){
-                longestSizeEvent = mapObject.get(keys).size() - 1;
+        for (int keys : calendarManager.getMonthlyCalendar(year, month).keySet()){
+            if (longestSizeEvent < calendarManager.getMonthlyCalendar(year, month).get(keys).size()- 1){
+                longestSizeEvent = calendarManager.getMonthlyCalendar(year, month).get(keys).size() - 1;
             }
         }
         for (int z = 0; z <= longestSizeEvent; z++) {
             for (int y = 0; y < this.DATES.size() - startIndex; y++) {
                 int size = 0;
                 if (usedKeys.size() > y) {
-                    if (mapObject.get(usedKeys.get(y)).size() > z) {
-                        Event chosenEvent = mapObject.get(usedKeys.get(y)).get(z);
-                        size = chosenEvent.getName().length() + 12;
+                    if (calendarManager.getMonthlyCalendar(year, month).get(usedKeys.get(y)).size() > z) {
+                        String chosenEvent = calendarManager.getEventNames(year, month, usedKeys.get(y)).get(z);
+                        size = chosenEvent.length() + 12;
                         if (size < this.DATES.get(startIndex + y).length() + 21) {
-                            result.append(" ").append(chosenEvent.getName()).append(": ");
-                            result.append(chosenEvent.getStartString(), 11, 16);
-                            result.append(" - ");
-                            result.append(chosenEvent.getEndString(), 11, 16);
-                            size = chosenEvent.getName().length() + 16;
+                            result.append(" ").append(chosenEvent).append(": ");
+                            result.append(calendarManager.getEventTimes(year, month, usedKeys.get(y)).get(z));
+                            size = chosenEvent.length() + 16;
                         }
                     }
                 }
