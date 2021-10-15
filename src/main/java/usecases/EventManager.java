@@ -39,6 +39,14 @@ public class EventManager {
     }
 
     /**
+     * empty EventManager
+     */
+    public EventManager(){
+        this.eventMap = new HashMap<String, Event>();
+        this.occurenceLists = new HashMap<String, ArrayList<Repeated>>();
+        this.fluidSessions = new HashMap<String, ArrayList<AutoSchedule>>();
+    }
+    /**
      * getDay returns a map of the events in a day
      * @param day the day that is being searched for
      * @return all events in this day
@@ -62,12 +70,56 @@ public class EventManager {
         return eventMap.get(name);
     }
 
+    /**
+     * removes an event from the set
+     * @param name the name to be removed
+     * @return the event just removed
+     */
     public Event removeEvent(String name){
         return eventMap.remove(name);
     }
 
-    public void addEvent(Event event){
-        eventMap.put(event.getName(),event);
+    /**
+     *
+     * @param year year of event
+     * @param month month of event
+     * @param day date of event
+     * @param startHour time event starts (form HHMM)
+     * @param endHour time event ends (form HHMM)
+     * @param startMin start minute
+     * @param endMin end minute
+     */
+    public void addEvent(String type, String name, int year, int month, int day, int startHour, int startMin, int endHour,
+                         int endMin){
+        //TODO add different types of Events (assignment, test, etc)
+        Event event = new Event(1, name, year, month, day, startHour, endHour, startMin, endMin);
+        this.eventMap.put(event.getName(), event);
+        if (event instanceof Repeated){
+            this.occurenceLists.put(event.getName(), ((Repeated) event).occurrences());
+        }
+        if (event instanceof Fluid){
+            this.fluidSessions.put(event.getName(), ((Fluid) event).getFluidSessions());
+        }
+        if (event instanceof AutoSchedule){
+            ArrayList<AutoSchedule> event1 = new ArrayList<AutoSchedule>();
+            event1.add((AutoSchedule) event);
+            this.fluidSessions.put(event.getName(), event1);
+        }
+    }
+
+
+    public String getName(Event event){
+        return event.getName();
+    }
+    public String getStart(Event event) {return event.getStartString();}
+    public String getEnd(Event event) {return event.getEndString();}
+
+    public StringBuilder getAllNames(){
+        StringBuilder list = new StringBuilder();
+        for (String name: eventMap.keySet()){
+            list.append(name);
+        }
+        return list;
     }
 
     public float totalHours(List<Event> events){

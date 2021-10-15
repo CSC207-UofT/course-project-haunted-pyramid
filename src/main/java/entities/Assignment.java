@@ -1,8 +1,8 @@
-package entities;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import interfaces.*;
+import entities.Event;
+import interfaces.Fluid;
+import interfaces.AutoSchedule;
 
 public class Assignment extends Event implements Fluid{
     //TODO properly implement these - change constructor so due date different - override conflict
