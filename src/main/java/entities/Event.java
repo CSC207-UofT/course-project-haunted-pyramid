@@ -151,15 +151,4 @@ public class Event {
                 (this.startTime.isAfter(other.getStartTime()) && this.startTime.isBefore(other.getEndTime()));
     }
 
-    public static void main(String[] Args){
-        Event event = new Event(1, "My entities.Event", LocalDateTime.of(2020, 1, 1, 1, 0,
-                0), LocalDateTime.of(2020, 1, 1, 3, 30, 0));
-        Event event2 = new Event(1, "My entities.Event", LocalDateTime.of(2020, 1, 1, 1, 0,
-                0), LocalDateTime.of(2020, 1, 1, 3, 30, 0));
-        System.out.println(event.getLength());
-        System.out.println(event.conflicts(event2));
-        System.out.println(event.getStartString());
-        System.out.println(event.endTimeDouble());
-    }
-
 }
