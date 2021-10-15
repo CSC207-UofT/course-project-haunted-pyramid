@@ -18,7 +18,6 @@ public class EventController {
         this.calendarPresenter = new CalendarPresenter(this.calendarManager);
 
     }
-
     public void schedule(){
         System.out.println("Enter 'test' to add test, 'assignment' to add assignment, 'lecture' to add lecture " +
                 "[please enter test]"); //TODO after phase 0, more than just tests

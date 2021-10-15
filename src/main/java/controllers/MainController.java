@@ -31,6 +31,7 @@ public class MainController {
         this.calendarManager = new CalendarManager();
         this.studentController = new StudentController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.loginController = new LoginController(this.studentController);
+        this.displayInitScreen();
         this.eventManager = new EventManager();
         this.calendarPresenter = new CalendarPresenter(this.calendarManager);
         this.eventController = new EventController(this.eventManager, this.calendarManager);
