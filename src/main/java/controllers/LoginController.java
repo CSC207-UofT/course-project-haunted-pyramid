@@ -35,6 +35,10 @@ public class LoginController {
         }
     }
 
+    public void logout(){
+        this.loggedIn = false;
+    }
+
     /**
      * Sign up a new account for the login verification.
      * Temporary for now since the presenter isn't fully implemented.

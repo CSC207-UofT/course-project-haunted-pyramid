@@ -1,6 +1,7 @@
 package presenters;
 import entities.Event;
 import usecases.CalendarManager;
+import usecases.EventManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -281,18 +282,15 @@ public class CalendarPresenter {
 
     public void testPresenter() {
         CalendarManager cm = new CalendarManager();
-        Event event = new Event(1, "test", LocalDateTime.of(2021, 12, 2, 3, 0,
-                0), LocalDateTime.of(2021, 12, 2, 6, 30, 0));
-        cm.addToCalendar(event);
-        Event event1 = new Event(2, "test2", LocalDateTime.of(2021, 12, 2, 5, 0,
-                0), LocalDateTime.of(2021, 12, 2, 9, 30, 0));
-        cm.addToCalendar(event1);
-        Event event2 = new Event(3, "test3", LocalDateTime.of(2021, 12, 2, 12, 0,
-                0), LocalDateTime.of(2021, 12, 2, 14, 30, 0));
-        Event event3 = new Event(4, "test4", LocalDateTime.of(2021, 12, 24, 7, 0,
-                0), LocalDateTime.of(2021, 12, 24, 9, 30, 0));
-        cm.addToCalendar(event2);
-        cm.addToCalendar(event3);
+        EventManager em = new EventManager();
+        em.addEvent("test", "test1", 2021, 12, 2, 3, 0, 6, 30);
+        cm.addToCalendar(em.getEvent("test1"));
+        em.addEvent("test", "test2", 2021, 12, 2, 5, 0, 9, 30);
+        cm.addToCalendar(em.getEvent("test2"));
+        em.addEvent("test", "test3", 2021, 12, 2, 12, 0, 14, 30);
+        cm.addToCalendar(em.getEvent("test3"));
+        em.addEvent("test", "test4", 2021, 12, 24, 7, 0, 9, 30);
+        cm.addToCalendar(em.getEvent("test4"));
         CalendarPresenter cp = new CalendarPresenter(cm);
         System.out.println(cp.showMonthCalendar(2021,12));
     }

@@ -3,7 +3,9 @@ package controllers;
 import gateways.IOSerializable;
 import presenters.CalendarPresenter;
 import usecases.CalendarManager;
+import usecases.EventManager;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class MainController {
@@ -12,6 +14,7 @@ public class MainController {
     private CalendarPresenter calendarPresenter;
     private LoginController loginController;
     private StudentController studentController;
+    private EventController eventController;
 
     private IOSerializable ioSerializable;
     private Scanner scanner = new Scanner(System.in);
@@ -19,13 +22,15 @@ public class MainController {
     public MainController() {
         //Instantiation of the IOSerializable
         this.ioSerializable = new IOSerializable();
+        this.calendarManager = new CalendarManager();
         this.studentController = new StudentController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.loginController = new LoginController(this.studentController);
         this.calendarPresenter = new CalendarPresenter(this.calendarManager);
+        this.eventController = new EventController(new EventManager(), this.calendarManager);
+        //TODO after phase 0, EventManager and CalendarManager specific to student - saved data
         this.displayInitScreen();
-        this.calendarPresenter.testPresenter();
-
-        this.saveAndExitProgram();
+        // this.calendarPresenter.testPresenter();
+        // this.saveAndExitProgram();
     }
 
     /**
@@ -47,6 +52,7 @@ public class MainController {
                 System.out.println("Invalid input! Try again.");
             }
         }
+        this.displayScreen();
     }
 
     /**
@@ -54,8 +60,22 @@ public class MainController {
      * Temporary for now since the presenter isn't fully implemented.
      */
     public void displayScreen() {
-        //this.calendarPresenter.testPresenter();
-
+        while (this.loginController.isLoggedIn()) {
+            System.out.println("Type 'add' to add an event to the calendar");
+            System.out.println("Type 'Exit' to exit this program.");
+            String SUorLI = scanner.nextLine();
+            if (SUorLI.equalsIgnoreCase("add")) {
+                this.eventController.schedule();
+            } else if (SUorLI.equalsIgnoreCase("Log In")) {
+                this.loginController.logout();
+                this.displayInitScreen();
+            } else if (SUorLI.equalsIgnoreCase("Exit")) {
+                this.saveAndExitProgram();
+            } else {
+                System.out.println("Invalid input! Try again.");
+            }
+            System.out.println(this.calendarPresenter.showMonthCalendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
+        }
     }
 
     /**

@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class CalendarManager {
-
     private OurCalendar currentCalendar; // calendar object for the current month
     private List<OurCalendar> futureCalendar; // List of calendar object for the past three months
     private List<OurCalendar> pastCalendar; //  List of calendar object for the next three months

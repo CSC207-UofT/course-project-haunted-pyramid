@@ -1,4 +1,18 @@
 Scenario walkthrough:
-Presenter prompts username. IO controller reads username, passes to StudentManager which selects student from map by username and passes student to Controller, which sets as current User.
-CalendarManager creates a new empty calendar and stores it. Passes it to controller to set as current calendar. Presenter prompts 1. Add test, 2. Add assignment, 3. Add Event. IO controller reads user input number (1) and runs create event in Controller [maybe pass to EventController?]. IO prompts input for course name, event name, event start time, event end time. Passes course to EventManager, creates and stores generic Event with this information. Passes to CourseManager. If course name exists, adds this event to the course.
- Controller requests CalendarPresenter to format calendar then passes formatted calender to IOcontroller to display. 
+Maincontroller is instantiated when program is run.
+Controller instantiates IO controller, and login controller with default logged in false
+The MainController displays the login screen, prompts user to 'Log In', 'sign up' or 'exit'
+User enters 'Sign Up', controller passes to login controller which prompts user to enter name, username,
+and password. login controller passes info to student manager to create new student with this information,
+requests CalendarManager create empty calendar and assign to this student.
+controller finishes signup, goes back to login prompts. user enters 'Log In', controller passes to login
+controller which runs log in, prompting user for username and password. User enters previously entered username
+and password, login controller finds this student exists in student manager, login controller sets logged in
+to true. main controller requests calendarPresenter show the empty calendar assigned to this student.
+....
+controller runs main program - prompts user to enter 'add event', 'remove event', 'exit'
+User enter 'add event', controller runs add event through EventController
+EventController prompts user to enter name of event, year of event, month, day, start time, end time. Passes
+to EventManager to create event, and CalendarManager to add event to User's calendar.
+maincontroller requests CalendarPresenter present calendar again with addition of new event.
+user
