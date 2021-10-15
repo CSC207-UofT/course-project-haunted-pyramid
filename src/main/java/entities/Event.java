@@ -57,7 +57,7 @@ public class Event {
      * @return String of start date in form YYYY-MM-DD TT:TT
      */
     public String getStartString(){return this.startTime.toLocalDate().toString() + " " +
-            this.startTime;}
+            this.startTime.toLocalTime().toString();}
 
     /**
      *
