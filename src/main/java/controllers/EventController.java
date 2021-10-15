@@ -3,16 +3,19 @@ import usecases.CalendarManager;
 import usecases.EventManager;
 import java.util.Scanner;
 import java.util.UUID;
+import presenters.CalendarPresenter;
 
 public class EventController {
 
     private EventManager eventManager;
     private CalendarManager calendarManager;
     private Scanner scanner = new Scanner(System.in);
+    private CalendarPresenter calendarPresenter;
 
     public EventController(EventManager eventManager, CalendarManager calendarManager){
         this.eventManager = eventManager;
         this.calendarManager = calendarManager;
+        this.calendarPresenter = new CalendarPresenter(this.calendarManager);
 
     }
 
@@ -35,10 +38,13 @@ public class EventController {
                     Integer.parseInt(dateParts[2]), Integer.parseInt(dateParts[3]),  Integer.parseInt(dateParts[4]),
                     Integer.parseInt(timeParts[0]), Integer.parseInt(timeParts[1]));
             this.calendarManager.addToCalendar(eventManager.getEvent(title));
+            System.out.println(this.calendarPresenter.showMonthCalendar(Integer.parseInt(dateParts[0]),
+                    Integer.parseInt(dateParts[1])));
         }
         else{
             System.out.println("please check spelling and try again!");
         }
 
     }
+
 }

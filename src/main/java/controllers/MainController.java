@@ -28,12 +28,13 @@ public class MainController {
     public MainController() {
         //Instantiation of the IOSerializable
         this.ioSerializable = new IOSerializable();
+        this.calendarManager = new CalendarManager();
         this.studentController = new StudentController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.loginController = new LoginController(this.studentController);
-        this.displayInitScreen();
+        this.eventManager = new EventManager();
         this.calendarPresenter = new CalendarPresenter(this.calendarManager);
         this.eventController = new EventController(this.eventManager, this.calendarManager);
-        this.displayScreen();
+        this.calendarPresenter = new CalendarPresenter(this.calendarManager);
         //TODO after phase 0, EventManager and CalendarManager specific to student - saved data - move to controllers
 
         // this.calendarPresenter.testPresenter();
