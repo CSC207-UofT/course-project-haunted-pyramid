@@ -30,10 +30,13 @@ Accesses calendarPresesnter again to re-display the calendar with the event adde
 Our skeleton program allows a user to log in, access a new (not stored) calendar, input basic events with start and end times, and be notified of conflicts.
 We have implemented the basic controller to run the scenario, and have created all the major entities and defined the basic Interfaces for special Events. There is one main class for runnning the program, 
 and one presenter for formatting calendars, which is used in the scenario.
-Sean has been working on the CalendarManager, Calendar, and CalendarPresenter classes with Shameel. They have created a system for creating, adding events to calendars, and displaying monthly calendars
-as is used in the scenario, as well as furthering the functionality with weekly and daily calendars. They will be continuing to develop the calendar related classes to do more complex scheduling,
-such as for repeating nd 
 # write more about skeleton code
+Sean has been working on the CalendarManager, Calendar, and CalendarPresenter classes with Shameel. They have created a system for creating empty calendars, adding events to calendars, and displaying monthly calendars
+as is used in the scenario, as well as furthering the functionality with weekly and daily calendars. They will be continuing to develop the calendar related classes to do more complex scheduling,
+such as for repeating and automatically scheduled events, as well as eliminating the dependency of CalendarManager on the actual Event class.
+Sebin has been working on the controllers and serializable IO for reading and writing student info to files, as
+
+
 
 
 
