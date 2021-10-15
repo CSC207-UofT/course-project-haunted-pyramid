@@ -27,6 +27,10 @@ public class StudentManager {
         this.studentInfo.put(student.getId(), student);
     }
 
+    public ArrayList<Student> getAllStudent() {
+        return new ArrayList<>(this.studentInfo.values());
+    }
+
     public HashMap<UUID, Student> getStudentInfo() {
         return this.studentInfo;
     }

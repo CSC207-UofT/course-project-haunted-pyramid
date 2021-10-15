@@ -268,7 +268,7 @@ public class CalendarPresenter {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { //public void testPresenter() {
         CalendarManager cm = new CalendarManager();
         Event event = new Event(1, "test", LocalDateTime.of(2021, 12, 2, 3, 0,
                 0), LocalDateTime.of(2021, 12, 2, 6, 30, 0));
