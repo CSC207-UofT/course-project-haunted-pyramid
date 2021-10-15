@@ -44,7 +44,7 @@ public class CalendarPresenter {
             return result + "There is no conflict for this month's events";
         }
         else {
-            StringBuilder temp = new StringBuilder("");
+            StringBuilder temp = new StringBuilder();
             for (Event item : this.calendarManager.notifyConflict(year, month)){
                 temp.append(item.getName()).append("; ");
             }
@@ -275,26 +275,6 @@ public class CalendarPresenter {
         appliedDays.add(this.DATES.get(i + j));
         tempDiv = " ".repeat(this.DATES.get(i + j).length() + 24 - spacer);
         result.append(tempDiv).append("|");
-    }
-
-
-
-    public void testPresenter() {
-        CalendarManager cm = new CalendarManager();
-        Event event = new Event(1, "test", LocalDateTime.of(2021, 12, 2, 3, 0,
-                0), LocalDateTime.of(2021, 12, 2, 6, 30, 0));
-        cm.addToCalendar(event);
-        Event event1 = new Event(2, "test2", LocalDateTime.of(2021, 12, 2, 5, 0,
-                0), LocalDateTime.of(2021, 12, 2, 9, 30, 0));
-        cm.addToCalendar(event1);
-        Event event2 = new Event(3, "test3", LocalDateTime.of(2021, 12, 2, 12, 0,
-                0), LocalDateTime.of(2021, 12, 2, 14, 30, 0));
-        Event event3 = new Event(4, "test4", LocalDateTime.of(2021, 12, 24, 7, 0,
-                0), LocalDateTime.of(2021, 12, 24, 9, 30, 0));
-        cm.addToCalendar(event2);
-        cm.addToCalendar(event3);
-        CalendarPresenter cp = new CalendarPresenter(cm);
-        System.out.println(cp.showMonthCalendar(2021,12));
     }
 }
 
