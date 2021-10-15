@@ -4,6 +4,7 @@ import entities.Event; // Needs to be removed after implementing EventController
 import gateways.IOSerializable;
 import presenters.CalendarPresenter;
 import usecases.CalendarManager;
+import usecases.EventManager;
 
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
@@ -13,6 +14,8 @@ import java.util.Scanner;
 
 public class MainController {
 
+    private EventController eventController;
+    private EventManager eventManager;
     private CalendarManager calendarManager; //May be updated to CalendarController
     private CalendarPresenter calendarPresenter;
     private LoginController loginController;
