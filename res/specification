@@ -4,7 +4,7 @@ School scheduling
 Students will log in to access their calendar.
 They will be able to enrol in courses adding specific in-class times to their calendar.
 They will add tasks with a specified number of hours they would like to spend working on it, how long a work entities.session should be, and a time/date by which they would like it to be complete.
-A calendar will algorithmicallychedule
+A calendar will algorithmically scheduled
 
 Entities:
 Student
@@ -20,7 +20,7 @@ analyse conflicts in calendar
 EventManager - creating, storing, returning information, and changing Events
 
 Controllers
-MainConroller - run main program (HTML, or consol, communicate to other controllers to initialize,
+MainController - run main program (HTML, or consol, communicate to other controllers to initialize,
 open gateway to first read from JSON file)
 EventController - for scheduling - runs scheduling methods and calls on CalendarManager and EventManager to add
 and schedule events
@@ -28,6 +28,9 @@ LoginController - runs login process
 
 Gateway: JSON
 - IOSerializable - serializes / deserializes info stored in file about students, their events and calendars
+
+Presenters
+CalendarPresenter - displays calendar images for the user to view.
 
 Command Line Interface:
 Format: console initially, HTML/CSS implementation
