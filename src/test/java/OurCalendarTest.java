@@ -25,7 +25,7 @@ public class OurCalendarTest {
         date = cal.get(Calendar.DATE);
     }
 
-    @Test(timeout = 50)
+    @Test
     public void testUpdateConflict(){
         assertFalse(calendar.isConflict());
         Event eventOne = new Event(1, "Test1",
