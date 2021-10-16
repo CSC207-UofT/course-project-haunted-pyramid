@@ -9,14 +9,14 @@ import java.util.UUID;
 
 public class StudentManager {
 
-    private HashMap<Student, Course[]> studentMap;
+    private HashMap<UUID, Course[]> studentMap;
     private HashMap<UUID, Student> studentInfo;
 
     public StudentManager(ArrayList<Student> students){
         this.studentMap = new HashMap<>();
         this.studentInfo = new HashMap<>();
         for(Student student : students){
-            this.studentMap.put(student, student.getCourseEnrolled());
+            this.studentMap.put(student.getId(), student.getCourseEnrolled());
             this.studentInfo.put(student.getId(), student);
         }
     }
@@ -24,6 +24,7 @@ public class StudentManager {
     public void addNewStudent(UUID id, String name, String username, String password) {
         Student student = new Student(id, name, username, password);
         this.studentInfo.put(student.getId(), student);
+        this.studentMap.put(student.getId(), student.getCourseEnrolled());
     }
 
     public ArrayList<Student> getAllStudents() {
@@ -43,7 +44,7 @@ public class StudentManager {
         return this.studentInfo;
     }
 
-    public HashMap<Student, Course[]> getStudentMap() {
+    public HashMap<UUID, Course[]> getStudentMap() {
         return this.studentMap;
     }
 

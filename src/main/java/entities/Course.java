@@ -42,15 +42,14 @@ public class Course {
         return true;
     }
 
+
     public String getName() {
         return name;
     }
-
-    public ArrayList<Event> getTask(String taskName) {
-        return taskList.get(taskName);
-    }
-
     public HashMap<String, ArrayList<Event>> getTaskList() {
         return taskList;
+    }
+    public ArrayList<Event> getTask(String taskName) {
+        return taskList.get(taskName);
     }
 }
