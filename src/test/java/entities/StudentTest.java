@@ -1,16 +1,11 @@
-package usecases;
+package entities;
 
-import entities.Course;
-import entities.Student;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class StudentTest {
     Student student = new Student(UUID.randomUUID(), "malik", "malikl", "pass");
