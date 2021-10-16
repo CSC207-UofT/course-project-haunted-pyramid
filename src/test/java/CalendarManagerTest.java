@@ -26,7 +26,7 @@ public class CalendarManagerTest {
         date = cal.get(Calendar.DATE);
     }
 
-    @Test(timeout = 50)
+    @Test(timeout = 100)
     public void testGetCurrentMonthlyCalendar() {
         Map<Integer, List<Event>> currentMonthlyCalendar = calendarManager.getMonthlyCalendar();
         YearMonth tempYearMonth = YearMonth.of(year, month);
@@ -39,7 +39,7 @@ public class CalendarManagerTest {
         assertEquals(count ,0);
     }
 
-    @Test(timeout = 50)
+    @Test(timeout = 100)
     public void testGetMonthlyCalendar() {
         Map<Integer, List<Event>> monthlyCalendar = calendarManager.getMonthlyCalendar(2021, 11);
         YearMonth tempYearMonth = YearMonth.of(year, 11);
@@ -52,7 +52,7 @@ public class CalendarManagerTest {
         assertEquals(count ,0);
     }
 
-    @Test(timeout = 50)
+    @Test(timeout = 100)
     public void testGetWeeklyCalender(){
         Map<Integer, List<Event>> weeklyCalendar = calendarManager.getWeeklyCalendar(year, month, 20);
         YearMonth tempYearMonth = YearMonth.of(year, month);
@@ -72,7 +72,7 @@ public class CalendarManagerTest {
         assertEquals(weeklyCalendar, calendarManager.getWeeklyCalendar());
     }
 
-    @Test(timeout = 50)
+    @Test(timeout = 100)
     public void testAddAndDailyCalendar(){
         Event eventOne = new Event(1, "Test1",
                 2021, 10, 15, 7, 10, 0, 0);
@@ -86,7 +86,7 @@ public class CalendarManagerTest {
         assertEquals(dailyCalendar, testMap);
     }
 
-    @Test
+    @Test(timeout = 100)
     public void testAddCalendarManager(){
         Event eventOne = new Event(1, "Test1",
                 2021, 11, 20, 7, 10, 0, 0);
@@ -101,7 +101,7 @@ public class CalendarManagerTest {
         assertEquals(eventTwo, eventList.get(1));
     }
 
-    @Test(timeout = 50)
+    @Test(timeout = 100)
     public void testNotifyConflict(){
         Event eventOne = new Event(1, "Test1",
                 year, month, 20, 7, 10, 0, 0);

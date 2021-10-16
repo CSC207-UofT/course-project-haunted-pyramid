@@ -1,32 +1,30 @@
 package usecases;
 
 import org.junit.Before;
-import org.testng.annotations.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Test;
 
 class StudentManagerTest {
 
     @Before
 
 
-    @Test(timeOut = 50)
-    void addNewStudent() {
+    @Test(timeout = 100)
+    public void testAddNewStudent() {
     }
 
-    @Test
-    void getAllStudents() {
+    @Test(timeout = 100)
+    public void testGetAllStudents() {
     }
 
-    @Test
-    void checkUsernameAndPassword() {
+    @Test(timeout = 100)
+    public void testCheckUsernameAndPassword() {
     }
 
-    @Test
-    void getStudentInfo() {
+    @Test(timeout = 100)
+    public void testGetStudentInfo() {
     }
 
-    @Test
-    void getStudentMap() {
+    @Test(timeout = 100)
+    public void testGetStudentMap() {
     }
 }

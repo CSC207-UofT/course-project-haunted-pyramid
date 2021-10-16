@@ -25,7 +25,7 @@ public class OurCalendarTest {
         date = cal.get(Calendar.DATE);
     }
 
-    @Test
+    @Test(timeout = 100)
     public void testUpdateConflict(){
         assertFalse(calendar.isConflict());
         Event eventOne = new Event(1, "Test1",
@@ -39,7 +39,7 @@ public class OurCalendarTest {
 
     }
 
-    @Test(timeout = 50)
+    @Test(timeout = 100)
     public void testAddEvent(){
         Event eventOne = new Event(1, "Test1",
                 2021, 10, 15, 7, 10, 0, 0);
@@ -58,7 +58,7 @@ public class OurCalendarTest {
         assertEquals(calendar.getCalendarMap(), tempMap);
     }
 
-    @Test(timeout = 50)
+    @Test(timeout = 100)
     public void testGetCalendarMap(){
         Map<Integer, List<Event>> tempMap = new HashMap<>();
         List<Event> myList  = new ArrayList<>();
@@ -69,7 +69,7 @@ public class OurCalendarTest {
         assertEquals(calendar.getCalendarMap(), tempMap);
     }
 
-    @Test(timeout = 50)
+    @Test(timeout = 100)
     public void testGetConflictEvent(){
         Event eventOne = new Event(1, "Test1",
                 2021, 10, 15, 7, 10, 0, 0);
