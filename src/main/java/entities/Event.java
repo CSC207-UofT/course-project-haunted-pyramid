@@ -47,6 +47,24 @@ public class Event {
 
     /**
      *
+     * @param object the object event is being compared to
+     * @return whether it is equal to this object
+     */
+    @Override
+    public boolean equals(Object object){
+        if (object == null){
+            return false;
+        }
+        if (object.getClass() != this.getClass()){
+            return false;
+        }
+        Event obj = (Event) object;
+        return this.startTime.isEqual(obj.getStartTime()) && this.endTime.isEqual(obj.getEndTime()) &&
+                this.name.equals(obj.getName());
+    }
+
+    /**
+     *
      * @return LocalDateTime startTime
      */
     public LocalDateTime getStartTime(){
