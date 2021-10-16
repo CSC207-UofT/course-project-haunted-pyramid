@@ -1,3 +1,5 @@
+package usecases;
+
 import org.junit.Before;
 import org.junit.Test;
 import usecases.CalendarManager;

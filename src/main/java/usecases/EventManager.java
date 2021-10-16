@@ -148,8 +148,8 @@ public class EventManager {
     }
 
     //TODO replace entities.Event with subclass of entities.Event for free slots - implements repeatable - list of events under one name
-    public ArrayList<Event> freeSlots(LocalDateTime start, LocalDateTime end, ArrayList<Event> events){
-        events = timeOrder(events);
+    public ArrayList<Event> freeSlots(LocalDateTime start, LocalDateTime end){
+        ArrayList<Event> events = timeOrder((ArrayList<Event>) this.eventMap.values());
         ArrayList<Event> freeSlots = new ArrayList<>();
         if (start.isBefore(events.get(0).getStartTime())){
             freeSlots.add(new Event(1, "before " + events.get(0).getName(), start,
