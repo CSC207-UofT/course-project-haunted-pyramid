@@ -1,4 +1,4 @@
-package usecasesTests;
+package usecases;
 
 import entities.Student;
 import org.junit.Before;
