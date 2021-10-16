@@ -115,12 +115,12 @@ public class EventManager {
     public String getStart(Event event) {return event.getStartString();}
     public String getEnd(Event event) {return event.getEndString();}
 
-    public StringBuilder getAllNames(){
+    public String getAllNames(){
         StringBuilder list = new StringBuilder();
         for (String name: eventMap.keySet()){
             list.append(name);
         }
-        return list;
+        return list.toString();
     }
 
     public float totalHours(List<Event> events){
@@ -147,10 +147,11 @@ public class EventManager {
         return sorted;
     }
 
-    //TODO replace entities.Event with subclass of entities.Event for free slots - implements repeatable - list of events under one name
+    //TODO replace entities.Event with subclass of entities.Event for free slots - implements repeatable -
+    // list of events under one name
     public ArrayList<Event> freeSlots(LocalDateTime start, LocalDateTime end){
-        ArrayList<Event> events = timeOrder((ArrayList<Event>) this.eventMap.values());
-        ArrayList<Event> freeSlots = new ArrayList<>();
+        ArrayList<Event> events = timeOrder(new ArrayList<Event>(this.eventMap.values()));
+        ArrayList<Event> freeSlots = new ArrayList<Event>();
         if (start.isBefore(events.get(0).getStartTime())){
             freeSlots.add(new Event(1, "before " + events.get(0).getName(), start,
                     events.get(0).getStartTime()));
