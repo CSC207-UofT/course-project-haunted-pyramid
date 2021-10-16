@@ -130,6 +130,9 @@ public class CalendarPresenter {
     /**
      * Helper method for convertMonthlyMapToPicture method. Add contents (time, name) of the events to the appropriate
      * dates
+     * == Representation Invariant ==
+     * The length of event name cannot exceed 12
+     * The event must be a same-day event
      * @param calendarManager CalendarManager input that will be used to display (with the information of events)
      * @param result the result string (diagram) that will be added on
      * @param startingDayOfWeek the starting day of week to add content with
