@@ -6,12 +6,13 @@ import entities.Event;
 import java.util.*;
 
 public class CalendarManager {
-    private OurCalendar currentCalendar; // calendar object for the current month
-    private List<OurCalendar> futureCalendar; // List of calendar object for the past three months
-    private List<OurCalendar> pastCalendar; //  List of calendar object for the next three months
     private final int currentMonth; // current month
     private final int currentDate; // current date
     private final int currentYear; // current year
+    private final OurCalendar currentCalendar; // calendar object for the current month
+    private final List<OurCalendar> futureCalendar; // List of calendar object for the past three months
+    private final List<OurCalendar> pastCalendar; //  List of calendar object for the next three months
+
 
     /**
      *  Initialize the usecases.CalendarManager
@@ -217,6 +218,13 @@ public class CalendarManager {
         }
     }
 
+    /**
+     * Returns a daily calendar for the specific date
+     * @param year year of the calendar
+     * @param month month of the calendar
+     * @param date date of the calendar
+     * @return map of daily calendar for the specific date
+     */
     public Map<Integer, List<Event>> getDailyCalendar(int year, int month, int date){
         if (year > this.currentYear){
             month = month + 12;
@@ -367,7 +375,13 @@ public class CalendarManager {
         }
     }
 
-
+    /**
+     * Get all the Events' names from the specific date of the calendar
+     * @param year year of the calendar
+     * @param month month of the calendar
+     * @param date date of the calendar that you want to extract events' names from
+     * @return return the list of the events' names
+     */
     public List<String> getEventNames(int year, int month, int date) {
         if (year == this.currentYear + 1) {
             month = month + 12;
@@ -407,6 +421,13 @@ public class CalendarManager {
         return nameList;
     }
 
+    /**
+     * Get all the Events' time information from the specific date of the calendar
+     * @param year year of the calendar
+     * @param month month of the calendar
+     * @param date date of the calendar that you want to extract events' names from
+     * @return return the string of the events' time information
+     */
     public List<StringBuilder> getEventTimes(int year, int month, int date) {
         if (year == this.currentYear + 1) {
             month = month + 12;
@@ -498,4 +519,6 @@ public class CalendarManager {
         return this.currentYear;
     }
 }
+
+
 
