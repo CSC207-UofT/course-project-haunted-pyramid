@@ -518,6 +518,21 @@ public class CalendarManager {
     public int getCurrentYear(){
         return this.currentYear;
     }
+
+
+    public static void main(String[] args) {
+        Event eventOne = new Event(1, "Test1",
+                2021, 10, 20, 7, 10, 0, 0);
+        Event eventTwo = new Event(2, "Test2",
+                2021, 10, 20, 15, 19, 30, 50);
+        Event eventThree = new Event(3, "Test3", 2021, 10,
+                20, 8, 13, 0, 0);
+        CalendarManager a = new CalendarManager();
+        a.addToCalendar(eventOne);
+        a.addToCalendar(eventTwo);
+        a.addToCalendar(eventThree);
+        System.out.println(a.notifyConflict(2021, 10));
+    }
 }
 
 
