@@ -32,7 +32,7 @@ public class Course {
         return true;
     }
 
-    public boolean removeTask(Event event){
+    public boolean removeEvent(Event event){
         if (this.taskList.containsKey(event.getName())){
             this.taskList.get(event.getName()).remove(event);
         }
