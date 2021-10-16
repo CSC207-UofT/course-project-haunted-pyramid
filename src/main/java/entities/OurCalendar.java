@@ -6,10 +6,11 @@ import helpers.IsOverlapped;
 
 public class OurCalendar {
 
-    private List<Event> conflictEvent; // All the objects that are conflicting
-    private boolean conflict;  // if the calendar has any conflicted information
-    private final Map<Integer, List<Event>> calendarMap; // map of calendar
     private final List<Integer> dateInfo; //in the form of [year, month, # of days in the month]
+    private boolean conflict;  // if the calendar has any conflicted information
+    private List<Event> conflictEvent; // All the objects that are conflicting
+    private final Map<Integer, List<Event>> calendarMap; // map of calendar
+
 
 
     // if provided a year and month and date, create a calendar that matches that year and month
@@ -41,10 +42,10 @@ public class OurCalendar {
     public OurCalendar(){
         GregorianCalendar temp = new GregorianCalendar();
         OurCalendar tempCalendar = new OurCalendar(temp.get(Calendar.YEAR), temp.get(Calendar.MONTH) + 1);
-        this.conflictEvent = tempCalendar.conflictEvent;
-        this.conflict = tempCalendar.conflict;
-        this.calendarMap = tempCalendar.calendarMap;
         this.dateInfo = tempCalendar.dateInfo;
+        this.conflict = tempCalendar.conflict;
+        this.conflictEvent = tempCalendar.conflictEvent;
+        this.calendarMap = tempCalendar.calendarMap;
     }
 
     /**

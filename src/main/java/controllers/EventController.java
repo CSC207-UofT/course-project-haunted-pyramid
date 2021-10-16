@@ -29,7 +29,7 @@ public class EventController {
             String title = scanner.nextLine();
             System.out.println("enter date of event (start) (YYYY-MM-DD-HH-MM)");
             String date = scanner.nextLine();
-            System.out.println("enter end time of event (HH-MM");
+            System.out.println("enter end time of event (HH-MM)");
             String endTime = scanner.nextLine();
             String[] dateParts = date.split("-");
             String[] timeParts = endTime.split("-");
