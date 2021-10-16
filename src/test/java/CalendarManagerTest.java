@@ -86,7 +86,7 @@ public class CalendarManagerTest {
         assertEquals(dailyCalendar, testMap);
     }
 
-    @Test(timeout = 50)
+    @Test
     public void testAddCalendarManager(){
         Event eventOne = new Event(1, "Test1",
                 2021, 11, 20, 7, 10, 0, 0);
