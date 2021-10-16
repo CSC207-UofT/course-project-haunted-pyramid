@@ -149,16 +149,17 @@ public class OurCalendar {
             }
             // compare if any of the start time, end time overlaps within the day
             for (int j = 0; j < (timeInfo.size() - 1); j++){
-                for (List<Double> timePair : timeInfo.subList(j + 1, timeInfo.size())){
-                    IsOverlapped check = new IsOverlapped(timeInfo.get(j), timePair);
+                List<List<Double>> timeSubList = timeInfo.subList(j + 1, timeInfo.size());
+                for (int k = 0; k < timeSubList.size(); k++){
+                    IsOverlapped check = new IsOverlapped(timeInfo.get(j), timeSubList.get(k));
                     // if overlaps store the information needed
                     if (check.getResult()){
                         checkCollection.add(true);
                         if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j)))){
                             this.conflictEvent.add(this.calendarMap.get(i).get(j));
                         }
-                        if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j + 1)))){
-                            this.conflictEvent.add(this.calendarMap.get(i).get(j + 1));
+                        if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j + k + 1)))){
+                            this.conflictEvent.add(this.calendarMap.get(i).get(j + k + 1));
                         }
                     }
                     else {
