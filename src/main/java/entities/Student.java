@@ -38,4 +38,8 @@ public class Student extends User implements Serializable {
     public Course[] getCourseEnrolled() {
         return this.courseEnrolled;
     }
+
+    public int getNumberOfCourses() {
+        return numberOfCourses;
+    }
 }

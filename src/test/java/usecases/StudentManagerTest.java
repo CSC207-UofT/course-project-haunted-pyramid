@@ -4,8 +4,6 @@ import entities.Student;
 import org.junit.Before;
 import org.junit.Test;
 
-import usecases.StudentManager;
-
 import java.util.ArrayList;
 import java.util.UUID;
 
