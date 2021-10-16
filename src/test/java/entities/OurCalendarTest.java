@@ -1,3 +1,5 @@
+package entities;
+
 import org.junit.Before;
 import org.junit.Test;
 import entities.OurCalendar;
