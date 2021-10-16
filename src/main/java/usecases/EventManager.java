@@ -1,5 +1,6 @@
 package usecases;
 
+import java.time.LocalTime;
 import java.util.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -149,21 +150,25 @@ public class EventManager {
 
     //TODO replace entities.Event with subclass of entities.Event for free slots - implements repeatable -
     // list of events under one name
-    public ArrayList<Event> freeSlots(LocalDateTime start, LocalDateTime end){
-        ArrayList<Event> events = timeOrder(new ArrayList<Event>(this.eventMap.values()));
-        ArrayList<Event> freeSlots = new ArrayList<Event>();
-        if (start.isBefore(events.get(0).getStartTime())){
-            freeSlots.add(new Event(1, "before " + events.get(0).getName(), start,
-                    events.get(0).getStartTime()));
-        }
-        for (int i = 0; i < events.size()-1; i++){
-            if (events.get(i).getEndTime().isBefore(events.get(i+1).getStartTime())){
-                freeSlots.add(new Event(1, "before " + events.get(i+1).getName(), events.get(i).getEndTime(),
-                        events.get(i+1).getStartTime()));
-            }
-        }
-        return freeSlots;
-    }
+    //TODO finish implementation for day instead of frame
+//    public ArrayList<Event> freeSlots(LocalDate day){
+//        ArrayList<Event> events = new ArrayList<Event>((this.getDay(day).values()));
+//        events = this.timeOrder(events);
+//        ArrayList<Event> freeSlots = new ArrayList<Event>();
+//        if (LocalTime.of(0, 0).isBefore(LocalTime.of(events.get(0).getStartTime().getHour(),
+//                events.get(0).getStartTime().getMinute()))){
+//            freeSlots.add(new Event(1, "before " + events.get(0).getName(),
+//                    LocalDateTime.of(day, LocalTime.of(0, 0)),
+//                    events.get(0).getStartTime()));
+//        }
+//        for (int i = 0; i < events.size()-1; i++){
+//            if (events.get(i).getEndTime().isBefore(events.get(i+1).getStartTime())){
+//                freeSlots.add(new Event(1, "before " + events.get(i+1).getName(), events.get(i).getEndTime(),
+//                        events.get(i+1).getStartTime()));
+//            }
+//        }
+//        return freeSlots;
+//    }
 
 
 }
