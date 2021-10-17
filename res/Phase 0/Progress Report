@@ -69,7 +69,8 @@ serializable IO for reading and writing student info to files, and will continue
 file writing for saving student data and events. He also worked on the LoginController such that it is fully
 implemented to both login and sign up. StudentController followed next with EventController since we wanted to
 separate certain aspects of the controller-level-code into separate controllers of their own, divided by specific
-roles or entity types.
+roles or entity types. Additional controllers for better organization and cleanup of all of the code in the program
+will be accomplished by the end of phase 1.
 
 Malik has been working on implementing the course and student entities which will be used more when we
 begin saving information and accumulating a database of course information and possibly extend to automate some
