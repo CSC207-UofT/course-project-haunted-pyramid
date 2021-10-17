@@ -13,21 +13,22 @@ public class Course {
 
     public Course(String name) {
         this.name = name;
-        ArrayList<Event> eventList = new ArrayList<>();
+        this.taskList = new HashMap<>();
         for(String eventName : courseRelatedEvents){
-            this.taskList = new HashMap<>();
+            ArrayList<Event> eventList = new ArrayList<>();
             this.taskList.put(eventName, eventList);
         }
+        ArrayList<Event> eventList = new ArrayList<>();
         this.taskList.put("Others", eventList);
     }
 
     public boolean addEvent(Event event){
-        Event[] thisEvent;
         if (this.taskList.containsKey(event.getName())){
             this.taskList.get(event.getName()).add(event);
         }
         else{
-            this.taskList.get("Others").add(event);
+            ArrayList<Event> eventList = this.taskList.get("Others");
+            eventList.add(event);
         }
         return true;
     }
