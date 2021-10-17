@@ -10,7 +10,8 @@ Entities:
 Student
 Course
 Calendar (daily, weekly, monthly)
-Event (assignment, reading, etc)
+Event (with children assignment, reading, etc)
+Interfaces: Fluid, Repeatable, AutoSchedulable (implemented by child classes of Event to allow them to be scheduled in loops in different ways)
 
 Use Cases:
 StudentManager - manage student entity, changing names, student login info
