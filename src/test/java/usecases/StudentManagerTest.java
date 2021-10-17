@@ -38,7 +38,8 @@ public class StudentManagerTest {
 
     @Test
     public void testGetAllStudents() {
-        assertEquals(studentManager.getAllStudents(), studentList);
+        assertTrue(studentManager.getAllStudents().contains(studentList.get(0)));
+        assertTrue(studentManager.getAllStudents().contains(studentList.get(1)));
     }
 
     @Test(timeout = 100)
