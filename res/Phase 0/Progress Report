@@ -32,6 +32,7 @@ events.
 
 - Gateways: IOSerializable
 serializes/deserializes files storing student info, course info, event and calendar info.
+***look at specifications***
 
 - Presenter: CalendarPresenter
 
@@ -63,8 +64,13 @@ be continuing to develop the calendar related classes to do more complex schedul
 automatically scheduled events, as well as cleaning up the possible structural issues in CalendarManager
 (such as dependency on Event entity)
 
-Sebin has been working on the MainController and serializable IO for reading and writing student
-info to files, and will continue to work on the gateways and file writing for saving student data and events.
+Sebin has been working on the MainController and make the entire program runnable by the end of phase 0, and
+serializable IO for reading and writing student info to files, and will continue to work on the gateways and
+file writing for saving student data and events. He also worked on the LoginController such that it is fully
+implemented to both login and sign up. StudentController followed next with EventController since we wanted to
+separate certain aspects of the controller-level-code into separate controllers of their own, divided by specific
+roles or entity types. Additional controllers for better organization and cleanup of all of the code in the program
+will be accomplished by the end of phase 1.
 
 Malik has been working on implementing the course and student entities which will be used more when we
 begin saving information and accumulating a database of course information and possibly extend to automate some

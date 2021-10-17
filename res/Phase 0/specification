@@ -143,6 +143,9 @@ IOSerializable
 
 Serializes and deserializes information stored in file about students, their events and calendars. It should be able to
 be updated as the actions happen. The file should be saved in the protected area with security.
+*** Note that importing entities into gateways is not clean architecture, but we implemented our code to be that way.
+This is necessary because we need to type cast the read object as an ArrayList<Student> when deserializing the file.
+This could change through code optimization or new insight for later phases of the program. ***
 
 Presenter:
 
