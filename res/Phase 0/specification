@@ -7,7 +7,7 @@ They will add tasks with a specified number of hours they would like to spend wo
 A calendar will algorithmically scheduled
 
 Entities:
-Student
+User (Student)
 Course
 Calendar (daily, weekly, monthly)
 Event (with children assignment, reading, etc)
@@ -26,6 +26,7 @@ open gateway to first read from JSON file)
 EventController - for scheduling - runs scheduling methods and calls on CalendarManager and EventManager to add
 and schedule events
 LoginController - runs login process
+StudentController - controlls changes to student such as name, preferences
 
 Gateway: JSON
 - IOSerializable - serializes / deserializes info stored in file about students, their events and calendars
