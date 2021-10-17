@@ -15,7 +15,6 @@ public class MainController {
 
     private final IOSerializable ioSerializable;
     private final Scanner scanner = new Scanner(System.in);
-    private final int iD = 1;
 
     public MainController() {
         //Instantiation of the IOSerializable
