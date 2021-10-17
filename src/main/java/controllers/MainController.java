@@ -1,7 +1,6 @@
 package controllers;
 
 import gateways.IOSerializable;
-import presenters.CalendarPresenter;
 import usecases.CalendarManager;
 import usecases.EventManager;
 
@@ -10,28 +9,24 @@ import java.util.Scanner;
 
 public class MainController {
 
-    private EventController eventController;
-    private EventManager eventManager;
-    private CalendarManager calendarManager; //May be updated to CalendarController
-    private CalendarPresenter calendarPresenter;
-    private LoginController loginController;
-    private StudentController studentController;
+    private final EventController eventController;
+    private final LoginController loginController;
+    private final StudentController studentController;
 
-    private IOSerializable ioSerializable;
-    private Scanner scanner = new Scanner(System.in);
-    private int iD = 1;
+    private final IOSerializable ioSerializable;
+    private final Scanner scanner = new Scanner(System.in);
+    private final int iD = 1;
 
     public MainController() {
         //Instantiation of the IOSerializable
         this.ioSerializable = new IOSerializable();
-        this.calendarManager = new CalendarManager();
+        //May be updated to CalendarController
+        CalendarManager calendarManager = new CalendarManager();
         this.studentController = new StudentController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.loginController = new LoginController(this.studentController);
         this.displayInitScreen();
-        this.eventManager = new EventManager();
-        this.calendarPresenter = new CalendarPresenter(this.calendarManager);
-        this.eventController = new EventController(this.eventManager, this.calendarManager);
-        this.calendarPresenter = new CalendarPresenter(this.calendarManager);
+        EventManager eventManager = new EventManager();
+        this.eventController = new EventController(eventManager, calendarManager);
         //TODO after phase 0, EventManager and CalendarManager specific to student - saved data - move to controllers
 
         // this.calendarPresenter.testPresenter();

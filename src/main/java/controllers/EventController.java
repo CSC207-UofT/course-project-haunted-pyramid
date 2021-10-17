@@ -3,7 +3,7 @@ import usecases.CalendarManager;
 import usecases.EventManager;
 import java.util.Scanner;
 import java.util.UUID;
-import presenters.CalendarPresenter;
+import presenters.CalendarPresenter; // JUST FOR THE DEMONSTRATION
 
 public class EventController {
 
@@ -37,6 +37,9 @@ public class EventController {
                     Integer.parseInt(dateParts[2]), Integer.parseInt(dateParts[3]),  Integer.parseInt(dateParts[4]),
                     Integer.parseInt(timeParts[0]), Integer.parseInt(timeParts[1]));
             this.calendarManager.addToCalendar(eventManager.getEvent(title));
+
+
+            // THIS JUST FOR THE TESTING. WILL BE SEPARATED IN THE FUTURE
             System.out.println(this.calendarPresenter.showMonthCalendar(Integer.parseInt(dateParts[0]),
                     Integer.parseInt(dateParts[1])));
         }

@@ -1,19 +1,18 @@
 package entities;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
+
 
 public class Course {
 
-    private final String[] courseRelatedEvents = new String[]{"Assigment", "Reading", "Test", "Project"};
-    private String name;
-    private HashMap<String, ArrayList<Event>> taskList;
+    private final String name;
+    private final HashMap<String, ArrayList<Event>> taskList;
 
     public Course(String name) {
         this.name = name;
         this.taskList = new HashMap<>();
+        String[] courseRelatedEvents = new String[]{"Assigment", "Reading", "Test", "Lecture", "Tutorial"};
         for(String eventName : courseRelatedEvents){
             ArrayList<Event> eventList = new ArrayList<>();
             this.taskList.put(eventName, eventList);

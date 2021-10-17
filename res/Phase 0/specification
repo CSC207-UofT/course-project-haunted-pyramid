@@ -8,31 +8,162 @@ A calendar will algorithmically scheduled
 
 Entities:
 User (Student)
+
+A User class sets up a class (parent class) to store personal information of the user.
+Also, the class should be able to store the username and password information that belong to a specific user.
+Student is a child class of user that has attribute related to courses. The program can enrol the student to a course
+and store what courses they are enrolled to.
+
 Course
-Calendar (daily, weekly, monthly)
+
+A class that stores different types of events (test, assignment, reading, lecture, tutorial) that belong in
+the same course together. You can add the events to the course or remove them from the collection.
+
+OurCalendar (daily, weekly, monthly)
+
+A class that can generate a calendar for the given year and month.
+It allows the program to add events to the calendar which will get updated on the calendar immediately for the event's
+date. The program can also check for the conflict and update the conflict related information such as if there exist
+any conflict or what are the events that are conflicting. The program should also allow the removal of the event from
+the calendar. The class should be able to tell calendar related information such as the number of days for the month.
+
 Event (with children assignment, reading, etc)
-Interfaces: Fluid, Repeatable, AutoSchedulable (implemented by child classes of Event to allow them to be scheduled in loops in different ways)
+
+An Event will be a parent class for all the event related classes (assignment, reading, test, project, etc).
+Event related classes should be able to store the start time and end time information (along with unique ID And name).
+Also, they should be able to tell the length of the event.
+They should be able to check with other events to see if there will be conflicts or not.
+
+
+Assignment
+
+Assignment is a child class of Event.
+It should be able to store the number of hours needed which will be ideally determined with an algorithm through machine
+learning with a collection of data (initially will be manually input by the user). It will collect number of hours spent
+by the user.
+The assignment class should give out the due date information along with the work session length.
+
+Reading
+
+TO BE DISCUSSED AND IMPLEMENTED
+
+Test
+
+TO BE DISCUSSED AND IMPLEMENTED
+
+Tutorial
+
+TO BE DISCUSSED AND IMPLEMENTED
+
+Labs
+
+TO BE DISCUSSED AND IMPLEMENTED
+
+Others
+
+TO BE DISCUSSED AND IMPLEMENTED
+
+
+Interfaces:
+
+Fluid
+
+
+
+Repeatable
+
+
+
+
+
+AutoSchedulable
+
 
 Use Cases:
-StudentManager - manage student entity, changing names, student login info
-CourseManager - make new course entity, delete course entity, change a course
-CalendarManager - add courses, to calendar, add Events to calendar, change to weekly calendar, daily calendar,
-analyse conflicts in calendar
-EventManager - creating, storing, returning information, and changing Events
 
-Controllers
-MainController - run main program (HTML, or consol, communicate to other controllers to initialize,
-open gateway to first read from JSON file)
-EventController - for scheduling - runs scheduling methods and calls on CalendarManager and EventManager to add
-and schedule events
-LoginController - runs login process
-StudentController - controlls changes to student such as name, preferences
+StudentManager
 
-Gateway: JSON
-- IOSerializable - serializes / deserializes info stored in file about students, their events and calendars
+StudentManager should be able to create/add a student class and store them with their ID.
+It allows the comparison with the username and password and should be able to give a prompt that if the user (student)
+is the right user or not.
 
-Presenters
-CalendarPresenter - displays calendar images for the user to view.
+CourseManager
 
-Command Line Interface:
-Format: console initially, HTML/CSS implementation
+CourseManager should be able to collect all the courses and provide with information
+(all the events) related to a chosen course. Once the courses are set, the class should enable the student to know what
+courses they are enrolled to. The program should enable addition or removal of courses from the collection as well.
+
+
+CalendarManager
+
+CalendarManager can set up a 7 months of calendar (3 month future, current month, 3 month past) that can be viewed
+as monthly (entire month), weekly (7 days starting from the chosen date) and daily (chosen date only). Program should
+enable users to add Event on any of the 7 calendars with their choice or remove from the calendar with their choice of
+date as well. The calendar should be able to notify any conflict information that could exist for the chosen month.
+The class should also provide methods that can output information of added events' names and
+timelines for the chosen month.
+
+EventManager
+
+
+
+Controllers:
+
+MainController
+
+MainController should be able to compile all the other controllers and run each of the controllers in the
+appropriate steps. LoginController to ask user to log in -> Provide choices to the user to choose (such as add event,
+remove event, change profile, view calendar etc...) -> Event Controller to add or remove events or StudentController
+to modify the user information etc...
+The mainController also accesses StudentController with the saved date to prompt the log in information or write a new
+log in information using IOSerializable.
+
+
+EventController
+
+EventController should give out the options for users to choose (add or removal of the events etc...). Will get inputs
+from the user to create the right type of event and store it into the appropriate calendar via scheduling. Depending on
+the implementation, the class should perform certain algorithm (i.e. spread the event throughout the month or week)
+to effectively schedule the events and give out satisfying result.
+
+LoginController
+
+LoginController allows user to input their username and password. The class compares the information and determine if
+a user has provided with the right information. The class should also be able to provide with an option to sign up for
+the user and store the data by passing it to the StudentController.
+
+StudentController
+
+StudentController class should allow the access to StudentManager for creation of new student profile. It should allow
+the user to modify their profile or username and password. It should also retrieve every student related
+saved data that were stored before. The controller also should enable the user to set up the preferences regarding
+their scheduling (i.e. avoid certain times or dates)
+
+Gateway:
+
+IOSerializable
+
+Serializes and deserializes information stored in file about students, their events and calendars. It should be able to
+be updated as the actions happen. The file should be saved in the protected area with security.
+
+Presenter:
+
+CalendarPresenter
+
+CalendarPresenter class should be able to display calendar to the user. The image must be visually satisfying and easy
+to understand. Depending on the implication, the displayed calendar should give out options
+that link to the controllers.
+
+
+How the program should run:
+
+When the main body runs, it will run the main controller which will compile all the other controllers and run them
+in order of the information provided by the user. If the user had already provided some information before, the stored
+data will be recalled from the ser file stored and create the initial set up.
+
+Each controller will do their tasks (mentioned above) to fulfill the user's task such as add an event to the calendar,
+modify their profile etc... The user should be able to see the updated calendar as a result. For the assignments or any
+other events that need multiple hours of preparation, the program will spread the estimated workload (initially gathered
+from manual inputs but later create good estimations depending on the data stored) along the calendar before the due
+date while following the user's preferences. Once the performances are done, the user should be able to see the updated
+graphical calendar. The information will be stored for this user and will be recalled in the future again.
