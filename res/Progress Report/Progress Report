@@ -1,5 +1,3 @@
-Has your group provided a brief summary of:
- 
 Our project is a Scheduling program that allows students to create different kinds of events such as tests,
 assignments, repeating lectures and other more generic events and track them in a calendar. The program
 will also automatically schedule work periods associated with events based on the input work time of the user.
@@ -9,10 +7,11 @@ IOSerializable controller. The MainController instantiates all the other control
 handles scheduling of events, and the login controller handles student information and login status. We are using
 a text based interface for now, and plan to extend to use JavaFX in the future.
 Our CRC model includes:
-- Interfaces: Repeatable, Fluid
+- Interfaces: Repeatable, Fluid, Autoschedulable
 Repeatable is implemented by event types such as lecture, to allow scheduling of lists of events of the same
 name. Fluid is implemented by event types such as assignment, to assign non-scheduled hours that can be
-autoscheduled by the program (work sessions)
+autoscheduled by the program (work sessions), and autoshcedulable makes specific events (work sessions) 
+eligible for autoscheduling and reconfiguring without fixed start and end times.
 - Entities: Event [children: Lecture, Reading, Lab, Test, Assignment, Tutorial, Other], Course, Student,
 OurCalendar. These are listed by Parent class at the top, followed by its children.
 - Use Cases: CalendarManager, EventManager, StudentManager, CourseManager
@@ -28,7 +27,7 @@ We implemented the maincontroller with the intention of delegating some of its t
 the future, as well as several other controllers such as StudentController, CourseController, and
 CalendarController as the functionaliy of our program expands to include more complex interaction with these
 entities, in order to better satisfy the single responsibility principle. Our scenario uses a main controller,
-a login controller, the basic Event entity, the OurCalendar Entity, the Student Entity, and each of the student,
+a login controller, an Event controllre, the basic Event entity, the OurCalendar Entity, the Student Entity, and each of the student,
 event, and calendar managers. it also uses the calendarPresenter.
 It follows the user signing up through the login controller and text IO, having an empty calendar displayed by
 the controller using the calendarPresenter. They are prompted to add an event by the controller, which takes
@@ -62,7 +61,7 @@ to modify without raising errors in other parts of the program. We have focused 
 classes and adhering to the single responsibility principle, and it has made the implementation of the basic
 skeleton of our code a fairly smooth process. Our primary issue is our ineffective use of github, but that is
 a workable problem. our other concern is for our graphic user interface, and whether we should use JavaFX or
-commit to learning enough HTML/CSS and Javadoc and a group to implement that in the time given. What would be a
+commit to learning enough HTML/CSS and Javadoc as a group to implement that in the time given. What would be a
 realistic GUI to aim for?
 
 
