@@ -8,9 +8,9 @@ public class LoginController {
 
     private boolean loggedIn;
 
-    private StudentController studentController;
+    private final StudentController studentController;
 
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     public LoginController(StudentController studentController) {
         this.loggedIn = false;

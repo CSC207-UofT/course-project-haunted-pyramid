@@ -7,10 +7,10 @@ import presenters.CalendarPresenter; // JUST FOR THE DEMONSTRATION
 
 public class EventController {
 
-    private EventManager eventManager;
-    private CalendarManager calendarManager;
-    private Scanner scanner = new Scanner(System.in);
-    private CalendarPresenter calendarPresenter;
+    private final EventManager eventManager;
+    private final CalendarManager calendarManager;
+    private final Scanner scanner = new Scanner(System.in);
+    private final CalendarPresenter calendarPresenter;
 
     public EventController(EventManager eventManager, CalendarManager calendarManager){
         this.eventManager = eventManager;

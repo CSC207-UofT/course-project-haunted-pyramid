@@ -9,8 +9,8 @@ import java.util.UUID;
 
 public class StudentManager {
 
-    private HashMap<UUID, Course[]> studentMap;
-    private HashMap<UUID, Student> studentInfo;
+    private final HashMap<UUID, Course[]> studentMap;
+    private final HashMap<UUID, Student> studentInfo;
 
     public StudentManager(ArrayList<Student> students){
         this.studentMap = new HashMap<>();
