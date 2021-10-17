@@ -12,7 +12,7 @@ public class CourseManager {
     private ArrayList<Course> courseList;
 
     public CourseManager(ArrayList<Course> courses){
-        this.courseList.addAll(courses);
+        courseList = courses;
     }
 
     public ArrayList<Course> getCourseList() {
@@ -44,7 +44,4 @@ public class CourseManager {
         }
         return true;
     }
-
-
-
 }
