@@ -1,14 +1,10 @@
 package controllers;
 
-import entities.Event; // Needs to be removed after implementing EventController/EventManager
 import gateways.IOSerializable;
 import presenters.CalendarPresenter;
 import usecases.CalendarManager;
 import usecases.EventManager;
 
-import java.lang.reflect.Array;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 

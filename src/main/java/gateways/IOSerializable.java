@@ -1,7 +1,7 @@
 package gateways;
 
 //IO
-import entities.Student;
+import entities.Student; // TODO change this to StudentManager or higher
 
 import java.io.*;
 //util
@@ -27,7 +27,7 @@ public class IOSerializable {
      * @return A boolean whether the user has save files.
      */
     public boolean hasSavedData() {
-        List<String> paths = Arrays.asList(STUDENTS_FILEPATH);
+        List<String> paths = List.of(STUDENTS_FILEPATH);
         //List<String> paths = Arrays.asList(EVENTS_FILEPATH, TASKS_FILEPATH, STUDENTS_FILEPATH, CALENDARS_FILEPATH)
         for (String path : paths) {
             if (!new File(path).exists()) return false;
