@@ -1,1 +1,0 @@
-Please view our Powerpoint based [CRC cards](https://utoronto-my.sharepoint.com/:p:/g/personal/qidong_yan_mail_utoronto_ca/ETVebbCFRjxKozGHg24-OpABR8zSyRQXr0fR12Ks_p7nzQ?email=yutian.feng%40mail.utoronto.ca&e=Zfxskh)
