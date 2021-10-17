@@ -1,6 +1,5 @@
 package controllers;
 
-import controllers.StudentController;
 
 import java.util.Scanner;
 import java.util.UUID;

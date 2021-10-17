@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class CourseManager {
 
-    private ArrayList<Course> courseList;
+    private final ArrayList<Course> courseList;
 
     public CourseManager(ArrayList<Course> courses){
         courseList = courses;
@@ -38,10 +38,9 @@ public class CourseManager {
         return true;
     }
 
-    public boolean createCourseList(Student student){
+    public void createCourseList(Student student){
         for(Course course : this.courseList){
             student.addCourse(course);
         }
-        return true;
     }
 }

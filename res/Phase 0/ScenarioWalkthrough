@@ -1,4 +1,6 @@
 Scenario walk through:
+
+
 MainController is instantiated when program is run.
 Controller instantiates IO controller, and login controller with default logged in false
 The MainController displays the login screen, prompts user to 'Log In', 'sign up' or 'exit'
@@ -11,5 +13,4 @@ to true. main controller displays the main screen. Controller prompts user to en
 User enters 'add', controller runs 'add event' through EventController
 EventController prompts user to enter name of event, year of event, month, day, start time, end time. Passes
 user input to EventManager to create event, and CalendarManager to add event to open calendar.
-main controller requests CalendarPresenter present calendar again with addition of new event, goes back to
-main program where user is prompted to 'add' or 'exit'
+CalendarPresenter present calendar with addition of a new event, asks the user to 'add' or 'exit' the event again.

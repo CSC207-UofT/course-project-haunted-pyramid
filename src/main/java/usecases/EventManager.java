@@ -9,28 +9,29 @@ import interfaces.AutoSchedule;
 import interfaces.Repeated;
 import interfaces.Fluid;
 
-public class EventManager {
-    private Map<String, Event> eventMap;
-    private Map<String, ArrayList<AutoSchedule>> fluidSessions;
-    private Map<String, ArrayList<Repeated>> occurenceLists;
+public class EventManager{
+    private final Map<String, Event> eventMap;
+    // STYLE ERROR BECAUSE THE CLASSES IMPLEMENTING THE INTERFACES ARE NOT IMPLEMENTED YET
+    private final Map<String, ArrayList<AutoSchedule>> fluidSessions;
+    private final Map<String, ArrayList<Repeated>> occurrenceLists;
     /**
      * constructor for event manager
      * @param events a list of the current users events
      */
     public EventManager(List<Event> events){
         this.eventMap = new HashMap<>();
-        this.occurenceLists = new HashMap<>();
+        this.occurrenceLists = new HashMap<>();
         this.fluidSessions = new HashMap<>();
 
         for (Event event: events){
             this.eventMap.put(event.getName(), event);
-            if (event instanceof Repeated){
-                this.occurenceLists.put(event.getName(), ((Repeated) event).occurrences());
+            if (event instanceof Repeated){ // NOT IMPLEMENTED YET
+                this.occurrenceLists.put(event.getName(), ((Repeated) event).occurrences());
             }
-            if (event instanceof Fluid){
+            if (event instanceof Fluid){ // NOT IMPLEMENTED YET
                 this.fluidSessions.put(event.getName(), ((Fluid) event).getFluidSessions());
             }
-            if (event instanceof AutoSchedule){
+            if (event instanceof AutoSchedule){ // NOT IMPLEMENTED YET
                 ArrayList<AutoSchedule> event1 = new ArrayList<>();
                 event1.add((AutoSchedule) event);
                 this.fluidSessions.put(event.getName(), event1);
@@ -44,7 +45,7 @@ public class EventManager {
      */
     public EventManager(){
         this.eventMap = new HashMap<>();
-        this.occurenceLists = new HashMap<>();
+        this.occurrenceLists = new HashMap<>();
         this.fluidSessions = new HashMap<>();
     }
     /**
@@ -96,6 +97,7 @@ public class EventManager {
         //TODO make ID to be more flexible
         Event event = new Event(1, name, year, month, day, startHour, endHour, startMin, endMin);
         this.eventMap.put(event.getName(), event);
+        /*
         if (event instanceof Repeated){
             this.occurenceLists.put(event.getName(), ((Repeated) event).occurrences());
         }
@@ -107,6 +109,7 @@ public class EventManager {
             event1.add((AutoSchedule) event);
             this.fluidSessions.put(event.getName(), event1);
         }
+        */
     }
 
 

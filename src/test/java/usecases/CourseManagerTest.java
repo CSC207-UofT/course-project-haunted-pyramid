@@ -6,13 +6,11 @@ import entities.Student;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class CourseManagerTest {
 
@@ -39,17 +37,17 @@ public class CourseManagerTest {
         Course course1 = courseManager.getCourseList().get(0);
         Course course2 = courseManager.getCourseList().get(1);
         assertEquals(courseManager.getCourseInformation(course1).get("Others").get(0), event);
-        assertEquals(courseManager.getCourseInformation(course2).keySet().size(), 5);
+        assertEquals(courseManager.getCourseInformation(course2).keySet().size(), 6);
     }
 
     @Test
     public void testCreatCourseList() {
         Student student = new Student(UUID.randomUUID(), "malik", "malikl", "pass");
         courseManager.createCourseList(student);
-        Course[] courses = new Course[2];
-        courses[0] = courseManager.getCourseList().get(0);
-        courses[1] = courseManager.getCourseList().get(1);
-        assertEquals(student.getCourseEnrolled(), courses);
+        Course course1 = new Course("CSC207");
+        Course course2 = new Course("CSC209");
+        assertEquals(student.getCourseEnrolled()[0].getName(), course1.getName());
+        assertEquals(student.getCourseEnrolled()[1].getName(), course2.getName());
     }
 
 
