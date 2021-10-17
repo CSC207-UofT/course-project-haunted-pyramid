@@ -68,14 +68,24 @@ Interfaces:
 
 Fluid
 
-
+Implemented by any child class of event that is associated with some automatically schedulable work sessions.
+Any class that implements Fluid can return a default work session length associated, a list of work session
+events associated with it, and the total number of hours that must be spent in preparation of this event.
+The User should be able to set preferred work session lengths for certain events and have those work sessions
+automatically created, scheduled, and rescheduled as needed.
 
 Repeatable
 
-
+Implemented by any child class of event that has several occurences of the same name. Returns a list of
+start times / end times,
 
 AutoSchedulable
 
+Implemented by work sessions or any Event that doesn't have a User determined start and end time or set length.
+Will return a boolean 'scheduled' that is true when it has already been added to a calendar and false if it
+has not. EventManager and CalendarManafger can check if events are Autoschedulable, and events
+that implement AutoSchedulable will always be eligible to be rescheduled in algorithmic
+autoscheduling of these events around the non AutoSchedulable Events.
 
 Use Cases:
 
@@ -103,7 +113,13 @@ timelines for the chosen month.
 
 EventManager
 
-
+EventManager can store a map to all Events accessible to the User, referred to by ID. It stores a seperate map
+of repeated events, with the ID of one repeatable event pointing to its returned list of occurences. It also
+stores a map of AutoSchedulable Events. It can return Events by ID, create events, remove events, return
+information such as start and end times and lengths of events and of lists of events. It can also order lists
+of events chronologically, return an event for each free time slot in a list of events, and return a list of
+a day's events. The CalendarManager should be able to work with the EventManager to track and schedule events
+for the user, and replace free time slot events with automatically schedulable Events.
 
 Controllers:
 
