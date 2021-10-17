@@ -23,7 +23,8 @@ public class IOSerializable {
     public static final String CALENDARS_FILEPATH = "calendars.ser";
 
     /**
-     * Checks if the user has save files for all supported data types. Returns true if and only if all data types are saved.
+     * Checks if the user has save files for all supported data types.
+     * Returns true if and only if all data types are saved.
      * @return A boolean whether the user has save files.
      */
     public boolean hasSavedData() {
@@ -40,6 +41,7 @@ public class IOSerializable {
             InputStream file = new FileInputStream(STUDENTS_FILEPATH);
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
+            //Please refer to specifications for explanation
             ArrayList<Student> recoveredStudents = (ArrayList<Student>) input.readObject();
             input.close();
             return recoveredStudents;
