@@ -79,7 +79,7 @@ Repeatable
 Implemented by any child class of event that has several occurences of the same name. Returns a list of
 start times / end times,
 
-AutoSchedulable
+AutoSchedule
 
 Implemented by work sessions or any Event that doesn't have a User determined start and end time or set length.
 Will return a boolean 'scheduled' that is true when it has already been added to a calendar and false if it
