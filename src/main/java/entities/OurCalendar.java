@@ -6,10 +6,11 @@ import helpers.IsOverlapped;
 
 public class OurCalendar {
 
-    private List<Event> conflictEvent; // All the objects that are conflicting
-    private boolean conflict;  // if the calendar has any conflicted information
-    private final Map<Integer, List<Event>> calendarMap; // map of calendar
     private final List<Integer> dateInfo; //in the form of [year, month, # of days in the month]
+    private boolean conflict;  // if the calendar has any conflicted information
+    private List<Event> conflictEvent; // All the objects that are conflicting
+    private final Map<Integer, List<Event>> calendarMap; // map of calendar
+
 
 
     // if provided a year and month and date, create a calendar that matches that year and month
@@ -41,10 +42,10 @@ public class OurCalendar {
     public OurCalendar(){
         GregorianCalendar temp = new GregorianCalendar();
         OurCalendar tempCalendar = new OurCalendar(temp.get(Calendar.YEAR), temp.get(Calendar.MONTH) + 1);
-        this.conflictEvent = tempCalendar.conflictEvent;
-        this.conflict = tempCalendar.conflict;
-        this.calendarMap = tempCalendar.calendarMap;
         this.dateInfo = tempCalendar.dateInfo;
+        this.conflict = tempCalendar.conflict;
+        this.conflictEvent = tempCalendar.conflictEvent;
+        this.calendarMap = tempCalendar.calendarMap;
     }
 
     /**
@@ -148,16 +149,17 @@ public class OurCalendar {
             }
             // compare if any of the start time, end time overlaps within the day
             for (int j = 0; j < (timeInfo.size() - 1); j++){
-                for (List<Double> timePair : timeInfo.subList(j + 1, timeInfo.size())){
-                    IsOverlapped check = new IsOverlapped(timeInfo.get(j), timePair);
+                List<List<Double>> timeSubList = timeInfo.subList(j + 1, timeInfo.size());
+                for (int k = 0; k < timeSubList.size(); k++){
+                    IsOverlapped check = new IsOverlapped(timeInfo.get(j), timeSubList.get(k));
                     // if overlaps store the information needed
                     if (check.getResult()){
                         checkCollection.add(true);
                         if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j)))){
                             this.conflictEvent.add(this.calendarMap.get(i).get(j));
                         }
-                        if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j + 1)))){
-                            this.conflictEvent.add(this.calendarMap.get(i).get(j + 1));
+                        if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j + k + 1)))){
+                            this.conflictEvent.add(this.calendarMap.get(i).get(j + k + 1));
                         }
                     }
                     else {

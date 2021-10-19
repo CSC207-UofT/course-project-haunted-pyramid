@@ -1,0 +1,115 @@
+Our project is a Scheduling program that allows students to create different kinds of events such as tests,
+assignments, repeating lectures and other more generic events and track them in a calendar. The program
+will also automatically schedule work periods associated with events based on the input work time of the user.
+The main entities of the program are the Student, Event, Calendar and Course, each with their own allocated
+use case Manager class. The main controllers are the MainController, EventController, LoginController. We have a gateway
+IOSerializable to deal with the importing and exporting of the data.
+
+The MainController instantiates all the other controllers, while the EventController
+handles scheduling of events, and the login controller handles student information and login status. We are using
+a text based interface for now, and plan to extend to use JavaFX in the future.
+
+
+Our CRC model includes:
+
+- Interfaces: Repeatable, Fluid, Autoschedule
+Repeatable is implemented by event types such as lecture, to allow scheduling of lists of events of the same
+name. Fluid is implemented by event types such as assignment, to assign non-scheduled hours that can be
+autoscheduled by the program (work sessions), and autoshcedule makes specific events (work sessions)
+eligible for autoscheduling and reconfiguring without fixed start and end times.
+
+- Entities: Event [children: Lecture, Reading, Lab, Test, Assignment, Tutorial, Other], Course, Student,
+OurCalendar. These are listed by Parent class at the top, followed by its children.
+
+- Use Cases: CalendarManager, EventManager, StudentManager, CourseManager
+each is responsible for getting information about each, storing and creating instances of these objects, 
+and organizing them
+
+- Controllers: MainController, LoginController, EventController, StudentController
+Maincontroller instantiates all other controllers, LoginController tracks login status as program runs 
+and controls login process. EventController works with EventManager and CalendarManager to add and schedule
+events.
+
+- Gateways: IOSerializable
+serializes/deserializes files storing student info, course info, event and calendar info.
+***look at specifications***
+
+- Presenter: CalendarPresenter
+
+Displays the image of calendar for the user to view.
+
+
+We implemented the MainController with the intention of delegating some of its tasks to an EventController in
+the future, as well as several other controllers such as StudentController, CourseController, and
+CalendarController as the functionality of our program expands to include more complex interaction with these
+entities, in order to better satisfy the single responsibility principle.
+
+Our scenario uses a MainController, LoginController, EventController, the basic Event entity, the OurCalendar Entity,
+the Student Entity, and each of the student, event, and calendar managers. it also uses the CalendarPresenter.
+
+It follows the user signing up through the login controller and text IO, having an empty calendar displayed by
+the controller using the CalendarPresenter. They are prompted to add an event by the EventController, which takes
+input and passes it to the EventManager to add a new event, then passes the event to the CalendarManager
+which adds the event to the calendar. The controller then accesses CalendarPresenter again to re-display
+the calendar with the event added. Our skeleton program allows a user to log in, access a new (not stored) calendar,
+input basic same-day events with start and end times, and be notified of conflicts. We have implemented
+the basic controllers to run the scenario, and have created all the major entities and defined the basic Interfaces
+for special Events. There is one main class for running the program, and one presenter for formatting calendars,
+which is used in the scenario.
+
+Seo Won and Shameel have been working on the CalendarManager, Calendar, and CalendarPresenter classes. They have
+created a system for creating empty calendars, adding events to calendars, and displaying monthly calendars
+as is used in the scenario, as well as furthering the functionality with weekly and daily calendars. They will
+be continuing to develop the calendar related classes to do more complex scheduling, such as for repeating and
+automatically scheduled events, as well as cleaning up the possible structural issues in CalendarManager
+(such as dependency on Event entity)
+
+Sebin has been working on the MainController and make the entire program runnable by the end of phase 0, and
+serializable IO for reading and writing student info to files, and will continue to work on the gateways and
+file writing for saving student data and events. He also worked on the LoginController such that it is fully
+implemented to both login and sign up. StudentController followed next with EventController since we wanted to
+separate certain aspects of the controller-level-code into separate controllers of their own, divided by specific
+roles or entity types. Additional controllers for better organization and cleanup of all of the code in the program
+will be accomplished by the end of phase 1.
+
+Malik has been working on implementing the course and student entities which will be used more when we
+begin saving information and accumulating a database of course information and possibly extend to automate some
+aspects of scheduling based on course enrollment at UofT. He will continue to work on these entities as well as
+the student and course controllers and managers to better localize interactions with these classes as the
+program becomes more complex.
+
+Teddy has been working on keeping CRC cards upto date and developing documentation for the code. He will participate
+more in the coding for the phase 1 and assist others in need of extra hands.
+
+Taite has been working on the Event class, controller, and manager and has created a system for creating and adding
+basic events, storing them, and interacting with them. She plans to modify Events to use ID's instead of names to
+avoid repetition issues in the future, as well as designing and implementing several child classes of Event such as
+Assignments and Lectures that can be scheduled in more specific ways such as repeatedly and automatically, and
+created more easily with more default values and less user input.
+
+Since our entities all require their own fairly seperated hierarchies of classes to interact with
+them, we have been able to effectively delegate responsibilities with hardly any conflict, and have been able
+to modify without raising errors in other parts of the program. We have focused on maintaining the hierarchy of
+classes and adhering to the single responsibility principle, and it has made the implementation of the basic
+skeleton of our code a fairly smooth process. Our primary issue is our ineffective use of github, but that is
+a workable problem. our other concern is for our graphic user interface, and whether we should use JavaFX or
+commit to learning enough HTML/CSS and Javadoc as a group to implement that in the time given. What would be a
+realistic GUI to aim for? Our group will also need to work on implementing more efficient code styles can be cleaned up
+more.
+
+
+
+your specification? - Taite
+
+your CRC model? - Sean
+
+your scenario walk-through? - Sebin
+
+your skeleton program? - Malik
+
+what each group member has been working on and plans to work on next? - Teddy
+
+what has worked well so far with your design as you have started implementing the code? - Shameel
+
+Have you clearly indicated at least one open question your group is struggling with,
+so that your TA can address it in their feedback for phase 0?

@@ -10,13 +10,11 @@ import java.util.UUID;
 
 public class StudentController {
 
-    private IOSerializable ioSerializable;
-    private StudentManager studentManager;
+    private final StudentManager studentManager;
 
     public StudentController(boolean hasSavedData, IOSerializable ioSerializable) {
-        this.ioSerializable = ioSerializable;
         if (hasSavedData) {
-            this.studentManager = new StudentManager(this.ioSerializable.studentsReadFromSerializable());
+            this.studentManager = new StudentManager(ioSerializable.studentsReadFromSerializable());
         } else {
             ArrayList<Student> arrL = new ArrayList<>();
             Student sebin = new Student(UUID.randomUUID(), "Sebin Im", "sebinUsername", "sebinPassword");
