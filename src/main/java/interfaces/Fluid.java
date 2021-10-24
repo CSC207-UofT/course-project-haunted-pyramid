@@ -10,5 +10,4 @@ public interface Fluid {
     float getSessionsLength();
     float setSessionLength(float hours);
     float setFluidHours(float hours);
-    ArrayList<AutoSchedule> getFluidSessions();
 }

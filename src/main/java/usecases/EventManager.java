@@ -1,53 +1,34 @@
 package usecases;
 
-import java.time.LocalTime;
 import java.util.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import entities.Event;
-import interfaces.AutoSchedule;
-import interfaces.Repeated;
-import interfaces.Fluid;
+import entities.Test;
 
 public class EventManager{
-    private final Map<String, Event> eventMap;
+    private final Map<Integer, Event> eventMap;
     // STYLE ERROR BECAUSE THE CLASSES IMPLEMENTING THE INTERFACES ARE NOT IMPLEMENTED YET
-    private final Map<String, ArrayList<AutoSchedule>> fluidSessions;
-    private final Map<String, ArrayList<Repeated>> occurrenceLists;
     /**
      * constructor for event manager
      * @param events a list of the current users events
      */
     public EventManager(List<Event> events){
         this.eventMap = new HashMap<>();
-        this.occurrenceLists = new HashMap<>();
-        this.fluidSessions = new HashMap<>();
 
-        for (Event event: events){
-            this.eventMap.put(event.getName(), event);
-            if (event instanceof Repeated){ // NOT IMPLEMENTED YET
-                this.occurrenceLists.put(event.getName(), ((Repeated) event).occurrences());
-            }
-            if (event instanceof Fluid){ // NOT IMPLEMENTED YET
-                this.fluidSessions.put(event.getName(), ((Fluid) event).getFluidSessions());
-            }
-            if (event instanceof AutoSchedule){ // NOT IMPLEMENTED YET
-                ArrayList<AutoSchedule> event1 = new ArrayList<>();
-                event1.add((AutoSchedule) event);
-                this.fluidSessions.put(event.getName(), event1);
-            }
-
+        for (Event event: events) {
+            this.eventMap.put(event.getID(), event);
         }
     }
 
     /**
      * empty EventManager
+     *
      */
     public EventManager(){
         this.eventMap = new HashMap<>();
-        this.occurrenceLists = new HashMap<>();
-        this.fluidSessions = new HashMap<>();
     }
+
     /**
      * getDay returns a map of the events in a day
      * @param day the day that is being searched for
@@ -65,22 +46,16 @@ public class EventManager{
 
     /**
      *
-     * @param name the name of an existing event
+     * @param ID the id of an existing event
      * @return the event of this name
      */
-    public Event getEvent(String name){
-        return eventMap.get(name);
+    public <T extends Event> T getEvent(int ID){
+        return (T) eventMap.get(ID);
     }
 
-    /**
-     * removes an event from the set
-     * @param name the name to be removed
-     * @return the event just removed
-     */
-    public Event removeEvent(String name){
-        return eventMap.remove(name);
+    public ArrayList<Event> getAll(){
+        return new ArrayList<Event>(this.eventMap.values());
     }
-
     /**
      *
      * @param year year of event
@@ -91,41 +66,22 @@ public class EventManager{
      * @param startMin start minute
      * @param endMin end minute
      */
-    public void addEvent(String type, String name, int year, int month, int day, int startHour, int startMin, int endHour,
-                         int endMin){
-        //TODO add different types of Events (assignment, test, etc)
-        //TODO make ID to be more flexible
-        Event event = new Event(1, name, year, month, day, startHour, endHour, startMin, endMin);
-        this.eventMap.put(event.getName(), event);
-        /*
-        if (event instanceof Repeated){
-            this.occurenceLists.put(event.getName(), ((Repeated) event).occurrences());
-        }
-        if (event instanceof Fluid){
-            this.fluidSessions.put(event.getName(), ((Fluid) event).getFluidSessions());
-        }
-        if (event instanceof AutoSchedule){
-            ArrayList<AutoSchedule> event1 = new ArrayList<>();
-            event1.add((AutoSchedule) event);
-            this.fluidSessions.put(event.getName(), event1);
-        }
-        */
+
+    /**
+     * removes an event from the list by ID
+     * @param ID the id to be removed
+     * @return the event just removed
+     */
+    public Event removeEvent(int ID){
+        return eventMap.remove(ID);
+    }
+    public <T extends Event> void addEvent(T event){
+        eventMap.put(event.getID(), event);
     }
 
-
-    public String getName(Event event){
-        return event.getName();
-    }
+    public String getName(Event event){return event.getName();}
     public String getStart(Event event) {return event.getStartString();}
     public String getEnd(Event event) {return event.getEndString();}
-
-    public String getAllNames(){
-        StringBuilder list = new StringBuilder();
-        for (String name: eventMap.keySet()){
-            list.append(name);
-        }
-        return list.toString();
-    }
 
     public float totalHours(List<Event> events){
         float hours = 0;
@@ -149,6 +105,18 @@ public class EventManager{
             events.remove(earliest(events));
         }
         return sorted;
+    }
+
+    public void newTest(Integer id, String title, Integer year, Integer month, Integer day,
+                        Integer startHour, Integer endHour, Integer startMin, Integer endMin) {
+        Test test = new Test(id, title, year, month, day, startHour, endHour, startMin, endMin);
+        this.eventMap.put(test.getID(), test);
+    }
+
+    public void newAssignment(Integer id, String title, String course, Integer integer, Integer integer1, Integer integer2, Integer integer3, Integer integer4) {
+    }
+
+    public void newLecture(Integer id, String title, String course, Integer integer, Integer integer1, Integer integer2, Integer integer3, Integer integer4, Integer integer5, Integer integer6) {
     }
 
     //TODO replace entities.Event with subclass of entities.Event for free slots - implements repeatable -

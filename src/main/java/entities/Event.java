@@ -9,6 +9,7 @@ public class Event {
     private LocalDateTime endTime;
     private final int ID;
     private final String name;
+    private Course course;
     //private Course course; TODO courses are a thing
 
     /**
@@ -169,5 +170,4 @@ public class Event {
                 (this.startTime.isEqual(other.getStartTime())) ||
                 (this.startTime.isAfter(other.getStartTime()) && this.startTime.isBefore(other.getEndTime()));
     }
-
 }

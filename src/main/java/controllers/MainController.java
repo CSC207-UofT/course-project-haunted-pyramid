@@ -3,6 +3,7 @@ package controllers;
 import gateways.IOSerializable;
 import usecases.CalendarManager;
 import usecases.EventManager;
+import usecases.SessionManager;
 
 import java.util.Scanner;
 
@@ -25,7 +26,8 @@ public class MainController {
         this.loginController = new LoginController(this.studentController);
         this.displayInitScreen();
         EventManager eventManager = new EventManager();
-        this.eventController = new EventController(eventManager, calendarManager);
+        SessionManager sessionManager = new SessionManager();
+        this.eventController = new EventController(eventManager, calendarManager, sessionManager);
         //TODO after phase 0, EventManager and CalendarManager specific to student - saved data - move to controllers
 
         // this.calendarPresenter.testPresenter();

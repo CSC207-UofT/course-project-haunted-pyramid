@@ -40,12 +40,12 @@ public class EventManagerTest {
     }
     @Test (timeout = 100)
     public void testGetStart() {
-        assertEquals("2021-10-01 02:00", this.eventManager.getStart(this.eventManager.getEvent("1")));
+        assertEquals("2021-10-01 02:00", this.eventManager.getStart(this.eventManager.getEvent(1)));
     }
 
     @Test (timeout = 100)
     public void testGetEnd() {
-        assertEquals("2021-10-01 02:00", this.eventManager.getStart(this.eventManager.getEvent("1")));
+        assertEquals("2021-10-01 02:00", this.eventManager.getStart(this.eventManager.getEvent(1)));
     }
 
     @Test(timeout = 50)
@@ -54,14 +54,14 @@ public class EventManagerTest {
     }
     @Test
     public void testTimeOrder() {
-        ArrayList<Event> ordered = new ArrayList<>(Arrays.asList(this.eventManager.getEvent("1"),
-                this.eventManager.getEvent("2"),
-                this.eventManager.getEvent("3"), this.eventManager.getEvent("4"),
-                this.eventManager.getEvent("5")));
-        ArrayList<Event> unordered = new ArrayList<>(Arrays.asList(this.eventManager.getEvent("4"),
-                this.eventManager.getEvent("2"),
-                this.eventManager.getEvent("1"), this.eventManager.getEvent("5"),
-                this.eventManager.getEvent("3")));
+        ArrayList<Event> ordered = new ArrayList<>(Arrays.asList(this.eventManager.getEvent(1),
+                this.eventManager.getEvent(2),
+                this.eventManager.getEvent(3), this.eventManager.getEvent(4),
+                this.eventManager.getEvent(5)));
+        ArrayList<Event> unordered = new ArrayList<>(Arrays.asList(this.eventManager.getEvent(4),
+                this.eventManager.getEvent(2),
+                this.eventManager.getEvent(1), this.eventManager.getEvent(5),
+                this.eventManager.getEvent(3)));
         assertEquals(ordered, this.eventManager.timeOrder(unordered));
     }
 
