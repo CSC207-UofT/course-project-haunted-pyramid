@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Decorator</title>
+    <link rel="stylesheet" href="designQStyle.css">
+</head>
+<body>
+<h1>Decorator</h1>
+    <p1>The purpose of the decorator design pattern is to recursively wrap a core object in different 'decorator'
+        objects that enhance the functionality of the core object without changing the interface.
+        The pattern consists of a base interface, a core object that implements this interface, and a decorator
+        object that implements the interface, stores a base interface implementing object, and delegates the base
+        responsibilities to that object. The decorator class can then have any number of children that delegate the
+        core function to the decorator object.
+        The Structure implemented simply looks something like this:
+    </p1>
+
+    <pre>
+    <code>
+        public interface Printable {
+            void sayName(String name);
+        }
+
+        public class basePrinter implements Printable{
+            @Override
+            void sayName(String name){
+                System.out.println(name)
+            }
+        }
+
+        public class printerDecorator implements Printable{
+            private Printable wrappee;
+            @Override
+            void sayName(String name){
+                super.sayName(name);
+                wrappee.sayName(name);
+            }
+        }
+
+        public class addSmile extends printerDecorator {
+            @Override
+            void sayName(String name){
+                super.sayName(name + " :)")
+            }
+        }
+    </code>
+    </pre>
+    <ul>
+        <li>Printable is the interface</li>
+        <li>basePrinter is the core functional class</li>
+        <li>printerDecorator is the base decorator class</li>
+        <li>addSmile is a specific decoration</li>
+    </ul>
+</body>
+</html>
