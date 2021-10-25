@@ -6,51 +6,90 @@
     <link rel="stylesheet" href="designQStyle.css">
 </head>
 <body>
-<h1>Decorator</h1>
-    <p1>The purpose of the decorator design pattern is to recursively wrap a core object in different 'decorator'
+<h1>Decorator Design Pattern</h1>
+<h2>Part 1: What is Decorator?</h2>
+    <p>The purpose of the decorator design pattern is to recursively wrap a core object in different 'decorator'
         objects that enhance the functionality of the core object without changing the interface.
         The pattern consists of a base interface, a core object that implements this interface, and a decorator
         object that implements the interface, stores a base interface implementing object, and delegates the base
         responsibilities to that object. The decorator class can then have any number of children that delegate the
         core function to the decorator object.
         The Structure implemented simply looks something like this:
-    </p1>
+    </p>
 
     <pre>
     <code>
         public interface Printable {
-            void sayName(String name);
+            public void sayName(String name);
         }
 
-        public class basePrinter implements Printable{
+        public class Printer implements Printable{
+            public void Printer(){
+            }
             @Override
-            void sayName(String name){
+            public void sayName(String name){
                 System.out.println(name)
             }
         }
 
         public class printerDecorator implements Printable{
             private Printable wrappee;
+            public printerDecorator(Printable wrappee){
+                this.wrappee = wrappee;
+            }
             @Override
-            void sayName(String name){
-                super.sayName(name);
+            public void sayName(String name){
                 wrappee.sayName(name);
             }
         }
 
         public class addSmile extends printerDecorator {
+            public addSmile(Printable wrappee){
+                super(wrappee);
+            }
             @Override
             void sayName(String name){
-                super.sayName(name + " :)")
+                super.sayName(name + " :)");
             }
+        }
+
+        public class addFrown extends printerDecorator {
+            public addFrown(Printable wrappee){
+                super(wrappee);
+            }
+            @Override
+            void sayName(String name){
+                super.sayName(name + " :(");
+            }
+        }
+
+        public static void main(String[] args){
+            Printable p = new Printer();
+            Printable f = new addFrown(p);
+            Printable s = new addSmiley(p);
+            p.sayName("Taite");
+            //prints `Taite`
+            f.sayName("Taite");
+            //prints `Taite :(`
+            s.sayName("Taite");
+            // prints `Taite :)`
+            new addSmiley(f).sayName("Taite");
+            // prints `Taite :) :(`
         }
     </code>
     </pre>
     <ul>
-        <li>Printable is the interface</li>
-        <li>basePrinter is the core functional class</li>
-        <li>printerDecorator is the base decorator class</li>
-        <li>addSmile is a specific decoration</li>
+        <li>Printable is the base interface with a core function sayName that takes a String as a parameter</li>
+        <li>basePrinter is the core functional class that implements .sayName(String name) by printing name to
+            the screen when called </li>
+        <li>printerDecorator is the base decorator class that acts as a container for a Printer, declaring a
+            composite relationship with the base interface and delegating the method call .sayName(String name)
+            to the Printable object it contains </li>
+        <li>addSmile and addFrown are the decorations - the wrappers that delegate the method call .sayName(String name)
+            to super and add additional functionality, in this case appending a smile or a frown onto the end (or both
+            with recursive wrapping)</li>
     </ul>
+<h2>Part 2: Haunted Pyramid Opportunities for Decorator Implementation</h2>
+
 </body>
 </html>
