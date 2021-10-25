@@ -7,7 +7,8 @@
 </head>
 <body>
 <h1>Decorator Design Pattern</h1>
-<h2>Part 1: What is Decorator?</h2>
+<section>
+    <h2>Part 1: What is Decorator?</h2>
     <p>The purpose of the decorator design pattern is to recursively wrap a core object in different 'decorator'
         objects that enhance the functionality of the core object without changing the interface.
         The pattern consists of a base interface, a core object that implements this interface, and a decorator
@@ -89,7 +90,28 @@
             to super and add additional functionality, in this case appending a smile or a frown onto the end (or both
             with recursive wrapping)</li>
     </ul>
-<h2>Part 2: Haunted Pyramid Opportunities for Decorator Implementation</h2>
+</section>
 
+<h2>Part 2: Haunted Pyramid Opportunities for Decorator Implementation</h2>
+    <p>
+        The school scheduler has the capability to keep track of objects with a name, a start time and an end
+        time.
+        The idea of the actual function of the program besides as a database for these objects is to
+        automatically create and change collections of these objects in different ways based on user input
+        and internal scheduling algorithms.
+
+        The decorator pattern is used to dynamically add additional functionality to a basic object with a
+        set base interface, so if we wanted to implement this pattern (aside from within user preferences for
+        Calendar display eventually) it could be useful in the structure of some 'scheduler' Class
+        which would add simple occurences to the set of occurences by a basic schedule method, and be decorated
+        with child classes of a  such as 'weeklyRecursive', 'monthlyRecursive', 'workSessions'
+        If we wanted to reduce every scheduler to some basic functions:
+        <code>
+            getEndTime();
+            getStartTime();
+            getName();
+        </code>
+        for instance, we cou
+    </p>
 </body>
 </html>
