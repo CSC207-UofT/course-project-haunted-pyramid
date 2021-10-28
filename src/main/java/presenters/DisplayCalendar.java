@@ -8,5 +8,5 @@ public abstract class DisplayCalendar {
     public DisplayCalendar(CalendarManager cm){
         this.cm = cm;
     }
-    public abstract String displayCalendar();
+    protected abstract String displayCalendar();
 }

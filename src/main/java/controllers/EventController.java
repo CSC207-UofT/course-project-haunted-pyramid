@@ -2,20 +2,20 @@ package controllers;
 import usecases.CalendarManager;
 import usecases.EventManager;
 import java.util.Scanner;
-import java.util.UUID;
-import presenters.CalendarPresenter; // JUST FOR THE DEMONSTRATION
+
+import presenters.DisplayCalendarFactory; // JUST FOR THE DEMONSTRATION
 
 public class EventController {
 
     private final EventManager eventManager;
     private final CalendarManager calendarManager;
     private final Scanner scanner = new Scanner(System.in);
-    private final CalendarPresenter calendarPresenter;
+    private final DisplayCalendarFactory displayCalendarFactory;
 
     public EventController(EventManager eventManager, CalendarManager calendarManager){
         this.eventManager = eventManager;
         this.calendarManager = calendarManager;
-        this.calendarPresenter = new CalendarPresenter(this.calendarManager);
+        this.displayCalendarFactory = new DisplayCalendarFactory(this.calendarManager);
 
     }
     public void schedule(){
