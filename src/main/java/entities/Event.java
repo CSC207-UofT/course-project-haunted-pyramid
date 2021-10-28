@@ -37,10 +37,10 @@ public class Event {
      * @param startMin minute event starts (integer)
      * @param endMin minute event ends (integer)
      */
-    public Event(int ID, String name, int year, int month, int day, int startHour, int endHour, int startMin,
+    public Event(int IDe, String name, int year, int month, int day, int startHour, int endHour, int startMin,
                  int endMin){
         this.name = name;
-        this.ID = ID;
+        this.ID = IDe;
         this.startTime = LocalDateTime.of(year, month, day, startHour, startMin , 0);
         this.endTime = LocalDateTime.of(year, month, day, endHour, endMin , 0);
     }
