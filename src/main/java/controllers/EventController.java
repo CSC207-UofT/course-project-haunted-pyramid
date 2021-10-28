@@ -39,9 +39,9 @@ public class EventController {
             this.calendarManager.addToCalendar(eventManager.getEvent(title));
 
 
-            // THIS JUST FOR THE TESTING. WILL BE SEPARATED IN THE FUTURE
+            /*// THIS JUST FOR THE TESTING. WILL BE SEPARATED IN THE FUTURE
             System.out.println(this.calendarPresenter.showMonthCalendar(Integer.parseInt(dateParts[0]),
-                    Integer.parseInt(dateParts[1])));
+                    Integer.parseInt(dateParts[1])));*/
         }
         else{
             System.out.println("please check spelling and try again!");
