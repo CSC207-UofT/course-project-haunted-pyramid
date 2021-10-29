@@ -2,7 +2,7 @@ package presenters;
 
 import usecases.CalendarManager;
 
-public class DisplayDailyCalendar extends DisplayCalendar{
+public class DisplayDailyCalendar extends DisplayCalendar {
     private int year;
     private int month;
     private int date;
