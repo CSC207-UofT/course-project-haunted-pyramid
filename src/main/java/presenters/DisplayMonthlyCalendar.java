@@ -10,11 +10,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 
-public class DisplayMonthlyCalendar extends DisplayCalendar{
+public class DisplayMonthlyCalendar extends DisplayCalendar {
     private final int year;
     private final int month;
-    private List<Integer> keyList;
-    private Map<Integer, List<Event>> calendarMap;
+    private final List<Integer> keyList;
+    private final Map<Integer, List<Event>> calendarMap;
     List<String> dayOfWeekCollection = new ArrayList<>(){{
         add("SUNDAY");
         add("MONDAY");
@@ -40,13 +40,23 @@ public class DisplayMonthlyCalendar extends DisplayCalendar{
         StringBuilder result = new StringBuilder();
         List<Integer> usedDates = new ArrayList<>();
         List<Integer> usedContentDates = new ArrayList<>();
-        result.append(cf.StartFrame());
+        result.append(cf.startFrame("SUNDAY"));
         addDateRowToCalendar(result, usedDates, usedContentDates);
         addContentsToCalendar(result, usedContentDates);
         usedContentDates = new ArrayList<>();
-        result.append(cf.EndFrame());
+        result.append(cf.endFrame());
         int iteratorCounter = keyList.subList(usedDates.size(), keyList.size()).size();
         fillCalendar(cf, result, usedDates, usedContentDates, iteratorCounter);
+        List<String> conflicts = cm.notifyConflict(this.year, this.month);
+        if (conflicts.size() == 0){
+            result.append("There is no conflict for this month");
+        }
+        else {
+            result.append("The following items are having conflict: ");
+            for (String name : conflicts){
+                result.append(name);
+            }
+        }
         return result.toString();
     }
 
@@ -57,7 +67,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar{
                 addDateRowToCalendar(result, usedDates, usedContentDates);
                 addContentsToCalendar(result, usedContentDates);
                 usedContentDates = new ArrayList<>();
-                result.append(cf.EndFrame());
+                result.append(cf.endFrame());
             }
         }
         else if (21 < iteratorCounter){
@@ -65,7 +75,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar{
                 addDateRowToCalendar(result, usedDates, usedContentDates);
                 addContentsToCalendar(result, usedContentDates);
                 usedContentDates = new ArrayList<>();
-                result.append(cf.EndFrame());
+                result.append(cf.endFrame());
             }
         }
         else {
@@ -73,7 +83,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar{
                 addDateRowToCalendar(result, usedDates, usedContentDates);
                 addContentsToCalendar(result, usedContentDates);
                 usedContentDates = new ArrayList<>();
-                result.append(cf.EndFrame());
+                result.append(cf.endFrame());
             }
         }
     }
@@ -210,19 +220,5 @@ public class DisplayMonthlyCalendar extends DisplayCalendar{
 
             result.append("\n");
         }
-    }
-
-    public static void main(String[] args) {
-        CalendarManager cm = new CalendarManager();
-        Event event1 = new Event(1, "TEST213213213211", 2022, 1, 1, 13, 15, 10, 15);
-        Event event2 = new Event(2, "TESTTESTESTESTESTESTTESTESTES", 2022, 1, 1, 17, 20, 0, 0);
-        Event event3 = new Event(3, "TEST", 2022, 1, 5, 7, 9, 20, 30);
-        Event event4 = new Event(4, "TESTTTT", 2022, 1, 3, 3, 5, 0, 0);
-        cm.addToCalendar(event1);
-        cm.addToCalendar(event2);
-        cm.addToCalendar(event3);
-        cm.addToCalendar(event4);
-        DisplayMonthlyCalendar dmc = new DisplayMonthlyCalendar(cm, 2022, 1);
-        System.out.println(dmc.displayCalendar());
     }
 }
