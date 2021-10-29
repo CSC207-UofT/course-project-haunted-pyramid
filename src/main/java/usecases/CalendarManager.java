@@ -29,7 +29,7 @@ public class CalendarManager {
         this.currentYear = year;
 
         // Create a calendar of the current month
-        this.currentCalendar = new OurCalendar(year, month + 1);
+        this.currentCalendar = new OurCalendar(this.currentYear, this.currentMonth);
 
         cal.add(Calendar.MONTH, 1);
         int firstNextMonth = cal.get(Calendar.MONTH);
@@ -87,165 +87,6 @@ public class CalendarManager {
 
     }
 
-    /**
-     * Return Monthly Calendar
-     * When there is no argument, return the current month calendar
-     * @return Map of the current month calendar
-     */
-    public Map<Integer, List<Event>> getMonthlyCalendar(){
-        return this.currentCalendar.getCalendarMap();
-    }
-
-    /**
-     * Return Monthly Calendar for the given month and year
-     *
-     * == Representation Invariant ==
-     * month <= currentMonth + 3
-     * month >= currentMonth - 3
-     * @param month a chosen month for the calendar
-     * @return Map of the chosen month calendar
-     */
-    public Map<Integer, List<Event>> getMonthlyCalendar(int year, int month){
-        if (year > this.currentYear){
-            month = month + 12;
-        }
-        else if (year < this.currentYear){
-            month = month - 12;
-        }
-        if (month == this.currentMonth){
-            return this.currentCalendar.getCalendarMap();
-        }
-        else if (month > this.currentMonth && month - this.currentMonth <= 3){
-            return this.futureCalendar.get(month - this.currentMonth - 1).getCalendarMap();
-        }
-        else {
-            return this.pastCalendar.get((this.currentMonth - month) - 1).getCalendarMap();
-        }
-    }
-
-    /**
-     * Get weekly calender for the given year, month, and date
-     * @param year year of the desired weekly calendar
-     * @param month month of the desired weekly calendar
-     * @param date starting date of the desired weekly calendar
-     * @return map of weekly calendar starting from the desired date
-     */
-    public Map<Integer, List<Event>> getWeeklyCalendar(int year, int month, int date){
-        if (year > this.currentYear){
-            month = month + 12;
-        }
-        else if (year < this.currentYear){
-            month = month - 12;
-        }
-        int currentMonth = this.currentMonth;
-        Map<Integer, List<Event>> result = new HashMap<>();
-        if (currentMonth == month){
-            Map<Integer, List<Event>> currentCal = this.currentCalendar.getCalendarMap();
-            int numTotalDays = this.currentCalendar.getDateInfo().get(2);
-            weeklyCalGenerator(date, result, currentCal, numTotalDays, 0, this.futureCalendar);
-        }
-        else if (currentMonth < month && month - currentMonth <= 3){
-            Map<Integer, List<Event>> futureCal = this.futureCalendar.get(month - currentMonth - 1).getCalendarMap();
-            int numTotalDays = this.futureCalendar.get(month - currentMonth - 1).getDateInfo().get(2);
-            if (month - currentMonth == 3 && date > numTotalDays - 6){
-                for (int i = date; i <= numTotalDays; i++){
-                    result.put(i, futureCal.get(i));
-                }
-            }
-            else {
-                weeklyCalGenerator(date, result, futureCal, numTotalDays, month - currentMonth,
-                        this.futureCalendar);
-            }
-        }
-        else if (currentMonth > month && currentMonth - month <= 3){
-            Map<Integer, List<Event>> pastCal = this.pastCalendar.get(currentMonth - month - 1).getCalendarMap();
-            int numTotalDays = this.pastCalendar.get(currentMonth - month - 1).getDateInfo().get(2);
-            if (currentMonth - month == 3 && date > numTotalDays - 6){
-                int shortage = 7 - numTotalDays - date + 1;
-                for (int j = date; j <= numTotalDays; j++){
-                    result.put(j, pastCal.get(j));
-                }
-                for (int k = 1; k <= shortage; k++){
-                    result.put(k, this.currentCalendar.getCalendarMap().get(k));
-                }
-            }
-            else {
-                weeklyCalGenerator(date, result, pastCal, numTotalDays, currentMonth - month - 2,
-                        this.pastCalendar);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * returns a weekly calendar starting from today
-     * @return map of weekly calendar which starts from today
-     */
-    public Map<Integer, List<Event>> getWeeklyCalendar(){
-        return getWeeklyCalendar(this.currentYear, this.currentMonth, this.currentDate);
-    }
-
-    /**
-     * helper method for the getWeeklyCalendar Method
-     * tackles number of situations
-     * 1. if the date is less than numTotalDays - 6, appends all the weekly information starting from date to result
-     * 2. otherwise, append the current month's weekly information starting from date to result
-     * and append next month's weekly information starting from 1 (two combined should equal to seven days)
-     * @param date given date of the calendar
-     * @param result a map that will get updated as a result
-     * @param cal list of events that will be added to result
-     * @param numTotalDays totdl number of the day in the chosen month
-     * @param index indexing for the calendar objects
-     * @param futurePast Either this.futureCalendar or this.pastCalendar
-     */
-    private void weeklyCalGenerator(int date, Map<Integer, List<Event>> result, Map<Integer,
-            List<Event>> cal, int numTotalDays, int index, List<OurCalendar> futurePast) {
-
-        if (date <= numTotalDays - 6){
-            for (int i = date; i < date + 7; i++){
-                result.put(i, cal.get(i));
-            }
-        }
-        else {
-            int shortage = 7 - (numTotalDays - date + 1);
-            for (int j = date; j <= numTotalDays; j++){
-                result.put(j, cal.get(j));
-                for (int k = 1; k <= shortage; k++){
-                    Map<Integer, List<Event>> nextMonthCal = futurePast.get(index).getCalendarMap();
-                    result.put(k, nextMonthCal.get(k));
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns a daily calendar for the specific date
-     * @param year year of the calendar
-     * @param month month of the calendar
-     * @param date date of the calendar
-     * @return map of daily calendar for the specific date
-     */
-    public Map<Integer, List<Event>> getDailyCalendar(int year, int month, int date){
-        if (year > this.currentYear){
-            month = month + 12;
-        }
-        else if (year < this.currentYear){
-            month = month - 12;
-        }
-        Map<Integer, List<Event>> result = new HashMap<>();
-        if (month == this.currentMonth){
-            result.put(date, this.currentCalendar.getCalendarMap().get(date));
-        }
-        else if (month > this.currentMonth && month - this.currentMonth <= 3){
-            OurCalendar futureCal = this.futureCalendar.get(month - this.currentMonth -1);
-            result.put(date, futureCal.getCalendarMap().get(date));
-        }
-        else if (month < this.currentMonth && this.currentMonth - month <= 3){
-            OurCalendar pastCal = this.pastCalendar.get(this.currentMonth - month - 1);
-            result.put(date, pastCal.getCalendarMap().get(date));
-        }
-        return result;
-    }
 
     /**
      * Observe the chosen calendar to see if there is any conflict
@@ -437,62 +278,54 @@ public class CalendarManager {
         List<StringBuilder> timeList = new ArrayList<>();
         if (month == this.currentMonth) {
             for (Event item : this.currentCalendar.getCalendarMap().get(date)) {
-                StringBuilder tempString = new StringBuilder();
-                tempString.append(item.getStartString(), 11, 16);
-                tempString.append(" - ");
-                tempString.append(item.getEndString(), 11, 16);
+                StringBuilder tempString = generateTimeString(item);
                 timeList.add(tempString);
             }
         } else if (month == this.currentMonth + 1) {
             for (Event item : this.futureCalendar.get(0).getCalendarMap().get(date)) {
-                StringBuilder tempString = new StringBuilder();
-                tempString.append(item.getStartString(), 11, 16);
-                tempString.append(" - ");
-                tempString.append(item.getEndString(), 11, 16);
+                StringBuilder tempString = generateTimeString(item);
                 timeList.add(tempString);
             }
         } else if (month == this.currentMonth + 2) {
             for (Event item : this.futureCalendar.get(1).getCalendarMap().get(date)) {
-                StringBuilder tempString = new StringBuilder();
-                tempString.append(item.getStartString(), 11, 16);
-                tempString.append(" - ");
-                tempString.append(item.getEndString(), 11, 16);
+                StringBuilder tempString = generateTimeString(item);
                 timeList.add(tempString);
             }
         } else if (month == this.currentMonth + 3) {
             for (Event item : this.futureCalendar.get(2).getCalendarMap().get(date)) {
-                StringBuilder tempString = new StringBuilder();
-                tempString.append(item.getStartString(), 11, 16);
-                tempString.append(" - ");
-                tempString.append(item.getEndString(), 11, 16);
+                StringBuilder tempString = generateTimeString(item);
                 timeList.add(tempString);
             }
         } else if (month == this.currentMonth - 1) {
             for (Event item : this.pastCalendar.get(0).getCalendarMap().get(date)) {
-                StringBuilder tempString = new StringBuilder();
-                tempString.append(item.getStartString(), 11, 16);
-                tempString.append(" - ");
-                tempString.append(item.getEndString(), 11, 16);
+                StringBuilder tempString = generateTimeString(item);
                 timeList.add(tempString);
             }
         } else if (month == this.currentMonth - 2) {
             for (Event item : this.pastCalendar.get(1).getCalendarMap().get(date)) {
-                StringBuilder tempString = new StringBuilder();
-                tempString.append(item.getStartString(), 11, 16);
-                tempString.append(" - ");
-                tempString.append(item.getEndString(), 11, 16);
+                StringBuilder tempString = generateTimeString(item);
                 timeList.add(tempString);
             }
         } else if (month == this.currentMonth - 3) {
             for (Event item : this.pastCalendar.get(2).getCalendarMap().get(date)) {
-                StringBuilder tempString = new StringBuilder();
-                tempString.append(item.getStartString(), 11, 16);
-                tempString.append(" - ");
-                tempString.append(item.getEndString(), 11, 16);
+                StringBuilder tempString = generateTimeString(item);
                 timeList.add(tempString);
             }
         }
         return timeList;
+    }
+
+    /**
+     * helper method for getEventTimes
+     * @param item Event item
+     * @return String of event's time information (start time - end time)
+     */
+    private StringBuilder generateTimeString(Event item) {
+        StringBuilder tempString = new StringBuilder();
+        tempString.append(item.getStartString(), 11, 16);
+        tempString.append(" - ");
+        tempString.append(item.getEndString(), 11, 16);
+        return tempString;
     }
 
     /**
@@ -519,6 +352,16 @@ public class CalendarManager {
         return this.currentYear;
     }
 
+    public OurCalendar getCurrentCalendar() {
+        return this.currentCalendar;
+    }
+    public List<OurCalendar> getFutureCalendar(){
+        return this.futureCalendar;
+    }
+
+    public List<OurCalendar> getPastCalendar(){
+        return this.pastCalendar;
+    }
 }
 
 
