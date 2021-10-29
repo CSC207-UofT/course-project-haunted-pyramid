@@ -117,8 +117,15 @@ public class EventManager{
         return event.getName();
     }
     public String getStart(Event event) {return event.getStartString();}
+    public String getStartTime(Event event){
+        String[] date = event.getStartString().split("-");
+        return date[3] + "-" + date[4];
+    }
+    public String getEndTime(Event event){
+        String[] date = event.getEndString().split("-");
+        return date[3] + "-" + date[4];
+    }
     public String getEnd(Event event) {return event.getEndString();}
-
     public String getAllNames(){
         StringBuilder list = new StringBuilder();
         for (String name: eventMap.keySet()){
