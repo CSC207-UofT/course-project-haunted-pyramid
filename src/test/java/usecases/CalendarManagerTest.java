@@ -2,7 +2,7 @@ package usecases;
 
 import org.junit.Before;
 import org.junit.Test;
-import usecases.CalendarManager;
+
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
@@ -13,6 +13,9 @@ import entities.Event;
 
 public class CalendarManagerTest {
     CalendarManager calendarManager;
+    MonthlyCalendar getMonthlyCalendar = new MonthlyCalendar();
+    WeeklyCalendar getWeeklyCalendar = new WeeklyCalendar();
+    DailyCalendar getDailyCalendar = new DailyCalendar();
     int year;
     int month;
     int date;
@@ -30,7 +33,7 @@ public class CalendarManagerTest {
 
     @Test(timeout = 100)
     public void testGetCurrentMonthlyCalendar() {
-        Map<Integer, List<Event>> currentMonthlyCalendar = calendarManager.getMonthlyCalendar();
+        Map<Integer, List<Event>> currentMonthlyCalendar = getMonthlyCalendar.getCalendar(calendarManager);
         YearMonth tempYearMonth = YearMonth.of(year, month);
         int length = tempYearMonth.lengthOfMonth();
         assertEquals(length, currentMonthlyCalendar.size());
@@ -43,7 +46,7 @@ public class CalendarManagerTest {
 
     @Test(timeout = 100)
     public void testGetMonthlyCalendar() {
-        Map<Integer, List<Event>> monthlyCalendar = calendarManager.getMonthlyCalendar(2021, 11);
+        Map<Integer, List<Event>> monthlyCalendar = getMonthlyCalendar.getCalendar(calendarManager, 2021, 11);
         YearMonth tempYearMonth = YearMonth.of(year, 11);
         int length = tempYearMonth.lengthOfMonth();
         assertEquals(length, monthlyCalendar.size());
@@ -56,8 +59,7 @@ public class CalendarManagerTest {
 
     @Test(timeout = 100)
     public void testGetWeeklyCalender(){
-        Map<Integer, List<Event>> weeklyCalendar = calendarManager.getWeeklyCalendar(year, month, 20);
-        YearMonth tempYearMonth = YearMonth.of(year, month);
+        Map<Integer, List<Event>> weeklyCalendar = getWeeklyCalendar.getCalendar(calendarManager, year, month, 20);
         int length = 7;
         assertEquals(length, weeklyCalendar.size());
         int count = 0;
@@ -70,8 +72,8 @@ public class CalendarManagerTest {
             testMap.put(i, new ArrayList<>());
         }
         assertEquals(testMap, weeklyCalendar);
-        weeklyCalendar = calendarManager.getWeeklyCalendar(year, month, date);
-        assertEquals(weeklyCalendar, calendarManager.getWeeklyCalendar());
+        weeklyCalendar = getWeeklyCalendar.getCalendar(calendarManager, year, month, date);
+        assertEquals(weeklyCalendar, getWeeklyCalendar.getCalendar(calendarManager));
     }
 
     @Test(timeout = 100)
@@ -79,7 +81,7 @@ public class CalendarManagerTest {
         Event eventOne = new Event(1, "Test1",
                 2021, 10, 15, 7, 10, 0, 0);
         calendarManager.addToCalendar(eventOne);
-        Map<Integer, List<Event>> dailyCalendar = calendarManager.getDailyCalendar(year, month, 15);
+        Map<Integer, List<Event>> dailyCalendar = getDailyCalendar.getCalendar(calendarManager, year, month, 15);
         assertEquals(dailyCalendar.size(), 1);
         Map<Integer, List<Event>> testMap = new HashMap<>();
         List<Event> testList = new ArrayList<>();
@@ -93,7 +95,7 @@ public class CalendarManagerTest {
         Event eventOne = new Event(1, "Test1",
                 2021, 11, 20, 7, 10, 0, 0);
         calendarManager.addToCalendar(eventOne);
-        List<Event> eventList = calendarManager.getMonthlyCalendar(2021, 11).get(20);
+        List<Event> eventList = getMonthlyCalendar.getCalendar(calendarManager, 2021, 11).get(20);
         assertEquals(1, eventList.size());
         assertEquals(eventOne, eventList.get(0));
         Event eventTwo = new Event(2, "Test2",
@@ -102,7 +104,7 @@ public class CalendarManagerTest {
         assertEquals(2, eventList.size());
         assertEquals(eventTwo, eventList.get(1));
         calendarManager.removeFromCalendar(eventOne, 2021, 11, 20);
-        eventList = calendarManager.getMonthlyCalendar(2021, 11).get(20);
+        eventList = getMonthlyCalendar.getCalendar(calendarManager, 2021, 11).get(20);
         assertNotSame(eventOne, eventList.get(0));
         assertSame(eventTwo, eventList.get(0));
         assertEquals(1, eventList.size());
@@ -161,5 +163,4 @@ public class CalendarManagerTest {
         assertEquals(testTimeTwo, "07:00 - 10:00");
         assertEquals(testTimeThree, "07:00 - 10:00");
     }
-
 }

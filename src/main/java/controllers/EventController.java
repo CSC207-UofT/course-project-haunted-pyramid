@@ -2,20 +2,20 @@ package controllers;
 import usecases.CalendarManager;
 import usecases.EventManager;
 import java.util.Scanner;
-import java.util.UUID;
-import presenters.CalendarPresenter; // JUST FOR THE DEMONSTRATION
+
+import presenters.DisplayCalendarFactory; // JUST FOR THE DEMONSTRATION
 
 public class EventController {
 
     private final EventManager eventManager;
     private final CalendarManager calendarManager;
     private final Scanner scanner = new Scanner(System.in);
-    private final CalendarPresenter calendarPresenter;
+    private final DisplayCalendarFactory displayCalendarFactory;
 
     public EventController(EventManager eventManager, CalendarManager calendarManager){
         this.eventManager = eventManager;
         this.calendarManager = calendarManager;
-        this.calendarPresenter = new CalendarPresenter(this.calendarManager);
+        this.displayCalendarFactory = new DisplayCalendarFactory(this.calendarManager);
 
     }
     public void schedule(){
@@ -39,9 +39,9 @@ public class EventController {
             this.calendarManager.addToCalendar(eventManager.getEvent(title));
 
 
-            // THIS JUST FOR THE TESTING. WILL BE SEPARATED IN THE FUTURE
+            /*// THIS JUST FOR THE TESTING. WILL BE SEPARATED IN THE FUTURE
             System.out.println(this.calendarPresenter.showMonthCalendar(Integer.parseInt(dateParts[0]),
-                    Integer.parseInt(dateParts[1])));
+                    Integer.parseInt(dateParts[1])));*/
         }
         else{
             System.out.println("please check spelling and try again!");
