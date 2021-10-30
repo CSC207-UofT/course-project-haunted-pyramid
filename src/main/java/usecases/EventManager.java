@@ -117,8 +117,15 @@ public class EventManager{
         return event.getName();
     }
     public String getStart(Event event) {return event.getStartString();}
+    public String getStartTime(Event event){
+        String[] date = event.getStartString().split("-");
+        return date[2].substring(3, 8);
+    }
+    public String getEndTime(Event event){
+        String[] date = event.getEndString().split("-");
+        return date[2].substring(3, 8);
+    }
     public String getEnd(Event event) {return event.getEndString();}
-
     public String getAllNames(){
         StringBuilder list = new StringBuilder();
         for (String name: eventMap.keySet()){
@@ -142,8 +149,8 @@ public class EventManager{
         }
         return earliest;
     }
-    public ArrayList<Event> timeOrder(ArrayList<Event> events){
-        ArrayList<Event> sorted = new ArrayList<>();
+    public List<Event> timeOrder(List<Event> events){
+        List<Event> sorted = new ArrayList<>();
         while (!events.isEmpty()){
             sorted.add(earliest(events));
             events.remove(earliest(events));

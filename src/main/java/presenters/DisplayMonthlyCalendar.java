@@ -40,11 +40,11 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         StringBuilder result = new StringBuilder();
         List<Integer> usedDates = new ArrayList<>();
         List<Integer> usedContentDates = new ArrayList<>();
-        result.append(cf.startFrame("SUNDAY"));
+        result.append(cf.startFrame("SUNDAY", 0));
         addDateRowToCalendar(result, usedDates, usedContentDates);
         addContentsToCalendar(result, usedContentDates);
         usedContentDates = new ArrayList<>();
-        result.append(cf.endFrame());
+        result.append(cf.endFrame(0));
         int iteratorCounter = keyList.subList(usedDates.size(), keyList.size()).size();
         fillCalendar(cf, result, usedDates, usedContentDates, iteratorCounter);
         List<String> conflicts = cm.notifyConflict(this.year, this.month);
@@ -67,7 +67,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
                 addDateRowToCalendar(result, usedDates, usedContentDates);
                 addContentsToCalendar(result, usedContentDates);
                 usedContentDates = new ArrayList<>();
-                result.append(cf.endFrame());
+                result.append(cf.endFrame(0));
             }
         }
         else if (21 < iteratorCounter){
@@ -75,7 +75,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
                 addDateRowToCalendar(result, usedDates, usedContentDates);
                 addContentsToCalendar(result, usedContentDates);
                 usedContentDates = new ArrayList<>();
-                result.append(cf.endFrame());
+                result.append(cf.endFrame(0));
             }
         }
         else {
@@ -83,7 +83,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
                 addDateRowToCalendar(result, usedDates, usedContentDates);
                 addContentsToCalendar(result, usedContentDates);
                 usedContentDates = new ArrayList<>();
-                result.append(cf.endFrame());
+                result.append(cf.endFrame(0));
             }
         }
     }

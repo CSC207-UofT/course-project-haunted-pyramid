@@ -24,12 +24,12 @@ public class CalendarFrame {
         this.month = month;
     }
 
-    public String startFrame(String startDayOfWeek){
+    public String startFrame(String startDayOfWeek, int additionalSpacer){
         StringBuilder result = new StringBuilder();
         result.append("Calendar for ").append(this.year).append("/").append(this.month).append("\n");
-        String div = "-".repeat(224);
+        String div = "-".repeat(224 + additionalSpacer * 7);
         result.append(" ").append(div).append("\n");
-        String space = " ".repeat(12);
+        String space = " ".repeat(12 + additionalSpacer/2);
         switch (startDayOfWeek) {
             case "SUNDAY":
                 frameWithDifferentStartDay(result, 0, space);
@@ -67,9 +67,9 @@ public class CalendarFrame {
         }
     }
 
-    public String endFrame(){
+    public String endFrame(int additionalSpacer){
         StringBuilder result = new StringBuilder();
-        String div = "-".repeat(224);
+        String div = "-".repeat(224 + additionalSpacer*7);
         result.append(" ").append(div).append("\n");
         return result.toString();
     }
