@@ -230,7 +230,6 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
         return temp;
     }
-
     public static void main(String[] args) {
         CalendarManager cm = new CalendarManager();
         EventManager em = new EventManager();
