@@ -127,24 +127,9 @@ public class OurCalendar {
             for (Event item :this.calendarMap.get(i)) {
                 // store start time and end time of the event as a list
                 List<Double> individualTimeInfo = new ArrayList<>();
-                // if the start date & end date are not the same as the event happening
-                // it means the event happens all day
-                if (!(Integer.parseInt(item.getStartString().substring(8, 10)) == i)
-                        && !(Integer.parseInt(item.getEndString().substring(8, 10)) == i)) {
-                    individualTimeInfo.add(0.0);
-                    individualTimeInfo.add(2400.0);
-                }
-                // if the event's start date is not the same but end date is the same
-                // event happens from 0 (start of the day) to the end time
-                else if (!(Integer.parseInt(item.getStartString().substring(8, 10)) == i)) {
-                    individualTimeInfo.add(0.0);
-                    individualTimeInfo.add(item.endTimeDouble());
-                }
                 // else is the same day event
-                else {
-                    individualTimeInfo.add(item.startTimeDouble());
-                    individualTimeInfo.add(item.startTimeDouble() + item.getLength() * 100);
-                }
+                individualTimeInfo.add(item.startTimeDouble());
+                individualTimeInfo.add(item.startTimeDouble() + item.getLength() * 100);
                 timeInfo.add(individualTimeInfo);
             }
             // compare if any of the start time, end time overlaps within the day

@@ -11,7 +11,6 @@ public class WeeklyCalendar extends GetCalendar {
 
     @Override
     public Map<Integer, List<Event>> getCalendar(CalendarManager cm) {
-        int currentMonth = cm.getCurrentMonth();
         Map<Integer, List<Event>> result = new HashMap<>();
         Map<Integer, List<Event>> currentCal = cm.getCurrentCalendar().getCalendarMap();
         int numTotalDays = cm.getCurrentCalendar().getDateInfo().get(2);
