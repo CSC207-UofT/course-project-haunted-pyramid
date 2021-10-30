@@ -44,6 +44,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         StringBuilder result = new StringBuilder();
         int startingDayOfWeek = dayOfWeek.getValue();
         setUpCalendar(startingDayOfWeek, result, cf);
+        addDate(result, startingDayOfWeek);
         for (int i = 0; i < 25; i++){
             for (int j = 0; j < 7; j++){
                 addTimeLine(result, i);
@@ -80,12 +81,56 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
     }
 
+    private void addDate(StringBuilder result, int dayOfWeek){
+        result.append("|");
+        List<Integer> keyList = getKeys();
+        int month = this.month;
+        for (int i = 0; i < keyList.size(); i++){
+            int spacer = getSpacer(dayOfWeek + i);
+            if (i != 0 && keyList.get(i) == 1){
+                month = this.month + 1;
+            }
+            int tempSpacer = spacer/2;
+            if (spacer % 2 == 1){
+                tempSpacer = spacer/2 + 1;
+            }
+            String tempDiv = " ".repeat(tempSpacer + lengthDecider()/2 + 9);
+            String preDiv = " ".repeat(9 + spacer/2 + lengthDecider()/2);
+            result.append(preDiv);
+            if (keyList.get(i) < 10 && month < 10){
+                result.append(" 0").append(month).append("/").append
+                        ("0").append(keyList.get(i)).append(tempDiv).append("|");
+            }
+            else if (keyList.get(i) < 10 && month >= 10){
+            result.append(" ").append(month).append("/").append
+                    ("0").append(keyList.get(i)).append(tempDiv).append("|");
+            }
+            else if (keyList.get(i) >= 10 && month < 10){
+                result.append(" 0").append(month).append
+                        ("/").append(keyList.get(i)).append(tempDiv).append("|");
+            }
+            else{
+                result.append(" ").append(month).append
+                        ("/").append(keyList.get(i)).append(tempDiv).append("|");
+            }
+        }
+
+        result.append("\n");
+    }
+
+
     private void addTimeLine(StringBuilder result, int index){
         result.append("|").append(" ");
         result.append(timeLine.get(index)).append(" |");
     }
 
     private void addSpace(StringBuilder result, int length, int dayOfWeek){
+        int spacer = getSpacer(dayOfWeek);
+        String tempDiv = " ".repeat(spacer + 16 + lengthDecider()  - length);
+        result.append(tempDiv);
+    }
+
+    private int getSpacer(int dayOfWeek) {
         int spacer = 0;
         if (dayOfWeek > 7){
             dayOfWeek -= 7;
@@ -107,8 +152,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
                 spacer = 8;
                 break;
         }
-        String tempDiv = " ".repeat(spacer + 16 + lengthDecider()  - length);
-        result.append(tempDiv);
+        return spacer;
     }
 
     private Integer addContent(StringBuilder result, int time, int index){
@@ -176,9 +220,9 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
                 }
             }
         }
-        temp = temp * 10;
-        if (temp > 15){
-            temp = temp - 14;
+        temp = temp * 12;
+        if (temp > 12){
+            temp = temp - 10;
         }
         else {
             temp = 0;
@@ -189,15 +233,18 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     public static void main(String[] args) {
         CalendarManager cm = new CalendarManager();
         EventManager em = new EventManager();
-        Event event = new Event(1, "TEST", 2021, 10, 30, 3, 5, 0, 0);
+        Event event = new Event(1, "TESTTESTESTESTESTES", 2021, 10, 30, 3, 5, 0, 0);
         Event event1 = new Event(2, "SEANSEANSEANSEANSEAN", 2021, 10, 30, 3, 5, 0, 0);
-        Event event2 = new Event(3, "SEANSEANSEANSEANSEANSEANSEAN", 2021, 10, 30, 3, 5, 0, 0);
+        Event event2 = new Event(3, "SEAN", 2021, 10, 30, 3, 5, 0, 0);
         Event event3 = new Event(4, "SEANSEANSEANSEAN SEAN", 2021, 11, 1, 15, 19, 0,0);
-        WeeklyCalendar wc = new WeeklyCalendar();
+        Event event4 = new Event(5, "SEANSEANSEANSEANSEAN", 2021, 10, 30, 3, 4, 0,0);
+        Event event5 = new Event(6, "SEANSEANSEANSEANSEAN", 2021, 10, 30, 3, 4, 0,0);
         cm.addToCalendar(event);
         cm.addToCalendar(event1);
         cm.addToCalendar(event2);
         cm.addToCalendar(event3);
+        cm.addToCalendar(event4);
+        cm.addToCalendar(event5);
         DisplayWeeklyCalendar dwc = new DisplayWeeklyCalendar(cm, 2021, 10, 28);
         System.out.println(dwc.displayCalendar());
     }
