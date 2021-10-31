@@ -11,9 +11,6 @@ import interfaces.Fluid;
 
 public class EventManager{
     private final Map<String, Event> eventMap;
-    // STYLE ERROR BECAUSE THE CLASSES IMPLEMENTING THE INTERFACES ARE NOT IMPLEMENTED YET
-    private final Map<String, ArrayList<AutoSchedule>> fluidSessions;
-    private final Map<String, ArrayList<Repeated>> occurrenceLists;
     /**
      * constructor for event manager
      * @param events a list of the current users events
