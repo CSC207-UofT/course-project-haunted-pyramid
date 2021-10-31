@@ -3,39 +3,22 @@ package usecases;
 import java.time.LocalTime;
 import java.util.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import entities.Event;
-import interfaces.AutoSchedule;
-import interfaces.Repeated;
-import interfaces.Fluid;
+import interfaces.EventListObserver;
+
 
 public class EventManager{
-    private final Map<String, Event> eventMap;
-    private final Map<String, ArrayList<AutoSchedule>> fluidSessions;
-    private final Map<String, ArrayList<Repeated>> occurrenceLists;
+    private final Map<Integer, Event> eventMap;
+    private EventListObserver[] toUpdate;
     /**
      * constructor for event manager
      * @param events a list of the current users events
      */
     public EventManager(List<Event> events){
         this.eventMap = new HashMap<>();
-        this.occurrenceLists = new HashMap<>();
-        this.fluidSessions = new HashMap<>();
 
         for (Event event: events){
-            this.eventMap.put(event.getName(), event);
-            if (event instanceof Repeated){ // NOT IMPLEMENTED YET
-                this.occurrenceLists.put(event.getName(), ((Repeated) event).occurrences());
-            }
-            if (event instanceof Fluid){ // NOT IMPLEMENTED YET
-                this.fluidSessions.put(event.getName(), ((Fluid) event).getFluidSessions());
-            }
-            if (event instanceof AutoSchedule){ // NOT IMPLEMENTED YET
-                ArrayList<AutoSchedule> event1 = new ArrayList<>();
-                event1.add((AutoSchedule) event);
-                this.fluidSessions.put(event.getName(), event1);
-            }
-
+            this.eventMap.put(event.getID(), event);
         }
     }
 
@@ -44,19 +27,17 @@ public class EventManager{
      */
     public EventManager(){
         this.eventMap = new HashMap<>();
-        this.occurrenceLists = new HashMap<>();
-        this.fluidSessions = new HashMap<>();
     }
     /**
      * getDay returns a map of the events in a day
      * @param day the day that is being searched for
      * @return all events in this day
      */
-    public Map<String, Event> getEventInDate(LocalDate day){
-        Map<String, Event> dayMap = new HashMap<>();
+    public Map<Integer, Event> getDay(LocalDate day){
+        Map<Integer, Event> dayMap = new HashMap<>();
         for (Event event: eventMap.values()){
             if (event.getDay().isEqual(day)) {
-                dayMap.put(event.getName(), event);
+                dayMap.put(event.getID(), event);
             }
         }
         return dayMap;
@@ -64,20 +45,20 @@ public class EventManager{
 
     /**
      *
-     * @param name the name of an existing event
+     * @param ID the name of an existing event
      * @return the event of this name
      */
-    public Event getEvent(String name){
-        return eventMap.get(name);
+    public Event get(Integer ID){
+        return eventMap.get(ID);
     }
 
     /**
      * removes an event from the set
-     * @param name the name to be removed
+     * @param ID the name to be removed
      * @return the event just removed
      */
-    public Event removeEvent(String name){
-        return eventMap.remove(name);
+    public Event remove(Integer ID){
+        return eventMap.remove(ID);
     }
 
     /**
@@ -90,25 +71,10 @@ public class EventManager{
      * @param startMin start minute
      * @param endMin end minute
      */
-    public void addEvent(String type, String name, int year, int month, int day, int startHour, int startMin, int endHour,
+    public void addEvent(Integer ID, String name, int year, int month, int day, int startHour, int startMin, int endHour,
                          int endMin){
-        //TODO add different types of Events (assignment, test, etc)
-        //TODO make ID to be more flexible
         Event event = new Event(1, name, year, month, day, startHour, endHour, startMin, endMin);
-        this.eventMap.put(event.getName(), event);
-        /*
-        if (event instanceof Repeated){
-            this.occurenceLists.put(event.getName(), ((Repeated) event).occurrences());
-        }
-        if (event instanceof Fluid){
-            this.fluidSessions.put(event.getName(), ((Fluid) event).getFluidSessions());
-        }
-        if (event instanceof AutoSchedule){
-            ArrayList<AutoSchedule> event1 = new ArrayList<>();
-            event1.add((AutoSchedule) event);
-            this.fluidSessions.put(event.getName(), event1);
-        }
-        */
+        this.eventMap.put(event.getID(), event);
     }
 
 
@@ -124,11 +90,13 @@ public class EventManager{
         String[] date = event.getEndString().split("-");
         return date[2].substring(3, 8);
     }
+
     public String getEnd(Event event) {return event.getEndString();}
+
     public String getAllNames(){
         StringBuilder list = new StringBuilder();
-        for (String name: eventMap.keySet()){
-            list.append(name);
+        for (Event event: eventMap.values()){
+            list.append(event.getName());
         }
         return list.toString();
     }
@@ -156,28 +124,4 @@ public class EventManager{
         }
         return sorted;
     }
-
-    //TODO replace entities.Event with subclass of entities.Event for free slots - implements repeatable -
-    // list of events under one name
-    //TODO finish implementation for day instead of frame
-//    public ArrayList<Event> freeSlots(LocalDate day){
-//        ArrayList<Event> events = new ArrayList<Event>((this.getDay(day).values()));
-//        events = this.timeOrder(events);
-//        ArrayList<Event> freeSlots = new ArrayList<Event>();
-//        if (LocalTime.of(0, 0).isBefore(LocalTime.of(events.get(0).getStartTime().getHour(),
-//                events.get(0).getStartTime().getMinute()))){
-//            freeSlots.add(new Event(1, "before " + events.get(0).getName(),
-//                    LocalDateTime.of(day, LocalTime.of(0, 0)),
-//                    events.get(0).getStartTime()));
-//        }
-//        for (int i = 0; i < events.size()-1; i++){
-//            if (events.get(i).getEndTime().isBefore(events.get(i+1).getStartTime())){
-//                freeSlots.add(new Event(1, "before " + events.get(i+1).getName(), events.get(i).getEndTime(),
-//                        events.get(i+1).getStartTime()));
-//            }
-//        }
-//        return freeSlots;
-//    }
-
-
 }
