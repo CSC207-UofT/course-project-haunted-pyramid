@@ -28,24 +28,24 @@ public class EventManagerTest {
 
     @Test(timeout = 50)
     public void testGetDay() {
-        Map<String, Event> day = this.eventManager.getDay(LocalDate.of(2021, 10, 1));
+        Map<Integer, Event> day = this.eventManager.getDay(LocalDate.of(2021, 10, 1));
         for (Event event: this.events){
             if (event.getDay().isEqual(LocalDate.of(2021, 10, 1))){
-                assertTrue(day.containsKey(event.getName()));
+                assertTrue(day.containsKey(event.getID()));
             }
             else{
-                assertFalse(day.containsKey(event.getName()));
+                assertFalse(day.containsKey(event.getID()));
             }
         }
     }
     @Test (timeout = 100)
     public void testGetStart() {
-        assertEquals("2021-10-01 02:00", this.eventManager.getStart(this.eventManager.getEvent("1")));
+        assertEquals("2021-10-01 02:00", this.eventManager.getStart(this.eventManager.get(1)));
     }
 
     @Test (timeout = 100)
     public void testGetEnd() {
-        assertEquals("2021-10-01 02:00", this.eventManager.getStart(this.eventManager.getEvent("1")));
+        assertEquals("2021-10-01 02:00", this.eventManager.getStart(this.eventManager.get(1)));
     }
 
     @Test(timeout = 50)
@@ -54,14 +54,14 @@ public class EventManagerTest {
     }
     @Test
     public void testTimeOrder() {
-        ArrayList<Event> ordered = new ArrayList<>(Arrays.asList(this.eventManager.getEvent("1"),
-                this.eventManager.getEvent("2"),
-                this.eventManager.getEvent("3"), this.eventManager.getEvent("4"),
-                this.eventManager.getEvent("5")));
-        ArrayList<Event> unordered = new ArrayList<>(Arrays.asList(this.eventManager.getEvent("4"),
-                this.eventManager.getEvent("2"),
-                this.eventManager.getEvent("1"), this.eventManager.getEvent("5"),
-                this.eventManager.getEvent("3")));
+        ArrayList<Event> ordered = new ArrayList<>(Arrays.asList(this.eventManager.get(1),
+                this.eventManager.get(2),
+                this.eventManager.get(3), this.eventManager.get(4),
+                this.eventManager.get(5)));
+        ArrayList<Event> unordered = new ArrayList<>(Arrays.asList(this.eventManager.get(4),
+                this.eventManager.get(2),
+                this.eventManager.get(1), this.eventManager.get(5),
+                this.eventManager.get(3)));
         assertEquals(ordered, this.eventManager.timeOrder(unordered));
     }
 
