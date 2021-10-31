@@ -27,8 +27,8 @@ public class EventManagerTest {
     }
 
     @Test(timeout = 50)
-    public void testGetDay() {
-        Map<String, Event> day = this.eventManager.getDay(LocalDate.of(2021, 10, 1));
+    public void testgetEventInDate() {
+        Map<String, Event> day = this.eventManager.getEventInDate(LocalDate.of(2021, 10, 1));
         for (Event event: this.events){
             if (event.getDay().isEqual(LocalDate.of(2021, 10, 1))){
                 assertTrue(day.containsKey(event.getName()));

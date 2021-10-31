@@ -11,7 +11,6 @@ import interfaces.Fluid;
 
 public class EventManager{
     private final Map<String, Event> eventMap;
-    // STYLE ERROR BECAUSE THE CLASSES IMPLEMENTING THE INTERFACES ARE NOT IMPLEMENTED YET
     private final Map<String, ArrayList<AutoSchedule>> fluidSessions;
     private final Map<String, ArrayList<Repeated>> occurrenceLists;
     /**
@@ -53,7 +52,7 @@ public class EventManager{
      * @param day the day that is being searched for
      * @return all events in this day
      */
-    public Map<String, Event> getDay(LocalDate day){
+    public Map<String, Event> getEventInDate(LocalDate day){
         Map<String, Event> dayMap = new HashMap<>();
         for (Event event: eventMap.values()){
             if (event.getDay().isEqual(day)) {
