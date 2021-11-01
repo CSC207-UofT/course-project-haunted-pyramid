@@ -48,8 +48,8 @@ public class WeeklyCalendar extends GetCalendar {
         else if (currentMonth > month && currentMonth - month <= 3){
             Map<Integer, List<Event>> pastCal = cm.getPastCalendar().get(currentMonth - month - 1).getCalendarMap();
             int numTotalDays = cm.getPastCalendar().get(currentMonth - month - 1).getDateInfo().get(2);
-            if (currentMonth - month == 3 && date > numTotalDays - 6){
-                int shortage = 7 - numTotalDays - date + 1;
+            if (currentMonth - month == 1 && date > numTotalDays - 6){
+                int shortage = 7 - (numTotalDays - date + 1);
                 for (int j = date; j <= numTotalDays; j++){
                     result.put(j, pastCal.get(j));
                 }
