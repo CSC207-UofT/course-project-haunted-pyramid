@@ -4,18 +4,24 @@ import java.time.LocalTime;
 import java.util.*;
 import java.time.LocalDate;
 import entities.Event;
+import entities.RecursiveEvent;
 import interfaces.EventListObserver;
 
 
 public class EventManager{
+
     private final Map<Integer, Event> eventMap;
+    private RepeatedEventManager repeatedEventManager;
     private EventListObserver[] toUpdate;
+
+
     /**
      * constructor for event manager
      * @param events a list of the current users events
      */
-    public EventManager(List<Event> events){
+    public EventManager(List<Event> events, RepeatedEventManager repeatedEventManager){
         this.eventMap = new HashMap<>();
+        this.repeatedEventManager = repeatedEventManager;
 
         for (Event event: events){
             this.eventMap.put(event.getID(), event);
@@ -71,16 +77,34 @@ public class EventManager{
      * @param year year of event
      * @param month month of event
      * @param day date of event
-     * @param startHour time event starts (form HHMM)
      * @param endHour time event ends (form HHMM)
-     * @param startMin start minute
      * @param endMin end minute
      */
-    public void addEvent(Integer ID, String name, int year, int month, int day, int startHour, int startMin, int endHour,
-                         int endMin){
-        Event event = new Event(1, name, year, month, day, startHour, endHour, startMin, endMin);
+    public void addEvent(Integer ID, String name, String type, int year, int month, int day, int endHour, int endMin,
+                         String categoryName, String otherInformation){
+        Event event = new Event(ID, name, type, year, month, day, endHour, endMin, categoryName, otherInformation);
         this.eventMap.put(event.getID(), event);
     }
+
+    public void addEvent(Event event){
+        this.eventMap.put(event.getID(), event);
+    }
+
+    public void addEventsInRecursion(RecursiveEvent recursiveEvent){
+        for(ArrayList<Event> events : repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId()).values()){
+            for(Event event : events){
+                this.addEvent(event);
+            }
+        }
+    }
+
+
+    public void addEventsInRecursion(){
+        for(RecursiveEvent recursiveEvent : this.repeatedEventManager.getRecursiveEventMap().values()){
+            this.addEventsInRecursion(recursiveEvent);
+        }
+    }
+
 
 
     public String getName(Event event){

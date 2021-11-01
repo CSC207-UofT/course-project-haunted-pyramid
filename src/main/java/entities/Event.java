@@ -10,7 +10,7 @@ public class Event {
     private final int ID;
     private String type;
     private final String name;
-    private boolean recurring;
+    private Integer recursiveId;
     private boolean inCategory;
     private String categoryType; // a category is a super class of course. For example, if the users wish to create
                                 // a test, they can choose to add the test to a category, which can be for example a
@@ -22,15 +22,12 @@ public class Event {
      * @param ID the id for this event and events related to it (repetition etc)
      * @param name the name of the event
      * @param endTime end time of the event
-     * @param recurring if the event repeats
      */
-    public Event(int ID, String name, String type, LocalDateTime endTime, boolean recurring,
-                 String categoryName, String otherInformation){
+    public Event(int ID, String name, String type, LocalDateTime endTime, String categoryName, String otherInformation){
         this.ID = ID;
         this.name = name;
         this.type = type;
         this.endTime = endTime;
-        this.recurring = recurring;
         this.categoryType = categoryName;
         this.inCategory = !categoryName.equals("");
         this.otherInformation = otherInformation;
@@ -47,12 +44,11 @@ public class Event {
      * @param endMin minute event ends (integer)
      */
     public Event(int ID, String name, String type, int year, int month, int day, int endHour, int endMin,
-                 boolean recurring, String categoryName, String otherInformation){
+                 String categoryName, String otherInformation){
         this.name = name;
         this.ID = ID;
         this.type = type;
         this.endTime = LocalDateTime.of(year, month, day, endHour, endMin);
-        this.recurring = recurring;
         this.categoryType = categoryName;
         this.inCategory = !categoryName.equals("");
         this.otherInformation = otherInformation;
@@ -90,19 +86,19 @@ public class Event {
     public int getID(){return this.ID;}
     public String getType() {return type;}
     public String getName(){return this.name;}
-    public boolean isRecurring() {return recurring;}
+    public Integer getRecursiveId() {return recursiveId;}
     public boolean getInCategory(){return inCategory;}
     public String getCategoryType() {return categoryType;}
     public String getOtherInformation() {return otherInformation;}
 
     /**
      *
-     * setter methods
+     * setter methods.
      */
     public void setStartTime(LocalDateTime startTime) {this.startTime = startTime;}
     public void setEndTime(LocalDateTime endTime) {this.endTime = endTime;}
     public void setType(String type) {this.type = type;}
-    public void setRecurring(boolean recurring) {this.recurring = recurring;}
+    public void setRecursiveId(Integer recursiveId) {this.recursiveId = recursiveId;}
     public void setCategoryType(String categoryType) {
         this.categoryType = categoryType;
         this.inCategory = true;}

@@ -28,12 +28,13 @@ public class EventController {
         Integer ID = nextID;
         nextID += 1;
         Set<Event> changes;
-        String title = IOController.getTitle();
+        String name = IOController.getName();
         String course = IOController.getCourse();
         List<Integer> date = IOController.getDate("Enter the date of the event");
         List<Integer> start = IOController.getTime("Enter the start time");
         List<Integer> end = IOController.getTime("enter the end time");
-        this.eventManager.addEvent(ID, title, date.get(0), date.get(1), date.get(2), start.get(0), end.get(0), start.get(1), end.get(1));
+        this.eventManager.addEvent(ID, name, type, date.get(0), date.get(1), date.get(2), end.get(0), end.get(1),
+                "", "");
         this.calendarManager.addToCalendar(eventManager.get(ID));
 
 
