@@ -18,7 +18,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private final int month;
     private final int date;
     private final Map<Integer, List<Event>> calendarMap;
-    private final List<String> timeLine = new ArrayList<>();
+    private final List<String> defaultTimeLine = new ArrayList<>();
     private final EventManager eventManager = new EventManager();
 
     public DisplayWeeklyCalendar(CalendarManager cm, int year, int month, int date) {
@@ -29,10 +29,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         WeeklyCalendar wc = new WeeklyCalendar();
         this.calendarMap = wc.getCalendar(cm, year, month, date);
         for (int i = 0; i < 10; i++){
-            this.timeLine.add("0" + i + ":00");
+            this.defaultTimeLine.add("0" + i + ":00");
         }
         for (int j = 10; j < 25; j++){
-            this.timeLine.add(j+ ":00");
+            this.defaultTimeLine.add(j+ ":00");
         }
 
     }
@@ -46,11 +46,18 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         int startingDayOfWeek = dayOfWeek.getValue();
         setUpCalendar(startingDayOfWeek, result, cf);
         addDate(result, startingDayOfWeek);
-        for (int i = 0; i < 25; i++){
+        for (int i = 0; i < getLongestTimeLine(); i++){
             for (int j = 0; j < 7; j++){
-                addTimeLine(result, i);
-                int tempDiv = addContent(result, i, j);
-                addSpace(result, tempDiv, startingDayOfWeek + j);
+                List<String> newTimeLine = updateTimeList(gatherTimeLine(j));
+                if (newTimeLine.size() > i){
+                    addTimeLine(result, newTimeLine, i);
+                    int tempDiv = addContent(result, newTimeLine, i, j);
+                    addSpace(result, tempDiv, startingDayOfWeek + j);
+                }
+                else {
+                    result.append("|");
+                    addSpace(result, -8, startingDayOfWeek + j);
+                }
             }
             result.append("|").append("\n");
         }
@@ -119,8 +126,54 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         result.append("\n");
     }
 
+    private int getLongestTimeLine(){
+        int length = this.defaultTimeLine.size();
+        for (int i = 0; i < this.calendarMap.size(); i++){
+            if (updateTimeList(gatherTimeLine(i)).size() > length){
+                length = updateTimeList(gatherTimeLine(i)).size();
+            }
+        }
+        return length;
+    }
+    private List<String> gatherTimeLine(int index){
+        List<String> temp = new ArrayList<>();
+        List<Integer> keyList = getKeys();
+        for (Event event: calendarMap.get(keyList.get(index))){
+            temp.add(eventManager.getStartTime(event));
+            temp.add(eventManager.getEndTime(event));
+        }
+        return temp;
+    }
 
-    private void addTimeLine(StringBuilder result, int index){
+    private List<String> updateTimeList(List<String> lst){
+        List<String> temp = new ArrayList<>(this.defaultTimeLine);
+        for (String time : lst){
+            if (!temp.contains(time)){
+                temp.add(time);
+            }
+        }
+        List<Integer> container = new ArrayList<>();
+        List<String> sortedList = new ArrayList<>();
+        for (String item : temp){
+            container.add(convertTimeToInt(item));
+        }
+        Collections.sort(container);
+        for (Integer number : container) {
+            String convertedTime = String.valueOf(number);
+            if (convertedTime.length() == 1) {
+                sortedList.add("00:0" + convertedTime);
+            } else if (convertedTime.length() == 2) {
+                sortedList.add("00:" + convertedTime);
+            } else if (convertedTime.length() == 3) {
+                sortedList.add("0" + convertedTime.charAt(0) + ":" + convertedTime.substring(1, 3));
+            } else if (convertedTime.length() == 4) {
+                sortedList.add(convertedTime.substring(0, 2) + ":" + convertedTime.substring(2, 4));
+            }
+        }
+        return sortedList;
+    }
+
+    private void addTimeLine(StringBuilder result, List<String> timeLine, int index){
         result.append("|").append(" ");
         result.append(timeLine.get(index)).append(" |");
     }
@@ -156,19 +209,19 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         return spacer;
     }
 
-    private Integer addContent(StringBuilder result, int time, int index){
+    private Integer addContent(StringBuilder result, List<String> timeLine, int time, int index){
         List<Integer> keyList = getKeys();
         int temp = 0;
         for (Event event: calendarMap.get(keyList.get(index))){
             if (convertTimeToInt(timeLine.get(time)) >= convertTimeToInt(eventManager.getStartTime(event))
                 && convertTimeToInt(timeLine.get(time)) <= convertTimeToInt(eventManager.getEndTime(event))){
-                if (eventManager.getName(event).length() < 10){
+                if (eventManager.getName(event).length() < 14){
                     result.append(" ").append(eventManager.getName(event)).append(";");
                     temp += eventManager.getName(event).length() + 2;
                 }
                 else {
-                    result.append(" ").append(eventManager.getName(event), 0, 7).append("...").append(";");
-                    temp += 12;}
+                    result.append(" ").append(eventManager.getName(event), 0, 10).append("...").append(";");
+                    temp += 15;}
             }
         }
         return temp;
@@ -207,44 +260,43 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
             List<Event> sorted = eventManager.timeOrder(calendarMap.get(number));
             calendarMap.get(number).addAll(sorted);
             for (int i = 0; i < sorted.size(); i++){
-                int count = 0;
+                int totalLength = Math.min(eventManager.getName(sorted.get(i)).length(), 14);
                 for (int j = i + 1; j < sorted.size(); j++){
                     if (convertTimeToInt(eventManager.getStartTime(sorted.get(i)))
                             <= convertTimeToInt(eventManager.getStartTime(sorted.get(j)))
-                            && convertTimeToInt(eventManager.getStartTime(sorted.get(i))) + 100
+                            && convertTimeToInt(eventManager.getEndTime(sorted.get(i)))
                             > convertTimeToInt(eventManager.getStartTime(sorted.get(j)))){
-                        count += 1;
+                        totalLength += Math.min(eventManager.getName(sorted.get(j)).length(), 14);
+
                     }
                 }
-                if (temp < count){
-                    temp = count;
+                if (temp < totalLength){
+                    temp = totalLength;
                 }
             }
         }
-        temp = temp * 12;
-        if (temp > 12){
-            temp = temp - 10;
+        if (temp > 14){
+            temp = temp - 14;
         }
         else {
             temp = 0;
         }
+        if (temp % 2 == 1){
+            temp += 1;
+        }
         return temp;
     }
+
     public static void main(String[] args) {
         CalendarManager cm = new CalendarManager();
-        EventManager em = new EventManager();
-        Event event = new Event(1, "TESTTESTESTESTESTES", 2021, 10, 30, 3, 5, 0, 0);
-        Event event1 = new Event(2, "SEANSEANSEANSEANSEAN", 2021, 10, 30, 3, 5, 0, 0);
-        Event event2 = new Event(3, "SEAN", 2021, 10, 30, 3, 5, 0, 0);
-        Event event3 = new Event(4, "SEANSEANSEANSEAN SEAN", 2021, 11, 1, 15, 19, 0,0);
-        Event event4 = new Event(5, "SEANSEANSEANSEANSEAN", 2021, 10, 30, 3, 4, 0,0);
-        Event event5 = new Event(6, "SEANSEANSEANSEANSEAN", 2021, 10, 30, 3, 4, 0,0);
+        Event event = new Event(1, "TEST1", 2021, 10, 30, 3, 5, 30, 30);
+        Event event1 = new Event(2, "TEST2", 2021, 10, 30, 3, 5, 0, 0);
+        Event event2 = new Event(3, "TEST3", 2021, 10, 30, 1, 5, 30, 30);
+        Event event3 = new Event(4, "REALLY", 2021, 11, 1, 15, 19, 0,0);
         cm.addToCalendar(event);
         cm.addToCalendar(event1);
         cm.addToCalendar(event2);
         cm.addToCalendar(event3);
-        cm.addToCalendar(event4);
-        cm.addToCalendar(event5);
         DisplayWeeklyCalendar dwc = new DisplayWeeklyCalendar(cm, 2021, 10, 28);
         System.out.println(dwc.displayCalendar());
     }

@@ -199,7 +199,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
                     if (eventName.length() > 12){
                         eventName = eventName.substring(0, 12) + "...";
                     }
-                    StringBuilder eventTime = cm.getEventTimes(year, month, usedContentDates.get(count)).get(j);
+                    String eventTime = cm.getEventTimes(year, month, usedContentDates.get(count)).get(j);
                     String tempDiv = " ".repeat(this.dayOfWeekCollection.get(i + count).length() + 24 -
                             eventName.length() - 3 - eventTime.length());
                     result.append(" ").append(eventName).append(": ").append(eventTime).append(tempDiv).append("|");
