@@ -1,11 +1,14 @@
 package entities;
 
+import helpers.Scheduler;
 import interfaces.EventListObserver;
 
 import java.util.Map;
 
 public abstract class EventCollection implements EventListObserver {
     protected Map<String, String> rules;
+    protected Integer[] collection;
+    protected Scheduler scheduler;
     /**
      * changes the rules of the collection
      * @param newRules Strings in the form "aspect=rule", from list of rules corresponding to this collection
@@ -37,4 +40,6 @@ public abstract class EventCollection implements EventListObserver {
      * @return all the id's of the events in this collection
      */
     protected abstract Integer[] getCollection();
+
+    protected abstract void addToCollection(Integer ID);
 }
