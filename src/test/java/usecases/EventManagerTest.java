@@ -23,7 +23,7 @@ public class EventManagerTest {
                 30), new Event(1, "4", 2021, 10, 2, 9, 10, 30,
                 0), new Event(1, "5", 2021, 10, 2, 9, 11, 30,
                 30));
-        this.eventManager = new EventManager(events);
+        this.eventManager = new EventManager(new ArrayList<>(this.events));
     }
 
     @Test(timeout = 50)
