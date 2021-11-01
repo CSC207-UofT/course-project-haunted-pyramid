@@ -10,8 +10,8 @@ public class CalendarManager {
     private final int currentDate; // current date
     private final int currentYear; // current year
     private final OurCalendar currentCalendar; // calendar object for the current month
-    private final List<OurCalendar> futureCalendar; // List of calendar object for the past three months
-    private final List<OurCalendar> pastCalendar; //  List of calendar object for the next three months
+    private final List<OurCalendar> futureCalendar; // List of calendar object for the next three months
+    private final List<OurCalendar> pastCalendar; //  List of calendar object for the past three months
 
 
     /**
@@ -154,6 +154,18 @@ public class CalendarManager {
             this.futureCalendar.get(2).addEvent(event);
             this.futureCalendar.get(2).updateConflict();
         }
+        else if (month == this.currentMonth - 1){
+            this.pastCalendar.get(0).addEvent(event);
+            this.pastCalendar.get(0).updateConflict();
+        }
+        else if (month == this.currentMonth - 2){
+            this.pastCalendar.get(1).addEvent(event);
+            this.pastCalendar.get(1).updateConflict();
+        }
+        else if (month == this.currentMonth - 3){
+            this.pastCalendar.get(2).addEvent(event);
+            this.pastCalendar.get(2).updateConflict();
+        }
 
     }
 
@@ -269,47 +281,47 @@ public class CalendarManager {
      * @param date date of the calendar that you want to extract events' names from
      * @return return the string of the events' time information
      */
-    public List<StringBuilder> getEventTimes(int year, int month, int date) {
+    public List<String> getEventTimes(int year, int month, int date) {
         if (year == this.currentYear + 1) {
             month = month + 12;
         } else if (year == this.currentYear - 1) {
             month = month - 12;
         }
-        List<StringBuilder> timeList = new ArrayList<>();
+        List<String> timeList = new ArrayList<>();
         if (month == this.currentMonth) {
             for (Event item : this.currentCalendar.getCalendarMap().get(date)) {
                 StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString);
+                timeList.add(tempString.toString());
             }
         } else if (month == this.currentMonth + 1) {
             for (Event item : this.futureCalendar.get(0).getCalendarMap().get(date)) {
                 StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString);
+                timeList.add(tempString.toString());
             }
         } else if (month == this.currentMonth + 2) {
             for (Event item : this.futureCalendar.get(1).getCalendarMap().get(date)) {
                 StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString);
+                timeList.add(tempString.toString());
             }
         } else if (month == this.currentMonth + 3) {
             for (Event item : this.futureCalendar.get(2).getCalendarMap().get(date)) {
                 StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString);
+                timeList.add(tempString.toString());
             }
         } else if (month == this.currentMonth - 1) {
             for (Event item : this.pastCalendar.get(0).getCalendarMap().get(date)) {
                 StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString);
+                timeList.add(tempString.toString());
             }
         } else if (month == this.currentMonth - 2) {
             for (Event item : this.pastCalendar.get(1).getCalendarMap().get(date)) {
                 StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString);
+                timeList.add(tempString.toString());
             }
         } else if (month == this.currentMonth - 3) {
             for (Event item : this.pastCalendar.get(2).getCalendarMap().get(date)) {
                 StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString);
+                timeList.add(tempString.toString());
             }
         }
         return timeList;

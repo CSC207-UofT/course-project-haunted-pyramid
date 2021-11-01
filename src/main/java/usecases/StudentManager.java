@@ -21,23 +21,8 @@ public class StudentManager {
         }
     }
 
-    public void addNewStudent(UUID id, String name, String username, String password) {
-        Student student = new Student(id, name, username, password);
-        this.studentInfo.put(student.getId(), student);
-        this.studentMap.put(student.getId(), student.getCourseEnrolled());
-    }
-
     public ArrayList<Student> getAllStudents() {
         return new ArrayList<>(this.studentInfo.values());
-    }
-
-    public boolean checkUsernameAndPassword(String username, String password) {
-        for (Student student : this.getAllStudents()) {
-            if (student.getUsername().equals(username) && student.getPassword().equals(password)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public HashMap<UUID, Student> getStudentInfo() {

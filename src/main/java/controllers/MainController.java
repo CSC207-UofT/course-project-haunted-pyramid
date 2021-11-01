@@ -9,27 +9,25 @@ import java.util.Scanner;
 
 public class MainController {
 
+    private final UserController userController;
+    private final StudentController studentController;
+    private final CalendarController calendarController;
     private final EventController eventController;
     private final LoginController loginController;
-    private final StudentController studentController;
 
     private final IOSerializable ioSerializable;
     private final Scanner scanner = new Scanner(System.in);
 
     public MainController() {
-        //Instantiation of the IOSerializable
         this.ioSerializable = new IOSerializable();
-        //May be updated to CalendarController
-        CalendarManager calendarManager = new CalendarManager();
-        this.studentController = new StudentController(this.ioSerializable.hasSavedData(), this.ioSerializable);
-        this.loginController = new LoginController(this.studentController);
+        this.userController = new UserController(this.ioSerializable.hasSavedData(), this.ioSerializable);
+        this.studentController = new StudentController(this.userController);
+        this.loginController = new LoginController(this.userController, this.studentController);
         this.displayInitScreen();
-        EventManager eventManager = new EventManager();
-        this.eventController = new EventController(eventManager, calendarManager);
-        //TODO after phase 0, EventManager and CalendarManager specific to student - saved data - move to controllers
-
-        // this.calendarPresenter.testPresenter();
-        // this.saveAndExitProgram();
+        this.calendarController = new CalendarController();
+        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
+                this.calendarController.getCalendarManager());
+        // displayScreen();
     }
 
     /**
@@ -52,8 +50,6 @@ public class MainController {
             }
         }
     }
-
-
 
     /**
      * Display the main screen. Used at and only at launch after initialization via login/signup.
@@ -80,8 +76,10 @@ public class MainController {
     /**
      * Save and exit the program. Only save students into students.ser for now.
      */
-    public void saveAndExitProgram() { //save just students for now
-        this.ioSerializable.studentsWriteToSerializable(this.studentController.getStudentManager().getAllStudents());
+    public void saveAndExitProgram() {
+        this.ioSerializable.eventsWriteToSerializable(this.eventController.getEventManager().getAllEvents());
+        this.ioSerializable.usersWriteToSerializable(this.userController.getUserManager().getAllUsers());
+        this.ioSerializable.saveToDropbox();
         System.exit(0);
     }
 
