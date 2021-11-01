@@ -81,7 +81,7 @@ public class EventManager{
      */
     public void addEvent(Integer ID, String name, int year, int month, int day, int startHour, int startMin, int endHour,
                          int endMin){
-        Event event = new Event(1, name, year, month, day, startHour, endHour, startMin, endMin);
+        Event event = new Event(ID, name, year, month, day, startHour, endHour, startMin, endMin);
         this.eventMap.put(event.getID(), event);
     }
 
