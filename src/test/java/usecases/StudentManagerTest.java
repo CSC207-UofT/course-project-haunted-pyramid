@@ -24,26 +24,9 @@ public class StudentManagerTest {
         studentManager = new StudentManager(studentList);
     }
 
-
-    @Test
-    public void testAddNewStudent() {
-        UUID x = UUID.randomUUID();
-        studentManager.addNewStudent(x, "Sebin Im", "sebinUsername", "sebinPassword");
-        Student sebin = new Student(x, "Sebin Im", "sebinUsername", "sebinPassword");
-        assertTrue(studentManager.getStudentInfo().containsKey(x));
-        assertEquals(studentManager.getStudentInfo().get(x).getName(), sebin.getName());
-        assertEquals(studentManager.getStudentInfo().get(x).getUsername(), sebin.getUsername());
-        assertEquals(studentManager.getStudentInfo().get(x).getPassword(), sebin.getPassword());
-    }
-
     @Test
     public void testGetAllStudents() {
         assertTrue(studentManager.getAllStudents().contains(studentList.get(0)));
         assertTrue(studentManager.getAllStudents().contains(studentList.get(1)));
-    }
-
-    @Test(timeout = 100)
-    public void testCheckUsernameAndPassword() {
-        assertTrue(studentManager.checkUsernameAndPassword("malikUsername", "malikPassword"));
     }
 }

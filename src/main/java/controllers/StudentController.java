@@ -1,42 +1,31 @@
 package controllers;
 
-import entities.Student; //TODO: DELETE THIS AFTER TESTING
+// Bottom two are for type checking only, thus not violating clean architecture
+import entities.Student;
+import entities.User;
 
-import gateways.IOSerializable;
 import usecases.StudentManager;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class StudentController {
 
     private final StudentManager studentManager;
 
-    public StudentController(boolean hasSavedData, IOSerializable ioSerializable) {
-        if (hasSavedData) {
-            this.studentManager = new StudentManager(ioSerializable.studentsReadFromSerializable());
+    public StudentController(UserController userController) {
+        if (!userController.getUserManager().getUserInfo().isEmpty()) {
+            ArrayList<Student> arrayList = new ArrayList<>();
+            for (User user : userController.getUserManager().getUserInfo().values()) {
+                if (user instanceof Student) {
+                    arrayList.add((Student) user);
+                }
+            }
+            this.studentManager = new StudentManager(arrayList);
         } else {
-            ArrayList<Student> arrL = new ArrayList<>();
-            Student sebin = new Student(UUID.randomUUID(), "Sebin Im", "sebinUsername", "sebinPassword");
-            Student sean = new Student(UUID.randomUUID(), "Sean Yi", "seanUsername", "seanPassword");
-            Student taite = new Student(UUID.randomUUID(), "Taite Cullen", "taiteUsername", "taitePassword");
-            Student shameel = new Student(UUID.randomUUID(), "Shameel Farooq", "shameelUsername", "shameelPassword");
-            Student teddy = new Student(UUID.randomUUID(), "Teddy Yan", "teddyUsername", "teddyPassword");
-            Student malik = new Student(UUID.randomUUID(), "Malik Lahlou", "malikUsername", "malikPassword");
-            arrL.add(sebin);
-            arrL.add(sean);
-            arrL.add(taite);
-            arrL.add(shameel);
-            arrL.add(teddy);
-            arrL.add(malik);
-            this.studentManager = new StudentManager(arrL);
-            //All the above is testing, below is what should be here.
-            //this.studentManager = new StudentManager(new ArrayList<>());
+            this.studentManager = new StudentManager(new ArrayList<>());
         }
     }
 
-    public StudentManager getStudentManager() {
-        return this.studentManager;
-    }
+    public StudentManager getStudentManager() { return this.studentManager; }
 
 }

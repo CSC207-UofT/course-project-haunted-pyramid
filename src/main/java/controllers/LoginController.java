@@ -1,6 +1,5 @@
 package controllers;
 
-
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -8,13 +7,15 @@ public class LoginController {
 
     private boolean loggedIn;
 
+    private final UserController userController;
     private final StudentController studentController;
 
     private final Scanner scanner = new Scanner(System.in);
 
-    public LoginController(StudentController studentController) {
-        this.loggedIn = false;
+    public LoginController(UserController userController, StudentController studentController) {
+        this.userController = userController;
         this.studentController = studentController;
+        this.loggedIn = false;
     }
 
     /**
@@ -26,7 +27,7 @@ public class LoginController {
         String username = scanner.nextLine();
         System.out.println("Type your password.");
         String password = scanner.nextLine();
-        if (this.studentController.getStudentManager().checkUsernameAndPassword(username, password)) {
+        if (this.userController.getUserManager().checkUsernameAndPassword(username, password)) {
             this.loggedIn = true;
             System.out.println("Login success!");
         } else {
@@ -49,8 +50,7 @@ public class LoginController {
         String username = scanner.nextLine();
         System.out.println("Type your desired password.");
         String password = scanner.nextLine();
-        this.studentController.getStudentManager().addNewStudent(UUID.randomUUID(), name, username, password);
-        System.out.println("Your new account was created.");
+        this.userController.getUserManager().addNewUser(UUID.randomUUID(), name, username, password);
     }
 
     public boolean isLoggedIn() {

@@ -19,7 +19,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private final int date;
     private final Map<Integer, List<Event>> calendarMap;
     private final List<String> timeLine = new ArrayList<>();
-    private final EventManager eventManager = new EventManager();
+    private final EventManager eventManager = new EventManager(new ArrayList<>());
 
     public DisplayWeeklyCalendar(CalendarManager cm, int year, int month, int date) {
         super(cm);
@@ -232,7 +232,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
     public static void main(String[] args) {
         CalendarManager cm = new CalendarManager();
-        EventManager em = new EventManager();
+        EventManager em = new EventManager(new ArrayList<>());
         Event event = new Event(1, "TESTTESTESTESTESTES", 2021, 10, 30, 3, 5, 0, 0);
         Event event1 = new Event(2, "SEANSEANSEANSEANSEAN", 2021, 10, 30, 3, 5, 0, 0);
         Event event2 = new Event(3, "SEAN", 2021, 10, 30, 3, 5, 0, 0);

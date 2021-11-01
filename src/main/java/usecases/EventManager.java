@@ -14,11 +14,14 @@ public class EventManager{
      * constructor for event manager
      * @param events a list of the current users events
      */
-    public EventManager(List<Event> events){
-        this.eventMap = new HashMap<>();
-
-        for (Event event: events){
-            this.eventMap.put(event.getID(), event);
+    public EventManager(ArrayList<Event> events){
+        if (events.isEmpty()) {
+            this.eventMap = new HashMap<>();
+        } else {
+            this.eventMap = new HashMap<>();
+            for (Event event: events){
+                this.eventMap.put(event.getID(), event);
+            }
         }
     }
 
@@ -82,6 +85,7 @@ public class EventManager{
         this.eventMap.put(event.getID(), event);
     }
 
+    public ArrayList<Event> getAllEvents() { return new ArrayList<>(this.eventMap.values()); }
 
     public String getName(Event event){
         return event.getName();
