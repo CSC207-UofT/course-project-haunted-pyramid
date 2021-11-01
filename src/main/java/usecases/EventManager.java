@@ -28,6 +28,11 @@ public class EventManager{
     public EventManager(){
         this.eventMap = new HashMap<>();
     }
+
+    public static Integer getID(Event event) {
+        return event.getID();
+    }
+
     /**
      * getDay returns a map of the events in a day
      * @param day the day that is being searched for
@@ -92,6 +97,17 @@ public class EventManager{
     }
 
     public String getEnd(Event event) {return event.getEndString();}
+
+    public void update(String addRemoveChange, Map<Integer, Event> changed){
+        for (EventListObserver obs: this.toUpdate){
+            obs.update(addRemoveChange, changed);
+        }
+    }
+    public void addObserver(EventListObserver obs){
+        ArrayList<EventListObserver> inter = new ArrayList<>(List.of(this.toUpdate));
+        inter.add(obs);
+        this.toUpdate = inter.toArray(new EventListObserver[0]);
+    }
 
     public String getAllNames(){
         StringBuilder list = new StringBuilder();
