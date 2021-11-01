@@ -1,8 +1,10 @@
 package controllers;
 import entities.Event;
+import gateways.IOSerializable;
 import usecases.CalendarManager;
 import usecases.EventManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -17,8 +19,12 @@ public class EventController {
     private final DisplayCalendarFactory displayCalendarFactory;
     private Integer nextID = 0;
 
-    public EventController(EventManager eventManager, CalendarManager calendarManager){
-        this.eventManager = eventManager;
+    public EventController(boolean hasSavedData, IOSerializable ioSerializable, CalendarManager calendarManager){
+        if (hasSavedData) {
+            this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
+        } else {
+            this.eventManager = new EventManager(new ArrayList<>());
+        }
         this.calendarManager = calendarManager;
         this.displayCalendarFactory = new DisplayCalendarFactory(this.calendarManager);
 
@@ -40,5 +46,7 @@ public class EventController {
             /*// THIS JUST FOR THE TESTING. WILL BE SEPARATED IN THE FUTURE
             System.out.println(this.calendarPresenter.showMonthCalendar(Integer.parseInt(dateParts[0]),
                     Integer.parseInt(dateParts[1])));*/
-        }
+    }
+
+    public EventManager getEventManager() { return this.eventManager; }
 }

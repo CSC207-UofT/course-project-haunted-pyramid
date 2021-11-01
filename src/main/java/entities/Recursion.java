@@ -2,6 +2,7 @@ package entities;
 
 import helpers.Scheduler;
 
+import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,9 +19,6 @@ public class Recursion extends EventCollection {
     // ->"YYYY-MM-DD TT:TT"
     //"AND"
     // ->"YYYY-MM-DD TT:TT YYYY-MM-DD TT:TT" <- * start and end time included
-    private Map<String, String> rules;
-    private Integer[] collection;
-    private Scheduler scheduler;
 
     public Recursion(String[] rules){
         this.rules = new HashMap<>();
@@ -53,8 +51,15 @@ public class Recursion extends EventCollection {
     }
 
     @Override
-    protected Integer[] getCollection() {
+    public Integer[] getCollection() {
         return this.collection;
+    }
+
+    @Override
+    protected void addToCollection(Integer ID) {
+        ArrayList<Integer> inter = new ArrayList<>(List.of(this.collection));
+        inter.add(ID);
+        this.collection = inter.toArray(new Integer[0]);
     }
 
     @Override

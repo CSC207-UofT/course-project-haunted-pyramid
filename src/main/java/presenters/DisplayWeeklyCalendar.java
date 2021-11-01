@@ -21,6 +21,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private final List<String> defaultTimeLine = new ArrayList<>();
     private final EventManager eventManager = new EventManager();
 
+
     public DisplayWeeklyCalendar(CalendarManager cm, int year, int month, int date) {
         super(cm);
         this.year = year;
