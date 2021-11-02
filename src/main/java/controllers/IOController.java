@@ -46,11 +46,11 @@ public class IOController {
          * @return date in form of list of integers
          */
         public static List<Integer> getDate(String request){
-            System.out.println(request + " (YYYY-MM-DD-HH-MM)");
+            System.out.println(request + " (YYYY-MM-DD)");
             String date = scanner.nextLine();
             String[] dateParts = date.split("-");
             return List.of(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]),
-                    Integer.parseInt(dateParts[2]), Integer.parseInt(dateParts[3]),  Integer.parseInt(dateParts[4]));
+                    Integer.parseInt(dateParts[2]));
         }
 
         /**
