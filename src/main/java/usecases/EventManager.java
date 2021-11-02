@@ -164,4 +164,10 @@ public class EventManager{
         }
         return sorted;
     }
+
+    public List<Event> getAllEvents() {
+        List<Event> result = new ArrayList<>();
+        result.addAll(this.eventMap.values());
+        return result;
+    }
 }
