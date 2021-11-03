@@ -1,5 +1,6 @@
 package usecases;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.time.LocalDate;
@@ -10,6 +11,9 @@ import interfaces.EventListObserver;
 public class EventManager{
     private final Map<Integer, Event> eventMap;
     private EventListObserver[] toUpdate;
+    //TODO temporary
+    private Integer nextID;
+
     /**
      * constructor for event manager
      * @param events a list of the current users events
@@ -23,6 +27,12 @@ public class EventManager{
                 this.eventMap.put(event.getID(), event);
             }
         }
+        this.nextID = 0;
+    }
+
+    private Integer nextID(){
+        nextID = nextID + 1;
+        return this.nextID;
     }
 
     /**
@@ -32,7 +42,7 @@ public class EventManager{
         this.eventMap = new HashMap<>();
     }
 
-    public static Integer getID(Event event) {
+    public Integer getID(Event event) {
         return event.getID();
     }
 
@@ -79,10 +89,21 @@ public class EventManager{
      * @param startMin start minute
      * @param endMin end minute
      */
-    public void addEvent(Integer ID, String name, int year, int month, int day, int startHour, int startMin, int endHour,
+    public Event addEvent(String name, int year, int month, int day, int startHour, int startMin, int endHour,
                          int endMin){
-        Event event = new Event(ID, name, year, month, day, startHour, endHour, startMin, endMin);
+        Event event = new Event(this.nextID(), name, year, month, day, startHour, endHour, startMin, endMin);
         this.eventMap.put(event.getID(), event);
+        return event;
+    }
+    public Event addEvent(String name, Integer[] datetime){
+        Event event = new Event(this.nextID(), name, datetime[0], datetime[1], datetime[2], datetime[3], datetime[4],
+                datetime[8], datetime[9]);
+        this.eventMap.put(event.getID(), event);
+        return event;
+    }
+
+    public void addToCollection(Event event, Integer ID){
+        event.addToCollection(ID);
     }
 
     public ArrayList<Event> getAllEvents() { return new ArrayList<>(this.eventMap.values()); }
@@ -91,9 +112,31 @@ public class EventManager{
         return event.getName();
     }
     public String getStart(Event event) {return event.getStartString();}
+
     public String getStartTime(Event event){
         String[] date = event.getStartString().split("-");
         return date[2].substring(3, 8);
+    }
+
+    public Integer[] getStartInt(Event event){
+        return new Integer[] {event.getStartTime().getYear(), event.getStartTime().getMonthValue(),
+                event.getStartTime().getDayOfMonth(), event.getStartTime().getHour(), event.getStartTime().getMinute()};
+    }
+
+    public Integer[] getEndInt(Event event){
+        return new Integer[] {event.getEndTime().getYear(), event.getEndTime().getMonthValue(),
+                event.getEndTime().getDayOfMonth(), event.getEndTime().getHour(), event.getEndTime().getMinute()};
+    }
+
+    public Integer[] getStartEndInt(Event event){
+        Integer[] concat = new Integer[10];
+        for (Integer i = 0; i < 5; i ++){
+            concat[i] = this.getStartInt(event)[i];
+        }
+        for (Integer i = 0; i < 5; i ++){
+            concat[i+5] = this.getEndInt(event)[i];
+        }
+        return concat;
     }
     public String getEndTime(Event event){
         String[] date = event.getEndString().split("-");
@@ -143,5 +186,13 @@ public class EventManager{
             events.remove(earliest(events));
         }
         return sorted;
+    }
+
+    public void setStartEnd(Event event, Integer[] instanceSchedule) {
+        event.setStartTime(LocalDateTime.of(instanceSchedule[0], instanceSchedule[1], instanceSchedule[2],
+                instanceSchedule[3], instanceSchedule[4]));
+        event.setEndTime(LocalDateTime.of(instanceSchedule[5], instanceSchedule[6], instanceSchedule[7],
+                instanceSchedule[8], instanceSchedule[9]));
+
     }
 }

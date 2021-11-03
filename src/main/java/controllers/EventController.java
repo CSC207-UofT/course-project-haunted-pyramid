@@ -14,9 +14,7 @@ public class EventController {
 
     private final EventManager eventManager;
     private final CalendarManager calendarManager;
-    private final Scanner scanner = new Scanner(System.in);
     private final DisplayCalendarFactory displayCalendarFactory;
-    private Integer nextID = 0;
 
     public EventController(boolean hasSavedData, IOSerializable ioSerializable, CalendarManager calendarManager){
         /*if (hasSavedData) {
@@ -29,18 +27,23 @@ public class EventController {
     }
     public void schedule(){
         String type = IOController.getEventType();
-        Integer ID = nextID;
-        nextID += 1;
         Set<Event> changes;
         String title = IOController.getTitle();
         String course = IOController.getCourse();
         List<Integer> date = IOController.getDate("Enter the date of the event");
         List<Integer> start = IOController.getTime("Enter the start time");
         List<Integer> end = IOController.getTime("enter the end time");
-        this.eventManager.addEvent(ID, title, date.get(0), date.get(1), date.get(2), start.get(0), start.get(1), end.get(0), end.get(1));
-        this.calendarManager.addToCalendar(this.eventManager.get(ID));
+        this.calendarManager.addToCalendar(this.eventManager.addEvent(title, date.get(0), date.get(1), date.get(2),
+                start.get(0), start.get(1), end.get(0), end.get(1)));
+        this.displayEvents();
+    }
 
-
+    //for testing purposes
+    public void displayEvents(){
+        for (Event event: this.eventManager.getAllEvents()){
+            System.out.println(eventManager.getID(event) + " " + eventManager.getName(event) + "-" +
+                    eventManager.getStart(event) + "/" + eventManager.getEnd(event));
+        }
     }
 
     public EventManager getEventManager() { return this.eventManager; }
