@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class RecursiveManager {
     public EventManager eventManager;
+
     public RecursiveManager(EventManager eventManager){
         this.eventManager = eventManager;
     }

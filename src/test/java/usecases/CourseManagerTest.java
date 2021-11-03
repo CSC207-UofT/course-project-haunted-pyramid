@@ -24,7 +24,7 @@ public class CourseManagerTest {
         Course course1 = new Course("CSC207");
         Course course2 = new Course("CSC209");
         event = new Event(1, "1", LocalDateTime.of(2021, 10, 15, 0, 0,
-                0), LocalDateTime.of(2021, 10, 15, 3, 0, 0));
+                0), LocalDateTime.of(2021, 10, 15, 3, 0, 0), recurring);
         course1.addEvent(event);
         courseList.add(course1);
         courseList.add(course2);
