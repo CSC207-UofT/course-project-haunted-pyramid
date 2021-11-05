@@ -53,7 +53,7 @@ public class OurCalendarTest {
                 add(eventOne);
             }
         };
-        for (int i = 1; i <= 31; i++){
+        for (int i = 1; i <= 30; i++){
             tempMap.put(i, myList);
         }
         tempMap.put(15, withEvent);
@@ -65,7 +65,7 @@ public class OurCalendarTest {
         Map<Integer, List<Event>> tempMap = new HashMap<>();
         List<Event> myList  = new ArrayList<>();
 
-        for (int i = 1; i <= 31; i++){
+        for (int i = 1; i <= 30; i++){
             tempMap.put(i, myList);
         }
         assertEquals(calendar.getCalendarMap(), tempMap);

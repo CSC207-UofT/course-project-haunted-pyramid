@@ -81,7 +81,7 @@ public class CalendarManagerTest {
         Event eventOne = new Event(1, "Test1",
                 2021, 10, 15, 7, 10, 0, 0);
         calendarManager.addToCalendar(eventOne);
-        Map<Integer, List<Event>> dailyCalendar = getDailyCalendar.getCalendar(calendarManager, year, month, 15);
+        Map<Integer, List<Event>> dailyCalendar = getDailyCalendar.getCalendar(calendarManager, 2021, 10, 15);
         assertEquals(dailyCalendar.size(), 1);
         Map<Integer, List<Event>> testMap = new HashMap<>();
         List<Event> testList = new ArrayList<>();
