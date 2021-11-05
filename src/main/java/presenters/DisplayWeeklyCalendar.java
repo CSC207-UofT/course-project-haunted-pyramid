@@ -287,18 +287,4 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
         return temp;
     }
-
-    public static void main(String[] args) {
-        CalendarManager cm = new CalendarManager();
-        Event event = new Event(1, "TEST1", 2021, 10, 30, 3, 5, 30, 30);
-        Event event1 = new Event(2, "TEST2", 2021, 10, 30, 3, 5, 0, 0);
-        Event event2 = new Event(3, "TEST3", 2021, 10, 30, 1, 5, 30, 30);
-        Event event3 = new Event(4, "REALLY", 2021, 11, 1, 15, 19, 0,0);
-        cm.addToCalendar(event);
-        cm.addToCalendar(event1);
-        cm.addToCalendar(event2);
-        cm.addToCalendar(event3);
-        DisplayWeeklyCalendar dwc = new DisplayWeeklyCalendar(cm, 2021, 10, 28);
-        System.out.println(dwc.displayCalendar());
-    }
 }
