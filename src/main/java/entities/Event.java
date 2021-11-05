@@ -8,29 +8,22 @@ public class Event {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private final int ID;
-    private String type;
     private final String name;
-    private Integer recursiveId;
-    private boolean inCategory;
-    private String categoryType; // a category is a super class of course. For example, if the users wish to create
-                                // a test, they can choose to add the test to a category, which can be for example a
-                                // course. I made a Category class (not only a course class) for extensibility purposes.
-    private String otherInformation;
+    private Integer collectionID;
+    //private Course course; TODO courses are a thing
 
     /**
-     * constructor sets the ID, name, and end times of the entities.Event
+     * constructor sets the ID, name, start and end times of the entities.Event
      * @param ID the id for this event and events related to it (repetition etc)
      * @param name the name of the event
+     * @param startTime start time of the event
      * @param endTime end time of the event
      */
-    public Event(int ID, String name, String type, LocalDateTime endTime, String categoryName, String otherInformation){
+    public Event(int ID, String name, LocalDateTime startTime, LocalDateTime endTime) {
         this.ID = ID;
         this.name = name;
-        this.type = type;
+        this.startTime = startTime;
         this.endTime = endTime;
-        this.categoryType = categoryName;
-        this.inCategory = !categoryName.equals("");
-        this.otherInformation = otherInformation;
     }
 
     /**
@@ -40,18 +33,17 @@ public class Event {
      * @param year year (integer)
      * @param month month (integer)
      * @param day day (integer)
+     * @param startHour hour event starts (integer)
      * @param endHour hour event ends (integer)
+     * @param startMin minute event starts (integer)
      * @param endMin minute event ends (integer)
      */
-    public Event(int ID, String name, String type, int year, int month, int day, int endHour, int endMin,
-                 String categoryName, String otherInformation){
+    public Event(int ID, String name, int year, int month, int day, int startHour, int endHour, int startMin,
+                 int endMin){
         this.name = name;
         this.ID = ID;
-        this.type = type;
-        this.endTime = LocalDateTime.of(year, month, day, endHour, endMin);
-        this.categoryType = categoryName;
-        this.inCategory = !categoryName.equals("");
-        this.otherInformation = otherInformation;
+        this.startTime = LocalDateTime.of(year, month, day, startHour, startMin , 0);
+        this.endTime = LocalDateTime.of(year, month, day, endHour, endMin , 0);
     }
 
     /**
@@ -68,42 +60,17 @@ public class Event {
             return false;
         }
         Event obj = (Event) object;
-        if (this.startTime != null){
-            return this.startTime.isEqual(obj.getStartTime()) && this.endTime.isEqual(obj.getEndTime()) &&
-                    this.name.equals(obj.getName());
-        }
-        else{
-            return this.endTime.isEqual(obj.getEndTime()) && this.name.equals(obj.getName());
-        }
+        return this.startTime.isEqual(obj.getStartTime()) && this.endTime.isEqual(obj.getEndTime()) &&
+                this.name.equals(obj.getName());
     }
 
     /**
      *
-     * getter methods.
+     * @return LocalDateTime startTime
      */
-    public LocalDateTime getStartTime(){return this.startTime;}
-    public LocalDateTime getEndTime() {return this.endTime;}
-    public int getID(){return this.ID;}
-    public String getType() {return type;}
-    public String getName(){return this.name;}
-    public Integer getRecursiveId() {return recursiveId;}
-    public boolean getInCategory(){return inCategory;}
-    public String getCategoryType() {return categoryType;}
-    public String getOtherInformation() {return otherInformation;}
-
-    /**
-     *
-     * setter methods.
-     */
-    public void setStartTime(LocalDateTime startTime) {this.startTime = startTime;}
-    public void setEndTime(LocalDateTime endTime) {this.endTime = endTime;}
-    public void setType(String type) {this.type = type;}
-    public void setRecursiveId(Integer recursiveId) {this.recursiveId = recursiveId;}
-    public void setCategoryType(String categoryType) {
-        this.categoryType = categoryType;
-        this.inCategory = true;}
-    public void setOtherInformation(String otherInformation) {this.otherInformation = otherInformation;}
-
+    public LocalDateTime getStartTime(){
+        return this.startTime;
+    }
 
     /**
      *
@@ -118,9 +85,17 @@ public class Event {
      */
     public double startTimeDouble()
     {return this.startTime.getHour()*100 + ((float)this.startTime.getMinute() * 100/60) ;}
+    /**
+     *
+     * @return LocalDateTime endTime
+     */
+    public LocalDateTime getEndTime() {
+        return this.endTime;
+    }
 
-
-
+    public void addToCollection(Integer ID){
+        this.collectionID = ID;
+    }
     /**
      *
      * @return String of end date in form YYYY-MM-DD TT:TT
@@ -134,8 +109,37 @@ public class Event {
      */
     public double endTimeDouble()
     {return this.endTime.getHour()*100 + ((float)this.endTime.getMinute() * 100/60);}
+    /**
+     *
+     * @return int name
+     */
+    public String getName(){
+        return this.name;
+    }
 
+    /**
+     *
+     * @return ID
+     */
+    public int getID(){
+        return this.ID;
+    }
 
+    /**
+     * change the start time
+     * @param startTime the start time
+     */
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    /**
+     * change the end time
+     * @param endTime the end time
+     */
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
 
     /**
      *
@@ -160,20 +164,14 @@ public class Event {
     /**
      * determines whether this event conflicts with another event - not useful for due dates, only
      * events with length
+     * TODO change implementation of conflicts for events that are due dates
      * @param other an event to compare to
      * @return true if their times overlap, false if they don't
      */
     public boolean conflicts(Event other){
-        if (this.startTime != null && other.getStartTime() != null){
-            return (this.startTime.isBefore(other.getStartTime()) && this.endTime.isAfter(other.getStartTime())) ||
+        return (this.startTime.isBefore(other.getStartTime()) && this.endTime.isAfter(other.getStartTime())) ||
                 (this.startTime.isEqual(other.getStartTime())) ||
                 (this.startTime.isAfter(other.getStartTime()) && this.startTime.isBefore(other.getEndTime()));
-        }
-        else {
-            return false;
-        }
     }
 
 }
-
-

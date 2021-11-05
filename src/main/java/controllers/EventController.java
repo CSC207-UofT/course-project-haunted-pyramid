@@ -4,7 +4,6 @@ import gateways.IOSerializable;
 import usecases.CalendarManager;
 import usecases.EventManager;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -15,39 +14,38 @@ public class EventController {
 
     private final EventManager eventManager;
     private final CalendarManager calendarManager;
-    private final Scanner scanner = new Scanner(System.in);
     private final DisplayCalendarFactory displayCalendarFactory;
-    private Integer nextID = 0;
 
     public EventController(boolean hasSavedData, IOSerializable ioSerializable, CalendarManager calendarManager){
-        if (hasSavedData) {
+        /*if (hasSavedData) {
             this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
-        } else {
-            this.eventManager = new EventManager(new ArrayList<>());
-        }
+        }*/
+        this.eventManager = new EventManager();
         this.calendarManager = calendarManager;
         this.displayCalendarFactory = new DisplayCalendarFactory(this.calendarManager);
 
     }
     public void schedule(){
         String type = IOController.getEventType();
-        Integer ID = nextID;
-        nextID += 1;
         Set<Event> changes;
-        String name = IOController.getName();
+        String title = IOController.getTitle();
         String course = IOController.getCourse();
         List<Integer> date = IOController.getDate("Enter the date of the event");
         List<Integer> start = IOController.getTime("Enter the start time");
         List<Integer> end = IOController.getTime("enter the end time");
-        this.eventManager.addEvent(ID, name, type, date.get(0), date.get(1), date.get(2), end.get(0), end.get(1),
-                "", "");
-        this.calendarManager.addToCalendar(eventManager.get(ID));
+        this.calendarManager.addToCalendar(this.eventManager.addEvent(title, date.get(0), date.get(1), date.get(2),
+                start.get(0), start.get(1), end.get(0), end.get(1)));
+        this.displayEvents();
+    }
 
-
-            /*// THIS JUST FOR THE TESTING. WILL BE SEPARATED IN THE FUTURE
-            System.out.println(this.calendarPresenter.showMonthCalendar(Integer.parseInt(dateParts[0]),
-                    Integer.parseInt(dateParts[1])));*/
+    //for testing purposes
+    public void displayEvents(){
+        for (Event event: this.eventManager.getAllEvents()){
+            System.out.println(eventManager.getID(event) + " " + eventManager.getName(event) + "-" +
+                    eventManager.getStart(event) + "/" + eventManager.getEnd(event));
+        }
     }
 
     public EventManager getEventManager() { return this.eventManager; }
+
 }
