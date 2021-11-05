@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.time.LocalDate;
+
+import entities.ConstantID;
 import entities.Event;
 import interfaces.EventListObserver;
 
@@ -18,8 +20,8 @@ public class EventManager{
      * constructor for event manager
      * @param events a list of the current users events
      */
-    public EventManager(ArrayList<Event> events){
-        if (events.isEmpty()) {
+    public EventManager(Event[] events){
+        if (events.length == 0) {
             this.eventMap = new HashMap<>();
         } else {
             this.eventMap = new HashMap<>();
@@ -91,12 +93,12 @@ public class EventManager{
      */
     public Event addEvent(String name, int year, int month, int day, int startHour, int startMin, int endHour,
                          int endMin){
-        Event event = new Event(this.nextID(), name, year, month, day, startHour, endHour, startMin, endMin);
+        Event event = new Event(ConstantID.get(), name, year, month, day, startHour, endHour, startMin, endMin);
         this.eventMap.put(event.getID(), event);
         return event;
     }
     public Event addEvent(String name, Integer[] datetime){
-        Event event = new Event(this.nextID(), name, datetime[0], datetime[1], datetime[2], datetime[3], datetime[4],
+        Event event = new Event(ConstantID.get(), name, datetime[0], datetime[1], datetime[2], datetime[3], datetime[4],
                 datetime[8], datetime[9]);
         this.eventMap.put(event.getID(), event);
         return event;

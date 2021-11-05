@@ -17,7 +17,7 @@ public class CourseTest {
     public void setUp() {
         course = new Course("CSC207");
         event = new Event(1, "1", LocalDateTime.of(2021, 10, 15, 0, 0,
-                0), LocalDateTime.of(2021, 10, 15, 3, 0, 0), recurring);
+                0), LocalDateTime.of(2021, 10, 15, 3, 0, 0));
     }
 
 
