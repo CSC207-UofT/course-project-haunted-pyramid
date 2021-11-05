@@ -1,6 +1,11 @@
 package helpers;
 
+import entities.Event;
+import usecases.EventManager;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class CalendarFrame {
 
@@ -16,8 +21,8 @@ public class CalendarFrame {
         }
     };
 
-    private int year;
-    private int month;
+    private final int year;
+    private final int month;
 
     public CalendarFrame(int year, int month){
         this.year = year;
@@ -72,5 +77,14 @@ public class CalendarFrame {
         String div = "-".repeat(224 + additionalSpacer*7);
         result.append(" ").append(div).append("\n");
         return result.toString();
+    }
+
+    public void eventSorter(Map<Integer, List<Event>> calendarMap){
+        EventManager em = new EventManager();
+        List<Integer> keyList = new ArrayList<>(calendarMap.keySet());
+        for (Integer key:keyList){
+            List<Event> eventList = em.timeOrder(calendarMap.get(key));
+            calendarMap.get(key).addAll(eventList);
+        }
     }
 }

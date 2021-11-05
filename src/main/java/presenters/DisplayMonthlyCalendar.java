@@ -5,9 +5,6 @@ import helpers.CalendarFrame;
 import usecases.CalendarManager;
 import usecases.MonthlyCalendar;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.*;
 
 public class DisplayMonthlyCalendar extends DisplayCalendar {
@@ -38,6 +35,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
     @Override
     public String displayCalendar() {
         CalendarFrame cf = new CalendarFrame(this.year, this.month);
+        cf.eventSorter(calendarMap);
         StringBuilder result = new StringBuilder();
         List<Integer> usedDates = new ArrayList<>();
         List<Integer> usedContentDates = new ArrayList<>();
@@ -55,7 +53,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         else {
             result.append("The following items are having conflict: ");
             for (String name : conflicts){
-                result.append(name);
+                result.append(name).append("; ");
             }
         }
         return result.toString();
@@ -89,7 +87,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
 
     private void addDateRowToCalendar(StringBuilder result, List<Integer> usedDates, List<Integer> usedContentDates) {
         result.append("|");
-        String startingDayOfWeek = startDayOfWeek(keyList, usedDates.size());
+        String startingDayOfWeek = findStartDayOfWeek(this.year, this.month, this.keyList.get(usedDates.size()));
         int count = 0;
         for (String day : dayOfWeekCollection) {
             if (!day.equals(startingDayOfWeek)) {
@@ -139,37 +137,6 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
     }
 
 
-    private String startDayOfWeek(List<Integer> keyList, int index) {
-        String startingDayOfWeek = LocalDate.parse(keyList.get(index) + "/" + month
-                        + "/" + year, DateTimeFormatter.ofPattern("d/M/uuuu"))
-                .getDayOfWeek().getDisplayName(TextStyle.SHORT_STANDALONE, Locale.CANADA);
-
-        switch (startingDayOfWeek) {
-            case "Sun.":
-                startingDayOfWeek = "SUNDAY";
-                break;
-            case "Mon.":
-                startingDayOfWeek = "MONDAY";
-                break;
-            case "Tue.":
-                startingDayOfWeek = "TUESDAY";
-                break;
-            case "Wed.":
-                startingDayOfWeek = "WEDNESDAY";
-                break;
-            case "Thu.":
-                startingDayOfWeek = "THURSDAY";
-                break;
-            case "Fri.":
-                startingDayOfWeek = "FRIDAY";
-                break;
-            case "Sat.":
-                startingDayOfWeek = "SATURDAY";
-                break;
-        }
-        return startingDayOfWeek;
-    }
-
     private void addContentsToCalendar(StringBuilder result, List<Integer> usedContentDates) {
         int longestSizeEvent = 0;
         for (int keys : keyList) {
@@ -177,7 +144,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
                 longestSizeEvent = calendarMap.get(keys).size();
             }
         }
-        String startingDayOfWeek = startDayOfWeek(usedContentDates, 0);
+        String startingDayOfWeek = findStartDayOfWeek(this.year, this.month, usedContentDates.get(0));
         int index = this.dayOfWeekCollection.indexOf(startingDayOfWeek);
         for (int j = 0; j < longestSizeEvent; j++) {
             result.append("|");
@@ -200,7 +167,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
                             eventName.length() - 3 - eventTime.length());
                     result.append(" ").append(eventName).append(": ").append(eventTime).append(tempDiv).append("|");
                 } else if (calendarMap.get(usedContentDates.get(count)).size() - 1 < j) {
-                    String tempDiv = " ".repeat(this.dayOfWeekCollection.get(count).length() + 24);
+                    String tempDiv = " ".repeat(this.dayOfWeekCollection.get(i + count).length() + 24);
                     result.append(tempDiv).append("|");
                 }
                 count += 1;
@@ -215,5 +182,19 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
 
             result.append("\n");
         }
+    }
+
+    public static void main(String[] args) {
+        CalendarManager calendarManager = new CalendarManager();
+        Event event = new Event(1, "TEST1", 2021, 10, 29, 3, 5, 30, 30);
+        Event event1 = new Event(2, "TEST2", 2021, 10, 30, 3, 5, 0, 0);
+        Event event2 = new Event(3, "TEST3", 2021, 10, 30, 1, 5, 30, 30);
+        Event event3 = new Event(4, "REALLY", 2021, 10, 1, 15, 19, 0,0);
+        calendarManager.addToCalendar(event);
+        calendarManager.addToCalendar(event1);
+        calendarManager.addToCalendar(event2);
+        calendarManager.addToCalendar(event3);
+        DisplayMonthlyCalendar dmc = new DisplayMonthlyCalendar(calendarManager, 2021, 10);
+        System.out.println(dmc.displayCalendar());
     }
 }

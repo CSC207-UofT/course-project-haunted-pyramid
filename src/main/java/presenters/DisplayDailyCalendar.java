@@ -18,49 +18,29 @@ public class DisplayDailyCalendar extends DisplayCalendar {
     @Override
     public String displayCalendar() {
         StringBuilder result = new StringBuilder();
-        String chosenDayOfWeek = dailyFrame(result);
-        addDate(result, chosenDayOfWeek);
+        dailyFrame(result);
+        addDate(result);
         return result.toString();
     }
 
 
-    private String dailyFrame(StringBuilder result){
-        LocalDate localDate = LocalDate.of(year, month, date);
-        DayOfWeek dayOfWeek = DayOfWeek.from(localDate);
-        int startingDayOfWeek = dayOfWeek.getValue();
-        String chosenDayOfWeek = "Monday";
-        switch (startingDayOfWeek) {
-            case 1:
-                chosenDayOfWeek = "MONDAY";
-                break;
-            case 2:
-                chosenDayOfWeek = "TUESDAY";
-                break;
-            case 3:
-                chosenDayOfWeek = "WEDNESDAY";
-                break;
-            case 4:
-                chosenDayOfWeek = "THURSDAY";
-                break;
-            case 5:
-                chosenDayOfWeek = "FRIDAY";
-                break;
-            case 6:
-                chosenDayOfWeek = "SATURDAY";
-                break;
-            case 7:
-                chosenDayOfWeek = "SUNDAY";
-                break;
-        }
+    private void dailyFrame(StringBuilder result){
+        String chosenDayOfWeek = findStartDayOfWeek(this.year, this.month, this.date);
         String top = "-".repeat(100);
         result.append(" ").append(top).append(" ").append("\n");
         String spacer = " ".repeat(50 - chosenDayOfWeek.length()/2);
-        result.append("|").append(spacer).append(chosenDayOfWeek).append(spacer).append("|").append("\n");
+        String nextSpacer;
+        if (chosenDayOfWeek.length() % 2 == 1){
+            nextSpacer = " ".repeat(50 - chosenDayOfWeek.length()/2 - 1);
+        }
+        else {
+            nextSpacer = " ".repeat(50 - chosenDayOfWeek.length()/2);
+        }
+        result.append("|").append(spacer).append(chosenDayOfWeek).append(nextSpacer).append("|").append("\n");
         result.append(" ").append(top).append(" ").append("\n");
-        return chosenDayOfWeek;
     }
 
-    private void addDate(StringBuilder result, String dayOfWeek){
+    private void addDate(StringBuilder result){
         result.append("|");
         String div = " ".repeat(47);
         result.append(div);
@@ -88,7 +68,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
 
     public static void main(String[] args) {
         CalendarManager cm = new CalendarManager();
-        DisplayDailyCalendar ddc = new DisplayDailyCalendar(cm, 2021, 11, 1);
+        DisplayDailyCalendar ddc = new DisplayDailyCalendar(cm, 2021, 11, 3);
         System.out.println(ddc.displayCalendar());
     }
 }
