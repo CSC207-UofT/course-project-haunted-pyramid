@@ -42,6 +42,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         LocalDate localDate = LocalDate.of(year, month, date);
         DayOfWeek dayOfWeek = DayOfWeek.from(localDate);
         CalendarFrame cf = new CalendarFrame(this.year, this.month);
+        cf.eventSorter(calendarMap);
         StringBuilder result = new StringBuilder();
         int startingDayOfWeek = dayOfWeek.getValue();
         setUpCalendar(startingDayOfWeek, result, cf);
@@ -258,16 +259,15 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         List<Integer> keyList = getKeys();
         int temp = 0;
         for (Integer number: keyList){
-            List<Event> sorted = eventManager.timeOrder(calendarMap.get(number));
-            calendarMap.get(number).addAll(sorted);
-            for (int i = 0; i < sorted.size(); i++){
-                int totalLength = Math.min(eventManager.getName(sorted.get(i)).length(), 14);
-                for (int j = i + 1; j < sorted.size(); j++){
-                    if (convertTimeToInt(eventManager.getStartTime(sorted.get(i)))
-                            <= convertTimeToInt(eventManager.getStartTime(sorted.get(j)))
-                            && convertTimeToInt(eventManager.getEndTime(sorted.get(i)))
-                            > convertTimeToInt(eventManager.getStartTime(sorted.get(j)))){
-                        totalLength += Math.min(eventManager.getName(sorted.get(j)).length(), 14);
+            List<Event> eventList = calendarMap.get(number);
+            for (int i = 0; i < eventList.size(); i++){
+                int totalLength = Math.min(eventManager.getName(eventList.get(i)).length(), 14);
+                for (int j = i + 1; j < eventList.size(); j++){
+                    if (convertTimeToInt(eventManager.getStartTime(eventList.get(i)))
+                            <= convertTimeToInt(eventManager.getStartTime(eventList.get(j)))
+                            && convertTimeToInt(eventManager.getEndTime(eventList.get(i)))
+                            > convertTimeToInt(eventManager.getStartTime(eventList.get(j)))){
+                        totalLength += Math.min(eventManager.getName(eventList.get(j)).length(), 14);
                     }
                 }
                 if (temp < totalLength){
@@ -288,9 +288,9 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
     public static void main(String[] args) {
         CalendarManager cm = new CalendarManager();
-        Event event = new Event(1, "TEST1", 2021, 10, 30, 3, 5, 30, 30);
-        Event event1 = new Event(2, "TEST2", 2021, 10, 30, 3, 5, 0, 0);
-        Event event2 = new Event(3, "TEST3", 2021, 10, 30, 1, 5, 30, 30);
+        Event event = new Event(1, "TEST1", 2021, 10, 31, 3, 5, 30, 30);
+        Event event1 = new Event(2, "TEST2", 2021, 10, 31, 3, 5, 0, 0);
+        Event event2 = new Event(3, "TEST3", 2021, 10, 31, 1, 5, 30, 30);
         Event event3 = new Event(4, "REALLY", 2021, 11, 1, 15, 19, 0,0);
         cm.addToCalendar(event);
         cm.addToCalendar(event1);
