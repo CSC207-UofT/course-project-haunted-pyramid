@@ -28,7 +28,7 @@ public class EventController {
     public void schedule(){
         String type = IOController.getEventType();
         Set<Event> changes;
-        String title = IOController.getTitle();
+        String title = IOController.getName();
         String course = IOController.getCourse();
         List<Integer> date = IOController.getDate("Enter the date of the event");
         List<Integer> start = IOController.getTime("Enter the start time");

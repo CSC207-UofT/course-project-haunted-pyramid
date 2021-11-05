@@ -13,17 +13,17 @@ import java.util.Map;
 
 public class EventManagerTest {
     private EventManager eventManager;
-    private List<Event> events;
+    private Event[] events;
 
     @Before
     public void start(){
-        this.events = Arrays.asList(new Event(1, "1", 2021, 10, 1, 2, 3, 0,
+        this.events = new Event[] {new Event(1, "1", 2021, 10, 1, 2, 3, 0,
                 0), new Event(1, "2", 2021, 10, 1, 4, 5, 0,
                 0), new Event(1, "3", 2021, 10, 1, 5, 6, 0,
                 30), new Event(1, "4", 2021, 10, 2, 9, 10, 30,
                 0), new Event(1, "5", 2021, 10, 2, 9, 11, 30,
-                30));
-        this.eventManager = new EventManager(events, null);
+                30)};
+        this.eventManager = new EventManager(events);
     }
 
     @Test(timeout = 50)
@@ -50,7 +50,7 @@ public class EventManagerTest {
 
     @Test(timeout = 50)
     public void testTotalHours() {
-        assertEquals((float) 6.0, this.eventManager.totalHours(this.events), 0);
+        assertEquals((float) 6.0, this.eventManager.totalHours(List.of(this.events)), 0);
     }
     @Test
     public void testTimeOrder() {
