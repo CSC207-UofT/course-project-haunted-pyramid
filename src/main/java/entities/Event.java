@@ -9,6 +9,7 @@ public class Event {
     private LocalDateTime endTime;
     private final int ID;
     private final String name;
+    private Integer collectionID;
     //private Course course; TODO courses are a thing
 
     /**
@@ -92,6 +93,9 @@ public class Event {
         return this.endTime;
     }
 
+    public void addToCollection(Integer ID){
+        this.collectionID = ID;
+    }
     /**
      *
      * @return String of end date in form YYYY-MM-DD TT:TT

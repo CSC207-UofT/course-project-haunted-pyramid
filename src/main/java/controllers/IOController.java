@@ -17,8 +17,8 @@ public class IOController {
          *
          * @return the title of an event as input by user
          */
-        public static String getTitle(){
-            System.out.println("enter title for event: ");
+        public static String getName(){
+            System.out.println("enter name for event: ");
             return scanner.nextLine();
         }
 
