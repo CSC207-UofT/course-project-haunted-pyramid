@@ -26,6 +26,7 @@ public class DisplayCalendarHelper {
 
     private final int year;
     private final int month;
+    private final int CALENDAR_SIZE = 224;
 
     public DisplayCalendarHelper(int year, int month){
         this.year = year;
@@ -35,9 +36,10 @@ public class DisplayCalendarHelper {
     public String startFrame(String startDayOfWeek, int additionalSpacer){
         StringBuilder result = new StringBuilder();
         result.append("Calendar for ").append(this.year).append("/").append(this.month).append("\n");
-        String div = "-".repeat(224 + additionalSpacer * 7);
+        String div = "-".repeat(CALENDAR_SIZE + additionalSpacer * 7);
         result.append(" ").append(div).append("\n");
-        String space = " ".repeat(12 + additionalSpacer/2);
+        int CALENDAR_SPACER = 12;
+        String space = " ".repeat(CALENDAR_SPACER + additionalSpacer/2);
         switch (startDayOfWeek) {
             case "SUNDAY":
                 frameWithDifferentStartDay(result, 0, space);
@@ -77,7 +79,7 @@ public class DisplayCalendarHelper {
 
     public String endFrame(int additionalSpacer){
         StringBuilder result = new StringBuilder();
-        String div = "-".repeat(224 + additionalSpacer*7);
+        String div = "-".repeat(CALENDAR_SIZE + additionalSpacer*7);
         result.append(" ").append(div).append("\n");
         return result.toString();
     }
