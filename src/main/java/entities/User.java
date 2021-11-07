@@ -2,7 +2,10 @@ package entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class User implements Serializable {
@@ -15,6 +18,7 @@ public class User implements Serializable {
     private String phoneNumber;
     private String homeAddress;
     private ArrayList<Event> events;
+    private Map<String, Boolean> preferences;
 
     public User(UUID id, String name, String username, String password) {
         this.id = id;
@@ -22,6 +26,8 @@ public class User implements Serializable {
         this.username = username;
         this.password = password;
         this.events = new ArrayList<>();
+        this.preferences = new HashMap<>();
+        this.preferences.put("procrastinate", true);
     }
 
     public UUID getId() { return this.id; }
@@ -43,5 +49,8 @@ public class User implements Serializable {
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
     public void setHomeAddress(String homeAddress) { this.homeAddress = homeAddress; }
     public void setEvents(ArrayList<Event> events) { this.events = events; }
+    public void changePreference(String type, boolean value){
+        this.preferences.put(type, value);
+    }
 
 }

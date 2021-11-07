@@ -95,7 +95,6 @@ public class EventManager{
         this.eventMap.put(event.getID(), event);
         this.update("add", new Event[]{event});
         return event;
-
     }
     public Event addEvent(String name, Integer[] datetime){
         Event event = new Event(ConstantID.get(), name, datetime[0], datetime[1], datetime[2], datetime[3], datetime[8],
@@ -111,8 +110,17 @@ public class EventManager{
         this.update("add", new Event[] {event});
     }
 
-
-    public List<Event> getAllEvents() { return List.of(this.eventMap.values().toArray(new Event[0])); }
+    private List<Event> flattenWorkSessions(List<Event> events){
+        List<Event> flat = new ArrayList<>();
+        for (Event event: events){
+            flat.add(event);
+            if (!event.getWorkSessions().isEmpty()){flat.addAll(event.getWorkSessions());}
+        }
+        return flat;
+    }
+    public List<Event> getAllEvents() {
+        return this.flattenWorkSessions(List.of(this.eventMap.values().toArray(new Event[0])));
+    }
 
     public String getName(Event event){
         return event.getName();
@@ -123,6 +131,7 @@ public class EventManager{
         event.setStartTime(stringToDate(startString));
         this.update("change", new Event[]{event});
     }
+
     public void setEnd(Event event, String endString){
         event.setEndTime(stringToDate(endString));
         this.update("change", new Event[]{event});
@@ -170,21 +179,13 @@ public class EventManager{
 
     public void update(String addRemoveChange, Event[] changed){
         for (EventListObserver obs: this.toUpdate){
-            obs.update(addRemoveChange, changed);
+            obs.update(addRemoveChange, changed, this);
         }
     }
     public void addObserver(EventListObserver obs){
         ArrayList<EventListObserver> inter = new ArrayList<>(List.of(this.toUpdate));
         inter.add(obs);
         this.toUpdate = inter.toArray(new EventListObserver[0]);
-    }
-
-    public String getAllNames(){
-        StringBuilder list = new StringBuilder();
-        for (Event event: eventMap.values()){
-            list.append(event.getName());
-        }
-        return list.toString();
     }
 
     public float totalHours(List<Event> events){
@@ -234,20 +235,17 @@ public class EventManager{
         return this.eventMap.containsKey(ID);
     }
 
-    public Integer getCollection(Integer ID){
-        return this.get(ID).getCollectionID();
-    }
-
     public Map<LocalDate, List<Event>> getRange(LocalDate from, LocalDate to){
         Map<LocalDate, List<Event>> range = new HashMap<>();
         while (from.isBefore(to)){
-            range.put(from, List.of(this.getDay(from).values().toArray(new Event[0])));
+            range.put(from, this.flattenWorkSessions(List.of(this.getDay(from).values().toArray(new Event[0]))));
+            from  = from.plusDays(1L);
         }
         return range;
     }
 
     public Map<LocalDateTime, Long> freeSlots(LocalDateTime start, List<Event> events, LocalDateTime end){
-        List<Event> schedule = this.timeOrder(events);
+        List<Event> schedule = this.timeOrder(this.flattenWorkSessions(events));
         Map<LocalDateTime, Long> lengthStart = new HashMap<>();
         int taskNum = 0;
         for (Event event: schedule){
