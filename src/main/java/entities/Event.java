@@ -1,16 +1,22 @@
 package entities;
 
+import java.awt.image.AreaAveragingScaleFilter;
+import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Event {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private final int ID;
     private String name;
-    private Integer collectionID;
     private String description = null;
+    private List<Event> workSessions;
+    private Long hoursNeeded;
+    private Long sessionLength;
     //private Course course; TODO courses are a thing
 
     /**
@@ -25,6 +31,9 @@ public class Event {
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.hoursNeeded = 0L;
+        this.sessionLength = 1L;
+        this.workSessions = new ArrayList<>();
     }
 
     /**
@@ -45,6 +54,9 @@ public class Event {
         this.ID = ID;
         this.startTime = LocalDateTime.of(year, month, day, startHour, startMin , 0);
         this.endTime = LocalDateTime.of(year, month, day, endHour, endMin , 0);
+        this.hoursNeeded = 0L;
+        this.sessionLength = 1L;
+        this.workSessions = new ArrayList<>();
     }
 
     public void setDescription(String description){
@@ -105,9 +117,6 @@ public class Event {
         return this.endTime;
     }
 
-    public void addToCollection(Integer ID){
-        this.collectionID = ID;
-    }
     /**
      *
      * @return String of end date in form YYYY-MM-DD TT:TT
@@ -186,8 +195,56 @@ public class Event {
                 (this.startTime.isAfter(other.getStartTime()) && this.startTime.isBefore(other.getEndTime()));
     }
 
-    public Integer getCollectionID(){
-        return this.collectionID;
+    public Long getHoursNeeded() {
+        return this.hoursNeeded;
+    }
+    public Long getSessionLength(){
+        return this.sessionLength;
+    }
+    public List<Event> getWorkSessions(){
+        return this.workSessions;
+    }
+
+    public void setHoursNeeded(Long hoursNeeded){
+        this.hoursNeeded = hoursNeeded;
+    }
+
+    public void setSessionLength(Long sessionLength){
+        this.sessionLength = sessionLength;
+    }
+
+    public List<Event> pastWorkSessions(){
+        List<Event> past = new ArrayList<>();
+        for (Event event: this.getWorkSessions()){
+            if (event.getEndTime().isBefore(LocalDateTime.now())){
+                past.add(event);
+            }
+        }
+        return past;
+    }
+
+    public List<Event> futureWorkSessions(){
+        List<Event> future = new ArrayList<>();
+        for (Event event: this.getWorkSessions()){
+            if (event.getStartTime().isAfter(LocalDateTime.now())){
+                future.add(event);
+            }
+        }
+        return future;
+    }
+
+    public void completeSession() {
+        this.hoursNeeded -= this.sessionLength;
+    }
+
+    public void resetWorkSessions(List<Event> toKeep){
+        this.workSessions = new ArrayList<>();
+    }
+
+    @Override
+    public String toString(){
+        return this.getID() + "\nname: " + this.getName() + "\nstart: " +
+                this.getStartString() + "\nend: " + this.getEndString() + "\ndescription: " + this.getDescription();
     }
 
 }

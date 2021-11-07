@@ -1,6 +1,7 @@
 package interfaces;
 
 import entities.Event;
+import usecases.EventManager;
 
 import java.util.Map;
 
@@ -11,5 +12,5 @@ public interface EventListObserver {
      * @param changed map of days to events, where days are the
      *      * Integer days they were originally mapped to before modification
      */
-    void update(String addRemoveChange, Event[] changed);
+    void update(String addRemoveChange, Event[] changed, EventManager eventManager);
 }
