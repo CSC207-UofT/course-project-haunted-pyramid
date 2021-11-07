@@ -26,7 +26,6 @@ public class DisplayCalendarHelper {
 
     private final int year;
     private final int month;
-    private final int CALENDAR_SIZE = 224;
 
     public DisplayCalendarHelper(int year, int month){
         this.year = year;
@@ -36,7 +35,7 @@ public class DisplayCalendarHelper {
     public String startFrame(String startDayOfWeek, int additionalSpacer){
         StringBuilder result = new StringBuilder();
         result.append("Calendar for ").append(this.year).append("/").append(this.month).append("\n");
-        String div = "-".repeat(CALENDAR_SIZE + additionalSpacer * 7);
+        String div = "-".repeat(Constants.CALENDAR_SIZE + additionalSpacer * 7);
         result.append(" ").append(div).append("\n");
         int CALENDAR_SPACER = 12;
         String space = " ".repeat(CALENDAR_SPACER + additionalSpacer/2);
@@ -79,7 +78,7 @@ public class DisplayCalendarHelper {
 
     public String endFrame(int additionalSpacer){
         StringBuilder result = new StringBuilder();
-        String div = "-".repeat(CALENDAR_SIZE + additionalSpacer*7);
+        String div = "-".repeat(Constants.CALENDAR_SIZE + additionalSpacer*7);
         result.append(" ").append(div).append("\n");
         return result.toString();
     }
