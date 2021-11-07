@@ -1,7 +1,7 @@
 package presenters;
 
 import entities.Event;
-import helpers.CalendarFrame;
+import helpers.DisplayCalendarHelper;
 import usecases.CalendarManager;
 import usecases.MonthlyCalendar;
 
@@ -12,6 +12,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
     private final int month;
     private final List<Integer> keyList;
     private final Map<Integer, List<Event>> calendarMap;
+    private final DisplayCalendarHelper cf;
     List<String> dayOfWeekCollection = new ArrayList<>() {{
         add("SUNDAY");
         add("MONDAY");
@@ -30,11 +31,11 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         this.keyList = new ArrayList<>(mc.getCalendar(cm, year, month).keySet());
         calendarMap = mc.getCalendar(cm, year, month);
         Collections.sort(this.keyList);
+        this.cf = new DisplayCalendarHelper(year, month);
     }
 
     @Override
     public String displayCalendar() {
-        CalendarFrame cf = new CalendarFrame(this.year, this.month);
         cf.eventSorter(calendarMap);
         StringBuilder result = new StringBuilder();
         List<Integer> usedDates = new ArrayList<>();
@@ -59,7 +60,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         return result.toString();
     }
 
-    private void fillCalendar(CalendarFrame cf, StringBuilder result, List<Integer> usedDates,
+    private void fillCalendar(DisplayCalendarHelper cf, StringBuilder result, List<Integer> usedDates,
                               List<Integer> usedContentDates, int iteratorCounter) {
         if (iteratorCounter > 28) {
             for (int i = 0; i < 5; i++) {
@@ -87,7 +88,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
 
     private void addDateRowToCalendar(StringBuilder result, List<Integer> usedDates, List<Integer> usedContentDates) {
         result.append("|");
-        String startingDayOfWeek = findStartDayOfWeek(this.year, this.month, this.keyList.get(usedDates.size()));
+        String startingDayOfWeek = cf.findStartDayOfWeek(this.year, this.month, this.keyList.get(usedDates.size()));
         int count = 0;
         for (String day : dayOfWeekCollection) {
             if (!day.equals(startingDayOfWeek)) {
@@ -144,7 +145,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
                 longestSizeEvent = calendarMap.get(keys).size();
             }
         }
-        String startingDayOfWeek = findStartDayOfWeek(this.year, this.month, usedContentDates.get(0));
+        String startingDayOfWeek = cf.findStartDayOfWeek(this.year, this.month, usedContentDates.get(0));
         int index = this.dayOfWeekCollection.indexOf(startingDayOfWeek);
         for (int j = 0; j < longestSizeEvent; j++) {
             result.append("|");
