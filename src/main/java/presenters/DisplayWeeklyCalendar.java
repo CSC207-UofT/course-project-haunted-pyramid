@@ -1,7 +1,7 @@
 package presenters;
 
 import entities.Event;
-import helpers.CalendarFrame;
+import helpers.DisplayCalendarHelper;
 import usecases.CalendarManager;
 import usecases.EventManager;
 import usecases.WeeklyCalendar;
@@ -20,6 +20,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private final Map<Integer, List<Event>> calendarMap;
     private final List<String> defaultTimeLine = new ArrayList<>();
     private final EventManager eventManager = new EventManager();
+    private final DisplayCalendarHelper cf;
 
     public DisplayWeeklyCalendar(CalendarManager cm, int year, int month, int date) {
         super(cm);
@@ -34,6 +35,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         for (int j = 10; j < 25; j++){
             this.defaultTimeLine.add(j+ ":00");
         }
+        this.cf = new DisplayCalendarHelper(this.year, this.month);
 
     }
 
@@ -41,7 +43,6 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     public String displayCalendar(){
         LocalDate localDate = LocalDate.of(year, month, date);
         DayOfWeek dayOfWeek = DayOfWeek.from(localDate);
-        CalendarFrame cf = new CalendarFrame(this.year, this.month);
         cf.eventSorter(calendarMap);
         StringBuilder result = new StringBuilder();
         int startingDayOfWeek = dayOfWeek.getValue();
@@ -49,7 +50,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         addDate(result, startingDayOfWeek);
         for (int i = 0; i < getLongestTimeLine(); i++){
             for (int j = 0; j < 7; j++){
-                List<String> newTimeLine = updateTimeList(gatherTimeLine(j));
+                List<String> newTimeLine = cf.updateTimeList(this.defaultTimeLine, gatherTimeLine(j));
                 if (newTimeLine.size() > i){
                     addTimeLine(result, newTimeLine, i);
                     int tempDiv = addContent(result, newTimeLine, i, j);
@@ -69,8 +70,9 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private int getLongestTimeLine(){
         int length = this.defaultTimeLine.size();
         for (int i = 0; i < this.calendarMap.size(); i++){
-            if (updateTimeList(gatherTimeLine(i)).size() > length){
-                length = updateTimeList(gatherTimeLine(i)).size();
+            List<String> newTimeList = cf.updateTimeList(this.defaultTimeLine, gatherTimeLine(i));
+            if (newTimeList.size() > length){
+                length = newTimeList.size();
             }
         }
         return length;
@@ -85,35 +87,8 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         return temp;
     }
 
-    private List<String> updateTimeList(List<String> lst){
-        List<String> temp = new ArrayList<>(this.defaultTimeLine);
-        for (String time : lst){
-            if (!temp.contains(time)){
-                temp.add(time);
-            }
-        }
-        List<Integer> container = new ArrayList<>();
-        List<String> sortedList = new ArrayList<>();
-        for (String item : temp){
-            container.add(convertTimeToInt(item));
-        }
-        Collections.sort(container);
-        for (Integer number : container) {
-            String convertedTime = String.valueOf(number);
-            if (convertedTime.length() == 1) {
-                sortedList.add("00:0" + convertedTime);
-            } else if (convertedTime.length() == 2) {
-                sortedList.add("00:" + convertedTime);
-            } else if (convertedTime.length() == 3) {
-                sortedList.add("0" + convertedTime.charAt(0) + ":" + convertedTime.substring(1, 3));
-            } else if (convertedTime.length() == 4) {
-                sortedList.add(convertedTime.substring(0, 2) + ":" + convertedTime.substring(2, 4));
-            }
-        }
-        return sortedList;
-    }
 
-    private void setUpCalendar(int startingDayOfWeek, StringBuilder result, CalendarFrame cf){
+    private void setUpCalendar(int startingDayOfWeek, StringBuilder result, DisplayCalendarHelper cf){
         if (startingDayOfWeek == 1){
             result.append(cf.startFrame("MONDAY", lengthDecider()));
         }

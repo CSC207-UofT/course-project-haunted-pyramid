@@ -1,19 +1,27 @@
 package presenters;
 
+import helpers.DisplayCalendarHelper;
 import usecases.CalendarManager;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DisplayDailyCalendar extends DisplayCalendar {
-    private int year;
-    private int month;
-    private int date;
+    private final int year;
+    private final int month;
+    private final int date;
+    private final DisplayCalendarHelper cf;
+    private List<Integer> timeLine;
+
     public DisplayDailyCalendar(CalendarManager cm, int year, int month, int date) {
         super(cm);
         this.year = year;
         this.month = month;
         this.date = date;
+        this.cf = new DisplayCalendarHelper(year, month);
     }
     @Override
     public String displayCalendar() {
@@ -25,7 +33,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
 
 
     private void dailyFrame(StringBuilder result){
-        String chosenDayOfWeek = findStartDayOfWeek(this.year, this.month, this.date);
+        String chosenDayOfWeek = cf.findStartDayOfWeek(this.year, this.month, this.date);
         String top = "-".repeat(100);
         result.append(" ").append(top).append(" ").append("\n");
         String spacer = " ".repeat(50 - chosenDayOfWeek.length()/2);
@@ -63,6 +71,8 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         String div = " ".repeat(105 - length - dayOfWeek.length());
         result.append(div).append("|").append("\n");
     }
+
+
 
 
 
