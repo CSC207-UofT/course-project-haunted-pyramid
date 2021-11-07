@@ -18,10 +18,10 @@ public class EventManagerTest {
     @Before
     public void start(){
         this.events = new Event[] {new Event(1, "1", 2021, 10, 1, 2, 3, 0,
-                0), new Event(1, "2", 2021, 10, 1, 4, 5, 0,
-                0), new Event(1, "3", 2021, 10, 1, 5, 6, 0,
-                30), new Event(1, "4", 2021, 10, 2, 9, 10, 30,
-                0), new Event(1, "5", 2021, 10, 2, 9, 11, 30,
+                0), new Event(2, "2", 2021, 10, 1, 4, 5, 0,
+                0), new Event(3, "3", 2021, 10, 1, 5, 6, 0,
+                30), new Event(4, "4", 2021, 10, 2, 9, 10, 30,
+                0), new Event(5, "5", 2021, 10, 2, 9, 11, 30,
                 30)};
         this.eventManager = new EventManager(events);
     }
@@ -54,15 +54,14 @@ public class EventManagerTest {
     }
     @Test
     public void testTimeOrder() {
-        ArrayList<Event> ordered = new ArrayList<>(Arrays.asList(this.eventManager.get(1),
+        List<Event> ordered = List.of(new Event[] {this.eventManager.get(1),
                 this.eventManager.get(2),
                 this.eventManager.get(3), this.eventManager.get(4),
-                this.eventManager.get(5)));
-        ArrayList<Event> unordered = new ArrayList<>(Arrays.asList(this.eventManager.get(4),
+                this.eventManager.get(5)});
+        List<Event> unordered = List.of(new Event[] {this.eventManager.get(4),
                 this.eventManager.get(2),
                 this.eventManager.get(1), this.eventManager.get(5),
-                this.eventManager.get(3)));
+                this.eventManager.get(3)});
         assertEquals(ordered, this.eventManager.timeOrder(unordered));
     }
-
 }

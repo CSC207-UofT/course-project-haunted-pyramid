@@ -26,23 +26,57 @@ public class EventController {
 
     }
     public void schedule(){
-        String type = IOController.getEventType();
         Set<Event> changes;
         String title = IOController.getName();
         String course = IOController.getCourse();
-        List<Integer> date = IOController.getDate("Enter the date of the event");
+        Integer[] date = IOController.getDate("Enter the date of the event");
         List<Integer> start = IOController.getTime("Enter the start time");
         List<Integer> end = IOController.getTime("enter the end time");
-        this.calendarManager.addToCalendar(this.eventManager.addEvent(title, date.get(0), date.get(1), date.get(2),
-                start.get(0), start.get(1), end.get(0), end.get(1)));
-        this.displayEvents();
+        Event event = this.eventManager.addEvent(title, date[0], date[1], date[2],
+                start.get(0), start.get(1), end.get(0), end.get(1));
+        this.calendarManager.addToCalendar(event);
+        this.edit(this.eventManager.getID(event));
+    }
+
+    public void edit(Integer ID){
+        boolean save = false;
+
+        if (this.eventManager.containsID(ID)){
+            while(!save){
+                System.out.println(this.eventManager.displayEvent(ID));
+                System.out.println("edit recursion");
+                System.out.println("edit prep");
+                String next = IOController.getAnswer("select a field to edit followed by its new value " +
+                        "[i.e. start: 0000-00-00-00-00], or \nsave \ndelete");
+                String[] nextArgs = next.split(": ");
+
+                if (nextArgs[0].equalsIgnoreCase("save")){
+                    save = true;
+                }else if (nextArgs[0].equalsIgnoreCase("delete")) {
+                    this.eventManager.remove(ID);
+                    save = true;
+                }else if (nextArgs[0].equals("start")){
+                    this.eventManager.setStart(this.eventManager.get(ID), nextArgs[1]);
+                }else if (nextArgs[0].equalsIgnoreCase("end")){
+                    this.eventManager.setStart(this.eventManager.get(ID), nextArgs[2]);
+                }else if (nextArgs[0].equalsIgnoreCase("description")){
+                    this.eventManager.setDescription(this.eventManager.get(ID), nextArgs[1]);
+                }else if (nextArgs[0].equalsIgnoreCase("name")){
+                    this.eventManager.setName(this.eventManager.get(ID), nextArgs[1]);
+                }else if (nextArgs[0].equalsIgnoreCase("edit prep")){
+
+                }else if (nextArgs[0].equalsIgnoreCase("edit recursion")){
+
+                }
+            }
+
+        }
     }
 
     //for testing purposes
     public void displayEvents(){
-        for (Event event: this.eventManager.getAllEvents()){
-            System.out.println(eventManager.getID(event) + " " + eventManager.getName(event) + "-" +
-                    eventManager.getStart(event) + "/" + eventManager.getEnd(event));
+        for (Event event: this.eventManager.timeOrder(this.eventManager.getAllEvents())){
+            System.out.println(this.eventManager.displayEvent(this.eventManager.getID(event)));
         }
     }
 

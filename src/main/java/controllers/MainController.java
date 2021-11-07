@@ -27,7 +27,7 @@ public class MainController {
         this.calendarController = new CalendarController();
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
                 this.calendarController.getCalendarManager());
-        // displayScreen();
+        displayScreen();
     }
 
     /**
@@ -57,8 +57,10 @@ public class MainController {
      */
     public void displayScreen() {
         while (this.loginController.isLoggedIn()) {
+            this.eventController.displayEvents();
             System.out.println("Type 'add' to add an event to the calendar");
             System.out.println("Type 'Exit' to exit this program.");
+            System.out.println("Type the number before an Event to edit that Event");
             String SUorLI = scanner.nextLine();
             if (SUorLI.equalsIgnoreCase("add")) {
                 this.eventController.schedule();
@@ -67,8 +69,8 @@ public class MainController {
                 this.displayInitScreen();
             } else if (SUorLI.equalsIgnoreCase("Exit")) {
                 this.saveAndExitProgram();
-            } else {
-                System.out.println("Invalid input! Try again.");
+            } else{
+                this.eventController.edit(Integer.parseInt(SUorLI));
             }
         }
     }

@@ -1,7 +1,7 @@
 package usecases;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 import java.time.LocalDate;
 
@@ -14,7 +14,6 @@ public class EventManager{
     private final Map<Integer, Event> eventMap;
     private EventListObserver[] toUpdate;
     //TODO temporary
-    private Integer nextID;
 
     /**
      * constructor for event manager
@@ -29,23 +28,21 @@ public class EventManager{
                 this.eventMap.put(event.getID(), event);
             }
         }
-        this.nextID = 0;
+        this.toUpdate = new EventListObserver[]{};
     }
 
-    private Integer nextID(){
-        nextID = nextID + 1;
-        return this.nextID;
-    }
 
     /**
      * empty EventManager
      */
     public EventManager(){
         this.eventMap = new HashMap<>();
+        this.toUpdate = new EventListObserver[]{};
     }
 
     public Integer getID(Event event) {
         return event.getID();
+
     }
 
     /**
@@ -78,6 +75,7 @@ public class EventManager{
      * @return the event just removed
      */
     public Event remove(Integer ID){
+        this.update("remove", new Event[] {this.get(ID)});
         return eventMap.remove(ID);
     }
 
@@ -95,25 +93,48 @@ public class EventManager{
                          int endMin){
         Event event = new Event(ConstantID.get(), name, year, month, day, startHour, endHour, startMin, endMin);
         this.eventMap.put(event.getID(), event);
+        this.update("add", new Event[]{event});
         return event;
+
     }
     public Event addEvent(String name, Integer[] datetime){
-        Event event = new Event(ConstantID.get(), name, datetime[0], datetime[1], datetime[2], datetime[3], datetime[4],
-                datetime[8], datetime[9]);
+        Event event = new Event(ConstantID.get(), name, datetime[0], datetime[1], datetime[2], datetime[3], datetime[8],
+                datetime[4], datetime[9]);
         this.eventMap.put(event.getID(), event);
+        this.update("add", new Event[] {event});
         return event;
     }
 
-    public void addToCollection(Event event, Integer ID){
-        event.addToCollection(ID);
+    public void addEvent(String name, LocalDateTime start, LocalDateTime end){
+        Event event = new Event(ConstantID.get(), name, start, end);
+        this.eventMap.put(event.getID(), event);
+        this.update("add", new Event[] {event});
     }
 
-    public ArrayList<Event> getAllEvents() { return new ArrayList<>(this.eventMap.values()); }
+
+    public List<Event> getAllEvents() { return List.of(this.eventMap.values().toArray(new Event[0])); }
 
     public String getName(Event event){
         return event.getName();
     }
     public String getStart(Event event) {return event.getStartString();}
+
+    public void setStart(Event event, String startString){
+        event.setStartTime(stringToDate(startString));
+        this.update("change", new Event[]{event});
+    }
+    public void setEnd(Event event, String endString){
+        event.setEndTime(stringToDate(endString));
+        this.update("change", new Event[]{event});
+    }
+
+    private LocalDateTime stringToDate(String endString) {
+        String[] full = endString.split(" ");
+        String[] time = full[1].split(":");
+        String[] date = full[0].split("-");
+        return LocalDateTime.of(Integer.parseInt(date[0]), Integer.parseInt(date[1]),
+                Integer.parseInt(date[2]), Integer.parseInt(time[0]), Integer.parseInt(time[1]));
+    }
 
     public String getStartTime(Event event){
         String[] date = event.getStartString().split("-");
@@ -147,7 +168,7 @@ public class EventManager{
 
     public String getEnd(Event event) {return event.getEndString();}
 
-    public void update(String addRemoveChange, Map<Integer, Event> changed){
+    public void update(String addRemoveChange, Event[] changed){
         for (EventListObserver obs: this.toUpdate){
             obs.update(addRemoveChange, changed);
         }
@@ -183,11 +204,13 @@ public class EventManager{
     }
     public List<Event> timeOrder(List<Event> events){
         List<Event> sorted = new ArrayList<>();
-        while (!events.isEmpty()){
+        events = new ArrayList<>(events);
+        while (!(events.isEmpty())){
             sorted.add(earliest(events));
             events.remove(earliest(events));
         }
-        return sorted;
+        events = sorted;
+        return events;
     }
 
     public void setStartEnd(Event event, Integer[] instanceSchedule) {
@@ -196,5 +219,58 @@ public class EventManager{
         event.setEndTime(LocalDateTime.of(instanceSchedule[5], instanceSchedule[6], instanceSchedule[7],
                 instanceSchedule[8], instanceSchedule[9]));
 
+    }
+    public String getDescription(Event event){
+        return event.getDescription();
+    }
+
+    public String displayEvent(Integer ID){
+        Event event = this.get(ID);
+        return this.getID(event) + "\nname: " + this.getName(event) + "\nstart: " +
+                this.getStart(event) + "\nend: " + this.getEnd(event) + "\ndescription: " + this.getDescription(event);
+    }
+
+    public boolean containsID(Integer ID){
+        return this.eventMap.containsKey(ID);
+    }
+
+    public Integer getCollection(Integer ID){
+        return this.get(ID).getCollectionID();
+    }
+
+    public Map<LocalDate, List<Event>> getRange(LocalDate from, LocalDate to){
+        Map<LocalDate, List<Event>> range = new HashMap<>();
+        while (from.isBefore(to)){
+            range.put(from, List.of(this.getDay(from).values().toArray(new Event[0])));
+        }
+        return range;
+    }
+
+    public Map<LocalDateTime, Long> freeSlots(LocalDateTime start, List<Event> events, LocalDateTime end){
+        List<Event> schedule = this.timeOrder(events);
+        Map<LocalDateTime, Long> lengthStart = new HashMap<>();
+        int taskNum = 0;
+        for (Event event: schedule){
+            if (event.getEndTime().isBefore(end) && event.getStartTime().isAfter(start)){
+                if (lengthStart.isEmpty()){
+                    lengthStart.put(start, Duration.between(start, event.getStartTime()).getSeconds());
+                }else{
+                    lengthStart.put(schedule.get(taskNum-1).getStartTime(), Duration.between(schedule.get(taskNum-1).getEndTime(),
+                                    event.getStartTime()).getSeconds());
+                }
+            }if(schedule.get(taskNum + 1).getStartTime().isAfter(end)){
+                lengthStart.put(event.getEndTime(), Duration.between(event.getEndTime(), end).getSeconds());
+            }
+            taskNum ++;
+        }
+        return lengthStart;
+    }
+
+    public void setName(Event event, String name) {
+        event.setName(name);
+    }
+
+    public void setDescription(Event event, String descrip) {
+        event.setDescription(descrip);
     }
 }
