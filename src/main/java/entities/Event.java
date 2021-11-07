@@ -8,8 +8,9 @@ public class Event {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private final int ID;
-    private final String name;
+    private String name;
     private Integer collectionID;
+    private String description = null;
     //private Course course; TODO courses are a thing
 
     /**
@@ -44,6 +45,17 @@ public class Event {
         this.ID = ID;
         this.startTime = LocalDateTime.of(year, month, day, startHour, startMin , 0);
         this.endTime = LocalDateTime.of(year, month, day, endHour, endMin , 0);
+    }
+
+    public void setDescription(String description){
+        this.description = description;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+    public void setName(String name){
+        this.name = name;
     }
 
     /**
@@ -172,6 +184,10 @@ public class Event {
         return (this.startTime.isBefore(other.getStartTime()) && this.endTime.isAfter(other.getStartTime())) ||
                 (this.startTime.isEqual(other.getStartTime())) ||
                 (this.startTime.isAfter(other.getStartTime()) && this.startTime.isBefore(other.getEndTime()));
+    }
+
+    public Integer getCollectionID(){
+        return this.collectionID;
     }
 
 }
