@@ -2,8 +2,6 @@ package presenters;
 
 import usecases.CalendarManager;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 
 public abstract class DisplayCalendar {
     public CalendarManager cm;

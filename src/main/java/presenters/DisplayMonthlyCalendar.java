@@ -1,6 +1,7 @@
 package presenters;
 
 import entities.Event;
+import helpers.Constants;
 import helpers.DisplayCalendarHelper;
 import usecases.CalendarManager;
 import usecases.MonthlyCalendar;
@@ -13,7 +14,6 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
     private final List<Integer> keyList;
     private final Map<Integer, List<Event>> calendarMap;
     private final DisplayCalendarHelper cf;
-    private final int SPACER = 24;
     List<String> dayOfWeekCollection = new ArrayList<>() {{
         add("SUNDAY");
         add("MONDAY");
@@ -94,14 +94,14 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         for (String day : dayOfWeekCollection) {
             if (!day.equals(startingDayOfWeek)) {
                 count += 1;
-                String tempDiv = " ".repeat(day.length() + SPACER);
+                String tempDiv = " ".repeat(day.length() + Constants.MONTHLY_CAL_SPACER);
                 result.append(tempDiv).append("|");
             } else {
                 String tempDiv;
                 if (keyList.get(usedDates.size()) < 10) {
-                    tempDiv = " ".repeat(day.length() + SPACER - 2);
+                    tempDiv = " ".repeat(day.length() + Constants.MONTHLY_CAL_SPACER - 2);
                 } else {
-                    tempDiv = " ".repeat(day.length() + SPACER - 3);
+                    tempDiv = " ".repeat(day.length() + Constants.MONTHLY_CAL_SPACER - 3);
                 }
                 result.append(" ").append(keyList.get(usedDates.size())).append(tempDiv).append("|");
                 usedContentDates.add(keyList.get(usedDates.size()));
@@ -119,9 +119,11 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         while (i < this.dayOfWeekCollection.size() - 1 - count && usedDates.size() < keyList.size()) {
             result.append(" ").append(keyList.get(usedDates.size()));
             if (keyList.get(usedDates.size()) < 10) {
-                result.append(" ".repeat(this.dayOfWeekCollection.get(count + 1 + i).length() + SPACER - 2)).append("|");
+                result.append(" ".repeat(this.dayOfWeekCollection.get(count + 1 + i).length() +
+                        Constants.MONTHLY_CAL_SPACER - 2)).append("|");
             } else {
-                result.append(" ".repeat(this.dayOfWeekCollection.get(count + 1 + i).length() + SPACER - 3)).append("|");
+                result.append(" ".repeat(this.dayOfWeekCollection.get(count + 1 + i).length() +
+                        Constants.MONTHLY_CAL_SPACER - 3)).append("|");
             }
             usedContentDates.add(keyList.get(usedDates.size()));
             usedDates.add(keyList.get(usedDates.size()));
@@ -131,7 +133,8 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
 
         if (usedDates.size() >= keyList.size()) {
             while (i < this.dayOfWeekCollection.size() - 1 - count) {
-                String tempDiv = " ".repeat(this.dayOfWeekCollection.get(count + 1 + i).length() + SPACER);
+                String tempDiv = " ".repeat(this.dayOfWeekCollection.get(count + 1 + i).length() +
+                        Constants.MONTHLY_CAL_SPACER);
                 result.append(tempDiv).append("|");
                 i += 1;
             }
@@ -153,7 +156,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
             int count = 0;
             int i = 0;
             while (i < index) {
-                String tempDiv = " ".repeat(this.dayOfWeekCollection.get(i).length() + SPACER);
+                String tempDiv = " ".repeat(this.dayOfWeekCollection.get(i).length() + Constants.MONTHLY_CAL_SPACER);
                 result.append(tempDiv).append("|");
                 i += 1;
             }
@@ -165,18 +168,20 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
                         eventName = eventName.substring(0, 12) + "...";
                     }
                     String eventTime = cm.getEventTimes(year, month, usedContentDates.get(count)).get(j);
-                    String tempDiv = " ".repeat(this.dayOfWeekCollection.get(i + count).length() + SPACER -
-                            eventName.length() - 3 - eventTime.length());
+                    String tempDiv = " ".repeat(this.dayOfWeekCollection.get(i + count).length() +
+                            Constants.MONTHLY_CAL_SPACER - eventName.length() - 3 - eventTime.length());
                     result.append(" ").append(eventName).append(": ").append(eventTime).append(tempDiv).append("|");
                 } else if (calendarMap.get(usedContentDates.get(count)).size() - 1 < j) {
-                    String tempDiv = " ".repeat(this.dayOfWeekCollection.get(i + count).length() + SPACER);
+                    String tempDiv = " ".repeat(this.dayOfWeekCollection.get(i + count).length() +
+                            Constants.MONTHLY_CAL_SPACER);
                     result.append(tempDiv).append("|");
                 }
                 count += 1;
             }
             if (usedContentDates.size() < 7 && usedContentDates.get(0) != 1) {
                 while (i + count < this.dayOfWeekCollection.size()) {
-                    String tempDiv = " ".repeat(this.dayOfWeekCollection.get(i + count).length() + SPACER);
+                    String tempDiv = " ".repeat(this.dayOfWeekCollection.get(i + count).length() +
+                            Constants.MONTHLY_CAL_SPACER);
                     result.append(tempDiv).append("|");
                     count += 1;
                 }

@@ -1,6 +1,7 @@
 package presenters;
 
 import entities.Event;
+import helpers.Constants;
 import helpers.DisplayCalendarHelper;
 import usecases.CalendarManager;
 import usecases.EventManager;
@@ -21,7 +22,6 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private final List<String> defaultTimeLine = new ArrayList<>();
     private final EventManager eventManager = new EventManager();
     private final DisplayCalendarHelper cf;
-    private int NAME_LIMIT = 14;
 
     public DisplayWeeklyCalendar(CalendarManager cm, int year, int month, int date) {
         super(cm);
@@ -193,7 +193,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         for (Event event: calendarMap.get(keyList.get(index))){
             if (convertTimeToInt(timeLine.get(time)) >= convertTimeToInt(eventManager.getStartTime(event))
                 && convertTimeToInt(timeLine.get(time)) <= convertTimeToInt(eventManager.getEndTime(event))){
-                if (eventManager.getName(event).length() < NAME_LIMIT){
+                if (eventManager.getName(event).length() < Constants.WEEKLY_CAL_NAME_LIMIT){
                     result.append(" ").append(eventManager.getName(event)).append(";");
                     temp += eventManager.getName(event).length() + 2;
                 }
@@ -237,13 +237,15 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         for (Integer number: keyList){
             List<Event> eventList = calendarMap.get(number);
             for (int i = 0; i < eventList.size(); i++){
-                int totalLength = Math.min(eventManager.getName(eventList.get(i)).length(), NAME_LIMIT);
+                int totalLength = Math.min(eventManager.getName(eventList.get(i)).length(),
+                        Constants.WEEKLY_CAL_NAME_LIMIT);
                 for (int j = i + 1; j < eventList.size(); j++){
                     if (convertTimeToInt(eventManager.getStartTime(eventList.get(i)))
                             <= convertTimeToInt(eventManager.getStartTime(eventList.get(j)))
                             && convertTimeToInt(eventManager.getEndTime(eventList.get(i)))
                             > convertTimeToInt(eventManager.getStartTime(eventList.get(j)))){
-                        totalLength += Math.min(eventManager.getName(eventList.get(j)).length(), NAME_LIMIT);
+                        totalLength += Math.min(eventManager.getName(eventList.get(j)).length(),
+                                Constants.WEEKLY_CAL_NAME_LIMIT);
                     }
                 }
                 if (temp < totalLength){
@@ -252,7 +254,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
             }
         }
         if (temp > 14){
-            temp = temp - NAME_LIMIT;
+            temp = temp - Constants.WEEKLY_CAL_NAME_LIMIT;
         }
         else {
             temp = 0;
