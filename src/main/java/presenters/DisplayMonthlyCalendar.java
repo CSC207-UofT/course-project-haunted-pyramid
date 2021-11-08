@@ -53,7 +53,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
             result.append("There is no conflict for this month");
         }
         else {
-            result.append("The following items are having conflict: ");
+            result.append("The following Events are having conflict: ");
             for (String name : conflicts){
                 result.append(name).append("; ");
             }
