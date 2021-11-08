@@ -31,61 +31,50 @@ public class CalendarManager {
         // Create a calendar of the current month
         this.currentCalendar = new OurCalendar(this.currentYear, this.currentMonth);
 
-        cal.add(Calendar.MONTH, 1);
-        int firstNextMonth = cal.get(Calendar.MONTH);
+        this.futureCalendar = createCalendarLists(cal, 1);
+
+        cal.setTime(today);
+
+        pastCalendar = createCalendarLists(cal, -1);
+
+    }
+
+    /**
+     * helper method for constructing list of OurCalendars
+     * interval determines the difference between the current and the next month
+     * ( if interval = 1, the next three month will be put in the list
+     * if interval = -1, the past three month will be put in the list)
+     * @param cal Calendar object with the current date info
+     * @param interval The difference between the current and the next month
+     * @return list of OurCalendar
+     */
+    private List<OurCalendar> createCalendarLists(Calendar cal, int interval) {
+
+        cal.add(Calendar.MONTH, interval);
+        int firstNextMonth = cal.get(Calendar.MONTH) + 1;
         int firstNextYear = cal.get(Calendar.YEAR);
 
-        cal.add(Calendar.MONTH, 1);
-        int secondNextMonth = cal.get(Calendar.MONTH);
+        cal.add(Calendar.MONTH, interval);
+        int secondNextMonth = cal.get(Calendar.MONTH) + 1;
         int secondNextYear = cal.get(Calendar.YEAR);
 
-        cal.add(Calendar.MONTH, 1);
-        int thirdNextMonth = cal.get(Calendar.MONTH);
+        cal.add(Calendar.MONTH, interval);
+        int thirdNextMonth = cal.get(Calendar.MONTH) + 1;
         int thirdNextYear = cal.get(Calendar.YEAR);
 
         // Create a calendar of the future 3 months calendar
-        OurCalendar firstFuture = new OurCalendar(firstNextYear, firstNextMonth + 1);
-        OurCalendar secondFuture = new OurCalendar(secondNextYear, secondNextMonth + 1);
-        OurCalendar thirdFuture = new OurCalendar(thirdNextYear, thirdNextMonth + 1);
+        OurCalendar firstNext = new OurCalendar(firstNextYear, firstNextMonth);
+        OurCalendar secondNext = new OurCalendar(secondNextYear, secondNextMonth);
+        OurCalendar thirdNext = new OurCalendar(thirdNextYear, thirdNextMonth);
 
-        this.futureCalendar = new ArrayList<>(){
+        return new ArrayList<>(){
             {
-                add(firstFuture);
-                add(secondFuture);
-                add(thirdFuture);
-            }
-        };
+                add(firstNext);
+                add(secondNext);
+                add(thirdNext);
+            }};
+        }
 
-
-        Calendar c = Calendar.getInstance();
-        c.setTime(today);
-
-        c.add(Calendar.MONTH, -1);
-        int firstPreviousMonth = c.get(Calendar.MONTH);
-        int firstPreviousYear = c.get(Calendar.YEAR);
-
-        c.add(Calendar.MONTH, -1);
-        int secondPreviousMonth = c.get(Calendar.MONTH);
-        int secondPreviousYear = c.get(Calendar.YEAR);
-
-        c.add(Calendar.MONTH, -1);
-        int thirdPreviousMonth = c.get(Calendar.MONTH);
-        int thirdPreviousYear = c.get(Calendar.YEAR);
-
-        // Create a calendar of the past 3 months calendar
-        OurCalendar firstPast = new OurCalendar(firstPreviousYear, firstPreviousMonth + 1);
-        OurCalendar secondPast = new OurCalendar(secondPreviousYear, secondPreviousMonth + 1);
-        OurCalendar thirdPast = new OurCalendar(thirdPreviousYear, thirdPreviousMonth + 1);
-
-        this.pastCalendar = new ArrayList<>(){
-            {
-                add(firstPast);
-                add(secondPast);
-                add(thirdPast);
-            }
-        };
-
-    }
 
 
     /**
@@ -93,32 +82,27 @@ public class CalendarManager {
      * @return a list of Events to show the events that are conflicted
      */
     public List<String> notifyConflict(int year, int month) {
-        if (year > this.currentYear){
-            month = month + 12;
-        }
-        else if (year < this.currentYear){
-            month = month - 12;
-        }
+        int adjustedMonth = adjustMonth(year, month);
         List<String> eventName = new ArrayList<>();
         // check the chosen calendar
-        if (month == this.currentMonth){
+        if (adjustedMonth == this.currentMonth){
             if (this.currentCalendar.isConflict()){
                 for (Event event : this.currentCalendar.getConflictEvent()){
                     eventName.add(event.getName());
                 }
             }
         }
-        else if (month > this.currentMonth && this.currentMonth + 4 > month){
-            if (this.futureCalendar.get(month - this.currentMonth - 1).isConflict()){
-                for (Event event : this.futureCalendar.get(month - this.currentMonth - 1).getConflictEvent()){
+        else if (adjustedMonth > this.currentMonth && this.currentMonth + 4 > adjustedMonth){
+            if (this.futureCalendar.get(adjustedMonth - this.currentMonth - 1).isConflict()){
+                for (Event event : this.futureCalendar.get(adjustedMonth - this.currentMonth - 1).getConflictEvent()){
                     eventName.add(event.getName());
                 }
             }
         }
 
-        else if (month < this.currentMonth && month + 4 > this.currentMonth) {
-            if (this.pastCalendar.get(this.currentMonth - month - 1).isConflict()){
-                for (Event event : this.pastCalendar.get(this.currentMonth - month - 1).getConflictEvent()){
+        else if (adjustedMonth < this.currentMonth && adjustedMonth + 4 > this.currentMonth) {
+            if (this.pastCalendar.get(this.currentMonth - adjustedMonth - 1).isConflict()){
+                for (Event event : this.pastCalendar.get(this.currentMonth - adjustedMonth - 1).getConflictEvent()){
                     eventName.add(event.getName());
                 }
             }
@@ -127,46 +111,51 @@ public class CalendarManager {
     }
 
     /**
+     * adjust the month according to the year
+     * if the year is greater than the current year, add more month to match
+     * otherwise, subtract month to match
+     * @param year year of the given input
+     * @param month month of the given input
+     * @return adjusted month
+     */
+    private int adjustMonth(int year, int month) {
+        if (year > this.currentYear){
+            month = month + 12 * (year - this.currentYear);
+        }
+        else if (year < this.currentYear){
+            month = month - 12 * (this.currentYear - year);
+        }
+        return month;
+    }
+
+    /**
      * Add event to calendar
      * @param event The Event object which is to be added to the calendar
      */
     public void addToCalendar(Event event){
         // Gets the month as an int from event start time (month)
-        String m = event.getStartString().split("-")[1];
-        int month = Integer.parseInt(m);
-        int year = Integer.parseInt(event.getStartString().split("-")[0]);
-        if (year == this.currentYear + 1){
-            month = month + 12;
-        }
-        if (month == this.currentMonth){
+        String eventMonthInfo = event.getStartString().split("-")[1];
+        String eventYearInfo = event.getStartString().split("-")[0];
+        int month = Integer.parseInt(eventMonthInfo);
+        int year = Integer.parseInt(eventYearInfo);
+        int adjustedMonth = adjustMonth(year, month);
+        if (adjustedMonth == this.currentMonth){
             this.currentCalendar.addEvent(event);
             this.currentCalendar.updateConflict();
         }
-        else if (month == this.currentMonth + 1){
-            this.futureCalendar.get(0).addEvent(event);
-            this.futureCalendar.get(0).updateConflict();
-        }
-        else if (month == this.currentMonth + 2){
-            this.futureCalendar.get(1).addEvent(event);
-            this.futureCalendar.get(1).updateConflict();
-        }
-        else if (month == this.currentMonth + 3){
-            this.futureCalendar.get(2).addEvent(event);
-            this.futureCalendar.get(2).updateConflict();
-        }
-        else if (month == this.currentMonth - 1){
-            this.pastCalendar.get(0).addEvent(event);
-            this.pastCalendar.get(0).updateConflict();
-        }
-        else if (month == this.currentMonth - 2){
-            this.pastCalendar.get(1).addEvent(event);
-            this.pastCalendar.get(1).updateConflict();
-        }
-        else if (month == this.currentMonth - 3){
-            this.pastCalendar.get(2).addEvent(event);
-            this.pastCalendar.get(2).updateConflict();
+        for (int i = 0; i < 3; i++){
+            if (adjustedMonth == this.currentMonth + i + 1){
+                this.futureCalendar.get(i).addEvent(event);
+                this.futureCalendar.get(i).updateConflict();
+            }
         }
 
+        for (int j = 0; j < 3; j++){
+            if (adjustedMonth == this.currentMonth - j - 1){
+                this.pastCalendar.get(j).addEvent(event);
+                this.pastCalendar.get(j).updateConflict();
+            }
+        }
     }
 
     /**
@@ -177,39 +166,22 @@ public class CalendarManager {
      * @param date the date that event will be removed from
      */
     public void removeFromCalendar(Event event, int year, int month, int date){
-        if (year == this.currentYear + 1){
-            month = month + 12;
-        }
-        else if (year == this.currentYear - 1){
-            month = month - 12;
-        }
-        if (month == this.currentMonth){
+        int adjustedMonth = adjustMonth(year, month);
+        if (adjustedMonth == this.currentMonth){
             this.currentCalendar.removeEvent(event, date);
             this.currentCalendar.updateConflict();
         }
-        else if (month == this.currentMonth + 1){
-            this.futureCalendar.get(0).removeEvent(event, date);
-            this.futureCalendar.get(0).updateConflict();
+        for (int i = 0; i < 3; i++){
+            if (adjustedMonth == this.currentMonth + i + 1){
+                this.futureCalendar.get(i).removeEvent(event, date);
+                this.futureCalendar.get(i).updateConflict();
+            }
         }
-        else if (month == this.currentMonth + 2){
-            this.futureCalendar.get(1).removeEvent(event, date);
-            this.futureCalendar.get(1).updateConflict();
-        }
-        else if (month == this.currentMonth + 3){
-            this.futureCalendar.get(2).removeEvent(event, date);
-            this.futureCalendar.get(2).updateConflict();
-        }
-        else if (month == this.currentMonth - 1){
-            this.pastCalendar.get(0).removeEvent(event, date);
-            this.pastCalendar.get(0).updateConflict();
-        }
-        else if (month == this.currentMonth - 2){
-            this.pastCalendar.get(1).removeEvent(event, date);
-            this.pastCalendar.get(1).updateConflict();
-        }
-        else if (month == this.currentMonth - 3){
-            this.pastCalendar.get(2).removeEvent(event, date);
-            this.pastCalendar.get(2).updateConflict();
+        for (int j = 0; j < 3; j++){
+            if (adjustedMonth == this.currentMonth - j - 1){
+                this.pastCalendar.get(j).removeEvent(event, date);
+                this.pastCalendar.get(j).updateConflict();
+            }
         }
     }
 
@@ -236,39 +208,25 @@ public class CalendarManager {
      * @return return the list of the events' names
      */
     public List<String> getEventNames(int year, int month, int date) {
-        if (year == this.currentYear + 1) {
-            month = month + 12;
-        } else if (year == this.currentYear - 1) {
-            month = month - 12;
-        }
+        int adjustedMonth = adjustMonth(year, month);
         List<String> nameList = new ArrayList<>();
-        if (month == this.currentMonth) {
+        if (adjustedMonth == this.currentMonth) {
             for (Event item : this.currentCalendar.getCalendarMap().get(date)) {
                 nameList.add(item.getName());
             }
-        } else if (month == this.currentMonth + 1) {
-            for (Event item : this.futureCalendar.get(0).getCalendarMap().get(date)) {
-                nameList.add(item.getName());
+        }
+        for (int i = 0; i < 3; i++){
+            if (adjustedMonth == this.currentMonth + i + 1){
+                for (Event item : this.futureCalendar.get(i).getCalendarMap().get(date)) {
+                    nameList.add(item.getName());
+                }
             }
-        } else if (month == this.currentMonth + 2) {
-            for (Event item : this.futureCalendar.get(1).getCalendarMap().get(date)) {
-                nameList.add(item.getName());
-            }
-        } else if (month == this.currentMonth + 3) {
-            for (Event item : this.futureCalendar.get(2).getCalendarMap().get(date)) {
-                nameList.add(item.getName());
-            }
-        } else if (month == this.currentMonth - 1) {
-            for (Event item : this.pastCalendar.get(0).getCalendarMap().get(date)) {
-                nameList.add(item.getName());
-            }
-        } else if (month == this.currentMonth - 2) {
-            for (Event item : this.pastCalendar.get(1).getCalendarMap().get(date)) {
-                nameList.add(item.getName());
-            }
-        } else if (month == this.currentMonth - 3) {
-            for (Event item : this.pastCalendar.get(2).getCalendarMap().get(date)) {
-                nameList.add(item.getName());
+        }
+        for (int j = 0; j < 3; j++) {
+            if (adjustedMonth == this.currentMonth - j - 1) {
+                for (Event item : this.pastCalendar.get(j).getCalendarMap().get(date)) {
+                    nameList.add(item.getName());
+                }
             }
         }
         return nameList;
@@ -282,46 +240,28 @@ public class CalendarManager {
      * @return return the string of the events' time information
      */
     public List<String> getEventTimes(int year, int month, int date) {
-        if (year == this.currentYear + 1) {
-            month = month + 12;
-        } else if (year == this.currentYear - 1) {
-            month = month - 12;
-        }
+        int adjustedMonth = adjustMonth(year, month);
         List<String> timeList = new ArrayList<>();
-        if (month == this.currentMonth) {
+        if (adjustedMonth == this.currentMonth) {
             for (Event item : this.currentCalendar.getCalendarMap().get(date)) {
                 StringBuilder tempString = generateTimeString(item);
                 timeList.add(tempString.toString());
             }
-        } else if (month == this.currentMonth + 1) {
-            for (Event item : this.futureCalendar.get(0).getCalendarMap().get(date)) {
-                StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString.toString());
+        }
+        for (int i = 0; i < 3; i++){
+            if (adjustedMonth == this.currentMonth + i + 1){
+                for (Event item : this.futureCalendar.get(i).getCalendarMap().get(date)) {
+                    StringBuilder tempString = generateTimeString(item);
+                    timeList.add(tempString.toString());
+                }
             }
-        } else if (month == this.currentMonth + 2) {
-            for (Event item : this.futureCalendar.get(1).getCalendarMap().get(date)) {
-                StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString.toString());
-            }
-        } else if (month == this.currentMonth + 3) {
-            for (Event item : this.futureCalendar.get(2).getCalendarMap().get(date)) {
-                StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString.toString());
-            }
-        } else if (month == this.currentMonth - 1) {
-            for (Event item : this.pastCalendar.get(0).getCalendarMap().get(date)) {
-                StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString.toString());
-            }
-        } else if (month == this.currentMonth - 2) {
-            for (Event item : this.pastCalendar.get(1).getCalendarMap().get(date)) {
-                StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString.toString());
-            }
-        } else if (month == this.currentMonth - 3) {
-            for (Event item : this.pastCalendar.get(2).getCalendarMap().get(date)) {
-                StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString.toString());
+        }
+        for (int j = 0; j < 3; j++){
+            if (adjustedMonth == this.currentMonth - j - 1){
+                for (Event item : this.pastCalendar.get(j).getCalendarMap().get(date)) {
+                    StringBuilder tempString = generateTimeString(item);
+                    timeList.add(tempString.toString());
+                }
             }
         }
         return timeList;
@@ -374,6 +314,7 @@ public class CalendarManager {
     public List<OurCalendar> getPastCalendar(){
         return this.pastCalendar;
     }
+
 }
 
 
