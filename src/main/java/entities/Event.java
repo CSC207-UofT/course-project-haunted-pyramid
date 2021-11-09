@@ -14,11 +14,14 @@ public class Event implements Serializable {
     private LocalDateTime endTime;
     private final int ID;
     private String name;
+    private String type;
     private String description = null;
     private List<Event> workSessions;
     private Long hoursNeeded;
     private Long sessionLength;
-    //private Course course; TODO courses are a thing
+    private Integer recursiveId;
+    private boolean inCategory;
+    private String categoryName;
 
     /**
      * constructor sets the ID, name, start and end times of the entities.Event
@@ -63,13 +66,17 @@ public class Event implements Serializable {
     public void setDescription(String description){
         this.description = description;
     }
+    public void setRecursiveId(int recursiveId) {this.recursiveId = recursiveId;}
+    public void setName(String name){
+        this.name = name;
+    }
+    public void setType(String type) {this.type = type;}
 
     public String getDescription(){
         return description;
     }
-    public void setName(String name){
-        this.name = name;
-    }
+    public String getType() {return type;}
+    public String getCategoryName() {return categoryName;}
 
     /**
      *
