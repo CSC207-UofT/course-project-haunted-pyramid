@@ -59,7 +59,7 @@ public class EventController {
                 }else if (nextArgs[0].equals("start")){
                     this.eventManager.setStart(this.eventManager.get(ID), nextArgs[1]);
                 }else if (nextArgs[0].equalsIgnoreCase("end")){
-                    this.eventManager.setStart(this.eventManager.get(ID), nextArgs[2]);
+                    this.eventManager.setEnd(this.eventManager.get(ID), nextArgs[1]);
                 }else if (nextArgs[0].equalsIgnoreCase("description")){
                     this.eventManager.setDescription(this.eventManager.get(ID), nextArgs[1]);
                 }else if (nextArgs[0].equalsIgnoreCase("name")){

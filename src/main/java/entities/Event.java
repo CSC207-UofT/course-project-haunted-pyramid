@@ -233,12 +233,19 @@ public class Event {
         return future;
     }
 
-    public void completeSession() {
-        this.hoursNeeded -= this.sessionLength;
+    public void completeSession(Event event) {
+        if (this.getWorkSessions().contains(event)){
+            this.getWorkSessions().remove(event);
+            this.hoursNeeded -= (long) (event.getLength());
+        }
     }
 
     public void resetWorkSessions(List<Event> toKeep){
-        this.workSessions = new ArrayList<>();
+        this.workSessions = toKeep;
+    }
+
+    public void addWorkSession(LocalDateTime start, LocalDateTime end){
+        this.workSessions.add(new Event(this.getID(), this.getName(), start, end));
     }
 
     @Override
