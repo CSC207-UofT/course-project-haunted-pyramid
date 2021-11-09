@@ -96,6 +96,7 @@ public class EventManager{
         this.update("add", new Event[]{event});
         return event;
     }
+
     public Event addEvent(String name, Integer[] datetime){
         Event event = new Event(ConstantID.get(), name, datetime[0], datetime[1], datetime[2], datetime[3], datetime[8],
                 datetime[4], datetime[9]);
