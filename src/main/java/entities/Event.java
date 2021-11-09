@@ -1,6 +1,7 @@
 package entities;
 
 import java.awt.image.AreaAveragingScaleFilter;
+import java.io.Serializable;
 import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
@@ -8,7 +9,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Event {
+public class Event implements Serializable {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private final int ID;

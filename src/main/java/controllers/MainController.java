@@ -1,9 +1,14 @@
 package controllers;
 
-import gateways.IOSerializable;
-import usecases.CalendarManager;
-import usecases.EventManager;
+// Just to type cast, never uses any variables or methods in entities.User
+import entities.Event;
+import entities.User;
 
+import gateways.IOSerializable;
+import usecases.EventManager;
+import usecases.UserManager;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -73,6 +78,30 @@ public class MainController {
                 this.eventController.edit(Integer.parseInt(SUorLI));
             }
         }
+    }
+
+    /**
+     * Used to make sure the User files that are being imported into the dropbox is up-to-date with any new data that
+     * were added whilst the program was running.
+     */
+    public ArrayList<User> combineTwoUserFileContents(UserManager um1, UserManager um2) {
+        ArrayList<User> arrayListUM1 = new ArrayList<>(um1.getAllUsers());
+        ArrayList<User> arrayListUM2 = new ArrayList<>(um2.getAllUsers());
+        arrayListUM1.removeAll(arrayListUM2);
+        arrayListUM1.addAll(arrayListUM2);
+        return arrayListUM1;
+    }
+
+    /**
+     * Used to make sure the Event files that are being imported into the dropbox is up-to-date with any new data that
+     * were added whilst the program was running.
+     */
+    public ArrayList<Event> combineTwoEventFileContents(EventManager em1, EventManager em2) {
+        ArrayList<Event> arrayListEM1 = new ArrayList<>(em1.getAllEvents());
+        ArrayList<Event> arrayListEM2 = new ArrayList<>(em2.getAllEvents());
+        arrayListEM1.removeAll(arrayListEM2);
+        arrayListEM1.addAll(arrayListEM2);
+        return arrayListEM1;
     }
 
     /**
