@@ -16,6 +16,7 @@ public class EventController {
     private final EventManager eventManager;
     private final CalendarManager calendarManager;
     private final WorkSessionController workSessionController;
+    private final RecursionController recursionController;
     private final DisplayCalendarFactory displayCalendarFactory;
 
     public EventController(boolean hasSavedData, IOSerializable ioSerializable, CalendarManager calendarManager){
@@ -27,6 +28,7 @@ public class EventController {
         this.calendarManager = calendarManager;
         this.displayCalendarFactory = new DisplayCalendarFactory(this.calendarManager);
         this.workSessionController = new WorkSessionController();
+        this.recursionController = new RecursionController();
     }
     public void schedule(){
         Set<Event> changes;
@@ -67,6 +69,8 @@ public class EventController {
                     this.eventManager.setName(this.eventManager.get(ID), nextArgs[1]);
                 }else if (nextArgs[0].equalsIgnoreCase("prep")){
                     this.workSessionController.edit(this.eventManager.get(ID), this.eventManager);
+                }else if (nextArgs[0].equalsIgnoreCase(("recurse"))){
+                    this.recursionController.edit(this.eventManager.get(ID), this.eventManager);
                 }
             }
 
