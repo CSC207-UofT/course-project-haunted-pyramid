@@ -54,6 +54,10 @@ public class RepeatedEventManager {
         this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
     }
 
+    public void addRecursiveEvent(RecursiveEvent recursiveEvent){
+        this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
+    }
+
     /**
      *
      * Returns the recursive event with the id.

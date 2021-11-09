@@ -7,11 +7,13 @@ import java.time.LocalDate;
 
 import entities.ConstantID;
 import entities.Event;
+import entities.RecursiveEvent;
 import interfaces.EventListObserver;
 
 
 public class EventManager{
     private final Map<Integer, Event> eventMap;
+    private RepeatedEventManager repeatedEventManager;
     private EventListObserver[] toUpdate;
     //TODO temporary
 
@@ -272,4 +274,49 @@ public class EventManager{
     public void setDescription(Event event, String descrip) {
         event.setDescription(descrip);
     }
+
+
+    public void addEvent(Event event){this.eventMap.put(event.getID(), event);}
+
+    public void setRepeatedEventManager(RepeatedEventManager repeatedEventManager) {
+        this.repeatedEventManager = repeatedEventManager;
+    }
+
+    /**
+     *
+     * Given a RecursiveEvent, this method gets all the events in the period of repetition and adds them to the
+     * event manager event list.
+     */
+
+    public void addEventsInRecursion(RecursiveEvent recursiveEvent){
+        for(ArrayList<Event> events : repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId()).values()){
+            for(Event event : events){
+                this.addEvent(event);
+            }
+        }
+    }
+
+
+    public void addEventsInRecursion(){
+        for(RecursiveEvent recursiveEvent : this.repeatedEventManager.getRecursiveEventMap().values()){
+            this.addEventsInRecursion(recursiveEvent);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
