@@ -12,7 +12,12 @@ public class OurCalendar {
     private final Map<Integer, List<Event>> calendarMap; // map of calendar
 
 
-
+    /**
+     * Initialize the OurCalendar class for the given month.
+     * If not year and month are provided, create based on the current year and month
+     * @param year year of the calendar
+     * @param month month of the calendar
+     */
     // if provided a year and month and date, create a calendar that matches that year and month
     public OurCalendar(int year, int month) {
         YearMonth tempYearMonth = YearMonth.of(year, month);
@@ -38,6 +43,7 @@ public class OurCalendar {
         }
         this.calendarMap = tempMap;
     }
+
     // if no argument, create the current month calendar
     public OurCalendar(){
         GregorianCalendar temp = new GregorianCalendar();
@@ -117,44 +123,23 @@ public class OurCalendar {
      * otherwise, reset conflict related attributes to default
      */
     public void updateConflict(){
-        // collection of checks for each day in the month
-        List<Boolean> checkCollection = new ArrayList<>();
         // iterate each day
-        for (int i = 1; i <= this.dateInfo.get(2); i++){
+        for (int date = 1; date <= this.dateInfo.get(2); date++){
             // create a temporary list to store [start time, end time] info
             List<List<Double>> timeInfo = new ArrayList<>();
             // iterate each event in the list
-            for (Event item :this.calendarMap.get(i)) {
+            for (Event item :this.calendarMap.get(date)) {
                 // store start time and end time of the event as a list
                 List<Double> individualTimeInfo = new ArrayList<>();
-                // else is the same day event
                 individualTimeInfo.add(item.startTimeDouble());
                 individualTimeInfo.add(item.startTimeDouble() + item.getLength() * 100);
                 timeInfo.add(individualTimeInfo);
             }
-            // compare if any of the start time, end time overlaps within the day
-            for (int j = 0; j < (timeInfo.size() - 1); j++){
-                List<List<Double>> timeSubList = timeInfo.subList(j + 1, timeInfo.size());
-                for (int k = 0; k < timeSubList.size(); k++){
-                    IsOverlapped check = new IsOverlapped(timeInfo.get(j), timeSubList.get(k));
-                    // if overlaps store the information needed
-                    if (check.getResult()){
-                        checkCollection.add(true);
-                        if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j)))){
-                            this.conflictEvent.add(this.calendarMap.get(i).get(j));
-                        }
-                        if (!(this.conflictEvent.contains(this.calendarMap.get(i).get(j + k + 1)))){
-                            this.conflictEvent.add(this.calendarMap.get(i).get(j + k + 1));
-                        }
-                    }
-                    else {
-                        checkCollection.add(false);
-                    }
-                }
-            }
+            // run the helper method to compare the times and update the conflictEvent
+            checkOverLap(timeInfo, date);
         }
         // if there is any kind of conflict return true
-        if (checkCollection.contains(true)){
+        if (this.conflictEvent.size() != 0){
             this.conflict = true;
         }
         // if there is no conflict at all
@@ -162,6 +147,31 @@ public class OurCalendar {
         else {
             this.conflict = false;
             this.conflictEvent = new ArrayList<>();
+        }
+    }
+
+    /**
+     * Helper method of updateConflict
+     * Compare the lists in time info using the class isOverLapped
+     * If any items are overlapping, add the items to the conflictEvent
+     * @param timeInfo the list that contains the list of start and end times
+     * @param date date of the calendar that we are checking for conflict
+     */
+    private void checkOverLap(List<List<Double>> timeInfo, int date) {
+        for (int j = 0; j < (timeInfo.size() - 1); j++){
+            List<List<Double>> timeSubList = timeInfo.subList(j + 1, timeInfo.size());
+            for (int k = 0; k < timeSubList.size(); k++){
+                IsOverlapped check = new IsOverlapped(timeInfo.get(j), timeSubList.get(k));
+                // if overlaps store the information needed
+                if (check.getResult()){
+                    if (!(this.conflictEvent.contains(this.calendarMap.get(date).get(j)))){
+                        this.conflictEvent.add(this.calendarMap.get(date).get(j));
+                    }
+                    if (!(this.conflictEvent.contains(this.calendarMap.get(date).get(j + k + 1)))){
+                        this.conflictEvent.add(this.calendarMap.get(date).get(j + k + 1));
+                    }
+                }
+            }
         }
     }
 
