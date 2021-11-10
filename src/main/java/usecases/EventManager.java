@@ -89,7 +89,9 @@ public class EventManager{
      * @return the event just removed
      */
     public Event remove(Integer ID){
-        this.update("remove", new Event[] {this.get(ID)});
+        ArrayList<Event> truc = new ArrayList<>();
+        truc.add(this.get(ID));
+        this.update("remove", truc);
         return eventMap.remove(ID);
     }
 
@@ -107,7 +109,9 @@ public class EventManager{
                          int endMin){
         Event event = new Event(ConstantID.get(), name, year, month, day, startHour, endHour, startMin, endMin);
         this.eventMap.put(event.getID(), event);
-        this.update("add", new Event[]{event});
+        ArrayList<Event> truc = new ArrayList<>();
+        truc.add(event);
+        this.update("add", truc);
         return event;
     }
 
@@ -115,14 +119,18 @@ public class EventManager{
                           int endMin){
         Event event = new Event(ConstantID.get(), name, year, month, day, endHour, endMin);
         this.eventMap.put(event.getID(), event);
-        this.update("add", new Event[]{event});
+        ArrayList<Event> truc = new ArrayList<>();
+        truc.add(event);
+        this.update("add", truc);
         return event;
     }
 
     public void addEvent(String name, LocalDateTime start, LocalDateTime end){
         Event event = new Event(ConstantID.get(), name, start, end);
         this.eventMap.put(event.getID(), event);
-        this.update("add", new Event[] {event});
+        ArrayList<Event> truc = new ArrayList<>();
+        truc.add(event);
+        this.update("add", truc);
     }
 
     private List<Event> flattenWorkSessions(List<Event> events){
@@ -144,12 +152,16 @@ public class EventManager{
 
     public void setStart(Event event, String startString){
         event.setStartTime(stringToDate(startString));
-        this.update("change", new Event[]{event});
+        ArrayList<Event> truc = new ArrayList<>();
+        truc.add(event);
+        this.update("change", truc);
     }
 
     public void setEnd(Event event, String endString){
         event.setEndTime(stringToDate(endString));
-        this.update("change", new Event[]{event});
+        ArrayList<Event> truc = new ArrayList<>();
+        truc.add(event);
+        this.update("change", truc);
     }
 
     private LocalDateTime stringToDate(String endString) {
@@ -192,7 +204,7 @@ public class EventManager{
 
     public String getEnd(Event event) {return event.getEndString();}
 
-    public void update(String addRemoveChange, Event[] changed){
+    public void update(String addRemoveChange, ArrayList<Event> changed){
         for (EventListObserver obs: this.toUpdate){
             obs.update(addRemoveChange, changed, this);
         }
