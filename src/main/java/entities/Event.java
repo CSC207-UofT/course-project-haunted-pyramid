@@ -63,6 +63,17 @@ public class Event implements Serializable {
         this.workSessions = new ArrayList<>();
     }
 
+
+    public Event(int ID, String name, int year, int month, int day, int startHour, int endHour, int startMin, int endMin){
+        this.name = name;
+        this.ID = ID;
+        this.endTime = LocalDateTime.of(year, month, day, endHour, endMin);
+        this.startTime = LocalDateTime.of(year, month, day, startHour, startMin);
+        this.hoursNeeded = 0L;
+        this.sessionLength = 1L;
+        this.workSessions = new ArrayList<>();
+    }
+
     /**
      * changes the description of the Event to new input value - used simply for changing notes on Event
      * for User benefit

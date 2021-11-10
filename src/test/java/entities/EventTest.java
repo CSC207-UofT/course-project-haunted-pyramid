@@ -24,12 +24,12 @@ public class EventTest {
 
     @Test
     public void getStartString() {
-        assertEquals("2021-10-15 00:00", this.event1.getStartString());
+        assertEquals("2021-10-15T00:00", this.event1.getStartTime().toString());
     }
 
     @Test
     public void getEndString() {
-        assertEquals("2021-10-15 03:00", this.event1.getEndString());
+        assertEquals("2021-10-15T03:00", this.event1.getEndTime().toString());
     }
 
     @Test

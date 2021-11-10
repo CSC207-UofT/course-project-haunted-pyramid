@@ -134,8 +134,8 @@ public class CalendarManager {
      */
     public void addToCalendar(Event event){
         // Gets the month as an int from event start time (month)
-        String eventMonthInfo = event.getStartString().split("-")[1];
-        String eventYearInfo = event.getStartString().split("-")[0];
+        String eventMonthInfo = event.getEndTime().toString().split("-")[1];
+        String eventYearInfo = event.getEndTime().toString().split("-")[0];
         int month = Integer.parseInt(eventMonthInfo);
         int year = Integer.parseInt(eventYearInfo);
         int adjustedMonth = adjustMonth(year, month);
@@ -274,9 +274,15 @@ public class CalendarManager {
      */
     private StringBuilder generateTimeString(Event item) {
         StringBuilder tempString = new StringBuilder();
-        tempString.append(item.getStartString(), 11, 16);
-        tempString.append(" - ");
-        tempString.append(item.getEndString(), 11, 16);
+        if (item.getStartTime() != null) {
+            tempString.append(item.getStartTime().toString(), 11, 16);
+            tempString.append(" - ");
+            tempString.append(item.getEndTime().toString(), 11, 16);
+        }
+        else {
+            tempString.append("Due ");
+            tempString.append(item.getEndTime().toString(), 11, 16);
+        }
         return tempString;
     }
 
