@@ -124,7 +124,7 @@ public class WorkSessionScheduler implements EventListObserver {
 
 
     @Override
-    public void update(String addRemoveChange, Event[] changed, EventManager eventManager) {
+    public void update(String addRemoveChange, ArrayList<Event>  changed, EventManager eventManager) {
         for (Event event : changed) {
             this.autoSchedule(event, eventManager);
         }
