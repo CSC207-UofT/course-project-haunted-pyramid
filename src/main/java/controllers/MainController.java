@@ -103,8 +103,8 @@ public class MainController {
      * were added whilst the program was running.
      */
     public ArrayList<Event> combineTwoEventFileContents(EventManager em1, EventManager em2) {
-        ArrayList<Event> arrayListEM1 = new ArrayList<>(em1.getAllEvents());
-        ArrayList<Event> arrayListEM2 = new ArrayList<>(em2.getAllEvents());
+        ArrayList<Event> arrayListEM1 = new ArrayList<>(em1.getAllEventsFlatSplit());
+        ArrayList<Event> arrayListEM2 = new ArrayList<>(em2.getAllEventsFlatSplit());
         arrayListEM1.removeAll(arrayListEM2);
         arrayListEM1.addAll(arrayListEM2);
         return arrayListEM1;

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import presenters.DisplayCalendarFactory; // JUST FOR THE DEMONSTRATION
-import usecases.WorkSessionScheduler;
+
 
 public class EventController {
 
@@ -77,7 +77,7 @@ public class EventController {
 
     //for testing purposes
     public void displayEvents(){
-        for (Event event: this.eventManager.timeOrder(this.eventManager.getAllEvents())){
+        for (Event event: this.eventManager.timeOrder(this.eventManager.getAllEventsFlatSplit())){
             System.out.println(this.eventManager.displayEvent(this.eventManager.getID(event)));
         }
     }

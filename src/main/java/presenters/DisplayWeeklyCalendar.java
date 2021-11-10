@@ -82,8 +82,8 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         List<String> temp = new ArrayList<>();
         List<Integer> keyList = getKeys();
         for (Event event: calendarMap.get(keyList.get(index))){
-            temp.add(eventManager.getStartTime(event));
-            temp.add(eventManager.getEndTime(event));
+            temp.add(eventManager.getStartStringLong(event));
+            temp.add(eventManager.getEndStringLong(event));
         }
         return temp;
     }
@@ -197,8 +197,8 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         List<Integer> keyList = getKeys();
         int temp = 0;
         for (Event event: calendarMap.get(keyList.get(index))){
-            if (convertTimeToInt(timeLine.get(time)) >= convertTimeToInt(eventManager.getStartTime(event))
-                && convertTimeToInt(timeLine.get(time)) <= convertTimeToInt(eventManager.getEndTime(event))){
+            if (convertTimeToInt(timeLine.get(time)) >= convertTimeToInt(eventManager.getStartStringLong(event))
+                && convertTimeToInt(timeLine.get(time)) <= convertTimeToInt(eventManager.getEndStringLong(event))){
                 if (eventManager.getName(event).length() < Constants.WEEKLY_CAL_NAME_LIMIT){
                     result.append(" ").append(eventManager.getName(event)).append(";");
                     temp += eventManager.getName(event).length() + 2;
@@ -269,10 +269,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
 
     private int getTotalLength(List<Event> eventList, int totalLength, int index) {
         for (int j = index + 1; j < eventList.size(); j++){
-            if (convertTimeToInt(eventManager.getStartTime(eventList.get(index)))
-                    <= convertTimeToInt(eventManager.getStartTime(eventList.get(j)))
-                    && convertTimeToInt(eventManager.getEndTime(eventList.get(index)))
-                    > convertTimeToInt(eventManager.getStartTime(eventList.get(j)))){
+            if (convertTimeToInt(eventManager.getStartStringLong(eventList.get(index)))
+                    <= convertTimeToInt(eventManager.getStartStringLong(eventList.get(j)))
+                    && convertTimeToInt(eventManager.getEndStringLong(eventList.get(index)))
+                    > convertTimeToInt(eventManager.getStartStringLong(eventList.get(j)))){
                 totalLength += Math.min(eventManager.getName(eventList.get(j)).length(),
                         Constants.WEEKLY_CAL_NAME_LIMIT);
             }
