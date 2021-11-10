@@ -100,43 +100,6 @@ public class EventManager{
         return eventMap.remove(ID);
     }
 
-    /**
-     * creates an event of the input parameters and adds it to <code>this.eventMap</code> by a unique ID
-     * @param year year of event
-     * @param month month of event
-     * @param day date of event
-     * @param startHour time event starts (form HHMM)
-     * @param endHour time event ends (form HHMM)
-     * @param startMin start minute
-     * @param endMin end minute
-     */
-    public Event addEvent(String name, int year, int month, int day, int startHour, int startMin, int endHour,
-                         int endMin){
-        Event event = new Event(ConstantID.get(), name, year, month, day, startHour, endHour, startMin, endMin);
-        this.eventMap.put(event.getID(), event);
-        ArrayList<Event> truc = new ArrayList<>();
-        truc.add(event);
-        this.update("add", truc);
-        return event;
-    }
-
-    /**
-     * creates an event of the input parameters [no start time] and adds it to <code>this.eventMap</code> by a unique ID
-     * @param year year of event
-     * @param month month of event
-     * @param day date of event
-     * @param endHour time event ends (form HHMM)
-     * @param endMin end minute
-     */
-    public Event addEvent(String name, int year, int month, int day, int endHour,
-                          int endMin){
-        Event event = new Event(ConstantID.get(), name, year, month, day, endHour, endMin);
-        this.eventMap.put(event.getID(), event);
-        ArrayList<Event> truc = new ArrayList<>();
-        truc.add(event);
-        this.update("add", truc);
-        return event;
-    }
 
     /**
      * creates an event of the given parameters and adds it to <code>this.eventMap</code> by unique ID
@@ -144,13 +107,34 @@ public class EventManager{
      * @param start LocalDateTime start time of event
      * @param end LocalDateTime end time of event
      */
-    public void addEvent(String name, LocalDateTime start, LocalDateTime end){
+    public Event addEvent(String name, LocalDateTime start, LocalDateTime end){
         Event event = new Event(ConstantID.get(), name, start, end);
         this.eventMap.put(event.getID(), event);
         ArrayList<Event> truc = new ArrayList<>();
         truc.add(event);
         this.update("add", truc);
+        return event;
+
     }
+
+    /**
+     *
+     * @param title
+     * @param endTime
+     * @return
+     */
+    public Event addEvent(String title, LocalDateTime endTime) {
+        Event event = new Event(ConstantID.get(), title, endTime);
+        this.addEvent(event);
+        return event;
+    }
+
+    public Event addEvent(String title, String endString){
+        Event event = new Event(ConstantID.get(), title, this.stringToDate(endString));
+        this.addEvent(event);
+        return event;
+    }
+
 
     /**
      * takes a list of events that may contain work sessions and returns the same list of events in addition to
@@ -172,11 +156,11 @@ public class EventManager{
             List<Event> splitByDay = new ArrayList<>();
             if (event.getStartTime().toLocalDate().isBefore(event.getEndTime().toLocalDate())){
                 splitByDay.add(new Event(event.getID(), event.getName(), event.getStartTime(),
-                        LocalDateTime.of(event.getStartTime().toLocalDate(), LocalTime.of(24, 00))));
+                        LocalDateTime.of(event.getStartTime().toLocalDate(), LocalTime.of(24, 0))));
                 LocalDate nextDay = event.getStartTime().plusDays(1L).toLocalDate();
                 while(event.getEndTime().toLocalDate().isBefore(nextDay)){
                     splitByDay.add(new Event(event.getID(), event.getName(), LocalDateTime.of(nextDay, LocalTime.of(0, 0)),
-                            LocalDateTime.of(nextDay, LocalTime.of(24, 00))));
+                            LocalDateTime.of(nextDay, LocalTime.of(24, 0))));
                     nextDay = nextDay.plusDays(1L);
                 }
                 splitByDay.add(new Event (event.getID(), event.getName(),
@@ -211,14 +195,6 @@ public class EventManager{
     public String getName(Event event){
         return event.getName();
     }
-
-    /**
-     * returns String of the start time of event or null
-     * @see Event#getStartString()
-     * @param event any event (does not have to be in <code>this.eventMap</code>
-     * @return String of the start time of the event
-     */
-    public String getStartString(Event event) {return event.getStartString();}
 
     /**
      * sets the start time of the event by splitting an input String of the format:
@@ -265,52 +241,6 @@ public class EventManager{
                 Integer.parseInt(date[2]), Integer.parseInt(time[0]), Integer.parseInt(time[1]));
     }
 
-    /**
-     * returns a long dash separated String of the Event StartTime, or null
-     * @param event any event (does not have to be in <code>this.eventMap</code>
-     * @return string of event start time of the form YYYY-MM-DD-HH-MM
-     */
-    public String getStartStringLong(Event event){
-        if (event.hasStart()){
-            String[] date = event.getStartString().split("-");
-            return date[2].substring(3, 8);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     *
-     * @param event
-     * @return
-     */
-    public Integer[] getStartInt(Event event){
-        return new Integer[] {event.getStartTime().getYear(), event.getStartTime().getMonthValue(),
-                event.getStartTime().getDayOfMonth(), event.getStartTime().getHour(), event.getStartTime().getMinute()};
-    }
-
-    public Integer[] getEndInt(Event event){
-        return new Integer[] {event.getEndTime().getYear(), event.getEndTime().getMonthValue(),
-                event.getEndTime().getDayOfMonth(), event.getEndTime().getHour(), event.getEndTime().getMinute()};
-    }
-
-    public Integer[] getStartEndInt(Event event){
-        Integer[] concat = new Integer[10];
-        for (int i = 0; i < 5; i ++){
-            concat[i] = this.getStartInt(event)[i];
-        }
-        for (int i = 0; i < 5; i ++){
-            concat[i+5] = this.getEndInt(event)[i];
-        }
-        return concat;
-    }
-    public String getEndStringLong(Event event){
-        String[] date = event.getEndString().split("-");
-        return date[2].substring(3, 8);
-    }
-
-    public String getEnd(Event event) {return event.getEndString();}
-
     public void update(String addRemoveChange, ArrayList<Event> changed){
         for (EventListObserver obs: this.toUpdate){
             obs.update(addRemoveChange, changed, this);
@@ -354,9 +284,7 @@ public class EventManager{
     }
 
     public String displayEvent(Integer ID){
-        Event event = this.get(ID);
-        return this.getID(event) + "\nname: " + this.getName(event) + "\nstart: " +
-                this.getStartString(event) + "\nend: " + this.getEnd(event) + "\ndescription: " + this.getDescription(event);
+        return this.get(ID).toString();
     }
 
     public boolean containsID(Integer ID){
@@ -429,6 +357,5 @@ public class EventManager{
             this.addEventsInRecursion(recursiveEvent);
         }
     }
-
 
 }
