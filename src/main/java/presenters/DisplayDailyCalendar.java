@@ -34,7 +34,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
 
 
     private void dailyFrame(StringBuilder result){
-        String chosenDayOfWeek = cf.findStartDayOfWeek(this.year, this.month, this.date);
+        String chosenDayOfWeek = cf.findStartDayOfWeekString(this.year, this.month, this.date);
         String top = "-".repeat(Constants.DAILY_CAL_SIZE);
         result.append(" ").append(top).append(" ").append("\n");
         String spacer = " ".repeat(Constants.DAILY_CAL_SIZE/2 - chosenDayOfWeek.length()/2);

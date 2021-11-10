@@ -37,8 +37,7 @@ public class DisplayCalendarHelper {
         result.append("Calendar for ").append(this.year).append("/").append(this.month).append("\n");
         String div = "-".repeat(Constants.CALENDAR_SIZE + additionalSpacer * 7);
         result.append(" ").append(div).append("\n");
-        int CALENDAR_SPACER = 12;
-        String space = " ".repeat(CALENDAR_SPACER + additionalSpacer/2);
+        String space = " ".repeat(Constants.CAL_ROW_SPACER /2 + additionalSpacer/2);
         switch (startDayOfWeek) {
             case "SUNDAY":
                 frameWithDifferentStartDay(result, 0, space);
@@ -125,10 +124,8 @@ public class DisplayCalendarHelper {
         return Integer.parseInt(temp);
     }
 
-    public String findStartDayOfWeek(int year, int month, int date){
-        LocalDate localDate = LocalDate.of(year, month, date);
-        DayOfWeek dayOfWeek = DayOfWeek.from(localDate);
-        int startingDayOfWeek = dayOfWeek.getValue();
+    public String findStartDayOfWeekString(int year, int month, int date){
+        int startingDayOfWeek = findStartDayOfWeekInteger(year, month, date);
         String chosenDayOfWeek = "Monday";
         switch (startingDayOfWeek) {
             case 1:
@@ -154,5 +151,11 @@ public class DisplayCalendarHelper {
                 break;
         }
         return chosenDayOfWeek;
+    }
+
+    public int findStartDayOfWeekInteger(int year, int month, int date){
+        LocalDate localDate = LocalDate.of(year, month, date);
+        DayOfWeek dayOfWeek = DayOfWeek.from(localDate);
+        return dayOfWeek.getValue();
     }
 }
