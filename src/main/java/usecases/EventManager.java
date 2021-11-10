@@ -21,8 +21,8 @@ public class EventManager{
      * constructor for event manager
      * @param events a list of the current users events
      */
-    public EventManager(Event[] events){
-        if (events.length == 0) {
+    public EventManager(ArrayList<Event> events){
+        if (events.isEmpty()) {
             this.eventMap = new HashMap<>();
         } else {
             this.eventMap = new HashMap<>();
@@ -37,7 +37,7 @@ public class EventManager{
     /**
      * empty EventManager
      */
-    public EventManager(){
+    public EventManager() {
         this.eventMap = new HashMap<>();
         this.toUpdate = new EventListObserver[]{};
     }
@@ -121,8 +121,8 @@ public class EventManager{
         }
         return flat;
     }
-    public List<Event> getAllEvents() {
-        return this.flattenWorkSessions(List.of(this.eventMap.values().toArray(new Event[0])));
+    public ArrayList<Event> getAllEvents() {
+        return new ArrayList<>(this.eventMap.values());
     }
 
     public String getName(Event event){

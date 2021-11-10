@@ -23,8 +23,13 @@ public class MainController {
     private final IOSerializable ioSerializable;
     private final Scanner scanner = new Scanner(System.in);
 
+    // Variables below are only for the final serialization process
+    private IOSerializable tempIoSerializable;
+    private UserController tempUserController;
+    private EventController tempEventController;
+
     public MainController() {
-        this.ioSerializable = new IOSerializable();
+        this.ioSerializable = new IOSerializable(true);
         this.userController = new UserController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.studentController = new StudentController(this.userController);
         this.loginController = new LoginController(this.userController, this.studentController);
@@ -108,10 +113,15 @@ public class MainController {
      * Save and exit the program. Only save students into students.ser for now.
      */
     public void saveAndExitProgram() {
-        this.ioSerializable.eventsWriteToSerializable(this.eventController.getEventManager().getAllEvents());
-        this.ioSerializable.usersWriteToSerializable(this.userController.getUserManager().getAllUsers());
+        this.tempIoSerializable = new IOSerializable(false);
+        this.tempUserController = new UserController(true, this.tempIoSerializable);
+        this.tempEventController = new EventController(true, this.tempIoSerializable,
+                this.calendarController.getCalendarManager());
+        this.ioSerializable.eventsWriteToSerializable(combineTwoEventFileContents(this.eventController.getEventManager(),
+                this.tempEventController.getEventManager()));
+        this.ioSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(),
+                this.tempUserController.getUserManager()));
         this.ioSerializable.saveToDropbox();
         System.exit(0);
     }
-
 }

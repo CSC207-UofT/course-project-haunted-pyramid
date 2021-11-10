@@ -5,7 +5,6 @@ import usecases.CalendarManager;
 import usecases.EventManager;
 
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 
 import presenters.DisplayCalendarFactory; // JUST FOR THE DEMONSTRATION
@@ -20,11 +19,11 @@ public class EventController {
     private final DisplayCalendarFactory displayCalendarFactory;
 
     public EventController(boolean hasSavedData, IOSerializable ioSerializable, CalendarManager calendarManager){
-        /*if (hasSavedData) {
+        if (hasSavedData) {
             this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
-            this.workSessionController = new workSessionController(ioSerializable.
-        }*/
-        this.eventManager = new EventManager();
+        } else {
+            this.eventManager = new EventManager();
+        }
         this.calendarManager = calendarManager;
         this.displayCalendarFactory = new DisplayCalendarFactory(this.calendarManager);
         this.workSessionController = new WorkSessionController();
