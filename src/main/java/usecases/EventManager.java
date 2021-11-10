@@ -99,11 +99,11 @@ public class EventManager{
         return event;
     }
 
-    public Event addEvent(String name, Integer[] datetime){
-        Event event = new Event(ConstantID.get(), name, datetime[0], datetime[1], datetime[2], datetime[3], datetime[8],
-                datetime[4], datetime[9]);
+    public Event addEvent(String name, int year, int month, int day, int endHour,
+                          int endMin){
+        Event event = new Event(ConstantID.get(), name, year, month, day, endHour, endMin);
         this.eventMap.put(event.getID(), event);
-        this.update("add", new Event[] {event});
+        this.update("add", new Event[]{event});
         return event;
     }
 
@@ -165,10 +165,10 @@ public class EventManager{
 
     public Integer[] getStartEndInt(Event event){
         Integer[] concat = new Integer[10];
-        for (Integer i = 0; i < 5; i ++){
+        for (int i = 0; i < 5; i ++){
             concat[i] = this.getStartInt(event)[i];
         }
-        for (Integer i = 0; i < 5; i ++){
+        for (int i = 0; i < 5; i ++){
             concat[i+5] = this.getEndInt(event)[i];
         }
         return concat;
@@ -185,6 +185,7 @@ public class EventManager{
             obs.update(addRemoveChange, changed, this);
         }
     }
+
     public void addObserver(EventListObserver obs){
         ArrayList<EventListObserver> inter = new ArrayList<>(List.of(this.toUpdate));
         inter.add(obs);
@@ -217,13 +218,6 @@ public class EventManager{
         return events;
     }
 
-    public void setStartEnd(Event event, Integer[] instanceSchedule) {
-        event.setStartTime(LocalDateTime.of(instanceSchedule[0], instanceSchedule[1], instanceSchedule[2],
-                instanceSchedule[3], instanceSchedule[4]));
-        event.setEndTime(LocalDateTime.of(instanceSchedule[5], instanceSchedule[6], instanceSchedule[7],
-                instanceSchedule[8], instanceSchedule[9]));
-
-    }
     public String getDescription(Event event){
         return event.getDescription();
     }

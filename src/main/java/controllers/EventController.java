@@ -19,14 +19,15 @@ public class EventController {
     private final DisplayCalendarFactory displayCalendarFactory;
 
     public EventController(boolean hasSavedData, IOSerializable ioSerializable, CalendarManager calendarManager){
+        this.workSessionController = new WorkSessionController();
         if (hasSavedData) {
             this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
         } else {
             this.eventManager = new EventManager();
+            this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         }
         this.calendarManager = calendarManager;
         this.displayCalendarFactory = new DisplayCalendarFactory(this.calendarManager);
-        this.workSessionController = new WorkSessionController();
         this.recursionController = new RecursionController();
     }
     public void schedule(){
@@ -34,10 +35,8 @@ public class EventController {
         String title = IOController.getName();
         String course = IOController.getCourse();
         Integer[] date = IOController.getDate("Enter the date of the event");
-        List<Integer> start = IOController.getTime("Enter the start time");
         List<Integer> end = IOController.getTime("enter the end time");
-        Event event = this.eventManager.addEvent(title, date[0], date[1], date[2],
-                start.get(0), start.get(1), end.get(0), end.get(1));
+        Event event = this.eventManager.addEvent(title, date[0], date[1], date[2], end.get(0), end.get(1));
         this.calendarManager.addToCalendar(event);
         this.edit(this.eventManager.getID(event));
     }

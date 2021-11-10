@@ -8,7 +8,13 @@ import java.util.ArrayList;
 
 public class WorkSessionController {
 
-    private final WorkSessionScheduler workSessionScheduler = new WorkSessionScheduler(new ArrayList<Event>(), true, true, true);
+    //TODO should be created based on user preferences
+    private final WorkSessionScheduler workSessionScheduler = new WorkSessionScheduler(new ArrayList<>(),
+            true, true, true);
+
+    public WorkSessionScheduler getWorkSessionScheduler(){
+        return this.workSessionScheduler;
+    }
 
     public void edit(Event event, EventManager eventManager){
         boolean done = false;

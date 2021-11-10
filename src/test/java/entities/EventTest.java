@@ -45,16 +45,16 @@ public class EventTest {
 
     @Test
     public void addWorkSession(){
-        LocalDateTime start = LocalDateTime.of(2002, 12, 05, 2, 30);
-        LocalDateTime end = LocalDateTime.of(2002, 12, 05, 3, 30);
+        LocalDateTime start = LocalDateTime.of(2002, 12, 5, 2, 30);
+        LocalDateTime end = LocalDateTime.of(2002, 12, 5, 3, 30);
         this.event1.addWorkSession(start, end);
         assertEquals(this.event1.getWorkSessions(), new ArrayList<>
                 (List.of(new Event[]{new Event(event1.getID(), event1.getName(), start, end)})));
     }
     @Test
     public void pastWorkSessions(){
-        LocalDateTime start = LocalDateTime.of(2002, 12, 05, 2, 30);
-        LocalDateTime end = LocalDateTime.of(2002, 12, 05, 3, 30);
+        LocalDateTime start = LocalDateTime.of(2002, 12, 5, 2, 30);
+        LocalDateTime end = LocalDateTime.of(2002, 12, 5, 3, 30);
         LocalDateTime start2 = LocalDateTime.now().plusDays(7L);
         LocalDateTime end2 = start2.plusHours(3L);
         this.event1.addWorkSession(start, end);
@@ -65,8 +65,8 @@ public class EventTest {
 
     @Test
     public void futureWorkSessions(){
-        LocalDateTime start = LocalDateTime.of(2002, 12, 05, 2, 30);
-        LocalDateTime end = LocalDateTime.of(2002, 12, 05, 3, 30);
+        LocalDateTime start = LocalDateTime.of(2002, 12, 5, 2, 30);
+        LocalDateTime end = LocalDateTime.of(2002, 12, 5, 3, 30);
         LocalDateTime start2 = LocalDateTime.now().plusDays(7L);
         LocalDateTime end2 = start2.plusHours(3L);
         this.event1.addWorkSession(start, end);
@@ -76,19 +76,19 @@ public class EventTest {
     }
     @Test
     public void resetWorkSessions(){
-        LocalDateTime start = LocalDateTime.of(2002, 12, 05, 2, 30);
-        LocalDateTime end = LocalDateTime.of(2002, 12, 05, 3, 30);
+        LocalDateTime start = LocalDateTime.of(2002, 12, 5, 2, 30);
+        LocalDateTime end = LocalDateTime.of(2002, 12, 5, 3, 30);
         LocalDateTime start2 = LocalDateTime.now().plusDays(7L);
         LocalDateTime end2 = start2.plusHours(3L);
         this.event1.addWorkSession(start, end);
         this.event1.addWorkSession(start2, end2);
-        this.event1.resetWorkSessions(new ArrayList<>());
+        this.event1.setWorkSessions(new ArrayList<>());
         assertEquals(this.event1.getWorkSessions(), new ArrayList<>());
     }
     @Test
     public void completeSession(){
-        LocalDateTime start = LocalDateTime.of(2002, 12, 05, 2, 30);
-        LocalDateTime end = LocalDateTime.of(2002, 12, 05, 3, 30);
+        LocalDateTime start = LocalDateTime.of(2002, 12, 5, 2, 30);
+        LocalDateTime end = LocalDateTime.of(2002, 12, 5, 3, 30);
         LocalDateTime start2 = LocalDateTime.now().plusDays(7L);
         LocalDateTime end2 = start2.plusHours(3L);
         this.event1.setHoursNeeded(10L);
