@@ -27,17 +27,18 @@ public class MainController {
     private IOSerializable tempIoSerializable;
     private UserController tempUserController;
     private EventController tempEventController;
+    private CalendarController tempCalendarController;
 
     public MainController() {
         this.ioSerializable = new IOSerializable(true);
         this.userController = new UserController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.studentController = new StudentController(this.userController);
         this.loginController = new LoginController(this.userController, this.studentController);
-        this.displayInitScreen();
         this.calendarController = new CalendarController();
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
                 this.calendarController.getCalendarManager());
-        displayScreen();
+        this.displayInitScreen();
+        this.displayScreen();
     }
 
     /**
@@ -115,12 +116,10 @@ public class MainController {
     public void saveAndExitProgram() {
         this.tempIoSerializable = new IOSerializable(false);
         this.tempUserController = new UserController(true, this.tempIoSerializable);
-        this.tempEventController = new EventController(true, this.tempIoSerializable,
-                this.calendarController.getCalendarManager());
-        this.ioSerializable.eventsWriteToSerializable(combineTwoEventFileContents(this.eventController.getEventManager(),
-                this.tempEventController.getEventManager()));
-        this.ioSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(),
-                this.tempUserController.getUserManager()));
+        this.tempCalendarController = new CalendarController();
+        this.tempEventController = new EventController(true, this.tempIoSerializable, this.tempCalendarController.getCalendarManager());
+        this.ioSerializable.eventsWriteToSerializable(combineTwoEventFileContents(this.eventController.getEventManager(), this.tempEventController.getEventManager()));
+        this.ioSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(), this.tempUserController.getUserManager()));
         this.ioSerializable.saveToDropbox();
         System.exit(0);
     }
