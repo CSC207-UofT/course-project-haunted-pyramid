@@ -2,7 +2,6 @@ package entities;
 
 import interfaces.DateGetter;
 
-import javax.lang.model.element.NestingKind;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -50,9 +49,10 @@ public class RecursiveEvent{
      *
      * Uses the classes that implement the date getter interface to return the dates of all the events in the
      * period of repetition.
+     * @return
      */
 
-    public ArrayList<LocalDateTime> listOfDatesInCycles(){
+    public ArrayList<Event> listOfDatesInCycles(){
         return methodToGetDate.listOfDatesInCycles(this.eventsInOneCycle);
     }
 
@@ -62,10 +62,10 @@ public class RecursiveEvent{
      * event (don't include original event in this.eventsInOneCycle).
      */
 
-    public ArrayList<LocalDateTime> listOfDatesInCyclesForSpecificEvent(Event event){
-        ArrayList<LocalDateTime> result = new ArrayList<>();
+    public ArrayList<Event> createEventInCycles(Event event){
+        ArrayList<Event> result = new ArrayList<>();
         int indexOfEvent = this.eventsInOneCycle.indexOf(event);
-        ArrayList<LocalDateTime> listOfDatesInCycles = this.listOfDatesInCycles();
+        ArrayList<Event> listOfDatesInCycles = this.listOfDatesInCycles();
         int cyclesLength = listOfDatesInCycles.size();
         int i = 1;
         while(indexOfEvent + this.getCycleLength()*i < cyclesLength){
@@ -86,19 +86,20 @@ public class RecursiveEvent{
      * start time and end time)).
      */
 
-    public ArrayList<Event> createEventInCycles(Event event){
-        String name = event.getName();
-        ArrayList<Event> result = new ArrayList<>();
-        ArrayList<LocalDateTime> dateList = this.listOfDatesInCyclesForSpecificEvent(event);
-        int i = 1;
-        for(LocalDateTime date : dateList){
-            LocalDateTime eventStartDate = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(),
-                    event.getStartTime().getHour(), event.getStartTime().getMinute());
-            Event event1 = new Event(ConstantID.get(), name + "-" + i, eventStartDate, date);
-            i ++;
-            result.add(event1);
-        }
-        return result;
-    }
+//    public ArrayList<Event> createEventInCycles(Event event){
+//        String name = event.getName();
+//        ArrayList<Event> result = new ArrayList<>();
+//        ArrayList<LocalDateTime> dateList = this.listOfDatesInCyclesForSpecificEvent(event);
+//        int i = 1;
+//        for(LocalDateTime date : dateList){
+//            LocalDateTime eventStartDate = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(),
+//                    event.getStartTime().getHour(), event.getStartTime().getMinute());
+//            Event event1 = new Event(ConstantID.get(), name + "-" + i, eventStartDate, date);
+//            i ++;
+//            result.add(event1);
+//        }
+//        return result;
+//    }
+//
 
 }
