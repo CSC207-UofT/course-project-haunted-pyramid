@@ -1,6 +1,5 @@
 package main;
 
-import com.dropbox.core.DbxException;
 import controllers.MainController;
 
 public class ProgramRun {

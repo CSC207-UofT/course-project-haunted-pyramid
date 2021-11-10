@@ -8,7 +8,9 @@ import java.nio.channels.ReadableByteChannel;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.DeleteResult;
 import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.WriteMode;
 import com.dropbox.core.v2.users.FullAccount;
 import java.util.logging.*;
 import java.util.*;
@@ -31,31 +33,47 @@ public class IOSerializable {
     private static final String ACCESS_TOKEN = "EfBUX9G7zxkAAAAAAAAAAaXr-kGtiOL1cwBhwIe7BcI0hvt-uH5LBsEh4FXJ31Ry";
 
     // A public Dropbox link where the serialized files are stored
-    private static final String eventsURL = "https://www.dropbox.com/s/eb7pk7h533kcoqs/events.ser?dl=1";
-    private static final String usersURL = "https://www.dropbox.com/s/qjwhf6s6zuw9w14/users.ser?dl=1";
+    private static final String eventsURL = "https://www.dropbox.com/s/or9lwf2edki7yvb/events.ser?dl=1";
+    private static final String usersURL = "https://www.dropbox.com/s/srxrmyoyvi49xup/users.ser?dl=1";
 
-    public IOSerializable() {
-        readFromDropbox();
+    public IOSerializable(Boolean intro) {
+        readFromDropbox(intro);
     }
 
-    public void readFromDropbox() {
+    public void readFromDropbox(Boolean intro) {
         // Download from public Dropbox repository these two files, and save them in the directory temporarily.
         try {
             URL eventsDownload = new URL(eventsURL);
             URL usersDownload = new URL(usersURL);
             ReadableByteChannel eventsReadableByteChannel = Channels.newChannel(eventsDownload.openStream());
             ReadableByteChannel usersReadableByteChannel = Channels.newChannel(usersDownload.openStream());
-            FileOutputStream eventsFileOutputStream = new FileOutputStream(EVENTS_FILEPATH);
-            FileOutputStream usersFileOutputStream = new FileOutputStream(USERS_FILEPATH);
+            ArrayList<FileOutputStream> arrayList = introOrEnd(intro);
+            FileOutputStream eventsFileOutputStream = arrayList.get(0);
+            FileOutputStream usersFileOutputStream = arrayList.get(1);
             eventsFileOutputStream.getChannel().transferFrom(eventsReadableByteChannel, 0, 1 << 24);
             usersFileOutputStream.getChannel().transferFrom(usersReadableByteChannel, 0, 1 << 24);
             eventsFileOutputStream.close();
             usersFileOutputStream.close();
             eventsReadableByteChannel.close();
             usersReadableByteChannel.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException eIO) {
+            eIO.printStackTrace();
         }
+    }
+
+    public ArrayList<FileOutputStream> introOrEnd(Boolean intro) {
+        try {
+            if (intro) {
+                return new ArrayList<>(Arrays.asList(new FileOutputStream(EVENTS_FILEPATH),
+                        new FileOutputStream(USERS_FILEPATH)));
+            } else {
+                return new ArrayList<>(Arrays.asList(new FileOutputStream("events1.ser"),
+                        new FileOutputStream("users1.ser")));
+            }
+        } catch (IOException eIO) {
+            eIO.printStackTrace();
+        }
+        return null;
     }
 
     public void saveToDropbox() {
@@ -72,14 +90,17 @@ public class IOSerializable {
             logger.log(Level.SEVERE, "Dropbox raised an exception.", eDBX);
         }
 
-        // Upload serializable files to Dropbox
+        // Delete files in the directory to avoid file duplication error and upload serializable files to Dropbox
         try {
+// Commenting out delete to check if overwrite is viable.
+//            DeleteResult delEvents1 = client.files().deleteV2("/" + EVENTS_FILEPATH);
+//            DeleteResult delUsers1 = client.files().deleteV2("/" + USERS_FILEPATH);
             InputStream eventsInputStream = new FileInputStream(EVENTS_FILEPATH);
             InputStream usersInputStream = new FileInputStream(USERS_FILEPATH);
             FileMetadata eventsMetadata = client.files().uploadBuilder("/" + EVENTS_FILEPATH).
-                    uploadAndFinish(eventsInputStream);
+                    withMode(WriteMode.OVERWRITE).uploadAndFinish(eventsInputStream);
             FileMetadata usersMetadata = client.files().uploadBuilder("/" + USERS_FILEPATH).
-                    uploadAndFinish(usersInputStream);
+                    withMode(WriteMode.OVERWRITE).uploadAndFinish(usersInputStream);
         } catch (FileNotFoundException eFNF) {
             logger.log(Level.SEVERE, "Cannot find file.", eFNF);
         } catch (IOException eIO) {
@@ -120,7 +141,7 @@ public class IOSerializable {
         }
     }
 
-    public void eventsWriteToSerializable(List<Event> events) {
+    public void eventsWriteToSerializable(ArrayList<Event> events) {
         try {
             OutputStream file = new FileOutputStream(EVENTS_FILEPATH);
             OutputStream buffer = new BufferedOutputStream(file);
@@ -150,7 +171,7 @@ public class IOSerializable {
         }
     }
 
-    public void usersWriteToSerializable(List<User> users) {
+    public void usersWriteToSerializable(ArrayList<User> users) {
         try {
             OutputStream file = new FileOutputStream(USERS_FILEPATH);
             OutputStream buffer = new BufferedOutputStream(file);
@@ -161,4 +182,20 @@ public class IOSerializable {
             logger.log(Level.SEVERE, "Cannot perform serialization", eIO);
         }
     }
+
+// Create new events.ser and users.ser in case they are deleted. In that case, write methods must be static.
+//    public static void main(String[] args) {
+//        Event event1 = new Event(0, "Example Event 1", 2021, 11, 10, 0, 1, 0, 0);
+//        Event event2 = new Event(0, "Example Event 2", 2021, 11, 10, 1, 2, 0, 0);
+//        Event event3 = new Event(0, "Example Event 3", 2021, 11, 10, 2, 3, 0, 0);
+//        Event event4 = new Event(0, "Example Event 4", 2021, 11, 10, 3, 4, 0, 0);
+//        ArrayList<Event> events = new ArrayList<>(Arrays.asList(event1, event2, event3, event4));
+//        User user1 = new User(UUID.randomUUID(), "Example User 1", "username1", "password1");
+//        User user2 = new User(UUID.randomUUID(), "Example User 2", "username2", "password2");
+//        User user3 = new User(UUID.randomUUID(), "Example User 3", "username3", "password3");
+//        User user4 = new User(UUID.randomUUID(), "Example User 4", "username4", "password4");
+//        ArrayList<User> users = new ArrayList<>(Arrays.asList(user1, user2, user3, user4));
+//        eventsWriteToSerializable(events);
+//        usersWriteToSerializable(users);
+//    }
 }
