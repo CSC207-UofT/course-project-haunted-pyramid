@@ -10,16 +10,23 @@ import entities.Event;
 import entities.RecursiveEvent;
 import interfaces.EventListObserver;
 
-
+/**
+ * @author Taite Cullen
+ * @author Malik Lahlou
+ * stores and Manages events
+ * edits Events by dictionary key (unique ID)
+ * updates EventListObservers when Event is added to its eventMap, removed from its eventMap, or
+ * the start or end time of an <code>Event</code> within its <code>eventMap</code> is modified
+ */
 public class EventManager{
     private final Map<Integer, Event> eventMap;
     private RepeatedEventManager repeatedEventManager;
     private EventListObserver[] toUpdate;
-    //TODO temporary
 
     /**
-     * constructor for event manager
-     * @param events a list of the current users events
+     * constructs event manager. stores list of events by key: ID, value: event in <code>this.eventMap</code>
+     * sets <code>this.toUpdate</code> to empty list of <code>EventListObservers</code>
+     * @param events a list of events to be stored in <code>this.eventMap</code>
      */
     public EventManager(ArrayList<Event> events){
         if (events.isEmpty()) {
@@ -35,13 +42,18 @@ public class EventManager{
 
 
     /**
-     * empty EventManager
+     * constructs empty EventManager (no Events or Observers)
      */
     public EventManager() {
         this.eventMap = new HashMap<>();
         this.toUpdate = new EventListObserver[]{};
     }
 
+    /**
+     * returns the ID of an Event (does not have to be in <code>this.eventMap</code>
+     * @param event any Event
+     * @return the ID of the Event (Event.getID())
+     */
     public Integer getID(Event event) {
         return event.getID();
 
@@ -99,11 +111,11 @@ public class EventManager{
         return event;
     }
 
-    public Event addEvent(String name, Integer[] datetime){
-        Event event = new Event(ConstantID.get(), name, datetime[0], datetime[1], datetime[2], datetime[3], datetime[8],
-                datetime[4], datetime[9]);
+    public Event addEvent(String name, int year, int month, int day, int endHour,
+                          int endMin){
+        Event event = new Event(ConstantID.get(), name, year, month, day, endHour, endMin);
         this.eventMap.put(event.getID(), event);
-        this.update("add", new Event[] {event});
+        this.update("add", new Event[]{event});
         return event;
     }
 
@@ -165,10 +177,10 @@ public class EventManager{
 
     public Integer[] getStartEndInt(Event event){
         Integer[] concat = new Integer[10];
-        for (Integer i = 0; i < 5; i ++){
+        for (int i = 0; i < 5; i ++){
             concat[i] = this.getStartInt(event)[i];
         }
-        for (Integer i = 0; i < 5; i ++){
+        for (int i = 0; i < 5; i ++){
             concat[i+5] = this.getEndInt(event)[i];
         }
         return concat;
@@ -185,6 +197,7 @@ public class EventManager{
             obs.update(addRemoveChange, changed, this);
         }
     }
+
     public void addObserver(EventListObserver obs){
         ArrayList<EventListObserver> inter = new ArrayList<>(List.of(this.toUpdate));
         inter.add(obs);
@@ -217,13 +230,6 @@ public class EventManager{
         return events;
     }
 
-    public void setStartEnd(Event event, Integer[] instanceSchedule) {
-        event.setStartTime(LocalDateTime.of(instanceSchedule[0], instanceSchedule[1], instanceSchedule[2],
-                instanceSchedule[3], instanceSchedule[4]));
-        event.setEndTime(LocalDateTime.of(instanceSchedule[5], instanceSchedule[6], instanceSchedule[7],
-                instanceSchedule[8], instanceSchedule[9]));
-
-    }
     public String getDescription(Event event){
         return event.getDescription();
     }
@@ -283,7 +289,7 @@ public class EventManager{
     }
 
     /**
-     *
+     * TODO Malik
      * Given a RecursiveEvent, this method gets all the events in the period of repetition and adds them to the
      * event manager event list.
      */
@@ -296,27 +302,14 @@ public class EventManager{
         }
     }
 
-
-    public void addEventsInRecursion(){
-        for(RecursiveEvent recursiveEvent : this.repeatedEventManager.getRecursiveEventMap().values()){
+    /**
+     * TODO Malik
+     */
+    public void addEventsInRecursion() {
+        for (RecursiveEvent recursiveEvent : this.repeatedEventManager.getRecursiveEventMap().values()) {
             this.addEventsInRecursion(recursiveEvent);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

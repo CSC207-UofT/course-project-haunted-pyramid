@@ -1,4 +1,4 @@
-/*
+
 package usecases;
 import entities.Event;
 
@@ -66,4 +66,4 @@ public class EventManagerTest {
                 this.eventManager.get(3)});
         assertEquals(ordered, this.eventManager.timeOrder(unordered));
     }
-}*/
+}
