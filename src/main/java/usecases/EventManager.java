@@ -358,4 +358,28 @@ public class EventManager{
         }
     }
 
+    /**
+     * return the start time information of the chosen event in string
+     * @param event event to investigate
+     * @return the string of the start time
+     */
+    public String getStartTimeString(Event event){
+        if (event.hasStart()){
+            String[] date = event.getStartTime().toString().split("-");
+            return date[2].substring(3, 8);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * return the end time information of the chosen event in string
+     * @param event event to investigate
+     * @return the string of the end time
+     */
+    public String getEndTimeString(Event event){
+        String[] date = event.getEndTime().toString().split("-");
+        return date[2].substring(3, 8);
+    }
+
 }

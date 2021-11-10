@@ -97,20 +97,17 @@ public class OurCalendar {
      */
 
     public void addEvent(Event event){
-        // get starting timeline info
-        String startInfo = event.getStartString();
-        // get ending timeline info
-        String endInfo = event.getEndString();
-        // extract start date and convert it to int
-        int startDate = Integer.parseInt(startInfo.substring(8, 10));
-        // extract end date and convert it to int
+        String endInfo = event.getEndTime().toString();
         int endDate = Integer.parseInt(endInfo.substring(8, 10));
-        // collect all dates that the event will happen
+        int startDate = endDate;
+        if (event.getStartTime() != null) {
+            String startInfo = event.getStartTime().toString();
+            startDate = Integer.parseInt(startInfo.substring(8, 10));
+        }
         List<Integer> applicableDates = new ArrayList<>();
         for (int i = startDate; i <= endDate; i++){
             applicableDates.add(i);
         }
-        // add the event to all dates that apply
         for (int dates : applicableDates){
             this.calendarMap.get(dates).add(event);
         }
@@ -131,8 +128,10 @@ public class OurCalendar {
             for (Event item :this.calendarMap.get(date)) {
                 // store start time and end time of the event as a list
                 List<Double> individualTimeInfo = new ArrayList<>();
-                individualTimeInfo.add(item.startTimeDouble());
-                individualTimeInfo.add(item.startTimeDouble() + item.getLength() * 100);
+                if (item.getStartTime() != null) {
+                    individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
+                    individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)) + item.getLength() * 100);
+                }
                 timeInfo.add(individualTimeInfo);
             }
             // run the helper method to compare the times and update the conflictEvent
@@ -148,6 +147,11 @@ public class OurCalendar {
             this.conflict = false;
             this.conflictEvent = new ArrayList<>();
         }
+    }
+
+    private String getStartTimeString(Event item) {
+        return item.getStartTime().toLocalTime().toString().substring(0, 2) +
+                item.getStartTime().toLocalTime().toString().substring(3, 5);
     }
 
     /**
