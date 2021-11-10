@@ -64,47 +64,6 @@ public class Event implements Serializable {
     }
 
     /**
-     * a constructor for single day events, using integers instead of LocalDateTime as input
-     * @param ID the event id
-     * @param name name of event
-     * @param year year (integer)
-     * @param month month (integer)
-     * @param day day (integer)
-     * @param endHour hour event ends (integer)
-     * @param endMin minute event ends (integer)
-     */
-    public Event(int ID, String name, int year, int month, int day, int endHour, int endMin){
-        this.name = name;
-        this.ID = ID;
-        this.endTime = LocalDateTime.of(year, month, day, endHour, endMin);
-        this.hoursNeeded = 0L;
-        this.sessionLength = 1L;
-        this.workSessions = new ArrayList<>();
-    }
-
-    /**
-     * a constructor for single day events, using integers instead of LocalDateTime as input
-     * @param ID the event id
-     * @param name name of event
-     * @param year year (integer)
-     * @param month month (integer)
-     * @param day day (integer)
-     * @param startHour hour event starts (integer)
-     * @param endHour hour event ends (integer)
-     * @param startMin minute event starts (integer)
-     * @param endMin minute event ends (integer)
-     */
-    public Event(int ID, String name, int year, int month, int day, int startHour, int endHour, int startMin, int endMin){
-        this.name = name;
-        this.ID = ID;
-        this.endTime = LocalDateTime.of(year, month, day, endHour, endMin);
-        this.startTime = LocalDateTime.of(year, month, day, startHour, startMin);
-        this.hoursNeeded = 0L;
-        this.sessionLength = 1L;
-        this.workSessions = new ArrayList<>();
-    }
-
-    /**
      * changes the description of the Event to new input value - used simply for changing notes on Event
      * for User benefit
      * @param description any String of any format, purpose to describe the nature of the Event - notes on the Event
@@ -194,32 +153,6 @@ public class Event implements Serializable {
     }
 
     /**
-     * returns what is considered start time of Event in formatted string
-     * @return String of start date in form YYYY-MM-DD TT:TT
-     */
-    public String getStartString(){
-        if (this.hasStart()){
-            return this.startTime.toLocalDate().toString() + " " +
-                    this.startTime.toLocalTime().toString();
-        } else{
-            return null;
-        }
-    }
-
-    /**
-     * returns the hour of the startTime times 100 + the minutes of the start time: int HHMM. if no start time,
-     * returns end time
-     * @return the hour of the start time in 100's plus the minutes
-     */
-    public double startTimeDouble() {
-        if (this.hasStart()){
-            return this.startTime.getHour()*100 + ((float)this.startTime.getMinute() * 100/60) ;
-        } else {
-            return this.endTimeDouble();
-        }
-
-    }
-    /**
      * returns LocalDateTime form of what is considered the end time of the Event - can be after end time
      * @return LocalDateTime endTime
      */
@@ -227,21 +160,6 @@ public class Event implements Serializable {
         return this.endTime;
     }
 
-    /**
-     * returns what is considered end time of Event in formatted string
-     * @return String of end date in form YYYY-MM-DD TT:TT
-     */
-    public String getEndString(){
-        return this.endTime.toLocalDate().toString() + " " + this.endTime.toLocalTime().toString();
-    }
-
-    /**
-     * returns the hour of the endTime times 100 + the minutes of the start time: int HHMM
-     * @return the hour of the end time in 100's plus the minutes
-     */
-    public double endTimeDouble() {
-        return this.endTime.getHour()*100 + ((float)this.endTime.getMinute() * 100/60);
-    }
     /**
      * gets the name of the Event - String can be any format, informative as to nature of Event, usually set by user
      * @return String name
@@ -296,7 +214,6 @@ public class Event implements Serializable {
         } else {
             return 0;
         }
-
     }
 
     /**
@@ -430,7 +347,8 @@ public class Event implements Serializable {
     @Override
     public String toString(){
         return this.getID() + "\nname: " + this.getName() + "\nstart: " +
-                this.getStartString() + "\nend: " + this.getEndString() + "\ndescription: " + this.getDescription();
+                this.getStartTime().toString() + "\nend: " + this.getEndTime().toString() + "\ndescription: " +
+                this.getDescription();
     }
 
 }

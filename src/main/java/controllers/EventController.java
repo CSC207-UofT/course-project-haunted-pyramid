@@ -4,6 +4,7 @@ import gateways.IOSerializable;
 import usecases.CalendarManager;
 import usecases.EventManager;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ public class EventController {
         String course = IOController.getCourse();
         Integer[] date = IOController.getDate("Enter the date of the event");
         List<Integer> end = IOController.getTime("enter the end time");
-        Event event = this.eventManager.addEvent(title, date[0], date[1], date[2], end.get(0), end.get(1));
+        Event event = this.eventManager.addEvent(title, LocalDateTime.of(date[0], date[1], date[2], end.get(0), end.get(1)));
         this.calendarManager.addToCalendar(event);
         this.edit(this.eventManager.getID(event));
     }
