@@ -94,14 +94,10 @@ public class EventManager{
      * @return the event just removed, or null
      */
     public Event remove(Integer ID){
-<<<<<<< HEAD
-
-
         ArrayList<Event> truc = new ArrayList<>();
         truc.add(this.get(ID));
         this.update("remove", truc);
         return eventMap.remove(ID);
->>>>>>> 3cad6194215e8360730eb381360e7356114b3d50
     }
 
     /**
@@ -176,14 +172,15 @@ public class EventManager{
             List<Event> splitByDay = new ArrayList<>();
             if (event.getStartTime().toLocalDate().isBefore(event.getEndTime().toLocalDate())){
                 splitByDay.add(new Event(event.getID(), event.getName(), event.getStartTime(),
-                        LocalDateTime.of(event.getStartTime().toLocalDate(), LocalTime.of(23, 59))));
+                        LocalDateTime.of(event.getStartTime().toLocalDate(), LocalTime.of(24, 00))));
                 LocalDate nextDay = event.getStartTime().plusDays(1L).toLocalDate();
                 while(event.getEndTime().toLocalDate().isBefore(nextDay)){
                     splitByDay.add(new Event(event.getID(), event.getName(), LocalDateTime.of(nextDay, LocalTime.of(0, 0)),
-                            LocalDateTime.of(nextDay, LocalTime.of(23, 59))));
+                            LocalDateTime.of(nextDay, LocalTime.of(24, 00))));
                     nextDay = nextDay.plusDays(1L);
                 }
-                splitByDay.add(new Event (event.getID(), event.getName(), event.getEndTime()));
+                splitByDay.add(new Event (event.getID(), event.getName(),
+                        LocalDateTime.of(nextDay, LocalTime.of(0, 0)), event.getEndTime()));
             }
             return splitByDay;
         }
