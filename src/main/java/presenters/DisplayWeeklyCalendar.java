@@ -7,8 +7,6 @@ import usecases.CalendarManager;
 import usecases.EventManager;
 import usecases.WeeklyCalendar;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,30 +40,32 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
 
     @Override
     public String displayCalendar(){
-        LocalDate localDate = LocalDate.of(year, month, date);
-        DayOfWeek dayOfWeek = DayOfWeek.from(localDate);
+        int startingDayOfWeek = cf.findStartDayOfWeekInteger(this.year, this.month, this.date);
         cf.eventSorter(calendarMap);
         StringBuilder result = new StringBuilder();
-        int startingDayOfWeek = dayOfWeek.getValue();
         setUpCalendar(startingDayOfWeek, result, cf);
         addDate(result, startingDayOfWeek);
         for (int i = 0; i < getLongestTimeLine(); i++){
             for (int j = 0; j < 7; j++){
-                List<String> newTimeLine = cf.updateTimeList(this.defaultTimeLine, gatherTimeLine(j));
-                if (newTimeLine.size() > i){
-                    addTimeLine(result, newTimeLine, i);
-                    int tempDiv = addContent(result, newTimeLine, i, j);
-                    addSpace(result, tempDiv, startingDayOfWeek + j);
-                }
-                else {
-                    result.append("|");
-                    addSpace(result, -8, startingDayOfWeek + j);
-                }
+                addTimeLineContent(startingDayOfWeek, result, i, j);
             }
             result.append("|").append("\n");
         }
         result.append(cf.endFrame(lengthDecider()));
         return result.toString();
+    }
+
+    private void addTimeLineContent(int startingDayOfWeek, StringBuilder result, int indexOne, int indexTwo) {
+        List<String> newTimeLine = cf.updateTimeList(this.defaultTimeLine, gatherTimeLine(indexTwo));
+        if (newTimeLine.size() > indexOne){
+            addTimeLine(result, newTimeLine, indexOne);
+            int tempDiv = addContent(result, newTimeLine, indexOne, indexTwo);
+            addSpace(result, tempDiv, startingDayOfWeek + indexTwo);
+        }
+        else {
+            result.append("|");
+            addSpace(result, -8, startingDayOfWeek + indexTwo);
+        }
     }
 
     private int getLongestTimeLine(){
@@ -90,64 +90,70 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
 
 
     private void setUpCalendar(int startingDayOfWeek, StringBuilder result, DisplayCalendarHelper cf){
-        if (startingDayOfWeek == 1){
-            result.append(cf.startFrame("MONDAY", lengthDecider()));
-        }
-        else if (startingDayOfWeek == 2){
-            result.append(cf.startFrame("TUESDAY", lengthDecider()));
-        }
-        else if (startingDayOfWeek == 3){
-            result.append(cf.startFrame("WEDNESDAY", lengthDecider()));
-        }
-        else if (startingDayOfWeek == 4){
-            result.append(cf.startFrame("THURSDAY", lengthDecider()));
-        }
-        else if (startingDayOfWeek == 5){
-            result.append(cf.startFrame("FRIDAY", lengthDecider()));
-        }
-        else if (startingDayOfWeek == 6){
-            result.append(cf.startFrame("SATURDAY", lengthDecider()));
-        }
-        else if (startingDayOfWeek == 7){
-            result.append(cf.startFrame("SUNDAY", lengthDecider()));
+        switch (startingDayOfWeek) {
+            case 1:
+                result.append(cf.startFrame("MONDAY", lengthDecider()));
+                break;
+            case 2:
+                result.append(cf.startFrame("TUESDAY", lengthDecider()));
+                break;
+            case 3:
+                result.append(cf.startFrame("WEDNESDAY", lengthDecider()));
+                break;
+            case 4:
+                result.append(cf.startFrame("THURSDAY", lengthDecider()));
+                break;
+            case 5:
+                result.append(cf.startFrame("FRIDAY", lengthDecider()));
+                break;
+            case 6:
+                result.append(cf.startFrame("SATURDAY", lengthDecider()));
+                break;
+            case 7:
+                result.append(cf.startFrame("SUNDAY", lengthDecider()));
+                break;
         }
     }
 
     private void addDate(StringBuilder result, int dayOfWeek){
         result.append("|");
         List<Integer> keyList = getKeys();
-        int month = this.month;
         for (int i = 0; i < keyList.size(); i++){
             int spacer = getSpacer(dayOfWeek + i);
-            if (i != 0 && keyList.get(i) == 1){
-                month = this.month + 1;
-            }
             int tempSpacer = spacer/2;
             if (spacer % 2 == 1){
                 tempSpacer = spacer/2 + 1;
             }
-            String tempDiv = " ".repeat(tempSpacer + lengthDecider()/2 + 9);
-            String preDiv = " ".repeat(9 + spacer/2 + lengthDecider()/2);
+            String tempDiv = " ".repeat(tempSpacer + lengthDecider()/2 + (Constants.CAL_ROW_SPACER/2 - 3));
+            String preDiv = " ".repeat((Constants.CAL_ROW_SPACER/2 - 3) + spacer/2 + lengthDecider()/2);
             result.append(preDiv);
-            if (keyList.get(i) < 10 && month < 10){
-                result.append(" 0").append(month).append("/").append
-                        ("0").append(keyList.get(i)).append(tempDiv).append("|");
-            }
-            else if (keyList.get(i) < 10 && month >= 10){
-            result.append(" ").append(month).append("/").append
-                    ("0").append(keyList.get(i)).append(tempDiv).append("|");
-            }
-            else if (keyList.get(i) >= 10 && month < 10){
-                result.append(" 0").append(month).append
-                        ("/").append(keyList.get(i)).append(tempDiv).append("|");
-            }
-            else{
-                result.append(" ").append(month).append
-                        ("/").append(keyList.get(i)).append(tempDiv).append("|");
-            }
+            addDateHelper(result, keyList, tempDiv, i);
         }
 
         result.append("\n");
+    }
+
+    private void addDateHelper(StringBuilder result, List<Integer> keyList, String tempDiv, int index) {
+        int month = this.month;
+        if (index != 0 && keyList.get(index) == 1){
+            month = this.month + 1;
+        }
+        if (keyList.get(index) < 10 && month < 10){
+            result.append(" 0").append(month).append("/").append
+                    ("0").append(keyList.get(index)).append(tempDiv).append("|");
+        }
+        else if (keyList.get(index) < 10 && month >= 10){
+        result.append(" ").append(month).append("/").append
+                ("0").append(keyList.get(index)).append(tempDiv).append("|");
+        }
+        else if (keyList.get(index) >= 10 && month < 10){
+            result.append(" 0").append(month).append
+                    ("/").append(keyList.get(index)).append(tempDiv).append("|");
+        }
+        else{
+            result.append(" ").append(month).append
+                    ("/").append(keyList.get(index)).append(tempDiv).append("|");
+        }
     }
 
 
@@ -158,7 +164,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
 
     private void addSpace(StringBuilder result, int length, int dayOfWeek){
         int spacer = getSpacer(dayOfWeek);
-        String tempDiv = " ".repeat(spacer + 16 + lengthDecider()  - length);
+        String tempDiv = " ".repeat(spacer + Constants.CAL_ROW_SPACER - 8 + lengthDecider()  - length);
         result.append(tempDiv);
     }
 
@@ -211,12 +217,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         List<Integer> tempOne = new ArrayList<>();
         List<Integer> tempTwo = new ArrayList<>();
         for (Integer items: lst){
-            if (0 < items && items < 10){
-                tempOne.add(items);
-            }
-            else if (20 < items){
-                tempTwo.add(items);
-            }
+            divideDate(tempOne, tempTwo, items);
         }
         if (tempOne.size() != 0 && tempTwo.size() != 0){
             lst = new ArrayList<>();
@@ -224,6 +225,15 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
             lst.addAll(tempOne);
         }
         return lst;
+    }
+
+    private void divideDate(List<Integer> tempOne, List<Integer> tempTwo, Integer items) {
+        if (0 < items && items < 10){
+            tempOne.add(items);
+        }
+        else if (20 < items){
+            tempTwo.add(items);
+        }
     }
 
     private Integer convertTimeToInt(String time){
@@ -239,15 +249,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
             for (int i = 0; i < eventList.size(); i++){
                 int totalLength = Math.min(eventManager.getName(eventList.get(i)).length(),
                         Constants.WEEKLY_CAL_NAME_LIMIT);
-                for (int j = i + 1; j < eventList.size(); j++){
-                    if (convertTimeToInt(eventManager.getStartTime(eventList.get(i)))
-                            <= convertTimeToInt(eventManager.getStartTime(eventList.get(j)))
-                            && convertTimeToInt(eventManager.getEndTime(eventList.get(i)))
-                            > convertTimeToInt(eventManager.getStartTime(eventList.get(j)))){
-                        totalLength += Math.min(eventManager.getName(eventList.get(j)).length(),
-                                Constants.WEEKLY_CAL_NAME_LIMIT);
-                    }
-                }
+                totalLength = getTotalLength(eventList, totalLength, i);
                 if (temp < totalLength){
                     temp = totalLength;
                 }
@@ -264,6 +266,21 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
         return temp;
     }
+
+    private int getTotalLength(List<Event> eventList, int totalLength, int index) {
+        for (int j = index + 1; j < eventList.size(); j++){
+            if (convertTimeToInt(eventManager.getStartTime(eventList.get(index)))
+                    <= convertTimeToInt(eventManager.getStartTime(eventList.get(j)))
+                    && convertTimeToInt(eventManager.getEndTime(eventList.get(index)))
+                    > convertTimeToInt(eventManager.getStartTime(eventList.get(j)))){
+                totalLength += Math.min(eventManager.getName(eventList.get(j)).length(),
+                        Constants.WEEKLY_CAL_NAME_LIMIT);
+            }
+        }
+        return totalLength;
+
+    }
+
     public static void main(String[] args) {
         CalendarManager cm = new CalendarManager();
         Event event = new Event(1, "TEST1", 2021, 10, 31, 3, 5, 30, 30);
@@ -274,7 +291,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         cm.addToCalendar(event1);
         cm.addToCalendar(event2);
         cm.addToCalendar(event3);
-        DisplayWeeklyCalendar dwc = new DisplayWeeklyCalendar(cm, 2021, 10, 28);
+        DisplayWeeklyCalendar dwc = new DisplayWeeklyCalendar(cm, 2021, 10, 30);
         System.out.println(dwc.displayCalendar());
     }
 }
