@@ -30,7 +30,7 @@ public class DisplayMenu {
         MenuContent content = new BasicMenuContent();
         MenuContent calendarContent = new CalendarYearMonthMenuContent();
         System.out.println(dm.displayMenu(content));
-        System.out.println(dm.displayMenu(new CalendarYearMonthMenuContent()));
+        System.out.println(dm.displayMenu(calendarContent));
         System.out.println(calendarContent.numberOfOptions());
     }
 }

@@ -204,8 +204,8 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
             if (eventStartTime == null){
                 eventStartTime = eventManager.getEndTimeString(event);
             }
-            if (convertTimeToInt(timeLine.get(time)) >= convertTimeToInt(eventStartTime)
-                && convertTimeToInt(timeLine.get(time)) <= convertTimeToInt(eventManager.getEndTimeString(event))){
+            if (cf.convertTimeToInt(timeLine.get(time)) >= cf.convertTimeToInt(eventStartTime)
+                && cf.convertTimeToInt(timeLine.get(time)) <= cf.convertTimeToInt(eventManager.getEndTimeString(event))){
                 String eventName = eventManager.getName(event);
                 int eventNameSize = eventName.length();
                 if (eventStartTime.equals(eventManager.getEndTimeString(event))){
@@ -253,11 +253,6 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
     }
 
-    private Integer convertTimeToInt(String time){
-        String temp = time.substring(0, 2) + time.substring(3, 5);
-        return Integer.parseInt(temp);
-    }
-
     private int lengthDecider(){
         List<Integer> keyList = getKeys();
         int temp = 0;
@@ -296,10 +291,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
                 startTimeStringTwo = eventManager.getEndTimeString(eventList.get(j));
                 eventName += " Due";
             }
-            if (convertTimeToInt(startTimeStringOne)
-                    <= convertTimeToInt(startTimeStringTwo)
-                    && convertTimeToInt(eventManager.getEndTimeString(eventList.get(index)))
-                    >= convertTimeToInt(startTimeStringTwo)){
+            if (cf.convertTimeToInt(startTimeStringOne)
+                    <= cf.convertTimeToInt(startTimeStringTwo)
+                    && cf.convertTimeToInt(eventManager.getEndTimeString(eventList.get(index)))
+                    >= cf.convertTimeToInt(startTimeStringTwo)){
                 totalLength += Math.min(eventName.length() + 2,
                         Constants.WEEKLY_CAL_NAME_LIMIT);
             }
