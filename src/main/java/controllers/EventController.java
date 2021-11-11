@@ -55,7 +55,7 @@ public class EventController {
      */
     public EventController(boolean hasSavedData, IOSerializable ioSerializable){
         this.workSessionController = new WorkSessionController(new WorkSessionScheduler(new HashMap<LocalTime, LocalTime>(),
-                true));
+                true, false));
         if (hasSavedData) {
             this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
             ConstantID.set(this.eventManager.getMaxID());

@@ -46,7 +46,7 @@ public class MainController {
         System.out.println("WELCOME!"); // TODO add user name here
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
                 new WorkSessionController(new WorkSessionScheduler(this.userController.getCurrentFreeTime(),
-                        this.userController.getCurrentProcrastinate())));
+                        this.userController.getCurrentProcrastinate(), !this.userController.getCurrentProcrastinate())));
         System.out.println(this.calendarController.showDefaultCalendar(eventController.getEventManager()));
         this.displayScreen();
     }

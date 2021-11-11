@@ -11,6 +11,7 @@ public class WorkSessionController {
     //TODO should be created based on user preferences
     private final WorkSessionScheduler workSessionScheduler;
 
+
     public WorkSessionController(WorkSessionScheduler workSessionScheduler){
         this.workSessionScheduler = workSessionScheduler;
     }
