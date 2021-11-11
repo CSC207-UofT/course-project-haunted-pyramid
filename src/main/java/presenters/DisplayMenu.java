@@ -12,10 +12,7 @@ public class DisplayMenu {
     public String displayMenu(MenuContent typeMenuContent) {
         setMenuContent(typeMenuContent);
         StringBuilder result = new StringBuilder();
-        String divider = "-".repeat(Constants.MENU_DIVIDER);
-        result.append(" ").append(divider).append(" ");
         this.menuContent.addMenuContent(result);
-        result.append("\n").append(" ").append(divider);
         return result.toString();
     }
 
