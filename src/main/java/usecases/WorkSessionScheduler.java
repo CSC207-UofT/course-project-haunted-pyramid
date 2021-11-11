@@ -5,10 +5,13 @@ import interfaces.EventListObserver;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalField;
-import java.util.*;
+
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * A scheduler that schedules work sessions for events that have no start-time
@@ -19,10 +22,11 @@ import java.util.*;
  */
 public class WorkSessionScheduler implements EventListObserver {
     //specified by saved user information - the time during which the user does not want to work
-    private List<Event> freeTime;
+    private Map<LocalTime, LocalTime> freeTime;
     //preferences for how work sessions should be sorted
     private boolean procrastinate;
-    private boolean notProcratsinate;
+    private boolean notProcrastinate;
+
 
     /**
      * A constructor for WorkSessionScheduler
@@ -30,10 +34,10 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param procrastinate Option for user, allows for a unique way of scheduling work sessions
      * @param notProcrastinate Option for user, allows for a unique way of scheduling work sessions
      */
-    public WorkSessionScheduler(List<Event> freeTime, boolean procrastinate, boolean notProcrastinate){
+    public WorkSessionScheduler(Map<LocalTime, LocalTime> freeTime, boolean procrastinate, boolean notProcrastinate){
         this.freeTime = freeTime;
         this.procrastinate = procrastinate;
-        this.notProcratsinate = notProcrastinate;
+        this.notProcrastinate = notProcrastinate;
     }
 
     /**
@@ -92,7 +96,7 @@ public class WorkSessionScheduler implements EventListObserver {
         // work sessions are taken into account
         Long totalNeeded = (long) (deadline.getHoursNeeded() - eventManager.totalHours(deadline.pastWorkSessions()));
 
-        if (notProcratsinate) {
+        if (this.notProcrastinate) {
 
             while (totalNeeded > 0) {
 

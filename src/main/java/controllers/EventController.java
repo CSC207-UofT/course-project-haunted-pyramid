@@ -4,24 +4,40 @@ import entities.Event;
 import gateways.IOSerializable;
 import presenters.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
-import presenters.MenuStrategies.MenuContent;
 import usecases.EventManager;
+import usecases.WorkSessionScheduler;
 
-import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.util.InvalidPropertiesFormatException;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-
+/**
+ * Controller for creating then editing, or editing selected individual events - change name, description
+ * start time, end time, delete
+ * passes to RecursiveController and WorkSessionController to edit recursion or prep of an individual event
+ * @author Taite Cullen
+ * @see Event
+ * @see EventManager
+ * @see RecursionController
+ * @see WorkSessionController
+ */
 public class EventController {
 
     private final EventManager eventManager;
     private final WorkSessionController workSessionController;
     private final RecursionController recursionController;
 
-    public EventController(boolean hasSavedData, IOSerializable ioSerializable){
-        this.workSessionController = new WorkSessionController();
+    /**
+     * constructor for EventController from serialized Events
+     * creates <code>this.eventManager</code> of current User's events, sets ID counter to maximum ID in eventManager,
+     * creates new workSessionController
+     * @param hasSavedData
+     * @param ioSerializable
+     * @param workSessionController
+     */
+    public EventController(boolean hasSavedData, IOSerializable ioSerializable, WorkSessionController workSessionController){
+        this.workSessionController = workSessionController;
         if (hasSavedData) {
             this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
             ConstantID.set(this.eventManager.getMaxID());
@@ -31,6 +47,28 @@ public class EventController {
         }
         this.recursionController = new RecursionController();
     }
+
+    /**
+     *
+     * @param hasSavedData
+     * @param ioSerializable
+     */
+    public EventController(boolean hasSavedData, IOSerializable ioSerializable){
+        this.workSessionController = new WorkSessionController(new WorkSessionScheduler(new HashMap<LocalTime, LocalTime>(),
+                true, false));
+        if (hasSavedData) {
+            this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
+            ConstantID.set(this.eventManager.getMaxID());
+        } else {
+            this.eventManager = new EventManager();
+            this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
+        }
+        this.recursionController = new RecursionController();
+    }
+
+    /**
+     *
+     */
     public void createDefaultEvent(){
         String title = IOController.getName();
         String course = IOController.getCourse();
@@ -43,6 +81,10 @@ public class EventController {
         }
     }
 
+    /**
+     *
+     * @param ID
+     */
     public void edit(Integer ID){
         boolean save = false;
         if (this.eventManager.containsID(ID)){
@@ -63,6 +105,11 @@ public class EventController {
         }
     }
 
+    /**
+     *
+     * @param command
+     * @param ID
+     */
     private void getAction(String command, Integer ID){
         String[] nextArgs = command.split(": ");
         if (nextArgs[0].equals("start")){
@@ -80,9 +127,19 @@ public class EventController {
         }
     }
 
+    /**
+     *
+     * @param ID
+     */
     public void delete(Integer ID){
         this.eventManager.remove(ID);
     }
+
+    /**
+     *
+     * @param ID
+     * @param newStart
+     */
     public void changeStart(Integer ID, String newStart){
         try {
             this.eventManager.setStart(this.eventManager.get(ID), newStart);
@@ -91,6 +148,11 @@ public class EventController {
         }
     }
 
+    /**
+     *
+     * @param ID
+     * @param newEnd
+     */
     public void changeEnd(Integer ID, String newEnd){
         try {
             this.eventManager.setEnd(this.eventManager.get(ID), newEnd);
@@ -99,29 +161,44 @@ public class EventController {
         }
     }
 
+    /**
+     *
+     * @param ID
+     * @param description
+     */
     public void changeDescription(Integer ID, String description){
         this.eventManager.setDescription(this.eventManager.get(ID), description);
     }
 
+    /**
+     *
+     * @param ID
+     * @param name
+     */
     public void changeName(Integer ID, String name){
         this.eventManager.setName(this.eventManager.get(ID), name);
     }
 
+    /**
+     *
+     * @param ID
+     */
     public void prep(Integer ID){
         this.workSessionController.edit(this.eventManager.get(ID), this.eventManager);
     }
 
+    /**
+     *
+     * @param ID
+     */
     public void recurse(Integer ID){
         this.recursionController.edit(this.eventManager.get(ID), this.eventManager);
     }
 
-    //for testing purposes
-    public void displayEvents(){
-        for (Event event: this.eventManager.timeOrder(this.eventManager.getAllEventsFlatSplit())){
-            System.out.println(this.eventManager.displayEvent(this.eventManager.getID(event)));
-        }
-    }
-
+    /**
+     *
+     * @return
+     */
     public EventManager getEventManager() { return this.eventManager; }
 
 }

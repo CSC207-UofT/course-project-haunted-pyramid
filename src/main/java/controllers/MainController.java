@@ -11,6 +11,7 @@ import presenters.DisplayMenu;
 import presenters.MenuStrategies.BasicMenuContent;
 import usecases.EventManager;
 import usecases.UserManager;
+import usecases.WorkSessionScheduler;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -40,10 +41,12 @@ public class MainController {
         this.studentController = new StudentController(this.userController);
         this.loginController = new LoginController(this.userController, this.studentController);
         this.calendarController = new CalendarController();
-        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.displayMenu = new DisplayMenu();
         this.displayInitScreen();
         System.out.println("WELCOME!"); // TODO add user name here
+        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
+                new WorkSessionController(new WorkSessionScheduler(this.userController.getCurrentFreeTime(),
+                        this.userController.getCurrentProcrastinate(), !this.userController.getCurrentProcrastinate())));
         System.out.println(this.calendarController.showDefaultCalendar(eventController.getEventManager()));
         this.displayScreen();
     }

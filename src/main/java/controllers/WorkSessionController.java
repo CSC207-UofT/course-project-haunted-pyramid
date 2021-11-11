@@ -9,9 +9,12 @@ import java.util.ArrayList;
 public class WorkSessionController {
 
     //TODO should be created based on user preferences
-    private final WorkSessionScheduler workSessionScheduler = new WorkSessionScheduler(new ArrayList<>(),
-            true, true);
+    private final WorkSessionScheduler workSessionScheduler;
 
+
+    public WorkSessionController(WorkSessionScheduler workSessionScheduler){
+        this.workSessionScheduler = workSessionScheduler;
+    }
     public WorkSessionScheduler getWorkSessionScheduler(){
         return this.workSessionScheduler;
     }
