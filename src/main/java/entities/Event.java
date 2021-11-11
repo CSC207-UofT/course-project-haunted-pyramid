@@ -93,7 +93,7 @@ public class Event implements Serializable {
      */
     public void setRecursiveId(int recursiveId) {this.recursiveId = recursiveId;}
 
-    public int getRecursiveId(){return this.recursiveId;}
+    public Integer getRecursiveId(){return this.recursiveId;}
 
     /**
      * name of the Event, like the description, is for User benefit - a visual reference to identify an Event
