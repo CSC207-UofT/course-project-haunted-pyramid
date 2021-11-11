@@ -175,6 +175,9 @@ public class EventManager{
      */
     private List<Event> flattenWorkSessions(List<Event> events){
         List<Event> flat = new ArrayList<>();
+        if (events.isEmpty()){
+            return flat;
+        }
         for (Event event: events){
             flat.add(event);
             if (!event.getWorkSessions().isEmpty()){flat.addAll(event.getWorkSessions());}
