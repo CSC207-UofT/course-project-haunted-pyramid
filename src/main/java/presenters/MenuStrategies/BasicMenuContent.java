@@ -9,10 +9,11 @@ public class BasicMenuContent implements MenuContent {
     public List<String> getContent() {
         return new ArrayList<>(){{
             add("1. Profile Setting");
-            add("2. View Events by Course");
+            add("2. View Calendar by Type and Date");
             add("3. Add a new Event");
-            add("4. Remove an Event");
-            add("5. Modify an existing Event");
+            add("4. Modify an existing Event through Calendar");
+            add("5. Log Out");
+            add("6. Exit");
         }};
     }
 
