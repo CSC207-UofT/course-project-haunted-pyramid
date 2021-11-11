@@ -50,8 +50,7 @@ public class EventController {
                 DisplayMenu dm = new DisplayMenu();
                 EventEditMenuContent content = new EventEditMenuContent(this.eventManager.get(ID));
                 System.out.println(dm.displayMenu(content));
-                String next = IOController.getAnswer("select a field to edit followed by its new value " +
-                        "[i.e. start: 0000-00-00-00-00], or \nprep \nrecurse \nsave \ndelete");
+                String next = IOController.getAnswer("");
                 if (next.equalsIgnoreCase("save")){
                     save = true;
                 }else if (next.equalsIgnoreCase("delete")) {

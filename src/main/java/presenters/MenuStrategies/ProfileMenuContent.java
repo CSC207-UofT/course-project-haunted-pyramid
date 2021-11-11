@@ -1,6 +1,5 @@
 package presenters.MenuStrategies;
 
-import entities.User;
 import usecases.UserManager;
 
 import java.util.ArrayList;
@@ -8,8 +7,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class ProfileMenuContent implements MenuContent{
-    private UUID user;
-    private UserManager userManager;
+    private final UUID user;
+    private final UserManager userManager;
 
     public ProfileMenuContent(UUID user, UserManager userManager){
         this.user = user;
@@ -27,6 +26,7 @@ public class ProfileMenuContent implements MenuContent{
             add("add free time");
             add("remove free time");
             add("toggle procrastinate");
+            add("done");
         }});
         return currentSettings;
     }

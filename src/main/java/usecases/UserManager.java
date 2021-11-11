@@ -42,7 +42,11 @@ public class UserManager {
     }
 
     public void addFreeTime(UUID user, LocalTime start, LocalTime end){this.userInfo.get(user).setFreeTime(start, end);}
-    public void removeFreeTime(UUID user, LocalTime start){this.userInfo.get(user).removeFreeTime(start);}
+    public void removeFreeTime(UUID user, LocalTime start){
+        if (this.getFreeTime(user).containsKey(start)){
+            this.userInfo.get(user).removeFreeTime(start);
+        }
+    }
 
     public void addNewUser(UUID id, String name, String username, String password) {
         User user = new User(id, name, username, password);
