@@ -6,6 +6,7 @@ import helpers.DisplayCalendarHelper;
 import usecases.CalendarManager;
 import usecases.MonthlyCalendar;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class DisplayMonthlyCalendar extends DisplayCalendar {
@@ -183,8 +184,8 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         if (calendarMap.get(usedContentDates.get(contentCount)).size() - 1 >= eventIndex &&
                 calendarMap.get(usedContentDates.get(contentCount)).size() != 0) {
             String eventName = cm.getEventNames(year, month, usedContentDates.get(contentCount)).get(eventIndex);
-            if (eventName.length() > 12) {
-                eventName = eventName.substring(0, 12) + "...";
+            if (eventName.length() > 14) {
+                eventName = eventName.substring(0, 11) + "...";
             }
             String eventTime = cm.getEventTimes(year, month, usedContentDates.get(contentCount)).get(eventIndex);
             String tempDiv = " ".repeat(this.dayOfWeekCollection.get(startingIndex + contentCount).length() +
@@ -213,19 +214,5 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
             result.append(tempDiv).append("|");
             count += 1;
         }
-    }
-
-    public static void main(String[] args) {
-        CalendarManager calendarManager = new CalendarManager();
-        Event event = new Event(1, "TEST1", 2021, 10, 29, 3, 5, 30, 30);
-        Event event1 = new Event(2, "TEST2", 2021, 10, 30, 3, 5, 0, 0);
-        Event event2 = new Event(3, "TEST3", 2021, 10, 30, 1, 5, 30, 30);
-        Event event3 = new Event(4, "REALLY", 2021, 10, 1, 15, 19, 0,0);
-        calendarManager.addToCalendar(event);
-        calendarManager.addToCalendar(event1);
-        calendarManager.addToCalendar(event2);
-        calendarManager.addToCalendar(event3);
-        DisplayMonthlyCalendar dmc = new DisplayMonthlyCalendar(calendarManager, 2021, 10);
-        System.out.println(dmc.displayCalendar());
     }
 }
