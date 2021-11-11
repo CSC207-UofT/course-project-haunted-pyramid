@@ -82,13 +82,14 @@ public class MainController {
             helper.invalidCheck(displayMenu, firstChoice, basicMenu.numberOfOptions(), basicMenu);
             switch (firstChoice){
                 case "1":
+                    this.userController.editProfile();
                     // TODO link to profile setting
                     break;
                 case "2":
                     this.calendarController.showCalendar(eventController.getEventManager());
                     break;
                 case "3":
-                    // TODO link to Event creation
+                    this.eventController.createDefaultEvent();
                     break;
                 case "4":
                     // TODO create direct access to daily calendar with the chosen date for modification
