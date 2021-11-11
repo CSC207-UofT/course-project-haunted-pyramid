@@ -5,6 +5,9 @@ import entities.Event;
 import entities.User;
 
 import gateways.IOSerializable;
+import helpers.ControllerHelper;
+import presenters.DisplayMenu;
+import presenters.MenuStrategies.BasicMenuContent;
 import usecases.EventManager;
 import usecases.UserManager;
 
@@ -22,12 +25,13 @@ public class MainController {
 
     private final IOSerializable ioSerializable;
     private final Scanner scanner = new Scanner(System.in);
+    private final ControllerHelper helper = new ControllerHelper();
 
     // Variables below are only for the final serialization process
     private IOSerializable tempIoSerializable;
     private UserController tempUserController;
     private EventController tempEventController;
-    private CalendarController tempCalendarController;
+    private DisplayMenu displayMenu;
 
     public MainController() {
         this.ioSerializable = new IOSerializable(true);
@@ -36,7 +40,10 @@ public class MainController {
         this.loginController = new LoginController(this.userController, this.studentController);
         this.calendarController = new CalendarController();
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable);
+        this.displayMenu = new DisplayMenu();
         this.displayInitScreen();
+        System.out.println("WELCOME!"); // TODO add user name here
+        System.out.println(this.calendarController.showDefaultCalendar(eventController.getEventManager()));
         this.displayScreen();
     }
 
@@ -67,20 +74,31 @@ public class MainController {
      */
     public void displayScreen() {
         while (this.loginController.isLoggedIn()) {
-            this.eventController.displayEvents();
-            System.out.println("Type 'add' to add an event to the calendar");
-            System.out.println("Type 'Exit' to exit this program.");
-            System.out.println("Type the number before an Event to edit that Event");
-            String SUorLI = scanner.nextLine();
-            if (SUorLI.equalsIgnoreCase("add")) {
-                this.eventController.schedule();
-            } else if (SUorLI.equalsIgnoreCase("Log out")) {
-                this.loginController.logout();
-                this.displayInitScreen();
-            } else if (SUorLI.equalsIgnoreCase("Exit")) {
-                this.saveAndExitProgram();
-            } else{
-                this.eventController.edit(Integer.parseInt(SUorLI));
+            System.out.println("Please choose your action");
+            BasicMenuContent basicMenu = new BasicMenuContent();
+            System.out.println(displayMenu.displayMenu(basicMenu)); //display the basic menu
+            String firstChoice = scanner.nextLine();
+            helper.invalidCheck(displayMenu, firstChoice, basicMenu.numberOfOptions(), basicMenu);
+            switch (firstChoice){
+                case "1":
+                    // TODO link to profile setting
+                    break;
+                case "2":
+                    this.calendarController.showCalendar(eventController.getEventManager());
+                    break;
+                case "3":
+                    // TODO link to Event creation
+                    break;
+                case "4":
+                    // TODO create direct access to daily calendar with the chosen date for modification
+                    break;
+                case "5":
+                    this.loginController.logout();
+                    this.displayInitScreen();
+                    break;
+                case "6":
+                    this.saveAndExitProgram();
+                    break;
             }
         }
     }
@@ -115,7 +133,6 @@ public class MainController {
     public void saveAndExitProgram() {
         this.tempIoSerializable = new IOSerializable(false);
         this.tempUserController = new UserController(true, this.tempIoSerializable);
-        this.tempCalendarController = new CalendarController();
         this.tempEventController = new EventController(true, this.tempIoSerializable);
         this.ioSerializable.eventsWriteToSerializable(combineTwoEventFileContents(this.eventController.getEventManager(), this.tempEventController.getEventManager()));
         this.ioSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(), this.tempUserController.getUserManager()));

@@ -1,6 +1,7 @@
 package controllers;
 
 import entities.Event;
+import helpers.ControllerHelper;
 import helpers.DateInfo;
 import presenters.DisplayCalendar;
 import presenters.DisplayCalendarFactory;
@@ -17,6 +18,16 @@ import java.util.Scanner;
 
 public class CalendarController {
     private final Scanner scanner = new Scanner(System.in);
+    private final ControllerHelper helper = new ControllerHelper();
+
+    public String showDefaultCalendar(EventManager eventManager){
+        CalendarManager calendarManager = new CalendarManager();
+        for (Event event : eventManager.getAllEventsFlatSplit()){
+            calendarManager.addToCalendar(event);
+        }
+        DisplayCalendarFactory calendarFactory = new DisplayCalendarFactory(calendarManager);
+        return calendarFactory.displayCurrentCalendarByType("Monthly").displayCalendar();
+    }
 
     public void showCalendar(EventManager eventManager) {
         DisplayMenu displayMenu = new DisplayMenu();
@@ -102,7 +113,7 @@ public class CalendarController {
         MenuContent calendarDateInfoMenu = new CalendarYearMonthMenuContent();
         System.out.println(displayMenu.displayMenu(calendarDateInfoMenu));
         String dateInput = scanner.nextLine();
-        invalidCheck(displayMenu, dateInput, calendarDateInfoMenu.numberOfOptions(), calendarDateInfoMenu);
+        helper.invalidCheck(displayMenu, dateInput, calendarDateInfoMenu.numberOfOptions(), calendarDateInfoMenu);
         return dateInput;
     }
 
@@ -110,19 +121,10 @@ public class CalendarController {
         System.out.println("Please select the type of calendar you would like to view");
         System.out.println(displayMenu.displayMenu(calendarTypeMenu));
         String typeCalendar = scanner.nextLine();
-        typeCalendar = invalidCheck(displayMenu, typeCalendar, calendarTypeMenu.numberOfOptions(), calendarTypeMenu);
+        typeCalendar = helper.invalidCheck(displayMenu, typeCalendar, calendarTypeMenu.numberOfOptions(), calendarTypeMenu);
         return typeCalendar;
     }
 
-    private String invalidCheck(DisplayMenu displayMenu, String typeCalendar, int numberOfOptions,
-                                MenuContent menuContentType) {
-        while (!validOption(listOfOptions(numberOfOptions)).contains(typeCalendar)){
-            System.out.println("Please select the valid number from the menu");
-            System.out.println(displayMenu.displayMenu(menuContentType));
-            typeCalendar = scanner.nextLine();
-        }
-        return typeCalendar;
-    }
 
 
     private int getDateInput(int numberOfDays) {
@@ -135,7 +137,7 @@ public class CalendarController {
         for (int i = 1; i <= numberOfDays; i++){
             tempIntList.add(i);
         }
-        while (!validOption(tempIntList).contains(dateStr)){
+        while (!helper.validOption(tempIntList).contains(dateStr)){
             System.out.println("Please type the valid date for the month");
             dateStr = scanner.nextLine();
         }
@@ -143,21 +145,6 @@ public class CalendarController {
         return date;
     }
 
-    private List<Integer> listOfOptions(int number){
-        List<Integer> intList = new ArrayList<>();
-        for (int i = 1; i <= number; i++){
-            intList.add(i);
-        }
-        return intList;
-    }
-
-    private List<String> validOption(List<Integer> options){
-        List<String> temp = new ArrayList<>();
-        for (Integer number : options){
-            temp.add(String.valueOf(number));
-        }
-        return temp;
-    }
 
     public static void main(String[] args) {
         CalendarController calendarController = new CalendarController();
