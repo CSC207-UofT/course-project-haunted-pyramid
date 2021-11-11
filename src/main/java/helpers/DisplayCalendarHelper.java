@@ -119,10 +119,6 @@ public class DisplayCalendarHelper {
         return sortedList;
     }
 
-    public Integer convertTimeToInt(String time){
-        String temp = time.substring(0, 2) + time.substring(3, 5);
-        return Integer.parseInt(temp);
-    }
 
     public String findStartDayOfWeekString(int year, int month, int date){
         int startingDayOfWeek = findStartDayOfWeekInteger(year, month, date);
@@ -157,5 +153,10 @@ public class DisplayCalendarHelper {
         LocalDate localDate = LocalDate.of(year, month, date);
         DayOfWeek dayOfWeek = DayOfWeek.from(localDate);
         return dayOfWeek.getValue();
+    }
+
+    public int convertTimeToInt(String time){
+        String temp = time.substring(0, 2) + time.substring(3, 5);
+        return Integer.parseInt(temp);
     }
 }

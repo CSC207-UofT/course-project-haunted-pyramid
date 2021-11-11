@@ -24,10 +24,10 @@ public class CalendarController {
         boolean exit = false;
         while (!exit) {
             CalendarManager calendarManager = new CalendarManager();
-            DisplayCalendarFactory calendarFactory = new DisplayCalendarFactory(calendarManager);
             for (Event event : eventManager.getAllEventsFlatSplit()) {
                 calendarManager.addToCalendar(event);
             }
+            DisplayCalendarFactory calendarFactory = new DisplayCalendarFactory(calendarManager);
             String typeCalendar = getTypeInput(displayMenu, calendarTypeMenu);
             String dateInput = getCalendarDateInput(displayMenu);
             DateInfo dateInfo = new DateInfo();
