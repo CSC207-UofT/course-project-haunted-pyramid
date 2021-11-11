@@ -9,6 +9,6 @@ public class Constants {
     public static final int DAILY_CAL_SIZE = 60;
     public static final int CAL_ROW_SPACER = 24;
     public static final int WEEKLY_CAL_NAME_LIMIT = 16;
-    public static final int MENU_DIVIDER = 50;
+    public static final int MENU_DIVIDER = 35;
 
 }
