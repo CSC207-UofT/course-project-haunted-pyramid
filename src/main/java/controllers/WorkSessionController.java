@@ -10,7 +10,7 @@ public class WorkSessionController {
 
     //TODO should be created based on user preferences
     private final WorkSessionScheduler workSessionScheduler = new WorkSessionScheduler(new ArrayList<>(),
-            true, true, true);
+            true, true);
 
     public WorkSessionScheduler getWorkSessionScheduler(){
         return this.workSessionScheduler;
