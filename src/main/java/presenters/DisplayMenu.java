@@ -1,32 +1,36 @@
 package presenters;
 
 import helpers.Constants;
-
-import java.util.ArrayList;
-import java.util.List;
+import presenters.MenuStrategies.BasicMenuContent;
+import presenters.MenuStrategies.CalendarYearMonthMenuContent;
+import presenters.MenuStrategies.MenuContent;
 
 public class DisplayMenu {
-    private MenuContent menuContent = new MenuContent();
+    private MenuContent menuContent;
 
 
-    public String displayMenu(String type){
+    public String displayMenu(MenuContent typeMenuContent) {
+        setMenuContent(typeMenuContent);
         StringBuilder result = new StringBuilder();
         String divider = "-".repeat(Constants.MENU_DIVIDER);
         result.append(" ").append(divider).append(" ");
-        if (type.equalsIgnoreCase("Basic"))
-        {
-            this.menuContent.addBasicMenuContent(result);}
-        else if (type.equalsIgnoreCase("Event Type")){
-            this.menuContent.addEventTypeMenuContent(result);
-        }
+        this.menuContent.addMenuContent(result);
         result.append("\n").append(" ").append(divider);
         return result.toString();
     }
 
+    public void setMenuContent(MenuContent menuContent) {
+        this.menuContent = menuContent;
+    }
+
+
 
     public static void main(String[] args) {
         DisplayMenu dm = new DisplayMenu();
-        System.out.println(dm.displayMenu("basic"));
-        System.out.println(dm.displayMenu("event type"));
+        MenuContent content = new BasicMenuContent();
+        MenuContent calendarContent = new CalendarYearMonthMenuContent();
+        System.out.println(dm.displayMenu(content));
+        System.out.println(dm.displayMenu(new CalendarYearMonthMenuContent()));
+        System.out.println(calendarContent.numberOfOptions());
     }
 }

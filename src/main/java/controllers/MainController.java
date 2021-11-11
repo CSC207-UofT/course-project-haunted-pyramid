@@ -35,8 +35,7 @@ public class MainController {
         this.studentController = new StudentController(this.userController);
         this.loginController = new LoginController(this.userController, this.studentController);
         this.calendarController = new CalendarController();
-        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
-                this.calendarController.getCalendarManager());
+        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.displayInitScreen();
         this.displayScreen();
     }
@@ -117,7 +116,7 @@ public class MainController {
         this.tempIoSerializable = new IOSerializable(false);
         this.tempUserController = new UserController(true, this.tempIoSerializable);
         this.tempCalendarController = new CalendarController();
-        this.tempEventController = new EventController(true, this.tempIoSerializable, this.tempCalendarController.getCalendarManager());
+        this.tempEventController = new EventController(true, this.tempIoSerializable);
         this.ioSerializable.eventsWriteToSerializable(combineTwoEventFileContents(this.eventController.getEventManager(), this.tempEventController.getEventManager()));
         this.ioSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(), this.tempUserController.getUserManager()));
         this.ioSerializable.saveToDropbox();
