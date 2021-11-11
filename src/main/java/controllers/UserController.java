@@ -10,6 +10,7 @@ import usecases.UserManager;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class UserController {
@@ -27,6 +28,18 @@ public class UserController {
 
     public void setCurrentUser(UUID currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public String getCurrentUsername(){
+        return this.userManager.getName(this.currentUser);
+    }
+
+    public Map<LocalTime, LocalTime> getCurrentFreeTime(){
+        return this.userManager.getFreeTime(this.currentUser);
+    }
+
+    public boolean getCurrentProcrastinate(){
+        return this.userManager.getProcrastinate(this.currentUser);
     }
 
     public void editProfile(){

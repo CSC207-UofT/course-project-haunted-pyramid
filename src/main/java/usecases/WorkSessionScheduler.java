@@ -6,6 +6,7 @@ import interfaces.EventListObserver;
 import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,17 +14,13 @@ import java.util.Map;
 
 public class WorkSessionScheduler implements EventListObserver {
     //specified by saved user information - the time during which the user does not want to work
-    private List<Event> freeTime;
+    private Map<LocalTime, LocalTime> freeTime;
     //preferences for how work sessions should be sorted
     private boolean procrastinate;
-    private boolean fillSmallSlots;
-    private boolean fillEmptyDays;
 
-    public WorkSessionScheduler(List<Event> freeTime, boolean procrastinate, boolean fillSmallSlots, boolean fillEmptyDays){
+    public WorkSessionScheduler(Map<LocalTime, LocalTime> freeTime, boolean procrastinate){
         this.freeTime = freeTime;
         this.procrastinate = procrastinate;
-        this.fillEmptyDays = fillEmptyDays;
-        this.fillSmallSlots = fillSmallSlots;
     }
 
     public void setSessionLength(Event deadline, Long sessionLength, EventManager eventManager){
