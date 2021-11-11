@@ -132,6 +132,10 @@ public class OurCalendar {
                     individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
                     individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)) + item.getLength() * 100);
                 }
+                else {
+                    individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
+                    individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
+                }
                 timeInfo.add(individualTimeInfo);
             }
             // run the helper method to compare the times and update the conflictEvent
@@ -150,8 +154,14 @@ public class OurCalendar {
     }
 
     private String getStartTimeString(Event item) {
-        return item.getStartTime().toLocalTime().toString().substring(0, 2) +
-                item.getStartTime().toLocalTime().toString().substring(3, 5);
+        if (item.getStartTime() != null) {
+            return item.getStartTime().toLocalTime().toString().substring(0, 2) +
+                    item.getStartTime().toLocalTime().toString().substring(3, 5);
+        }
+        else {
+            return item.getEndTime().toLocalTime().toString().substring(0, 2) +
+                    item.getEndTime().toLocalTime().toString().substring(3, 5);
+        }
     }
 
     /**

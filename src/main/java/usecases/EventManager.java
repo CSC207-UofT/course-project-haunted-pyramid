@@ -261,8 +261,16 @@ public class EventManager{
 
     public Event earliest(List<Event> events){
         Event earliest = events.get(0);
+        LocalDateTime earliestStartTime = earliest.getStartTime();
+        if (!earliest.hasStart()){
+            earliestStartTime = earliest.getEndTime();
+        }
         for (Event event: events){
-            if (event.getStartTime().isBefore(earliest.getStartTime())){
+            LocalDateTime eventStartTime = event.getStartTime();
+            if (!event.hasStart()){
+                eventStartTime = event.getEndTime();
+            }
+            if (eventStartTime.isBefore(earliestStartTime)){
                 earliest = event;
             }
         }

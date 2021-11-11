@@ -144,10 +144,21 @@ public class Event implements Serializable {
             return false;
         }
         Event obj = (Event) object;
-        return this.startTime.isEqual(obj.getStartTime()) && this.endTime.isEqual(obj.getEndTime()) &&
-                this.name.equals(obj.getName()) && this.workSessions.equals(obj.getWorkSessions())
-                && this.ID == obj.getID() && this.hoursNeeded.equals(obj.getHoursNeeded()) &&
-                this.sessionLength.equals(obj.getSessionLength());
+        if (this.hasStart() && obj.hasStart()) {
+            return this.startTime.isEqual(obj.getStartTime()) && this.endTime.isEqual(obj.getEndTime()) &&
+                    this.name.equals(obj.getName()) && this.workSessions.equals(obj.getWorkSessions())
+                    && this.ID == obj.getID() && this.hoursNeeded.equals(obj.getHoursNeeded()) &&
+                    this.sessionLength.equals(obj.getSessionLength());
+        }
+        else if ((!this.hasStart() && obj.hasStart()) || (this.hasStart() && !obj.hasStart())){
+            return false;
+        }
+        else {
+            return this.endTime.isEqual(obj.getEndTime()) && this.name.equals(obj.getName()) &&
+                    this.workSessions.equals(obj.getWorkSessions())  && this.ID == obj.getID() &&
+                    this.hoursNeeded.equals(obj.getHoursNeeded()) &&
+                    this.sessionLength.equals(obj.getSessionLength());
+        }
     }
 
     /**
