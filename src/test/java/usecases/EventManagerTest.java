@@ -7,10 +7,8 @@ import org.junit.Test;
 import org.junit.Before;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class EventManagerTest {
     private EventManager eventManager;
@@ -65,5 +63,15 @@ public class EventManagerTest {
                 this.eventManager.get(1), this.eventManager.get(5),
                 this.eventManager.get(3)});
         assertEquals(ordered, this.eventManager.timeOrder(unordered));
+    }
+
+    @Test
+    public void testGetRange(){
+
+        Map<LocalDate, List<Event>> range = this.eventManager.getRange(LocalDate.of(2021, 10, 1),
+                LocalDate.of(2021, 10, 4));
+        assertEquals(range.get(LocalDate.of(2021, 10, 1)),
+                this.eventManager.getDay(LocalDate.of(2021, 10, 1)));
+
     }
 }

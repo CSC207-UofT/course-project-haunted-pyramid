@@ -274,9 +274,7 @@ public class Event implements Serializable {
      * a list of the work sessions contained in this event - no restrictions
      * @return workSessions as a list of events
      */
-    public List<Event> getWorkSessions(){
-        return this.workSessions;
-    }
+    public List<Event> getWorkSessions(){return this.workSessions;}
 
     /**
      * sets a new value for hours needed - default is 0L, no restrictions - for information on preferences only
