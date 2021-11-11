@@ -1,11 +1,16 @@
 package entities;
 
 import interfaces.DateGetter;
+import interfaces.EventListObserver;
+import usecases.EventManager;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class RecursiveEvent{
+public class RecursiveEvent implements EventListObserver {
 
     // + eventsInOneCycle ;for example if a lecture is tuesdays and thurdays of each week, the cycle will consist
     // of [(tuesday, date+time of lecture), (thursday, date+time of lecture), (tuesday, date+time of lecture after the
@@ -46,14 +51,78 @@ public class RecursiveEvent{
     public void setMethodToGetDate(DateGetter methodToGetDate) {this.methodToGetDate = methodToGetDate;}
 
     /**
+     * If user were to Remove/add/change an event from/to a recursion, these methods return cycle in which they will be.
+     */
+
+    public void addOrChange(String addChange, ArrayList<Event> objects, Event object, int index){
+        if (!Objects.equals(addChange, "add")) {
+            objects.remove(index);
+        }
+        objects.add(index, object);
+    }
+
+    public ArrayList<Event> cycleAfterRemoval(Event event){
+        int cycleLength = this.getCycleLength();
+        ArrayList<Event> eventsInCycles = this.listOfEventsInCycles(this.eventsInOneCycle);
+        int eventIndex = eventsInCycles.indexOf(event);
+        int rest = eventIndex % cycleLength;
+        int quotient = eventIndex - rest;
+        ArrayList<Event> newCycle = new ArrayList<>();
+        for (int i = 0 ; i < quotient ; i++){
+            newCycle.add(eventsInCycles.get(quotient + i));
+        }
+        newCycle.remove(rest);
+        return newCycle;
+    }
+
+    public ArrayList<Event> cycleAfterAdditionOrChange(Event event, String addChange){
+        event.setRecursiveId(this.id);
+        int cycleLength = this.getCycleLength();
+        Event firstEvent1 = this.eventsInOneCycle.get(0);
+        ArrayList<Event> tempCycle = this.createEventInCycles(firstEvent1);
+        int i = 0;
+        Event currentEvent = tempCycle.get(i);
+        while(event.getStartTime().isAfter(currentEvent.getStartTime())){
+            i++;
+            currentEvent = tempCycle.get(i);
+        }
+        if(i==0){
+            ArrayList<Event> newCycle = this.eventsInOneCycle;
+            int j = 1;
+            Event thisEvent = newCycle.get(j);
+            while (event.getStartTime().isAfter(thisEvent.getStartTime())){
+                j++;
+                thisEvent = newCycle.get(j);
+            }
+            this.addOrChange(addChange, newCycle, event, j);
+            return newCycle;
+        }
+        else{
+            ArrayList<Event> aCycle = this.listOfEventsInCycles(this.eventsInOneCycle);
+            ArrayList<Event> newCycle = new ArrayList<>();
+            for (int k = 0 ; k < cycleLength ; k++){
+                newCycle.add(aCycle.get(i*cycleLength + k));
+            }
+            int j = 1;
+            Event thisEvent = newCycle.get(j);
+            while (event.getStartTime().isAfter(thisEvent.getStartTime())){
+                j++;
+                thisEvent = newCycle.get(j);
+            }
+            this.addOrChange(addChange, newCycle, event, j);
+            return newCycle;
+        }
+    }
+
+    /**
      *
      * Uses the classes that implement the date getter interface to return the dates of all the events in the
      * period of repetition.
      * @return
      */
 
-    public ArrayList<Event> listOfDatesInCycles(){
-        return methodToGetDate.listOfDatesInCycles(this.eventsInOneCycle);
+    public ArrayList<Event> listOfEventsInCycles(ArrayList<Event> events){
+        return methodToGetDate.listOfDatesInCycles(events);
     }
 
     /**
@@ -65,7 +134,7 @@ public class RecursiveEvent{
     public ArrayList<Event> createEventInCycles(Event event){
         ArrayList<Event> result = new ArrayList<>();
         int indexOfEvent = this.eventsInOneCycle.indexOf(event);
-        ArrayList<Event> listOfDatesInCycles = this.listOfDatesInCycles();
+        ArrayList<Event> listOfDatesInCycles = this.listOfEventsInCycles(this.eventsInOneCycle);
         int cyclesLength = listOfDatesInCycles.size();
         int i = 1;
         while(indexOfEvent + this.getCycleLength()*i < cyclesLength){
@@ -73,6 +142,11 @@ public class RecursiveEvent{
             i += 1;
         }
         return result;
+    }
+
+    @Override
+    public void update(String addRemoveChange, ArrayList<Event> changed, EventManager eventManager) {
+
     }
 
     /**

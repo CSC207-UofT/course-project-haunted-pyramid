@@ -3,13 +3,14 @@ package usecases;
 import entities.Event;
 import entities.RecursiveEvent;
 import interfaces.DateGetter;
+import interfaces.EventListObserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RepeatedEventManager {
+public class RepeatedEventManager implements EventListObserver {
 
     private Map<Integer, RecursiveEvent> recursiveEventMap;
 
@@ -54,6 +55,8 @@ public class RepeatedEventManager {
         this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
     }
 
+
+
     public void addRecursiveEvent(RecursiveEvent recursiveEvent){
         this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
     }
@@ -86,5 +89,14 @@ public class RepeatedEventManager {
     }
 
 
+    @Override
+    public void update(String addRemoveChange, ArrayList<Event> changed, EventManager eventManager) {
+        ArrayList<Event> recursiveEvents = new ArrayList<>();
+        for(Event event : changed){
+            if(event.getRecursiveId() != null){
+                recursiveEvents.add(event);
+            }
+        }
+    }
 }
 
