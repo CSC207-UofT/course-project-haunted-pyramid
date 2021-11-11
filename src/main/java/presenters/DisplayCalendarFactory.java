@@ -22,14 +22,5 @@ public class DisplayCalendarFactory {
         }
         return null;
     }
-
-    public DisplayCalendar displayCurrentCalendarByType(String calendarType){
-        int year = calendarManager.getCurrentYear();
-        int month = calendarManager.getCurrentMonth();
-        int date = calendarManager.getCurrentDate();
-        return displaySpecificCalendarByType(calendarType, year, month, date);
-    }
-
-
 }
 

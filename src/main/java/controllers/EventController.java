@@ -14,12 +14,10 @@ import presenters.DisplayCalendarFactory; // JUST FOR THE DEMONSTRATION
 public class EventController {
 
     private final EventManager eventManager;
-    private final CalendarManager calendarManager;
     private final WorkSessionController workSessionController;
     private final RecursionController recursionController;
-    private final DisplayCalendarFactory displayCalendarFactory;
 
-    public EventController(boolean hasSavedData, IOSerializable ioSerializable, CalendarManager calendarManager){
+    public EventController(boolean hasSavedData, IOSerializable ioSerializable){
         this.workSessionController = new WorkSessionController();
         if (hasSavedData) {
             this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
@@ -27,8 +25,6 @@ public class EventController {
             this.eventManager = new EventManager();
             this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         }
-        this.calendarManager = calendarManager;
-        this.displayCalendarFactory = new DisplayCalendarFactory(this.calendarManager);
         this.recursionController = new RecursionController();
     }
     public void schedule(){
@@ -38,7 +34,6 @@ public class EventController {
         Integer[] date = IOController.getDate("Enter the date of the event");
         List<Integer> end = IOController.getTime("enter the end time");
         Event event = this.eventManager.addEvent(title, LocalDateTime.of(date[0], date[1], date[2], end.get(0), end.get(1)));
-        this.calendarManager.addToCalendar(event);
         this.edit(this.eventManager.getID(event));
     }
 
