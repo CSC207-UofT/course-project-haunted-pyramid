@@ -5,6 +5,8 @@ import entities.Event;
 import entities.User;
 
 import gateways.IOSerializable;
+import presenters.DisplayMenu;
+import presenters.MenuStrategies.BasicMenuContent;
 import usecases.EventManager;
 import usecases.UserManager;
 
@@ -68,17 +70,22 @@ public class MainController {
     public void displayScreen() {
         while (this.loginController.isLoggedIn()) {
             this.eventController.displayEvents();
+            DisplayMenu dm = new DisplayMenu();
+            dm.displayMenu(new BasicMenuContent());
+            System.out.println();
             System.out.println("Type 'add' to add an event to the calendar");
             System.out.println("Type 'Exit' to exit this program.");
             System.out.println("Type the number before an Event to edit that Event");
             String SUorLI = scanner.nextLine();
             if (SUorLI.equalsIgnoreCase("add")) {
-                this.eventController.schedule();
+                this.eventController.createDefaultEvent();
             } else if (SUorLI.equalsIgnoreCase("Log out")) {
                 this.loginController.logout();
                 this.displayInitScreen();
             } else if (SUorLI.equalsIgnoreCase("Exit")) {
                 this.saveAndExitProgram();
+            } else if (SUorLI.equalsIgnoreCase("profile")){
+                this.userController.editProfile();
             } else{
                 this.eventController.edit(Integer.parseInt(SUorLI));
             }
