@@ -2,8 +2,10 @@ package usecases;
 
 import entities.User;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class UserManager {
@@ -17,18 +19,43 @@ public class UserManager {
         }
     }
 
+    public UserManager(){
+        this.userInfo = new HashMap<>();
+    }
+
+    public void toggleProcrastinate(UUID user){
+        this.userInfo.get(user).setProcrastinate(!userInfo.get(user).getProcrastinate());
+    }
+
+    public boolean getProcrastinate(UUID user){return this.userInfo.get(user).getProcrastinate();}
+
+    public void setName(UUID user, String name){
+        this.userInfo.get(user).setName(name);
+    }
+
+    public String getName(UUID user){
+        return this.userInfo.get(user).getName();
+    }
+
+    public Map<LocalTime, LocalTime> getFreeTime(UUID user){
+        return this.userInfo.get(user).getFreeTime();
+    }
+
+    public void addFreeTime(UUID user, LocalTime start, LocalTime end){this.userInfo.get(user).setFreeTime(start, end);}
+    public void removeFreeTime(UUID user, LocalTime start){this.userInfo.get(user).removeFreeTime(start);}
+
     public void addNewUser(UUID id, String name, String username, String password) {
         User user = new User(id, name, username, password);
         this.userInfo.put(id, user);
     }
 
-    public boolean checkUsernameAndPassword(String username, String password) {
+    public User checkUsernameAndPassword(String username, String password) {
         for (User user : this.getAllUsers()) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                return true;
+                return user;
             }
         }
-        return false;
+        return null;
     }
 
     public ArrayList<User> getAllUsers() {

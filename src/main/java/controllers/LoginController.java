@@ -27,9 +27,11 @@ public class LoginController {
         String username = scanner.nextLine();
         System.out.println("Type your password.");
         String password = scanner.nextLine();
-        if (this.userController.getUserManager().checkUsernameAndPassword(username, password)) {
+        if (this.userController.getUserManager().checkUsernameAndPassword(username, password) != null) {
             this.loggedIn = true;
             System.out.println("Login success!");
+            this.userController.setCurrentUser(this.userController.getUserManager().checkUsernameAndPassword(username,
+                    password).getId());
         } else {
             System.out.println("Login failed. Check for possible spelling mistakes.");
         }

@@ -61,6 +61,24 @@ public class EventManager{
     }
 
     /**
+     * for Unique ID
+     * @return Integer the largest integer ID in <code>this.eventMap</code>
+     */
+    public Integer getMaxID(){
+        List<Integer> ids = new ArrayList<>(this.eventMap.keySet());
+        if (this.eventMap.isEmpty()){
+            return 0;
+        }
+        Integer max = ids.get(0);
+        for (Integer i: ids) {
+            if (i>max){
+                max = i;
+            }
+        }
+        return max;
+    }
+
+    /**
      * getDay returns a map of the events in a day
      * @param day the day that is being searched for
      * @return <code>Map<Integer, Event></code> of all events in this day by ID
@@ -372,6 +390,10 @@ public class EventManager{
             return null;
         }
     }
+    public String displayEvent(Event event){
+        return event.toString();
+    }
+
 
     /**
      * checks if an Event of this ID is contained in <code>this.eventMap</code>
