@@ -127,7 +127,9 @@ public class CalendarController {
 
     private int getDateInput(int numberOfDays) {
         int date;
-        System.out.println("Please type the date view the calendar from");
+      
+        System.out.println("Please type the date to view the calendar from");
+
         String dateStr = scanner.nextLine();
         List<Integer> tempIntList = new ArrayList<>();
         for (int i = 1; i <= numberOfDays; i++){
