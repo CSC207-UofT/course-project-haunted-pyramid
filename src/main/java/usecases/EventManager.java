@@ -118,10 +118,10 @@ public class EventManager{
     }
 
     /**
-     *
-     * @param title
-     * @param endTime
-     * @return
+     * creates an event with given name and end time and adds to <code>this.eventMap</code>
+     * @param title String title of the Event
+     * @param endTime LocalDateTime end time of the event
+     * @return the event that was created with given title, endTime, and unique ID
      */
     public Event addEvent(String title, LocalDateTime endTime) {
         Event event = new Event(ConstantID.get(), title, endTime);
@@ -129,11 +129,24 @@ public class EventManager{
         return event;
     }
 
+    /**
+     * creates an event with given title and endString using <code>this.stringToDate</code> to convert to LocalDateTime
+     * and adds to <code>this.eventMap</code>
+     * @param title String name of event
+     * @param endString DateTime string in the form "YYYY-MM-DDTHH-MM"
+     * @return the event that was created
+     */
     public Event addEvent(String title, String endString){
         Event event = new Event(ConstantID.get(), title, this.stringToDate(endString));
         this.addEvent(event);
         return event;
     }
+
+    /**
+     * adds an already existing event to <code>this.eventMap</code>. will overwrite event of same ID
+     * @param event event to be added
+     */
+    public void addEvent(Event event){this.eventMap.put(event.getID(), event);}
 
 
     /**
@@ -151,6 +164,15 @@ public class EventManager{
         return flat;
     }
 
+    /**
+     * returns an Event as a list of events, splitting them at 24:00 each day it spans. For an event that spans
+     * multiple days, will return an event with startTime = event.startTime, endTime the same day as the startTime
+     * but with time = 24:00, and each subsequent event will have start and end 0:00-24:00 for each day the event spans
+     * fully. The final event will have start time 0:00 on the date of the endTime, with endTime same as the original
+     * events endTime
+     * @param event the event to be split, may or may not have start time or span multiple days
+     * @return the list of events as split by day
+     */
     private List<Event> splitByDay(Event event){
         if (event.hasStart()){
             List<Event> splitByDay = new ArrayList<>();
@@ -172,7 +194,8 @@ public class EventManager{
     }
 
     /**
-     * returns ArrayList of all events in <code>this.eventMap</code>, including work sessions within events
+     * returns ArrayList of all events in <code>this.eventMap</code>, including work sessions within events, split
+     * at day boundaries
      * @return  list of events, including work sessions within events (flattened)
      */
     public List<Event> getAllEventsFlatSplit() {
@@ -183,6 +206,10 @@ public class EventManager{
         return events;
     }
 
+    /**
+     * returns all the values in <code>this.eventMap</code>
+     * @return list of events (without work sessions, not split)
+     */
     public List<Event> getAllEvents() {
         return new ArrayList<>(this.eventMap.values());
     }
@@ -204,11 +231,11 @@ public class EventManager{
      * @param event any event (does not have to be in <code>this.eventMap</code>
      * @param startString String in the form YYYY-MM-DD HH:MM
      */
-    public void setStart(Event event, String startString){
-        event.setStartTime(stringToDate(startString));
-        ArrayList<Event> truc = new ArrayList<>();
-        truc.add(event);
-        this.update("change", truc);
+    public void setStart(Event event, String startString) throws IllegalArgumentException{
+            event.setStartTime(stringToDate(startString));
+            ArrayList<Event> truc = new ArrayList<>();
+            truc.add(event);
+            this.update("change", truc);
     }
 
     /**
@@ -230,35 +257,65 @@ public class EventManager{
      * <code>
      *     YYYY-MM-DD HH:MM
      * </code>
-     * @param dateString String in the form YYYY-MM-DD HH:MM
+     * @param dateString String in the form YYYY-MM-DDTHH:MM
      * @return LocalDateTime with year YYYY, month MM, day DD, hour HH, minute MM
      */
-    private LocalDateTime stringToDate(String dateString) {
-        String[] full = dateString.split(" ");
+    private LocalDateTime stringToDate(String dateString) throws IllegalArgumentException{
+        String[] full = dateString.split("T");
+        if (full.length != 2){
+            throw new IllegalArgumentException();
+        }
         String[] time = full[1].split(":");
         String[] date = full[0].split("-");
-        return LocalDateTime.of(Integer.parseInt(date[0]), Integer.parseInt(date[1]),
-                Integer.parseInt(date[2]), Integer.parseInt(time[0]), Integer.parseInt(time[1]));
+        if (time.length != 2 || date.length != 3){
+            throw new IllegalArgumentException();
+        }
+        try {
+            return LocalDateTime.of(Integer.parseInt(date[0]), Integer.parseInt(date[1]),
+                    Integer.parseInt(date[2]), Integer.parseInt(time[0]), Integer.parseInt(time[1]));
+        }catch(NumberFormatException numberFormatException){
+            throw new IllegalArgumentException();
+        }
     }
 
+    /**
+     * updates all eventList observers in <code>this.toUpdate</code> with given parameter. Runs when events are added,
+     * removed, or times change in <code>this.eventMap</code>
+     * @param addRemoveChange string "add" or "remove" or "change" to specify the nature of the update
+     * @param changed list of the events that are modified
+     */
     public void update(String addRemoveChange, ArrayList<Event> changed){
         for (EventListObserver obs: this.toUpdate){
             obs.update(addRemoveChange, changed, this);
         }
     }
 
+    /**
+     * adds an <code>EventListObserver</code> to <code>this.toUpdate</code>
+     * @param obs the observer to be added
+     */
     public void addObserver(EventListObserver obs){
         ArrayList<EventListObserver> inter = new ArrayList<>(List.of(this.toUpdate));
         inter.add(obs);
         this.toUpdate = inter.toArray(new EventListObserver[0]);
     }
 
+    /**
+     * calculates the total hours in a list of events using event.getLength and summing
+     * @param events list of events with lengths to be added
+     * @return the total length of time in hours spent on these events
+     */
     public float totalHours(List<Event> events){
         float hours = 0;
         for(Event event: events) {hours += event.getLength();}
         return hours;
     }
 
+    /**
+     * computes the earliest startTime in a list of events (chronologically first)
+     * @param events the list of events over which to compare startTimes
+     * @return the event with the earliest start time
+     */
     public Event earliest(List<Event> events){
         Event earliest = events.get(0);
         LocalDateTime earliestStartTime = earliest.getStartTime();
@@ -276,6 +333,12 @@ public class EventManager{
         }
         return earliest;
     }
+
+    /**
+     * orders a list of events chronologically earliest to latest
+     * @param events the list to be modified
+     * @return the input list, timeordered
+     */
     public List<Event> timeOrder(List<Event> events){
         List<Event> sorted = new ArrayList<>();
         events = new ArrayList<>(events);
@@ -287,27 +350,68 @@ public class EventManager{
         return events;
     }
 
+    /**
+     * returns the Event.getDescription
+     * @param event the event to get description
+     * @return String of event Description or null
+     */
     public String getDescription(Event event){
         return event.getDescription();
     }
 
+    /**
+     * returns the event.toString() for Event in <code>this.eventMap</code>
+     * @see Event#toString()
+     * @param ID the ID of the event to be shown
+     * @return the Event.toString of this ID, or null if it does not exist
+     */
     public String displayEvent(Integer ID){
-        return this.get(ID).toString();
+        if (this.containsID(ID)){
+            return this.get(ID).toString();
+        } else{
+            return null;
+        }
     }
 
+    /**
+     * checks if an Event of this ID is contained in <code>this.eventMap</code>
+     * @param ID any integer
+     * @return true if an event with this integer ID is in <code>this.eventMap</code>, false otherwise
+     */
     public boolean containsID(Integer ID){
         return this.eventMap.containsKey(ID);
     }
 
+    /**
+     * returns all events in <code>this.eventMap</code> whose start times are after input 'from', and whose end times are
+     * before input 'to'
+     * @param from LocalDate the start day of the range
+     * @param to LocalDate the end day of the range
+     * @return Map with key LocalDate for each day between or equal to 'from' and 'to' in range, value all the events
+     * in <code>this.eventMap</code> that occur in this day
+     */
     public Map<LocalDate, List<Event>> getRange(LocalDate from, LocalDate to){
         Map<LocalDate, List<Event>> range = new HashMap<>();
         while (from.isBefore(to)){
-            range.put(from, this.flattenWorkSessions(List.of(this.getDay(from).values().toArray(new Event[0]))));
+            for (Event event: this.getDay(from).values()){
+                if (range.containsKey(from)){
+                    range.get(from).addAll(this.flattenWorkSessions(this.splitByDay(event)));
+                }else{
+                    range.put(from, this.flattenWorkSessions(this.splitByDay(event)));
+                }
+            }
             from  = from.plusDays(1L);
         }
         return range;
     }
 
+    /**
+     * computes the times between events and the Long length of them in seconds
+     * @param start the start time from which freeslot are calculated - first start time of freeslot
+     * @param events the events between which free slots are calculated
+     * @param end the end time from which freeslots are calculated - last end time of freeslot
+     * @return Map with key: LocalDateTime start time of free slot, value: Long duration of free slot in seconds
+     */
     public Map<LocalDateTime, Long> freeSlots(LocalDateTime start, List<Event> events, LocalDateTime end){
         List<Event> schedule = this.timeOrder(this.flattenWorkSessions(events));
         Map<LocalDateTime, Long> lengthStart = new HashMap<>();
@@ -328,17 +432,28 @@ public class EventManager{
         return lengthStart;
     }
 
+    /**
+     * sets the name of any event (does not have to be in <code>this.eventMap</code>
+     * @param event the event to set name
+     * @param name String of new name
+     */
     public void setName(Event event, String name) {
         event.setName(name);
     }
 
+    /**
+     * sets the description of an event, does not have to be in <code>this.eventMap</code>
+     * @param event the event with description to be set
+     * @param descrip String the new description
+     */
     public void setDescription(Event event, String descrip) {
         event.setDescription(descrip);
     }
 
-
-    public void addEvent(Event event){this.eventMap.put(event.getID(), event);}
-
+    /**
+     * TODO Malik
+     * @param repeatedEventManager
+     */
     public void setRepeatedEventManager(RepeatedEventManager repeatedEventManager) {
         this.repeatedEventManager = repeatedEventManager;
     }

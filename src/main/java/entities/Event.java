@@ -368,9 +368,15 @@ public class Event implements Serializable {
      */
     @Override
     public String toString(){
-        return this.getID() + "\nname: " + this.getName() + "\nstart: " +
-                this.getStartTime().toString() + "\nend: " + this.getEndTime().toString() + "\ndescription: " +
-                this.getDescription();
+
+        if (this.hasStart()){
+            return this.getID() + "\nname: " + this.getName() + "\nstart: " + this.getStartTime().toString() + "\nend: " + this.getEndTime().toString() + "\ndescription: " +
+                            this.getDescription();
+        }else{
+            return this.getID() + "\nname: " + this.getName() + "\nstart: " + null + "\nend: " + this.getEndTime().toString() + "\ndescription: " +
+                    this.getDescription();
+        }
+
     }
 
 }
