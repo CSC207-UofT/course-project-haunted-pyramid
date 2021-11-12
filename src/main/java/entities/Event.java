@@ -229,9 +229,9 @@ public class Event implements Serializable {
     public double getLength(){
         if (this.hasStart()){
             Duration duration = Duration.between(this.startTime, this.endTime);
-            double whole_hours = duration.toHoursPart();
-            double partHour =  duration.toMinutesPart();
-            partHour = partHour/60;
+            double whole_hours = duration.toHours();
+            double partHour =  duration.toMinutes();
+            partHour = partHour/60 - whole_hours;
             return whole_hours + partHour;
         } else {
             return 0;

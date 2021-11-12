@@ -10,6 +10,7 @@ import usecases.events.EventManager;
 import java.sql.Array;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class EventManagerTest {
@@ -20,8 +21,8 @@ public class EventManagerTest {
     public void start(){
         Event[] events = new Event[] {new Event(1, "1", 2021, 10, 1, 2, 3, 0,
                 0), new Event(2, "2", 2021, 10, 1, 4, 5, 0,
-                0), new Event(3, "3", 2021, 10, 1, 5, 6, 0,
-                30), new Event(4, "4", 2021, 10, 2, 9, 10, 30,
+                0), new Event(3, "3", 2021, 10, 1, 5, 7, 0,
+                0), new Event(4, "4", 2021, 10, 2, 9, 10, 30,
                 0), new Event(5, "5", 2021, 10, 2, 9, 11, 30,
                 30), new Event(6, "6", LocalDateTime.of(2021, 11, 10, 2,
                 30), LocalDateTime.of(2021, 11, 13, 4, 30))};
@@ -53,7 +54,7 @@ public class EventManagerTest {
 
     @Test(timeout = 50)
     public void testTotalHours() {
-        assertEquals((float) 6.0, this.eventManager.totalHours(this.events), 0);
+        assertEquals(80.5, this.eventManager.totalHours(this.events), 0);
     }
     @Test
     public void testTimeOrder() {
@@ -102,7 +103,7 @@ public class EventManagerTest {
 
     @Test
     public void testSplitByDay(){
-        assertEquals(new ArrayList<Event> (List.of(new Event[] {new Event(6, "6", LocalDateTime.of(2021, 11, 10, 2,
+        assertEquals(new ArrayList<> (List.of(new Event[] {new Event(6, "6", LocalDateTime.of(2021, 11, 10, 2,
                 30), LocalDateTime.of(2021, 11, 10, 23, 59)), new Event(6,
                 "6", LocalDateTime.of(2021, 11, 11, 0,
                 0), LocalDateTime.of(2021, 11, 11, 23, 59)), new Event(6,
@@ -111,7 +112,7 @@ public class EventManagerTest {
                 "6", LocalDateTime.of(2021, 11, 13, 0,
                 0), LocalDateTime.of(2021, 11, 13, 4, 30))})),
                 this.eventManager.splitByDay(this.eventManager.get(6)));
-        assertEquals(new ArrayList<Event>(List.of(this.eventManager.get(1))), this.eventManager.splitByDay(this.eventManager.get(1)));
+        assertEquals(new ArrayList<>(List.of(this.eventManager.get(1))), this.eventManager.splitByDay(this.eventManager.get(1)));
     }
 
     @Test
@@ -139,6 +140,18 @@ public class EventManagerTest {
         List<Event> actual = this.eventManager.flatSplitEvents(this.eventManager.getAllEvents());
         assertTrue((expected.size() == this.eventManager.flatSplitEvents(this.eventManager.getAllEvents()).size())
             && expected.containsAll(actual) && actual.containsAll(expected));
+    }
 
+    @Test
+    public void testEarliest(){
+        List<Event> unordered = List.of(new Event[] {
+                this.eventManager.get(4),
+                this.eventManager.get(2),
+                this.eventManager.get(1),
+                this.eventManager.get(3),
+                this.eventManager.get(5),
+                });
+        assertEquals(unordered.get(2), this.eventManager.earliest(unordered));
+        assertTrue(this.eventManager.get(1).getStartTime().isBefore(this.eventManager.get(3).getStartTime()));
     }
 }
