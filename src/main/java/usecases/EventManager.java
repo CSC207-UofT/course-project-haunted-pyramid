@@ -530,4 +530,26 @@ public class EventManager{
         return date[2].substring(3, 8);
     }
 
+    public String getStartDateString(Integer ID){
+        if (this.containsID(ID) && this.get(ID).hasStart()){
+            return this.get(ID).getStartTime().toLocalDate().toString();
+        } else{
+            return null;
+        }
+    }
+
+    public String getEndDateString(Integer ID){
+        if (this.containsID(ID)){
+            return this.get(ID).getEndTime().toLocalDate().toString();
+        } else{
+            return null;
+        }
+    }
+
+    public static void main(String[] args){
+        EventManager em = new EventManager();
+        Event event = new Event(1, "this", LocalDateTime.of(2002,12,5,2,30));
+        System.out.println(em.getEndTimeString(event));
+    }
+
 }
