@@ -2,6 +2,7 @@ package usecases;
 
 import entities.Event;
 import interfaces.EventListObserver;
+import usecases.events.EventManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

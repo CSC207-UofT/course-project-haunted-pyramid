@@ -1,4 +1,4 @@
-package usecases;
+package usecases.calendar;
 
 import entities.OurCalendar;
 import entities.Event;
@@ -15,7 +15,7 @@ public class CalendarManager {
 
 
     /**
-     *  Initialize the usecases.CalendarManager
+     *  Initialize the usecases.calendar.CalendarManager
      */
     public CalendarManager(){
         Date today = new Date();

@@ -9,7 +9,7 @@ import gateways.IOSerializable;
 import helpers.ControllerHelper;
 import presenters.DisplayMenu;
 import presenters.MenuStrategies.BasicMenuContent;
-import usecases.EventManager;
+import usecases.events.EventManager;
 import usecases.UserManager;
 import usecases.WorkSessionScheduler;
 
@@ -20,7 +20,6 @@ import java.util.Scanner;
 public class MainController {
 
     private final UserController userController;
-    private final StudentController studentController;
     private final CalendarController calendarController;
     private final EventController eventController;
     private final LoginController loginController;
@@ -38,8 +37,7 @@ public class MainController {
     public MainController() {
         this.ioSerializable = new IOSerializable(true);
         this.userController = new UserController(this.ioSerializable.hasSavedData(), this.ioSerializable);
-        this.studentController = new StudentController(this.userController);
-        this.loginController = new LoginController(this.userController, this.studentController);
+        this.loginController = new LoginController(this.userController);
         this.calendarController = new CalendarController();
         this.displayMenu = new DisplayMenu();
         this.displayInitScreen();
@@ -73,7 +71,6 @@ public class MainController {
 
     /**
      * Display the main screen. Used at and only at launch after initialization via login/signup.
-     * Temporary for now since the presenter isn't fully implemented.
      */
     public void displayScreen() {
         while (this.loginController.isLoggedIn()) {

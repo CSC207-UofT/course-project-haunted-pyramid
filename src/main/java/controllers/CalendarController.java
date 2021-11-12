@@ -11,7 +11,7 @@ import presenters.MenuStrategies.CalNextActionMenuContent;
 import presenters.MenuStrategies.CalendarTypeMenuContent;
 import presenters.MenuStrategies.CalendarYearMonthMenuContent;
 import presenters.MenuStrategies.MenuContent;
-import usecases.CalendarManager;
+import usecases.calendar.CalendarManager;
 
 
 import java.util.ArrayList;
@@ -22,6 +22,11 @@ public class CalendarController {
     private final Scanner scanner = new Scanner(System.in);
     private final ControllerHelper helper = new ControllerHelper();
 
+    /**
+     * the default current monthly calendar that will show every time the user returns to the main menu
+     * @param eventController eventcontroller that stores the entire event information
+     * @return the current monthly calendar image
+     */
     public String showDefaultCalendar(EventController eventController){
         DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
         return calendarFactory.displayCurrentCalendarByType("Monthly").displayCalendar();

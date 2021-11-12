@@ -10,6 +10,10 @@ import java.time.YearMonth;
 import java.util.*;
 
 import entities.Event;
+import usecases.calendar.CalendarManager;
+import usecases.calendar.DailyCalendar;
+import usecases.calendar.MonthlyCalendar;
+import usecases.calendar.WeeklyCalendar;
 
 public class CalendarManagerTest {
     CalendarManager calendarManager;

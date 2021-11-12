@@ -3,15 +3,11 @@ package presenters;
 import entities.Event;
 import helpers.Constants;
 import helpers.DisplayCalendarHelper;
-import usecases.CalendarManager;
-import usecases.DailyCalendar;
-import usecases.EventManager;
+import usecases.calendar.CalendarManager;
+import usecases.calendar.DailyCalendar;
+import usecases.events.EventManager;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 

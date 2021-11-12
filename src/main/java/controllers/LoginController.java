@@ -8,13 +8,10 @@ public class LoginController {
     private boolean loggedIn;
 
     private final UserController userController;
-    private final StudentController studentController;
-
     private final Scanner scanner = new Scanner(System.in);
 
-    public LoginController(UserController userController, StudentController studentController) {
+    public LoginController(UserController userController) {
         this.userController = userController;
-        this.studentController = studentController;
         this.loggedIn = false;
     }
 
