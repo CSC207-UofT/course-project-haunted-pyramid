@@ -10,9 +10,9 @@ import java.util.Map;
 public class DailyCalendar extends GetCalendar {
 
     /**
-     * get daily calendar map (list of events for the selected date)
+     * get daily calendar map for the current date
      * @param cm calendarManager object to consider from
-     * @return map of the calendar
+     * @return map of the daily calendar
      */
     @Override
     public Map<Integer, List<Event>> getCalendar(CalendarManager cm) {
@@ -21,7 +21,14 @@ public class DailyCalendar extends GetCalendar {
         return result;
     }
 
-    // Daily Calendar for selected year, month, date
+    /**
+     * get daily calendar map for the selected year, month, date.
+     * @param cm calendarManager object to consider from
+     * @param year chosen year
+     * @param month chosen month
+     * @param date chosen date
+     * @return map of the daily calendar
+     */
     public Map<Integer, List<Event>> getCalendar(CalendarManager cm, int year, int month, int date) {
         int adjustedMonth =  adjustMonth(cm.getCurrentYear(), year, month);
         Map<Integer, List<Event>> result = new HashMap<>();
