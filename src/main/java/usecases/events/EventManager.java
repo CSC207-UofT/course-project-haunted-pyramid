@@ -175,7 +175,7 @@ public class EventManager{
      * @param events List<Event> a list of events that may contain work sessions
      * @return a list of events plus their work sessions
      */
-    List<Event> flattenWorkSessions(List<Event> events){
+    public List<Event> flattenWorkSessions(List<Event> events){
         List<Event> flat = new ArrayList<>();
         if (events.isEmpty()){
             return flat;
@@ -196,7 +196,7 @@ public class EventManager{
      * @param event the event to be split, may or may not have start time or span multiple days
      * @return the list of events as split by day
      */
-    List<Event> splitByDay(Event event){
+    public List<Event> splitByDay(Event event){
         if (event.hasStart()){
             List<Event> splitByDay = new ArrayList<>();
             if (event.getStartTime().toLocalDate().isBefore(event.getEndTime().toLocalDate())){
@@ -349,17 +349,20 @@ public class EventManager{
      */
     public Event earliest(List<Event> events){
         Event earliest = events.get(0);
-        LocalDateTime earliestStartTime = earliest.getStartTime();
-        if (!earliest.hasStart()){
-            earliestStartTime = earliest.getEndTime();
+        LocalDateTime earliestStartTime = earliest.getEndTime();
+        if (earliest.hasStart()){
+            earliestStartTime = earliest.getStartTime();
         }
         for (Event event: events){
-            LocalDateTime eventStartTime = event.getStartTime();
+            LocalDateTime eventStartTime;
             if (!event.hasStart()){
                 eventStartTime = event.getEndTime();
+            } else{
+                eventStartTime = event.getStartTime();
             }
             if (eventStartTime.isBefore(earliestStartTime)){
                 earliest = event;
+                earliestStartTime = eventStartTime;
             }
         }
         return earliest;
