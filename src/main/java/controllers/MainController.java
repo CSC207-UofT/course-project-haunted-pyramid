@@ -20,7 +20,6 @@ import java.util.Scanner;
 public class MainController {
 
     private final UserController userController;
-    private final StudentController studentController;
     private final CalendarController calendarController;
     private final EventController eventController;
     private final LoginController loginController;
@@ -38,8 +37,7 @@ public class MainController {
     public MainController() {
         this.ioSerializable = new IOSerializable(true);
         this.userController = new UserController(this.ioSerializable.hasSavedData(), this.ioSerializable);
-        this.studentController = new StudentController(this.userController);
-        this.loginController = new LoginController(this.userController, this.studentController);
+        this.loginController = new LoginController(this.userController);
         this.calendarController = new CalendarController();
         this.displayMenu = new DisplayMenu();
         this.displayInitScreen();
