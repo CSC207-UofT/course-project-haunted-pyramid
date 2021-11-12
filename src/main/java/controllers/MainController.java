@@ -73,7 +73,6 @@ public class MainController {
 
     /**
      * Display the main screen. Used at and only at launch after initialization via login/signup.
-     * Temporary for now since the presenter isn't fully implemented.
      */
     public void displayScreen() {
         while (this.loginController.isLoggedIn()) {
