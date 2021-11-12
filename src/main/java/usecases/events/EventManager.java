@@ -559,7 +559,8 @@ public class EventManager{
     public static void main(String[] args){
         EventManager em = new EventManager();
         Event event = new Event(1, "this", LocalDateTime.of(2002,12,5,2,30));
-        System.out.println(em.getEndTimeString(event));
+        em.addEvent(event);
+        System.out.println(em.getRange(LocalDate.of(2021,12,4), LocalDate.of(2021, 12, 10)));
     }
 
 }

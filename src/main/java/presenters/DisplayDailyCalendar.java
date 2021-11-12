@@ -108,11 +108,8 @@ public class DisplayDailyCalendar extends DisplayCalendar {
     private List<String> getAdditionalTimeLine() {
         List<String> additionalTimeLine = new ArrayList<>();
         for (Event event : calendarMap.get(this.date)) {
-            String startTime = eventManager.getStartTimeString(event);
             String endTime = eventManager.getEndTimeString(event);
-            if (startTime == null){
-                startTime = endTime;
-            }
+            String startTime = getStartTime(event, endTime);
             if (!additionalTimeLine.contains(startTime)){
                 additionalTimeLine.add(startTime);
             }
@@ -134,11 +131,8 @@ public class DisplayDailyCalendar extends DisplayCalendar {
     private int addContent(StringBuilder result, String time){
         int totalLength = 0;
         for (Event event : this.calendarMap.get(this.date)){
-            String startTime = eventManager.getStartTimeString(event);
             String endTime = eventManager.getEndTimeString(event);
-            if (startTime == null){
-                startTime = endTime;
-            }
+            String startTime = getStartTime(event, endTime);
             String eventName = eventManager.getName(event);
             int eventNameSize = eventName.length();
             int eventID = eventManager.getID(event);
@@ -165,17 +159,22 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         return totalLength;
     }
 
+    private String getStartTime(Event event, String endTime) {
+        String startTime = eventManager.getStartTimeString(event);
+        if (startTime == null){
+            startTime = endTime;
+        }
+        return startTime;
+    }
+
     private int getLongestEventLength() {
         int longestLength = 0;
         for (String time : this.timeLine) {
             int tempLength = 0;
             for (Event event : this.calendarMap.get(this.date)) {
-                String eventStartTime = this.eventManager.getStartTimeString(event);
                 String eventEndTime = this.eventManager.getEndTimeString(event);
                 String eventName = eventManager.getName(event);
-                if (eventStartTime == null){
-                    eventStartTime = eventEndTime;
-                }
+                String eventStartTime = getStartTime(event, eventEndTime);
                 int nameMin = Math.min(eventName.length() + 13, Constants.DAILY_CAL_SIZE + 13);
                 if (eventStartTime.equals(time)){
                     tempLength += nameMin;
@@ -188,6 +187,11 @@ public class DisplayDailyCalendar extends DisplayCalendar {
                 longestLength = tempLength;
             }
         }
+        longestLength = trimLength(longestLength);
+        return longestLength;
+    }
+
+    private int trimLength(int longestLength) {
         if (longestLength > 90){
             longestLength -= 90;
         }

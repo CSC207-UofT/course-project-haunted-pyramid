@@ -197,7 +197,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
 
     private Integer addContent(StringBuilder result, List<String> timeLine, int time, int index){
         List<Integer> keyList = getKeys();
-        int temp = 0;
+        int nameLength = 0;
         for (Event event: calendarMap.get(keyList.get(index))){
             String eventStartTime = eventManager.getStartTimeString(event);
             if (eventStartTime == null){
@@ -205,26 +205,31 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
             }
             if (cf.convertTimeToInt(timeLine.get(time)) >= cf.convertTimeToInt(eventStartTime)
                 && cf.convertTimeToInt(timeLine.get(time)) <= cf.convertTimeToInt(eventManager.getEndTimeString(event))){
-                String eventName = eventManager.getName(event);
-                int eventNameSize = eventName.length();
-                if (eventStartTime.equals(eventManager.getEndTimeString(event))){
-                    eventName = eventName + " Due";
-                    eventNameSize = eventName.length();
-                    if (eventNameSize >= Constants.WEEKLY_CAL_NAME_LIMIT){
-                        eventName = eventName.substring(0, Constants.WEEKLY_CAL_NAME_LIMIT - 9) + "..." + " Due";
-                        eventNameSize = eventName.length();
-                    }
-                }
-                if (eventNameSize <= Constants.WEEKLY_CAL_NAME_LIMIT - 2){
-                    result.append(" ").append(eventName).append(";");
-                    temp += eventNameSize + 2;
-                }
-                else {
-                    result.append(" ").append(eventName, 0, Constants.WEEKLY_CAL_NAME_LIMIT - 5).append("...").append(";");
-                    temp += Constants.WEEKLY_CAL_NAME_LIMIT;}
+                nameLength = appendNameGetNameLength(result, nameLength, event, eventStartTime);
             }
         }
-        return temp;
+        return nameLength;
+    }
+
+    private int appendNameGetNameLength(StringBuilder result, int nameLength, Event event, String eventStartTime) {
+        String eventName = eventManager.getName(event);
+        int eventNameSize = eventName.length();
+        if (eventStartTime.equals(eventManager.getEndTimeString(event))){
+            eventName = eventName + " Due";
+            eventNameSize = eventName.length();
+            if (eventNameSize >= Constants.WEEKLY_CAL_NAME_LIMIT){
+                eventName = eventName.substring(0, Constants.WEEKLY_CAL_NAME_LIMIT - 9) + "..." + " Due";
+                eventNameSize = eventName.length();
+            }
+        }
+        if (eventNameSize <= Constants.WEEKLY_CAL_NAME_LIMIT - 2){
+            result.append(" ").append(eventName).append(";");
+            nameLength += eventNameSize + 2;
+        }
+        else {
+            result.append(" ").append(eventName, 0, Constants.WEEKLY_CAL_NAME_LIMIT - 5).append("...").append(";");
+            nameLength += Constants.WEEKLY_CAL_NAME_LIMIT;}
+        return nameLength;
     }
 
     private List<Integer> getKeys(){
