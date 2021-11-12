@@ -115,9 +115,9 @@ public class EventController {
             this.changeStartDate(ID, nextArgs[1]);
         }else if (nextArgs[0].equalsIgnoreCase("end date")){
             this.changeEndDate(ID, nextArgs[1]);
-        }else if (nextArgs[1].equalsIgnoreCase("start time")){
+        }else if (nextArgs[0].equalsIgnoreCase("start time")){
             this.changeStartTime(ID, nextArgs[1]);
-        }else if (nextArgs[1].equalsIgnoreCase("end time")){
+        }else if (nextArgs[0].equalsIgnoreCase("end time")){
             this.changeEndTime(ID, nextArgs[1]);
         }
         else if (nextArgs[0].equalsIgnoreCase("description")){
