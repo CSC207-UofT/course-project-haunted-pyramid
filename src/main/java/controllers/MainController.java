@@ -43,11 +43,10 @@ public class MainController {
         this.calendarController = new CalendarController();
         this.displayMenu = new DisplayMenu();
         this.displayInitScreen();
-        System.out.println("WELCOME!"); // TODO add user name here
+        System.out.println("WELCOME " + this.userController.getCurrentUsername() + "!");
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
                 new WorkSessionController(new WorkSessionScheduler(this.userController.getCurrentFreeTime(),
                         this.userController.getCurrentProcrastinate())));
-        System.out.println(this.calendarController.showDefaultCalendar(eventController.getEventManager()));
         this.displayScreen();
     }
 
@@ -78,6 +77,7 @@ public class MainController {
      */
     public void displayScreen() {
         while (this.loginController.isLoggedIn()) {
+            System.out.println(this.calendarController.showDefaultCalendar(this.eventController));
             System.out.println("Please choose your action");
             BasicMenuContent basicMenu = new BasicMenuContent();
             System.out.println(displayMenu.displayMenu(basicMenu)); //display the basic menu
@@ -86,16 +86,15 @@ public class MainController {
             switch (firstChoice){
                 case "1":
                     this.userController.editProfile();
-                    // TODO link to profile setting
                     break;
                 case "2":
-                    this.calendarController.showCalendar(eventController.getEventManager());
+                    this.calendarController.showCalendar(this.eventController);
                     break;
                 case "3":
                     this.eventController.createDefaultEvent();
                     break;
                 case "4":
-                    // TODO create direct access to daily calendar with the chosen date for modification
+                    this.calendarController.dailyCalendarForModification(this.eventController);
                     break;
                 case "5":
                     this.loginController.logout();

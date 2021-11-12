@@ -1,16 +1,18 @@
 package controllers;
 
 import entities.Event;
+import helpers.CalendarSelection;
 import helpers.ControllerHelper;
 import helpers.DateInfo;
 import presenters.DisplayCalendar;
 import presenters.DisplayCalendarFactory;
 import presenters.DisplayMenu;
+import presenters.MenuStrategies.CalNextActionMenuContent;
 import presenters.MenuStrategies.CalendarTypeMenuContent;
 import presenters.MenuStrategies.CalendarYearMonthMenuContent;
 import presenters.MenuStrategies.MenuContent;
 import usecases.CalendarManager;
-import usecases.EventManager;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,74 +22,97 @@ public class CalendarController {
     private final Scanner scanner = new Scanner(System.in);
     private final ControllerHelper helper = new ControllerHelper();
 
-    public String showDefaultCalendar(EventManager eventManager){
-        CalendarManager calendarManager = new CalendarManager();
-        for (Event event : eventManager.getAllEventsFlatSplit()){
-            calendarManager.addToCalendar(event);
-        }
-        DisplayCalendarFactory calendarFactory = new DisplayCalendarFactory(calendarManager);
+    public String showDefaultCalendar(EventController eventController){
+        DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
         return calendarFactory.displayCurrentCalendarByType("Monthly").displayCalendar();
     }
 
-    public void showCalendar(EventManager eventManager) {
+    public void showCalendar(EventController eventController) {
+        System.out.println("You may type Return to return to the main menu at any time");
         DisplayMenu displayMenu = new DisplayMenu();
         MenuContent calendarTypeMenu = new CalendarTypeMenuContent();
-        boolean exit = false;
-        while (!exit) {
-            CalendarManager calendarManager = new CalendarManager();
-            for (Event event : eventManager.getAllEventsFlatSplit()) {
-                calendarManager.addToCalendar(event);
-            }
-            DisplayCalendarFactory calendarFactory = new DisplayCalendarFactory(calendarManager);
-            String typeCalendar = getTypeInput(displayMenu, calendarTypeMenu);
-            String dateInput = getCalendarDateInput(displayMenu);
-            DateInfo dateInfo = new DateInfo();
-            DisplayCalendar calendar = selectCalendar(calendarFactory, typeCalendar, dateInput, dateInfo);
-            System.out.println(calendar.displayCalendar());
-            System.out.println("Please choose the next action");
-            exit = true;
-            }
+        DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
+        String typeCalendar = getTypeInput(displayMenu, calendarTypeMenu);
+        if (typeCalendar.equalsIgnoreCase("Return")){
+            return;
         }
+        String dateInput = getCalendarDateInput(displayMenu);
+        if (dateInput.equalsIgnoreCase("Return")){
+            return;
+        }
+        DateInfo dateInfo = new DateInfo();
+        DisplayCalendar calendar = selectCalendar(calendarFactory, typeCalendar, dateInput, dateInfo);
+        System.out.println(calendar.displayCalendar());
+        finalAction(eventController, displayMenu);
+    }
 
-    private DisplayCalendar selectCalendar(DisplayCalendarFactory calendarFactory, String typeCalendar,
-                                           String dateInput, DateInfo dateInfo) {
-        int year = dateInfo.getDateInfo(0).get(0);
-        int month = dateInfo.getDateInfo(0).get(1);
-        int numberOfDays = dateInfo.getDateInfo(0).get(2);
-        switch (dateInput) {
+    public void dailyCalendarForModification(EventController eventController){
+        DisplayMenu displayMenu = new DisplayMenu();
+        System.out.println("You may type Return to return to the main menu at any time");
+        System.out.println("Choose the Year/Month that you would like to modify the Event from");
+        String dateInput = getCalendarDateInput(displayMenu);
+        CalendarSelection calendarSelection = new CalendarSelection(new DateInfo(), dateInput);
+        int year = calendarSelection.getYear();
+        int month = calendarSelection.getMonth();
+        int numberOfDays = calendarSelection.getNumberOfDays();
+        int date = getDateInput(numberOfDays, "event");
+        if (date == 0){
+            return;
+        }
+        DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
+        System.out.println(calendarFactory.displaySpecificCalendarByType("Daily",
+                year, month, date).displayCalendar());
+        System.out.println("Please type the Event ID to access the Event or type Return to return to the main menu");
+        String eventID = scanner.nextLine();
+        if (eventID.equalsIgnoreCase("return")){
+            return;
+        }
+        while (!(isInteger(eventID) && eventController.getEventManager().containsID(Integer.parseInt(eventID)))){
+            System.out.println("Please type the valid ID");
+            eventID = scanner.nextLine();
+        }
+        eventController.edit(Integer.parseInt(eventID));
+    }
+
+    private DisplayCalendarFactory getDisplayCalendarFactory(EventController eventController) {
+        CalendarManager calendarManager = new CalendarManager();
+        for (Event event : eventController.getEventManager().getAllEventsFlatSplit()) {
+            calendarManager.addToCalendar(event);
+        }
+        return new DisplayCalendarFactory(calendarManager);
+    }
+
+    private void finalAction(EventController eventController, DisplayMenu displayMenu) {
+        System.out.println("Please choose the next action");
+        MenuContent calNextActionMenu = new CalNextActionMenuContent();
+        System.out.println(displayMenu.displayMenu(calNextActionMenu));
+        String finalAction = scanner.nextLine();
+        if (finalAction.equalsIgnoreCase("return")){
+            return;
+        }
+        helper.invalidCheck(displayMenu, finalAction, calNextActionMenu.numberOfOptions(), calNextActionMenu);
+        switch (finalAction) {
             case "1":
-                year = dateInfo.getDateInfo(3).get(0);
-                month = dateInfo.getDateInfo(3).get(1);
-                numberOfDays = dateInfo.getDateInfo(3).get(2);
+                showCalendar(eventController);
                 break;
             case "2":
-                year = dateInfo.getDateInfo(2).get(0);
-                month = dateInfo.getDateInfo(2).get(1);
-                numberOfDays = dateInfo.getDateInfo(2).get(2);
+                dailyCalendarForModification(eventController);
                 break;
             case "3":
-                year = dateInfo.getDateInfo(1).get(0);
-                month = dateInfo.getDateInfo(1).get(1);
-                numberOfDays = dateInfo.getDateInfo(1).get(2);
+                eventController.createDefaultEvent();
                 break;
             case "4":
                 break;
-            case "5":
-                year = dateInfo.getDateInfo(-1).get(0);
-                month = dateInfo.getDateInfo(-1).get(1);
-                numberOfDays = dateInfo.getDateInfo(-1).get(2);
-                break;
-            case "6":
-                year = dateInfo.getDateInfo(-2).get(0);
-                month = dateInfo.getDateInfo(-2).get(1);
-                numberOfDays = dateInfo.getDateInfo(-2).get(2);
-                break;
-            case "7":
-                year = dateInfo.getDateInfo(-3).get(0);
-                month = dateInfo.getDateInfo(-3).get(1);
-                numberOfDays = dateInfo.getDateInfo(-3).get(2);
-                break;
         }
+    }
+
+
+    private DisplayCalendar selectCalendar(DisplayCalendarFactory calendarFactory, String typeCalendar,
+                                           String dateInput, DateInfo dateInfo) {
+        CalendarSelection calendarSelection = new CalendarSelection(dateInfo, dateInput);
+        int year = calendarSelection.getYear();
+        int month = calendarSelection.getMonth();
+        int numberOfDays = calendarSelection.getNumberOfDays();
         int date = 1;
         DisplayCalendar calendar;
         switch (typeCalendar) {
@@ -95,11 +120,11 @@ public class CalendarController {
                 calendar = calendarFactory.displaySpecificCalendarByType("monthly", year, month, date);
                 break;
             case "2":
-                date = getDateInput(numberOfDays);
+                date = getDateInput(numberOfDays, "calendar");
                 calendar = calendarFactory.displaySpecificCalendarByType("weekly", year, month, date);
                 break;
             case "3":
-                date = getDateInput(numberOfDays);
+                date = getDateInput(numberOfDays, "calendar");
                 calendar = calendarFactory.displaySpecificCalendarByType("daily", year, month, date);
                 break;
             default:
@@ -127,18 +152,21 @@ public class CalendarController {
 
 
 
-    private int getDateInput(int numberOfDays) {
+    private int getDateInput(int numberOfDays, String question) {
         int date;
-      
-        System.out.println("Please type the date to view the calendar from");
-
+        if (question.equalsIgnoreCase("calendar")) {
+            System.out.println("Please type the date to view the calendar from");
+        }
+        else if (question.equalsIgnoreCase("event")){
+            System.out.println("Please type the date to modify the Event from");
+        }
         String dateStr = scanner.nextLine();
         List<Integer> tempIntList = new ArrayList<>();
         for (int i = 1; i <= numberOfDays; i++){
             tempIntList.add(i);
         }
         while (!helper.validOption(tempIntList).contains(dateStr)){
-            System.out.println("Please type the valid date for the month");
+            System.out.println("Please type the valid date of the month");
             dateStr = scanner.nextLine();
         }
         date = Integer.parseInt(dateStr);
@@ -146,9 +174,13 @@ public class CalendarController {
     }
 
 
-    public static void main(String[] args) {
-        CalendarController calendarController = new CalendarController();
-        EventManager eventManager = new EventManager();
-        calendarController.showCalendar(eventManager);
+    private boolean isInteger(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e){
+            return false;
+        }
     }
+
 }
