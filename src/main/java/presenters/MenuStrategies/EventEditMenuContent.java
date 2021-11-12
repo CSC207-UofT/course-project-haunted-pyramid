@@ -17,8 +17,9 @@ public class EventEditMenuContent implements MenuContent{
         EventManager em = new EventManager();
         content.add(em.displayEvent(this.event));
         content.addAll(new ArrayList<>(){{
-            add("enter field followed by new value, i.e. " +
-                    "\nstart: 2002-12-05T2-30 or \nname: Elizabeth" );
+            add("enter field: [value] and press enter i.e.");
+            add("name: test");
+            add("or, type:");
             add("prep");
             add("recurse");
             add("save");
