@@ -1,7 +1,7 @@
 package helpers;
 
 import entities.Event;
-import usecases.EventManager;
+import usecases.events.EventManager;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

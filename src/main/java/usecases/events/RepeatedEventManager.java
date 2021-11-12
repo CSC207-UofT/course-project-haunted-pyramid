@@ -1,8 +1,8 @@
-package usecases;
+package usecases.events;
 
 import entities.ConstantID;
 import entities.Event;
-import entities.RecursiveEvent;
+import entities.recursions.RecursiveEvent;
 import interfaces.DateGetter;
 import interfaces.EventListObserver;
 

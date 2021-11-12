@@ -1,4 +1,4 @@
-package usecases;
+package usecases.events;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -8,8 +8,9 @@ import java.time.LocalDate;
 
 import entities.ConstantID;
 import entities.Event;
-import entities.RecursiveEvent;
+import entities.recursions.RecursiveEvent;
 import interfaces.EventListObserver;
+import usecases.events.RepeatedEventManager;
 
 /**
  * @author Taite Cullen

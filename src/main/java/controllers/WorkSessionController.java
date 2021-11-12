@@ -1,10 +1,8 @@
 package controllers;
 
 import entities.Event;
-import usecases.EventManager;
+import usecases.events.EventManager;
 import usecases.WorkSessionScheduler;
-
-import java.util.ArrayList;
 
 public class WorkSessionController {
 

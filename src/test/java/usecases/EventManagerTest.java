@@ -5,9 +5,9 @@ import entities.Event;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.Before;
+import usecases.events.EventManager;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class EventManagerTest {

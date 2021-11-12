@@ -4,13 +4,11 @@ import entities.Event;
 import gateways.IOSerializable;
 import presenters.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
-import usecases.EventManager;
+import usecases.events.EventManager;
 import usecases.WorkSessionScheduler;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Controller for creating then editing, or editing selected individual events - change name, description

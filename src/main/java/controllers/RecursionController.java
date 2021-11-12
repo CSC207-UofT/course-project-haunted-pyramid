@@ -1,11 +1,10 @@
 package controllers;
 
 import entities.Event;
-import entities.IntervalDateInput;
-import entities.NumberOfRepetitionInput;
-import entities.RecursiveEvent;
+import entities.recursions.IntervalDateInput;
+import entities.recursions.NumberOfRepetitionInput;
 import interfaces.DateGetter;
-import usecases.EventManager;
+import usecases.events.EventManager;
 
 import java.util.ArrayList;
 

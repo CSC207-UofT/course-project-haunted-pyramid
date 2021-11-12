@@ -1,6 +1,7 @@
-package usecases;
+package usecases.calendar;
 
 import entities.Event;
+import usecases.calendar.CalendarManager;
 
 import java.util.List;
 import java.util.Map;
