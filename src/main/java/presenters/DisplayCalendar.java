@@ -1,6 +1,6 @@
 package presenters;
 
-import usecases.CalendarManager;
+import usecases.calendar.CalendarManager;
 
 
 public abstract class DisplayCalendar {

@@ -1,10 +1,8 @@
 package controllers;
 
-import entities.User;
 import gateways.IOSerializable;
 import presenters.DisplayMenu;
 import presenters.MenuStrategies.ProfileMenuContent;
-import usecases.EventManager;
 import usecases.UserManager;
 
 import java.time.LocalTime;

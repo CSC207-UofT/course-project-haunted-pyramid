@@ -11,7 +11,7 @@ import presenters.MenuStrategies.CalNextActionMenuContent;
 import presenters.MenuStrategies.CalendarTypeMenuContent;
 import presenters.MenuStrategies.CalendarYearMonthMenuContent;
 import presenters.MenuStrategies.MenuContent;
-import usecases.CalendarManager;
+import usecases.calendar.CalendarManager;
 
 
 import java.util.ArrayList;

@@ -359,20 +359,25 @@ public class Event implements Serializable {
      * <code>
      *     #ID
      *     name: name
-     *     start: YYYY-MM-DD / null
-     *     end: YYYY-MM-DD
+     *     start date: YYYY-MM-DD / null
+     *     start time: HH:MM / null
+     *     end date: YYYY-MM-DD
+     *     end time: HH:MM
      *     description: description / null
      * </code>
      */
     @Override
     public String toString(){
-
         if (this.hasStart()){
-            return this.getID() + "\nname: " + this.getName() + "\nstart: " + this.getStartTime().toString() + "\nend: " + this.getEndTime().toString() + "\ndescription: " +
-                            this.getDescription();
+            return this.getID() + "\nname: " + this.getName() + "\nstart date: " + this.getStartTime().toLocalDate().toString()
+                    + "\nstart time: " + this.getStartTime().toLocalTime().toString() + "\nend date: " +
+                    this.getEndTime().toLocalDate().toString() + "\nend time: " + this.getEndTime().toLocalTime().toString()
+                    + "\ndescription: " + this.getDescription();
         }else{
-            return this.getID() + "\nname: " + this.getName() + "\nstart: " + null + "\nend: " + this.getEndTime().toString() + "\ndescription: " +
-                    this.getDescription();
+            return this.getID() + "\nname: " + this.getName() + "\nstart date: " + null
+                    + "\nstart time: " + null + "\nend date: " +
+                    this.getEndTime().toLocalDate().toString() + "\nend time: " + this.getEndTime().toLocalTime().toString()
+                    + "\ndescription: " + this.getDescription();
         }
 
     }

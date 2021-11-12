@@ -4,13 +4,11 @@ import entities.Event;
 import gateways.IOSerializable;
 import presenters.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
-import usecases.EventManager;
+import usecases.events.EventManager;
 import usecases.WorkSessionScheduler;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Controller for creating then editing, or editing selected individual events - change name, description
@@ -72,9 +70,10 @@ public class EventController {
     public void createDefaultEvent(){
         String title = IOController.getName();
         String course = IOController.getCourse();
-        String date = IOController.getAnswer("Enter the date/time of the event in the form YYYY-MM-DDTHH:MM");
+        String date = IOController.getAnswer("Enter the date of the event in the form YYYY-MM-DD");
+        String time = IOController.getAnswer("Enter the time of the event in the form HH:MM");
         try {
-            Event event = this.eventManager.addEvent(title, date);
+            Event event = this.eventManager.addEvent(title, date + "T" + time);
             this.edit(this.eventManager.getID(event));
         }catch(IllegalArgumentException illegalArgumentException){
             System.out.println("invalid date/time");
@@ -112,11 +111,16 @@ public class EventController {
      */
     private void getAction(String command, Integer ID){
         String[] nextArgs = command.split(": ");
-        if (nextArgs[0].equals("start")){
-            this.changeStart(ID, nextArgs[1]);
-        }else if (nextArgs[0].equalsIgnoreCase("end")){
-            this.changeEnd(ID, nextArgs[1]);
-        }else if (nextArgs[0].equalsIgnoreCase("description")){
+        if (nextArgs[0].equals("start date")){
+            this.changeStartDate(ID, nextArgs[1]);
+        }else if (nextArgs[0].equalsIgnoreCase("end date")){
+            this.changeEndDate(ID, nextArgs[1]);
+        }else if (nextArgs[1].equalsIgnoreCase("start time")){
+            this.changeStartTime(ID, nextArgs[1]);
+        }else if (nextArgs[1].equalsIgnoreCase("end time")){
+            this.changeEndTime(ID, nextArgs[1]);
+        }
+        else if (nextArgs[0].equalsIgnoreCase("description")){
             this.changeDescription(ID, nextArgs[1]);
         }else if (nextArgs[0].equalsIgnoreCase("name")){
             this.changeName(ID, nextArgs[1]);
@@ -140,11 +144,16 @@ public class EventController {
      * @param ID
      * @param newStart
      */
-    public void changeStart(Integer ID, String newStart){
+    public void changeStartDate(Integer ID, String newStart){
         try {
-            this.eventManager.setStart(this.eventManager.get(ID), newStart);
+            if (this.eventManager.getStartTimeString(this.eventManager.get(ID)) == null){
+                this.eventManager.setStart(this.eventManager.get(ID), newStart + "T00:00");
+            } else {
+                this.eventManager.setStart(this.eventManager.get(ID), newStart + "T" +
+                        this.eventManager.getStartTimeString(this.eventManager.get(ID)));
+            }
         } catch(IllegalArgumentException illegalArgumentException){
-            System.out.println("please enter a valid date of the form \n YYYY-MM-DDTHH:MM");
+            System.out.println("please enter a valid date of the form \n YYYY-MM-DD");
         }
     }
 
@@ -153,11 +162,35 @@ public class EventController {
      * @param ID
      * @param newEnd
      */
-    public void changeEnd(Integer ID, String newEnd){
+    public void changeEndDate(Integer ID, String newEnd){
         try {
-            this.eventManager.setEnd(this.eventManager.get(ID), newEnd);
+            this.eventManager.setEnd(this.eventManager.get(ID), newEnd + "T" +
+                    this.eventManager.getEndTimeString(this.eventManager.get(ID)));
         } catch(IllegalArgumentException illegalArgumentException){
-            System.out.println("please enter a valid date of the form \n YYYY-MM-DDTHH:MM");
+            System.out.println("please enter a valid date of the form \n YYYY-MM-DD");
+        }
+    }
+
+    public void changeEndTime(Integer ID, String newEnd){
+        try {
+            this.eventManager.setEnd(this.eventManager.get(ID), this.eventManager.getEndDateString(ID) + "T" +
+                    newEnd);
+        } catch(IllegalArgumentException illegalArgumentException){
+            System.out.println("please enter a valid time of the form \n HH:MM");
+        }
+    }
+
+    public void changeStartTime(Integer ID, String newStart){
+        try {
+            if (this.eventManager.getStartDateString(ID) == null){
+                this.eventManager.setStart(this.eventManager.get(ID), this.eventManager.getEndDateString(ID) + "T" +
+                        newStart);
+            }else{
+                this.eventManager.setEnd(this.eventManager.get(ID), this.eventManager.getStartDateString(ID) + "T" +
+                        newStart);
+            }
+        } catch(IllegalArgumentException illegalArgumentException){
+            System.out.println("please enter a valid time of the form \n HH:MM");
         }
     }
 
@@ -192,7 +225,12 @@ public class EventController {
      * @param ID
      */
     public void recurse(Integer ID){
-        this.recursionController.edit(this.eventManager.get(ID), this.eventManager);
+        String nextStep = IOController.getAnswer("Enter 'Create' to create new recursion" +
+                "'edit' to modify an existing one and 'delete' to remove all repetitions of this event");
+        if (nextStep.equalsIgnoreCase("Create")){
+            this.recursionController.createNewRecursion(this.eventManager.get(ID), this.eventManager);
+        }
+        //TODO: add more options to delete or modify a recursion (now can only add).
     }
 
     /**

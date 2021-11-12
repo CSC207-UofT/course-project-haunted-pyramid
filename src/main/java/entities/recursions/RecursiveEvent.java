@@ -1,23 +1,25 @@
-package entities;
+package entities.recursions;
 
+import entities.Event;
 import interfaces.DateGetter;
 import interfaces.EventListObserver;
-import usecases.EventManager;
+import usecases.events.EventManager;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class RecursiveEvent implements EventListObserver {
 
-    // + eventsInOneCycle ;for example if a lecture is tuesdays and thurdays of each week, the cycle will consist
-    // of [(tuesday, date+time of lecture), (thursday, date+time of lecture), (tuesday, date+time of lecture after the
-    // thursday one)]. If an event repeats 3 times each 2 week, the list would have 3 elements with the days and
-    // times of the three occurrences of the event.
-    // methodToGetDate: indicates which method the user want to handle repetitions. For now, the user can either input
-    // the number of times a cycle repeats, or the two dates in between the cycle repeats.
+
+    /**
+     * + eventsInOneCycle ;for example if a lecture is tuesdays and thurdays of each week, the cycle will consist
+     *  of [(tuesday, date+time of lecture), (thursday, date+time of lecture), (tuesday, date+time of lecture after the
+     *  thursday one)]. If an event repeats 3 times each 2 week, the list would have 3 elements with the days and
+     *  times of the three occurrences of the event.
+     *  methodToGetDate: indicates which method the user want to handle repetitions. For now, the user can either input
+     *  the number of times a cycle repeats, or the two dates in between the cycle repeats.
+     */
+
 
     private Integer id;
     private ArrayList<Event> eventsInOneCycle;
@@ -138,6 +140,7 @@ public class RecursiveEvent implements EventListObserver {
         int cyclesLength = listOfDatesInCycles.size();
         int i = 1;
         while(indexOfEvent + this.getCycleLength()*i < cyclesLength){
+            listOfDatesInCycles.get(indexOfEvent + this.getCycleLength()*i).setRecursiveId(this.id);
             result.add(listOfDatesInCycles.get(indexOfEvent + this.getCycleLength()*i));
             i += 1;
         }

@@ -1,4 +1,4 @@
-package usecases;
+package usecases.events;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -8,8 +8,9 @@ import java.time.LocalDate;
 
 import entities.ConstantID;
 import entities.Event;
-import entities.RecursiveEvent;
+import entities.recursions.RecursiveEvent;
 import interfaces.EventListObserver;
+import usecases.events.RepeatedEventManager;
 
 /**
  * @author Taite Cullen
@@ -39,6 +40,7 @@ public class EventManager{
             }
         }
         this.toUpdate = new EventListObserver[]{};
+        this.repeatedEventManager = new RepeatedEventManager();
     }
 
 
@@ -48,6 +50,7 @@ public class EventManager{
     public EventManager() {
         this.eventMap = new HashMap<>();
         this.toUpdate = new EventListObserver[]{};
+        this.repeatedEventManager = new RepeatedEventManager();
     }
 
     /**
@@ -132,7 +135,6 @@ public class EventManager{
         truc.add(event);
         this.update("add", truc);
         return event;
-
     }
 
     /**
@@ -281,7 +283,7 @@ public class EventManager{
      * @param dateString String in the form YYYY-MM-DDTHH:MM
      * @return LocalDateTime with year YYYY, month MM, day DD, hour HH, minute MM
      */
-    private LocalDateTime stringToDate(String dateString) throws IllegalArgumentException{
+    public LocalDateTime stringToDate(String dateString) throws IllegalArgumentException{
         String[] full = dateString.split("T");
         if (full.length != 2){
             throw new IllegalArgumentException();
@@ -483,6 +485,14 @@ public class EventManager{
         this.repeatedEventManager = repeatedEventManager;
     }
 
+    public RepeatedEventManager getRepeatedEventManager() {
+        return repeatedEventManager;
+    }
+
+    public int getRecursiveEventId(RecursiveEvent recursiveEvent){
+        return recursiveEvent.getId();
+    }
+
     /**
      * TODO Malik
      * Given a RecursiveEvent, this method gets all the events in the period of repetition and adds them to the
@@ -528,6 +538,28 @@ public class EventManager{
     public String getEndTimeString(Event event){
         String[] date = event.getEndTime().toString().split("-");
         return date[2].substring(3, 8);
+    }
+
+    public String getStartDateString(Integer ID){
+        if (this.containsID(ID) && this.get(ID).hasStart()){
+            return this.get(ID).getStartTime().toLocalDate().toString();
+        } else{
+            return null;
+        }
+    }
+
+    public String getEndDateString(Integer ID){
+        if (this.containsID(ID)){
+            return this.get(ID).getEndTime().toLocalDate().toString();
+        } else{
+            return null;
+        }
+    }
+
+    public static void main(String[] args){
+        EventManager em = new EventManager();
+        Event event = new Event(1, "this", LocalDateTime.of(2002,12,5,2,30));
+        System.out.println(em.getEndTimeString(event));
     }
 
 }

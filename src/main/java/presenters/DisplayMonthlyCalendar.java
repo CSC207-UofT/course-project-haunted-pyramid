@@ -3,10 +3,9 @@ package presenters;
 import entities.Event;
 import helpers.Constants;
 import helpers.DisplayCalendarHelper;
-import usecases.CalendarManager;
-import usecases.MonthlyCalendar;
+import usecases.calendar.CalendarManager;
+import usecases.calendar.MonthlyCalendar;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class DisplayMonthlyCalendar extends DisplayCalendar {

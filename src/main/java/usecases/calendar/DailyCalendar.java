@@ -1,4 +1,4 @@
-package usecases;
+package usecases.calendar;
 
 import entities.Event;
 import entities.OurCalendar;
