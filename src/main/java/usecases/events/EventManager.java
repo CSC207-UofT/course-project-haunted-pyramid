@@ -175,7 +175,7 @@ public class EventManager{
      * @param events List<Event> a list of events that may contain work sessions
      * @return a list of events plus their work sessions
      */
-    private List<Event> flattenWorkSessions(List<Event> events){
+    List<Event> flattenWorkSessions(List<Event> events){
         List<Event> flat = new ArrayList<>();
         if (events.isEmpty()){
             return flat;
@@ -196,24 +196,24 @@ public class EventManager{
      * @param event the event to be split, may or may not have start time or span multiple days
      * @return the list of events as split by day
      */
-    private List<Event> splitByDay(Event event){
+    List<Event> splitByDay(Event event){
         if (event.hasStart()){
             List<Event> splitByDay = new ArrayList<>();
             if (event.getStartTime().toLocalDate().isBefore(event.getEndTime().toLocalDate())){
                 splitByDay.add(new Event(event.getID(), event.getName(), event.getStartTime(),
-                        LocalDateTime.of(event.getStartTime().toLocalDate(), LocalTime.of(24, 0))));
+                        LocalDateTime.of(event.getStartTime().toLocalDate(), LocalTime.of(23, 59))));
                 LocalDate nextDay = event.getStartTime().plusDays(1L).toLocalDate();
-                while(event.getEndTime().toLocalDate().isBefore(nextDay)){
+                while(event.getEndTime().toLocalDate().isAfter(nextDay)){
                     splitByDay.add(new Event(event.getID(), event.getName(), LocalDateTime.of(nextDay, LocalTime.of(0, 0)),
-                            LocalDateTime.of(nextDay, LocalTime.of(24, 0))));
+                            LocalDateTime.of(nextDay, LocalTime.of(23, 59))));
                     nextDay = nextDay.plusDays(1L);
                 }
                 splitByDay.add(new Event (event.getID(), event.getName(),
                         LocalDateTime.of(nextDay, LocalTime.of(0, 0)), event.getEndTime()));
+                return splitByDay;
             }
-            return splitByDay;
         }
-        return new ArrayList<>(List.of(new Event[] {new Event (event.getID(), event.getName(), event.getEndTime())}));
+        return new ArrayList<>(List.of(new Event[] {event}));
     }
 
     /**
@@ -227,6 +227,14 @@ public class EventManager{
             events.addAll(this.splitByDay(event));
         }
         return events;
+    }
+
+    public List<Event> flatSplitEvents(List<Event> events){
+        List<Event> splitFlat = new ArrayList<>();
+        for (Event event: this.flattenWorkSessions(events)){
+            splitFlat.addAll(this.splitByDay(event));
+        }
+        return splitFlat;
     }
 
     /**
@@ -419,15 +427,10 @@ public class EventManager{
      */
     public Map<LocalDate, List<Event>> getRange(LocalDate from, LocalDate to){
         Map<LocalDate, List<Event>> range = new HashMap<>();
-        while (from.isBefore(to)){
-            for (Event event: this.getDay(from).values()){
-                if (range.containsKey(from)){
-                    range.get(from).addAll(this.flattenWorkSessions(this.splitByDay(event)));
-                }else{
-                    range.put(from, this.flattenWorkSessions(this.splitByDay(event)));
-                }
-            }
-            from  = from.plusDays(1L);
+        long current = 0L;
+        while (!from.plusDays(current).isAfter(to)){
+            range.put(from.plusDays(current),  this.flatSplitEvents(List.of(this.getDay(from).values().toArray(new Event[0]))));
+            current  += 1L;
         }
         return range;
     }
@@ -441,22 +444,27 @@ public class EventManager{
      */
     public Map<LocalDateTime, Long> freeSlots(LocalDateTime start, List<Event> events, LocalDateTime end){
         List<Event> schedule = this.timeOrder(this.flattenWorkSessions(events));
-        Map<LocalDateTime, Long> lengthStart = new HashMap<>();
+        Map<LocalDateTime, Long> freeSlots = new HashMap<>();
         int taskNum = 0;
-        for (Event event: schedule){
-            if (event.getEndTime().isBefore(end) && event.getStartTime().isAfter(start)){
-                if (lengthStart.isEmpty()){
-                    lengthStart.put(start, Duration.between(start, event.getStartTime()).getSeconds());
+        while (schedule.get(taskNum).getEndTime().isBefore(end) && taskNum < schedule.size()){
+            if (schedule.get(taskNum).getStartTime().isAfter(start)){
+                if (taskNum != 0){
+                    if (schedule.get(taskNum - 1).getEndTime().isBefore(start)){
+                        freeSlots.put(start, Duration.between(start, schedule.get(taskNum).getStartTime()).toHours());
+                    }else if(schedule.get(taskNum - 1).getEndTime().isBefore(schedule.get(taskNum).getStartTime())){
+                        freeSlots.put(schedule.get(taskNum-1).getEndTime(),
+                                Duration.between(schedule.get((taskNum - 1)).getEndTime(),
+                                        schedule.get(taskNum).getStartTime()).toHours());
+                    }
                 }else{
-                    lengthStart.put(schedule.get(taskNum-1).getStartTime(),
-                            Duration.between(schedule.get(taskNum-1).getEndTime(), event.getStartTime()).getSeconds());
+                    freeSlots.put(start, Duration.between(start, schedule.get(taskNum).getStartTime()).toHours());
                 }
-            }if(schedule.get(taskNum + 1).getStartTime().isAfter(end)){
-                lengthStart.put(event.getEndTime(), Duration.between(event.getEndTime(), end).getSeconds());
             }
-            taskNum ++;
+            taskNum += 1;
         }
-        return lengthStart;
+        int last = taskNum - 1;
+        freeSlots.put(schedule.get(last).getEndTime(), Duration.between(schedule.get(last).getEndTime(), end).toHours());
+        return freeSlots;
     }
 
     /**
