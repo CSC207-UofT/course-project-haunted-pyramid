@@ -39,6 +39,7 @@ public class EventManager{
             }
         }
         this.toUpdate = new EventListObserver[]{};
+        this.repeatedEventManager = new RepeatedEventManager();
     }
 
 
@@ -48,6 +49,7 @@ public class EventManager{
     public EventManager() {
         this.eventMap = new HashMap<>();
         this.toUpdate = new EventListObserver[]{};
+        this.repeatedEventManager = new RepeatedEventManager();
     }
 
     /**
@@ -132,7 +134,6 @@ public class EventManager{
         truc.add(event);
         this.update("add", truc);
         return event;
-
     }
 
     /**
@@ -281,7 +282,7 @@ public class EventManager{
      * @param dateString String in the form YYYY-MM-DDTHH:MM
      * @return LocalDateTime with year YYYY, month MM, day DD, hour HH, minute MM
      */
-    private LocalDateTime stringToDate(String dateString) throws IllegalArgumentException{
+    public LocalDateTime stringToDate(String dateString) throws IllegalArgumentException{
         String[] full = dateString.split("T");
         if (full.length != 2){
             throw new IllegalArgumentException();
@@ -481,6 +482,14 @@ public class EventManager{
      */
     public void setRepeatedEventManager(RepeatedEventManager repeatedEventManager) {
         this.repeatedEventManager = repeatedEventManager;
+    }
+
+    public RepeatedEventManager getRepeatedEventManager() {
+        return repeatedEventManager;
+    }
+
+    public int getRecursiveEventId(RecursiveEvent recursiveEvent){
+        return recursiveEvent.getId();
     }
 
     /**

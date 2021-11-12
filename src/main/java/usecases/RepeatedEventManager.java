@@ -1,5 +1,6 @@
 package usecases;
 
+import entities.ConstantID;
 import entities.Event;
 import entities.RecursiveEvent;
 import interfaces.DateGetter;
@@ -50,9 +51,10 @@ public class RepeatedEventManager implements EventListObserver {
      * object to the RepeatedEventManager map.
      */
 
-    public void addRecursiveEvent(Integer ID, ArrayList<Event> eventsInCycle, DateGetter methodToGetDate){
-        RecursiveEvent recursiveEvent = new RecursiveEvent(ID, eventsInCycle, methodToGetDate);
+    public RecursiveEvent addRecursiveEvent(ArrayList<Event> eventsInCycle, DateGetter methodToGetDate){
+        RecursiveEvent recursiveEvent = new RecursiveEvent(ConstantID.get(), eventsInCycle, methodToGetDate);
         this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
+        return recursiveEvent;
     }
 
 
@@ -80,10 +82,8 @@ public class RepeatedEventManager implements EventListObserver {
 
     public HashMap<String, ArrayList<Event>> getEventsFromRecursion(Integer id){
         HashMap<String, ArrayList<Event>> result = new HashMap<>();
-        int i = 0;
         for(Event event : this.recursiveEventMap.get(id).getEventsInOneCycle()){
             result.put(event.getName(), this.getRecursiveEvent(id).createEventInCycles(event));
-            i ++;
         }
         return result;
     }

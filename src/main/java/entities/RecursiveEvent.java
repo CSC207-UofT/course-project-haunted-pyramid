@@ -138,6 +138,7 @@ public class RecursiveEvent implements EventListObserver {
         int cyclesLength = listOfDatesInCycles.size();
         int i = 1;
         while(indexOfEvent + this.getCycleLength()*i < cyclesLength){
+            listOfDatesInCycles.get(indexOfEvent + this.getCycleLength()*i).setRecursiveId(this.id);
             result.add(listOfDatesInCycles.get(indexOfEvent + this.getCycleLength()*i));
             i += 1;
         }
