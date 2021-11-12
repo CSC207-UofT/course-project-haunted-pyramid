@@ -186,21 +186,6 @@ public class CalendarManager {
     }
 
     /**
-     * remove the event from the entire calendar
-     * @param event event to be removed
-     */
-    public void removeFromCalendar(Event event){
-        for (int i = 0; i < 3; i++){
-            this.currentCalendar.removeEvent(event);
-            this.currentCalendar.updateConflict();
-            this.futureCalendar.get(i).removeEvent(event);
-            this.futureCalendar.get(i).updateConflict();
-            this.pastCalendar.get(i).removeEvent(event);
-            this.pastCalendar.get(i).updateConflict();
-        }
-    }
-
-    /**
      * Get all the Events' names from the specific date of the calendar
      * @param year year of the calendar
      * @param month month of the calendar
