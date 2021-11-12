@@ -139,7 +139,7 @@ public class WorkSessionScheduler implements EventListObserver {
                 else{
 //                    ArrayList<Event> s = (ArrayList<Event>) tempSchedule.get(day.toLocalDate());
 //                    LocalDate f = day.toLocalDate();
-                    // freeSlots for each of the three days
+                    // freeSlots for each of the three dayss
                     Map<LocalDateTime, Long> freeSlots = eventManager.freeSlots(firstDay, tempSchedule.get(day.toLocalDate()), thirdDay);
 
                     for (LocalDateTime slot: freeSlots.keySet()){
