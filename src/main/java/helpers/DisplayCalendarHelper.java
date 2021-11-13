@@ -32,6 +32,13 @@ public class DisplayCalendarHelper {
         this.month = month;
     }
 
+    /**
+     * Make the starting frame of the calendar image for monthly and weekly calendar
+     * Contain Day of Week information
+     * @param startDayOfWeek the starting day of week for the calendar frame
+     * @param additionalSpacer horizontal space flexibility (0 makes the default size of the frame)
+     * @return the string of the calendar frame with the day of week information
+     */
     public String startFrame(String startDayOfWeek, int additionalSpacer){
         StringBuilder result = new StringBuilder();
         result.append("Calendar for ").append(this.year).append("/").append(this.month).append("\n");
