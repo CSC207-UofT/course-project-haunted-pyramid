@@ -158,32 +158,6 @@ public class CalendarManager {
         }
     }
 
-    /**
-     * remove an event from a specific date
-     * @param event event to be removed
-     * @param year the year that event will be removed from
-     * @param month the month that event will be removed from
-     * @param date the date that event will be removed from
-     */
-    public void removeFromCalendar(Event event, int year, int month, int date){
-        int adjustedMonth = adjustMonth(year, month);
-        if (adjustedMonth == this.currentMonth){
-            this.currentCalendar.removeEvent(event, date);
-            this.currentCalendar.updateConflict();
-        }
-        for (int i = 0; i < 3; i++){
-            if (adjustedMonth == this.currentMonth + i + 1){
-                this.futureCalendar.get(i).removeEvent(event, date);
-                this.futureCalendar.get(i).updateConflict();
-            }
-        }
-        for (int j = 0; j < 3; j++){
-            if (adjustedMonth == this.currentMonth - j - 1){
-                this.pastCalendar.get(j).removeEvent(event, date);
-                this.pastCalendar.get(j).updateConflict();
-            }
-        }
-    }
 
     /**
      * Get all the Events' names from the specific date of the calendar
