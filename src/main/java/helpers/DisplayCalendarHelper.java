@@ -113,6 +113,13 @@ public class DisplayCalendarHelper {
         }
     }
 
+    /**
+     * add all the items from addLst to toBeUpdated. Avoid adding duplicates.
+     * Sort the items (the elements of the list are all numerical strings) and return the sorted result
+     * @param toBeUpdated the list that will act as a base
+     * @param addLst the list that will be added to toBeUpdated
+     * @return the sorted list of numerical strings that contain elements of toBeUpdated and addLst
+     */
     public List<String> updateTimeList(List<String> toBeUpdated, List<String> addLst){
         List<String> temp = new ArrayList<>(toBeUpdated);
         for (String time : addLst){
