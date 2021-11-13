@@ -95,8 +95,10 @@ public class EventController {
                 if (next.equalsIgnoreCase("save")){
                     save = true;
                 }else if (next.equalsIgnoreCase("delete")) {
-                    this.delete(ID);
-                    save = true;
+                    if (IOController.getAnswer("are you sure? (y/n)").equalsIgnoreCase("y")){
+                        this.delete(ID);
+                        save = true;
+                    }
                 }else {
                     this.getAction(next, ID);
                 }
