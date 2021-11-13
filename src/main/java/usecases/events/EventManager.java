@@ -449,7 +449,7 @@ public class EventManager{
         List<Event> schedule = this.timeOrder(this.flattenWorkSessions(events));
         Map<LocalDateTime, Long> freeSlots = new HashMap<>();
         int taskNum = 0;
-        while (schedule.get(taskNum).getEndTime().isBefore(end) && taskNum < schedule.size()){
+        while (taskNum < schedule.size() && schedule.get(taskNum).getEndTime().isBefore(end)){
             if (schedule.get(taskNum).getStartTime().isAfter(start)){
                 if (taskNum != 0){
                     if (schedule.get(taskNum - 1).getEndTime().isBefore(start)){
