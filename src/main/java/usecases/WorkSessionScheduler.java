@@ -8,10 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -119,10 +116,10 @@ public class WorkSessionScheduler implements EventListObserver {
             LocalDateTime secondDay = deadline.getEndTime().minusDays(2);
             LocalDateTime thirdDay = deadline.getEndTime().minusDays(1);
 
-            Map<LocalDate, List<Event>> tempSchedule = eventManager.getRange(LocalDate.now(),
+            Map<LocalDate, List<Event>> tempSchedule = eventManager.getRange(firstDay.toLocalDate(),
                     deadline.getEndTime().toLocalDate());
 
-            ArrayList<LocalDateTime> daysList = new ArrayList<LocalDateTime>(){
+            ArrayList<LocalDateTime> daysList = new ArrayList<>(){
                 {
                     add(firstDay);
                     add(secondDay);
@@ -130,17 +127,29 @@ public class WorkSessionScheduler implements EventListObserver {
 
                 }
             };
-            for (LocalDateTime day: daysList){
-                // freeSlots for each day
-                Map<LocalDateTime, Long> freeSlots = eventManager.freeSlots(day, tempSchedule.get(day.toLocalDate()), day);
 
-                for (LocalDateTime slot: freeSlots.keySet()){
-                    if (freeSlots.get(slot) >= sessionLength){
-                        deadline.addWorkSession(slot, slot.plusHours(sessionLength));
-                        break;
+            for (LocalDateTime day: daysList){
+//                List<Event> js = tempSchedule.get(day.toLocalDate());
+//                int sz = tempSchedule.get(day.toLocalDate()).size();
+                if (tempSchedule.get(day.toLocalDate()).size() == 0){
+                    LocalDate infoDay = day.toLocalDate();
+                    LocalDateTime startTimeForDay = infoDay.atTime(12, 0);
+                    deadline.addWorkSession(startTimeForDay, startTimeForDay.plusHours(sessionLength));
+                }
+                else{
+//                    ArrayList<Event> s = (ArrayList<Event>) tempSchedule.get(day.toLocalDate());
+//                    LocalDate f = day.toLocalDate();
+                    // freeSlots for each of the three dayss
+                    Map<LocalDateTime, Long> freeSlots = eventManager.freeSlots(firstDay, tempSchedule.get(day.toLocalDate()), thirdDay);
+
+                    for (LocalDateTime slot: freeSlots.keySet()){
+                        if (freeSlots.get(slot) >= sessionLength){
+                            deadline.addWorkSession(slot, slot.plusHours(sessionLength));
+                            break;
                     }
                 }
 
+                }
             }
         }
 
@@ -226,6 +235,8 @@ public class WorkSessionScheduler implements EventListObserver {
         EventManager em = new EventManager();
         WorkSessionScheduler ws = new WorkSessionScheduler(new HashMap<>(), true);
         em.addEvent("hello", LocalDateTime.of(2021, 11, 10, 2,0));
+        em.addEvent("hello2", LocalDateTime.of(2021, 11, 8, 2,0),
+                LocalDateTime.of(2021, 11, 8, 3, 0));
         em.get(1).setHoursNeeded(10L);
         ws.autoSchedule(em.get(1), em);
 
