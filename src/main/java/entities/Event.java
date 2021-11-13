@@ -219,7 +219,7 @@ public class Event implements Serializable {
      * @return a LocalDate object for the day of the start of the event
      */
     public LocalDate getDay(){
-        return LocalDate.of(this.endTime.getYear(), this.endTime.getMonthValue(), this.endTime.getDayOfMonth());
+        return this.getEndTime().toLocalDate();
     }
 
     /**
@@ -316,7 +316,7 @@ public class Event implements Serializable {
     public List<Event> futureWorkSessions(){
         List<Event> future = new ArrayList<>();
         for (Event event: this.getWorkSessions()){
-            if (event.getStartTime().isAfter(LocalDateTime.now())){
+            if (event.getEndTime().isAfter(LocalDateTime.now())){
                 future.add(event);
             }
         }
@@ -350,7 +350,7 @@ public class Event implements Serializable {
      * @param end LocalDateTime end time
      */
     public void addWorkSession(LocalDateTime start, LocalDateTime end){
-        this.workSessions.add(new Event(this.getID(), this.getName(), start, end));
+        this.workSessions.add(new Event(this.getID(), this.getName() + " session", start, end));
     }
 
     /**

@@ -12,6 +12,8 @@ import entities.recursions.RecursiveEvent;
 import interfaces.EventListObserver;
 import usecases.events.RepeatedEventManager;
 
+import javax.swing.text.TabableView;
+
 /**
  * @author Taite Cullen
  * @author Malik Lahlou
@@ -432,7 +434,7 @@ public class EventManager{
         Map<LocalDate, List<Event>> range = new HashMap<>();
         long current = 0L;
         while (!from.plusDays(current).isAfter(to)){
-            range.put(from.plusDays(current),  this.flatSplitEvents(List.of(this.getDay(from).values().toArray(new Event[0]))));
+            range.put(from.plusDays(current),  this.flatSplitEvents(List.of(this.getDay(from.plusDays(current)).values().toArray(new Event[0]))));
             current  += 1L;
         }
         return range;
@@ -449,24 +451,31 @@ public class EventManager{
         List<Event> schedule = this.timeOrder(this.flattenWorkSessions(events));
         Map<LocalDateTime, Long> freeSlots = new HashMap<>();
         int taskNum = 0;
-        while (schedule.get(taskNum).getEndTime().isBefore(end) && taskNum < schedule.size()){
-            if (schedule.get(taskNum).getStartTime().isAfter(start)){
-                if (taskNum != 0){
-                    if (schedule.get(taskNum - 1).getEndTime().isBefore(start)){
+        while (taskNum < schedule.size() && schedule.get(taskNum).getEndTime().isBefore(end)){
+            if (schedule.get(taskNum).hasStart() && schedule.get(taskNum).getStartTime().isAfter(start)) {
+                if (taskNum != 0) {
+                    if (schedule.get(taskNum - 1).getEndTime().isBefore(start)) {
                         freeSlots.put(start, Duration.between(start, schedule.get(taskNum).getStartTime()).toHours());
-                    }else if(schedule.get(taskNum - 1).getEndTime().isBefore(schedule.get(taskNum).getStartTime())){
-                        freeSlots.put(schedule.get(taskNum-1).getEndTime(),
+                    } else if (schedule.get(taskNum - 1).getEndTime().isBefore(schedule.get(taskNum).getStartTime())) {
+                        freeSlots.put(schedule.get(taskNum - 1).getEndTime(),
                                 Duration.between(schedule.get((taskNum - 1)).getEndTime(),
                                         schedule.get(taskNum).getStartTime()).toHours());
                     }
-                }else{
+                } else {
                     freeSlots.put(start, Duration.between(start, schedule.get(taskNum).getStartTime()).toHours());
                 }
             }
             taskNum += 1;
         }
-        int last = taskNum - 1;
-        freeSlots.put(schedule.get(last).getEndTime(), Duration.between(schedule.get(last).getEndTime(), end).toHours());
+        if (taskNum > 0){
+            int last = taskNum - 1;
+            if (schedule.get(last).hasStart()){
+                freeSlots.put(schedule.get(last).getEndTime(), Duration.between(schedule.get(last).getEndTime(),
+                        end).toHours());
+            }
+        } else {
+            freeSlots.put(start, Duration.between(start, end).toHours());
+        }
         return freeSlots;
     }
 
@@ -570,7 +579,8 @@ public class EventManager{
     public static void main(String[] args){
         EventManager em = new EventManager();
         Event event = new Event(1, "this", LocalDateTime.of(2002,12,5,2,30));
-        System.out.println(em.getEndTimeString(event));
+        em.addEvent(event);
+        System.out.println(em.getRange(LocalDate.of(2021,12,4), LocalDate.of(2021, 12, 10)));
     }
 
 }

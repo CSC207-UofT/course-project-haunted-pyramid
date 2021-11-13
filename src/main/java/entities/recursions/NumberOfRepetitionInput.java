@@ -31,15 +31,20 @@ public class NumberOfRepetitionInput implements DateGetter {
         int i = 2;
         while(repetitionIndex < this.numberOfRepetitions){
             int eventIndex = 0;
-            while(eventIndex < cycleLength -1){
+            while(eventIndex < cycleLength){
                 Event thisEvent = events.get(eventIndex);
-                LocalDateTime newStartTime = thisEvent.getStartTime().plus(periodMultiplicationByScalar(period, repetitionIndex));
-                LocalDateTime newEndTime = thisEvent.getEndTime().plus(periodMultiplicationByScalar(period, repetitionIndex));
-                Event newThisEvent = new Event(ConstantID.get(), thisEvent.getName() + "-" + i, newStartTime, newEndTime);
+                Period multiple = periodMultiplicationByScalar(period, repetitionIndex);
+                LocalDateTime newEndTime = thisEvent.getEndTime().plus(multiple);
+                Event newThisEvent = new Event(ConstantID.get(), thisEvent.getName() + "-" + i, newEndTime);
+                if(thisEvent.getStartTime() != null){
+                    LocalDateTime newStartTime = thisEvent.getStartTime().plus(multiple);
+                    newThisEvent.setStartTime(newStartTime);
+                }
                 result.add(newThisEvent);
                 eventIndex++;
             }
             repetitionIndex++;
+            i++;
         }
         return result;
     }
