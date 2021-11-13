@@ -19,7 +19,7 @@ public class RecursionController {
             while (!cycleCreation){
                 cycle.add(event);
                 String chooseOrAdd = IOController.getAnswer("enter 'choose' to add an existing event into this recursion" +
-                        "and 'new' to create a new event to add to this recursion");
+                        " and 'new' to create a new event to add to this recursion");
                 if (chooseOrAdd.equalsIgnoreCase("choose")){
                     String ids = IOController.getAnswer("enter the number before the name of the event you" +
                             "want to add in this format: num_1-num_2-...-num_n");
@@ -53,9 +53,9 @@ public class RecursionController {
             }
             else{
                 String beginningOfCycles = IOController.getAnswer("Enter the date when this cycle should begin" +
-                        "in the form YYYY-MM-DD");
+                        "in the form YYYY-MM-DDTHH:MM");
                 String endOfCycles = IOController.getAnswer("Enter the date when this cycle should end" +
-                        "in the form YYYY-MM-DD");
+                        "in the form YYYY-MM-DDTHH:MM");
                 methodToGetDates = new IntervalDateInput(eventManager.stringToDate(beginningOfCycles),
                         eventManager.stringToDate(endOfCycles));
             }
