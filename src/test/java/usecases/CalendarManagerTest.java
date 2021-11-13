@@ -95,7 +95,7 @@ public class CalendarManagerTest {
     }
 
     @Test(timeout = 100)
-    public void testAddAndRemoveCalendarManager(){
+    public void testAddCalendarManager(){
         Event eventOne = new Event(1, "Test1",
                 2021, 11, 20, 7, 10, 0, 0);
         calendarManager.addToCalendar(eventOne);
@@ -107,11 +107,6 @@ public class CalendarManagerTest {
         calendarManager.addToCalendar(eventTwo);
         assertEquals(2, eventList.size());
         assertEquals(eventTwo, eventList.get(1));
-        calendarManager.removeFromCalendar(eventOne, 2021, 11, 20);
-        eventList = getMonthlyCalendar.getCalendar(calendarManager, 2021, 11).get(20);
-        assertNotSame(eventOne, eventList.get(0));
-        assertSame(eventTwo, eventList.get(0));
-        assertEquals(1, eventList.size());
     }
 
     @Test(timeout = 100)
