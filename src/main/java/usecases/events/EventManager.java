@@ -467,12 +467,9 @@ public class EventManager{
             }
             taskNum += 1;
         }
-        if (taskNum > 0){
-            int last = taskNum - 1;
-            if (schedule.get(last).hasStart()){
-                freeSlots.put(schedule.get(last).getEndTime(), Duration.between(schedule.get(last).getEndTime(),
-                        end).toHours());
-            }
+        if (taskNum > 0 && schedule.get(taskNum - 1).hasStart()){
+            freeSlots.put(schedule.get(taskNum - 1).getEndTime(), Duration.between(schedule.get(taskNum - 1).getEndTime(),
+                    end).toHours());
         } else {
             freeSlots.put(start, Duration.between(start, end).toHours());
         }
