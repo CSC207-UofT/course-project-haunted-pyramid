@@ -46,6 +46,7 @@ public class EventController {
         this.recursionController = new RecursionController();
     }
 
+
     /**
      *
      * @param hasSavedData
@@ -233,7 +234,7 @@ public class EventController {
         String nextStep = IOController.getAnswer("Enter 'Create' to create new recursion" +
                 "'edit' to modify an existing one and 'delete' to remove all repetitions of this event");
         if (nextStep.equalsIgnoreCase("Create")){
-            this.recursionController.createNewRecursion(this.eventManager.get(ID), this.eventManager);
+            this.recursionController.createNewRecursion(this.eventManager.get(ID), this.eventManager, this);
         }
         //TODO: add more options to delete or modify a recursion (now can only add).
     }
