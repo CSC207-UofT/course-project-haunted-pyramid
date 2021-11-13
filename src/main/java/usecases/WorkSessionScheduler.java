@@ -1,6 +1,5 @@
 package usecases;
 
-import controllers.IOController;
 import entities.Event;
 import interfaces.EventListObserver;
 import usecases.events.EventManager;
@@ -9,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
@@ -65,47 +65,72 @@ public class WorkSessionScheduler implements EventListObserver {
 
         // Calculate hours which are required for the deadline event after previous
         // work sessions are taken into account
-        Long totalNeeded = (long) (deadline.getHoursNeeded() - eventManager.totalHours(deadline.pastWorkSessions()));
+        long totalNeeded = (long) (deadline.getHoursNeeded() - eventManager.totalHours(deadline.pastWorkSessions()));
 
         if (!this.procrastinate) {
 
             while (totalNeeded > 0) {
+                LocalDate d0 = LocalDate.now();
+                LocalDate de = deadline.getEndTime().toLocalDate();
+                long days = ChronoUnit.DAYS.between(d0, de);
+//                long pop = deadline.getSessionLength();
+                long sessionL = deadline.getHoursNeeded() / days;
 
                 // returns a Map of events incl. work sessions for the dates inputted
                 Map<LocalDate, List<Event>> tempSchedule = eventManager.getRange(LocalDate.now(),
                         deadline.getEndTime().toLocalDate());
 
+                tempSchedule.remove(deadline.getEndTime().toLocalDate());
+
                 LocalDate mostFreeTime = LocalDate.now();
-                LocalDateTime bestSlot = LocalDateTime.now();
+//                LocalDateTime bestSlot = LocalDateTime.now();
 
                 for (LocalDate day : tempSchedule.keySet()) {
-                    if (eventManager.totalHours(tempSchedule.get(day)) <
-                            eventManager.totalHours(tempSchedule.get(mostFreeTime))) {
 
-                        Map<LocalDateTime, Long> freeSlots = eventManager.freeSlots(LocalDateTime.now(),
+                    LocalDateTime bestSlot = day.atTime(9, 0);
+
+                    if (tempSchedule.get(day).size() == 0){
+
+                        deadline.addWorkSession(bestSlot, bestSlot.plusHours(deadline.getSessionLength()));
+                        totalNeeded = totalNeeded - deadline.getSessionLength();
+                    }
+//                    else if (eventManager.totalHours(tempSchedule.get(day)) <=
+//                            eventManager.totalHours(tempSchedule.get(mostFreeTime))) {
+                    else{
+
+                        // Get freeSlots for that day
+                        Map<LocalDateTime, Long> freeSlots = eventManager.freeSlots(day.atTime(9, 0),
                                 tempSchedule.get(day),
-                                deadline.getStartTime());
+                                day.atTime(23, 59));
 
-                        if (this.maximum(freeSlots.values().toArray(new Long[0])) < deadline.getSessionLength()) {
-                            mostFreeTime = day;
-                            for (LocalDateTime slot : freeSlots.keySet()) {
-                                if (deadline.getSessionLength() < freeSlots.get(slot) && freeSlots.get(slot) <
-                                        freeSlots.get(bestSlot)) {
-                                    bestSlot = slot;
-                                }
+                        for (LocalDateTime slot: freeSlots.keySet()){
+                            if (freeSlots.get(slot) >= deadline.getSessionLength()){
+                                deadline.addWorkSession(slot, slot.plusHours(deadline.getSessionLength()));
+                                totalNeeded = totalNeeded - deadline.getSessionLength();
+                                break;
                             }
                         }
+
+//                        if (this.maximum(freeSlots.values().toArray(new Long[0])) < deadline.getSessionLength()) {
+//                            mostFreeTime = day;
+//                            for (LocalDateTime slot : freeSlots.keySet()) {
+//                                if (deadline.getSessionLength() < freeSlots.get(slot) && freeSlots.get(slot) <
+//                                        freeSlots.get(bestSlot)) {
+//                                    bestSlot = slot;
+//                                }
+//                            }
+//                        }
                     }
                 }
-                if (totalNeeded > deadline.getSessionLength()) {
-                    deadline.addWorkSession(bestSlot,
-                            bestSlot.plusHours(deadline.getSessionLength()));
-                    totalNeeded -= deadline.getSessionLength();
-                } else {
-                    deadline.addWorkSession(bestSlot,
-                            bestSlot.plusHours(totalNeeded));
-                    totalNeeded = 0L;
-                }
+//                if (totalNeeded > deadline.getSessionLength()) {
+//                    deadline.getWorkSessions().add(new Event(deadline.getID(), deadline.getName() + "session", bestSlot,
+//                            bestSlot.plusHours(deadline.getSessionLength())));
+//                    totalNeeded -= deadline.getSessionLength();
+//                } else {
+//                    deadline.getWorkSessions().add(new Event(deadline.getID(), deadline.getName() + "session", bestSlot,
+//                            bestSlot.plusHours(totalNeeded)));
+//                    totalNeeded = 0L;
+//                }
             }
         } else{
 
@@ -118,7 +143,7 @@ public class WorkSessionScheduler implements EventListObserver {
             LocalDateTime thirdDay = deadline.getEndTime().minusDays(1);
 
             Map<LocalDate, List<Event>> tempSchedule = eventManager.getRange(firstDay.toLocalDate(),
-                    deadline.getEndTime().toLocalDate());
+                    thirdDay.toLocalDate());
 
             ArrayList<LocalDateTime> daysList = new ArrayList<>(){
                 {
@@ -130,18 +155,15 @@ public class WorkSessionScheduler implements EventListObserver {
             };
 
             for (LocalDateTime day: daysList){
-//                List<Event> js = tempSchedule.get(day.toLocalDate());
-//                int sz = tempSchedule.get(day.toLocalDate()).size();
                 if (tempSchedule.get(day.toLocalDate()).size() == 0){
                     LocalDate infoDay = day.toLocalDate();
                     LocalDateTime startTimeForDay = infoDay.atTime(12, 0);
                     deadline.addWorkSession(startTimeForDay, startTimeForDay.plusHours(sessionLength));
                 }
                 else{
-//                    ArrayList<Event> s = (ArrayList<Event>) tempSchedule.get(day.toLocalDate());
-//                    LocalDate f = day.toLocalDate();
-                    // freeSlots for each of the three dayss
-                    Map<LocalDateTime, Long> freeSlots = eventManager.freeSlots(firstDay, tempSchedule.get(day.toLocalDate()), thirdDay);
+                    // freeSlots for each day
+                    Map<LocalDateTime, Long> freeSlots = eventManager.freeSlots(day.toLocalDate().atTime(9,0),
+                            tempSchedule.get(day.toLocalDate()), day.toLocalDate().atTime(23, 59));
 
                     for (LocalDateTime slot: freeSlots.keySet()){
                         if (freeSlots.get(slot) >= sessionLength){
@@ -154,56 +176,6 @@ public class WorkSessionScheduler implements EventListObserver {
             }
         }
 
-    }
-
-    private Map<LocalDateTime, Long> removeSmallSlots(Map<LocalDateTime, Long> allFreeSlots, long sessionLength){
-        for (LocalDateTime time: allFreeSlots.keySet()){
-            if (allFreeSlots.get(time) < sessionLength){
-                allFreeSlots.remove(time);
-            }
-        }
-        return allFreeSlots;
-    }
-
-    private Map<LocalDate, List<Event>> removeFullDays(LocalDateTime start, LocalDateTime end, Map<LocalDate, List<Event>> schedule, long sessionLength){
-        EventManager em = new EventManager();
-        for (LocalDate day: schedule.keySet()){
-            if (day.isEqual(start.toLocalDate())){
-                if (this.removeSmallSlots(em.freeSlots(start, schedule.get(day), LocalDateTime.of(day, LocalTime.of(23, 59))), sessionLength).isEmpty()){
-                    schedule.remove(day);
-                }
-            } else if (day.isEqual(end.toLocalDate())){
-                if (this.removeSmallSlots(em.freeSlots(LocalDateTime.of(day, LocalTime.of(0, 0)), schedule.get(day), end), sessionLength).isEmpty()){
-                    schedule.remove(day);
-                }
-            } else if (day.isAfter(start.toLocalDate()) && day.isBefore(end.toLocalDate())) {
-                if (this.removeSmallSlots(em.freeSlots(LocalDateTime.of(day, LocalTime.of(0, 0)), schedule.get(day), LocalDateTime.of(day, LocalTime.of(23, 59))), sessionLength).isEmpty()) {
-                    schedule.remove(day);
-                }
-            }
-        }
-        return schedule;
-    }
-
-    private LocalDate getEmptiestDay(Map<LocalDate, List<Event>> schedule){
-        EventManager eventManager = new EventManager();
-        LocalDate emptiest = schedule.keySet().toArray(new LocalDate[0])[0];
-        for (LocalDate day: schedule.keySet()){
-            if (eventManager.totalHours(schedule.get(day)) < eventManager.totalHours(schedule.get(emptiest))){
-                emptiest = day;
-            }
-        }
-        return emptiest;
-    }
-
-    private LocalDateTime getSmallestSlot(Map<LocalDateTime, Long> freeSlots){
-        LocalDateTime smallestSlot = freeSlots.keySet().toArray(new LocalDateTime[0])[0];
-        for (LocalDateTime slot: freeSlots.keySet()){
-            if (freeSlots.get(slot) < freeSlots.get(smallestSlot)){
-                smallestSlot = slot;
-            }
-        }
-        return smallestSlot;
     }
 
     /**
@@ -228,8 +200,7 @@ public class WorkSessionScheduler implements EventListObserver {
      */
     public String sessionsString(Event event){
         EventManager eventManager = new EventManager();
-        return "Past sessions --------:\n " + this.sessionOptionsString(eventManager.timeOrder(event.pastWorkSessions()))
-                + "\nFuture Sessions -------:\n " +
+        return "Past sessions --------:\n " + this.sessionOptionsString(eventManager.timeOrder(event.pastWorkSessions())) + "\nFuture Sessions -------:\n " +
                 this.sessionOptionsString(eventManager.timeOrder(event.futureWorkSessions()));
     }
 
@@ -239,6 +210,7 @@ public class WorkSessionScheduler implements EventListObserver {
      * @return A string which gives the details of the session
      */
     private String sessionOptionsString(List<Event> sessions){
+        EventManager eventManager = new EventManager();
         StringBuilder options = new StringBuilder();
         int i=0;
         for (Event session: sessions) {
@@ -285,10 +257,10 @@ public class WorkSessionScheduler implements EventListObserver {
     public static void main(String[] args){
         EventManager em = new EventManager();
         WorkSessionScheduler ws = new WorkSessionScheduler(new HashMap<>(), false);
-        em.addEvent("hello", LocalDateTime.of(2021, 11, 10, 2,0));
-        em.addEvent("hello2", LocalDateTime.of(2021, 11, 8, 2,0),
-                LocalDateTime.of(2021, 11, 8, 3, 0));
-        em.get(1).setHoursNeeded(3L);
+        em.addEvent("hello", LocalDateTime.of(2021, 11, 19, 2,0));
+        Event e = new Event(3, "this", LocalDateTime.of(2021,11,17,2,30));
+        em.addEvent(e);
+        em.get(1).setHoursNeeded(10L);
         ws.autoSchedule(em.get(1), em);
 
         for (Event event: em.getAllEventsFlatSplit()){
@@ -298,8 +270,6 @@ public class WorkSessionScheduler implements EventListObserver {
             System.out.println(event.getWorkSessions().isEmpty());
         }
         System.out.println("---------------");
-
-        Map<LocalDateTime, Long> freeSlots = em.freeSlots(LocalDateTime.now(), List.of(new Event(1, "event", LocalDateTime.now().plusHours(8))), LocalDateTime.now().plusHours(9));
-        System.out.println(freeSlots);
+        System.out.println(em.get(1).getWorkSessions());
     }
 }
