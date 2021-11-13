@@ -1,5 +1,6 @@
 package usecases;
 
+import controllers.IOController;
 import entities.Event;
 import interfaces.EventListObserver;
 import usecases.events.EventManager;
@@ -97,12 +98,12 @@ public class WorkSessionScheduler implements EventListObserver {
                     }
                 }
                 if (totalNeeded > deadline.getSessionLength()) {
-                    deadline.getWorkSessions().add(new Event(deadline.getID(), deadline.getName() + "session", bestSlot,
-                            bestSlot.plusHours(deadline.getSessionLength())));
+                    deadline.addWorkSession(bestSlot,
+                            bestSlot.plusHours(deadline.getSessionLength()));
                     totalNeeded -= deadline.getSessionLength();
                 } else {
-                    deadline.getWorkSessions().add(new Event(deadline.getID(), deadline.getName() + "session", bestSlot,
-                            bestSlot.plusHours(totalNeeded)));
+                    deadline.addWorkSession(bestSlot,
+                            bestSlot.plusHours(totalNeeded));
                     totalNeeded = 0L;
                 }
             }
@@ -155,6 +156,56 @@ public class WorkSessionScheduler implements EventListObserver {
 
     }
 
+    private Map<LocalDateTime, Long> removeSmallSlots(Map<LocalDateTime, Long> allFreeSlots, long sessionLength){
+        for (LocalDateTime time: allFreeSlots.keySet()){
+            if (allFreeSlots.get(time) < sessionLength){
+                allFreeSlots.remove(time);
+            }
+        }
+        return allFreeSlots;
+    }
+
+    private Map<LocalDate, List<Event>> removeFullDays(LocalDateTime start, LocalDateTime end, Map<LocalDate, List<Event>> schedule, long sessionLength){
+        EventManager em = new EventManager();
+        for (LocalDate day: schedule.keySet()){
+            if (day.isEqual(start.toLocalDate())){
+                if (this.removeSmallSlots(em.freeSlots(start, schedule.get(day), LocalDateTime.of(day, LocalTime.of(23, 59))), sessionLength).isEmpty()){
+                    schedule.remove(day);
+                }
+            } else if (day.isEqual(end.toLocalDate())){
+                if (this.removeSmallSlots(em.freeSlots(LocalDateTime.of(day, LocalTime.of(0, 0)), schedule.get(day), end), sessionLength).isEmpty()){
+                    schedule.remove(day);
+                }
+            } else if (day.isAfter(start.toLocalDate()) && day.isBefore(end.toLocalDate())) {
+                if (this.removeSmallSlots(em.freeSlots(LocalDateTime.of(day, LocalTime.of(0, 0)), schedule.get(day), LocalDateTime.of(day, LocalTime.of(23, 59))), sessionLength).isEmpty()) {
+                    schedule.remove(day);
+                }
+            }
+        }
+        return schedule;
+    }
+
+    private LocalDate getEmptiestDay(Map<LocalDate, List<Event>> schedule){
+        EventManager eventManager = new EventManager();
+        LocalDate emptiest = schedule.keySet().toArray(new LocalDate[0])[0];
+        for (LocalDate day: schedule.keySet()){
+            if (eventManager.totalHours(schedule.get(day)) < eventManager.totalHours(schedule.get(emptiest))){
+                emptiest = day;
+            }
+        }
+        return emptiest;
+    }
+
+    private LocalDateTime getSmallestSlot(Map<LocalDateTime, Long> freeSlots){
+        LocalDateTime smallestSlot = freeSlots.keySet().toArray(new LocalDateTime[0])[0];
+        for (LocalDateTime slot: freeSlots.keySet()){
+            if (freeSlots.get(slot) < freeSlots.get(smallestSlot)){
+                smallestSlot = slot;
+            }
+        }
+        return smallestSlot;
+    }
+
     /**
      *
      * @param durations Array of Long type values
@@ -177,7 +228,8 @@ public class WorkSessionScheduler implements EventListObserver {
      */
     public String sessionsString(Event event){
         EventManager eventManager = new EventManager();
-        return "Past sessions --------:\n " + this.sessionOptionsString(eventManager.timeOrder(event.pastWorkSessions())) + "\nFuture Sessions -------:\n " +
+        return "Past sessions --------:\n " + this.sessionOptionsString(eventManager.timeOrder(event.pastWorkSessions()))
+                + "\nFuture Sessions -------:\n " +
                 this.sessionOptionsString(eventManager.timeOrder(event.futureWorkSessions()));
     }
 
@@ -187,7 +239,6 @@ public class WorkSessionScheduler implements EventListObserver {
      * @return A string which gives the details of the session
      */
     private String sessionOptionsString(List<Event> sessions){
-        EventManager eventManager = new EventManager();
         StringBuilder options = new StringBuilder();
         int i=0;
         for (Event session: sessions) {
@@ -233,11 +284,11 @@ public class WorkSessionScheduler implements EventListObserver {
 
     public static void main(String[] args){
         EventManager em = new EventManager();
-        WorkSessionScheduler ws = new WorkSessionScheduler(new HashMap<>(), true);
+        WorkSessionScheduler ws = new WorkSessionScheduler(new HashMap<>(), false);
         em.addEvent("hello", LocalDateTime.of(2021, 11, 10, 2,0));
         em.addEvent("hello2", LocalDateTime.of(2021, 11, 8, 2,0),
                 LocalDateTime.of(2021, 11, 8, 3, 0));
-        em.get(1).setHoursNeeded(10L);
+        em.get(1).setHoursNeeded(3L);
         ws.autoSchedule(em.get(1), em);
 
         for (Event event: em.getAllEventsFlatSplit()){
@@ -247,6 +298,8 @@ public class WorkSessionScheduler implements EventListObserver {
             System.out.println(event.getWorkSessions().isEmpty());
         }
         System.out.println("---------------");
-        System.out.println(em.get(1).getWorkSessions());
+
+        Map<LocalDateTime, Long> freeSlots = em.freeSlots(LocalDateTime.now(), List.of(new Event(1, "event", LocalDateTime.now().plusHours(8))), LocalDateTime.now().plusHours(9));
+        System.out.println(freeSlots);
     }
 }
