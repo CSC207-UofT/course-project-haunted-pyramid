@@ -53,8 +53,8 @@ public class EventTest {
     }
     @Test
     public void pastWorkSessions(){
-        LocalDateTime start = LocalDateTime.of(2002, 12, 5, 2, 30);
-        LocalDateTime end = LocalDateTime.of(2002, 12, 5, 3, 30);
+        LocalDateTime start = LocalDateTime.now().minusMinutes(10);
+        LocalDateTime end = LocalDateTime.now().minusMinutes(2);
         LocalDateTime start2 = LocalDateTime.now().plusDays(7L);
         LocalDateTime end2 = start2.plusHours(3L);
         this.event1.addWorkSession(start, end);
