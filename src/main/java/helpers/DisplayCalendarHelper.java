@@ -73,6 +73,12 @@ public class DisplayCalendarHelper {
         return result.toString();
     }
 
+    /**
+     * Helper method for starFrame. Determines which day of week to show first on the startFrame
+     * @param result StringBuilder object that the output of the method will be appended on
+     * @param index the index representing each day of the week (Sunday = 0, Monday = 1, etc...)
+     * @param space external space to have between each of the day of the week strings
+     */
     private void frameWithDifferentStartDay(StringBuilder result, int index, String space){
         for (String days : this.DATES.subList(index, 7)){
             result.append("|").append(space).append(days).append(space);
@@ -82,6 +88,11 @@ public class DisplayCalendarHelper {
         }
     }
 
+    /**
+     * End frame of the monthly and weekly calendar images. Associated with dashes
+     * @param additionalSpacer horizontal space flexibility that will be added on to make the frame larger if needed
+     * @return the string of the dashed lines that will be used as end frame
+     */
     public String endFrame(int additionalSpacer){
         StringBuilder result = new StringBuilder();
         String div = "-".repeat(Constants.CALENDAR_SIZE + additionalSpacer*7);
@@ -89,6 +100,10 @@ public class DisplayCalendarHelper {
         return result.toString();
     }
 
+    /**
+     * Sort the events associated in the calendarMap
+     * @param calendarMap calendarMap object that has events inside
+     */
     public void eventSorter(Map<Integer, List<Event>> calendarMap){
         EventManager em = new EventManager();
         List<Integer> keyList = new ArrayList<>(calendarMap.keySet());
@@ -98,6 +113,13 @@ public class DisplayCalendarHelper {
         }
     }
 
+    /**
+     * add all the items from addLst to toBeUpdated. Avoid adding duplicates.
+     * Sort the items (the elements of the list are all numerical strings) and return the sorted result
+     * @param toBeUpdated the list that will act as a base
+     * @param addLst the list that will be added to toBeUpdated
+     * @return the sorted list of numerical strings that contain elements of toBeUpdated and addLst
+     */
     public List<String> updateTimeList(List<String> toBeUpdated, List<String> addLst){
         List<String> temp = new ArrayList<>(toBeUpdated);
         for (String time : addLst){
@@ -111,6 +133,11 @@ public class DisplayCalendarHelper {
             container.add(convertTimeToInt(item));
         }
         Collections.sort(container);
+        addTimeString(container, sortedList);
+        return sortedList;
+    }
+
+    private void addTimeString(List<Integer> container, List<String> sortedList) {
         for (Integer number : container) {
             String convertedTime = String.valueOf(number);
             if (convertedTime.length() == 1) {
@@ -123,7 +150,6 @@ public class DisplayCalendarHelper {
                 sortedList.add(convertedTime.substring(0, 2) + ":" + convertedTime.substring(2, 4));
             }
         }
-        return sortedList;
     }
 
 
