@@ -350,7 +350,7 @@ public class Event implements Serializable {
      * @param end LocalDateTime end time
      */
     public void addWorkSession(LocalDateTime start, LocalDateTime end){
-        this.workSessions.add(new Event(this.getID(), this.getName(), start, end));
+        this.workSessions.add(new Event(this.getID(), this.getName() + " session", start, end));
     }
 
     /**

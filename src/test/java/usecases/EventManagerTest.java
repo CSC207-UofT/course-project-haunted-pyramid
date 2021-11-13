@@ -72,11 +72,11 @@ public class EventManagerTest {
     @Test
     public void testGetRange(){
         Map<LocalDate, List<Event>> range = this.eventManager.getRange(LocalDate.of(2021, 10, 1),
-                LocalDate.of(2021, 10, 4));
+                LocalDate.of(2021, 10, 2));
 
         List<Event> expected = this.eventManager.flatSplitEvents(List.of(this.eventManager.getDay(LocalDate.of(2021,
                 10, 1)).values().toArray(new Event[0])));
-        List<Event> actual = range.get(LocalDate.of(2021, 10, 4));
+        List<Event> actual = range.get(LocalDate.of(2021, 10, 1));
         assertTrue(expected.size() == actual.size() && expected.containsAll(actual) && actual.containsAll(expected));
 
     }
@@ -87,12 +87,17 @@ public class EventManagerTest {
         LocalDateTime start = LocalDateTime.of(2021, 10, 1, 1, 0);
         LocalDateTime end = LocalDateTime.of(2021, 10, 5, 0, 0);
 
+        this.eventManager.get(1).addWorkSession(LocalDateTime.of(2021, 10, 2, 2, 0),
+                LocalDateTime.of(2021, 10, 2, 3, 0));
+        expected.put(this.eventManager.get(3).getEndTime(), Duration.between(this.eventManager.get(3).getEndTime(),
+                LocalDateTime.of(2021, 10, 2, 2, 0)).toHours());
+        expected.put(LocalDateTime.of(2021, 10, 2, 3, 0),
+                Duration.between(LocalDateTime.of(2021, 10, 2, 3, 0),
+                        this.eventManager.get(4).getStartTime()).toHours());
         expected.put(start, Duration.between(start, this.eventManager.get(1).getStartTime()).toHours());
         expected.put(this.eventManager.get(1).getEndTime(),
                 Duration.between(this.eventManager.get(1).getEndTime(),
                         this.eventManager.get(2).getStartTime()).toHours());
-        expected.put(this.eventManager.get(3).getEndTime(), Duration.between(this.eventManager.get(3).getEndTime(),
-                this.eventManager.get(4).getStartTime()).toHours());
         expected.put(this.eventManager.get(5).getEndTime(), Duration.between(this.eventManager.get(5).getEndTime(),
                 end).toHours());
 
