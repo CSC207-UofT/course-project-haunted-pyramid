@@ -1,5 +1,6 @@
 package usecases;
 
+import controllers.IOController;
 import entities.Event;
 import interfaces.EventListObserver;
 import usecases.events.EventManager;
@@ -46,12 +47,12 @@ public class WorkSessionScheduler implements EventListObserver {
      */
     public void setSessionLength(Event deadline, Long sessionLength, EventManager eventManager){
         deadline.setSessionLength(sessionLength);
-        this.autoSchedule(deadline, eventManager);
+        this.autoSchedule(deadline.getID(), eventManager);
     }
 
     public void setHoursNeeded(Event deadline, Long hoursNeeded, EventManager eventManager){
         deadline.setHoursNeeded(hoursNeeded);
-        this.autoSchedule(deadline, eventManager);
+        this.autoSchedule(deadline.getID(), eventManager);
     }
 
     /**
@@ -60,7 +61,7 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param deadline An Event
      * @param eventManager An EventManager
      */
-    private void autoSchedule(Event deadline, EventManager eventManager){
+    private void autoSchedule1(Event deadline, EventManager eventManager){
 
         // past work sessions are now the work sessions associated with the deadline event
         //deadline.resetWorkSessions(deadline.pastWorkSessions());
@@ -100,12 +101,12 @@ public class WorkSessionScheduler implements EventListObserver {
                     }
                 }
                 if (totalNeeded > deadline.getSessionLength()) {
-                    deadline.getWorkSessions().add(new Event(deadline.getID(), deadline.getName() + "session", bestSlot,
-                            bestSlot.plusHours(deadline.getSessionLength())));
+                    deadline.addWorkSession(bestSlot,
+                            bestSlot.plusHours(deadline.getSessionLength()));
                     totalNeeded -= deadline.getSessionLength();
                 } else {
-                    deadline.getWorkSessions().add(new Event(deadline.getID(), deadline.getName() + "session", bestSlot,
-                            bestSlot.plusHours(totalNeeded)));
+                    deadline.addWorkSession(bestSlot,
+                            bestSlot.plusHours(totalNeeded));
                     totalNeeded = 0L;
                 }
             }
@@ -146,6 +147,80 @@ public class WorkSessionScheduler implements EventListObserver {
 
     }
 
+    private Map<LocalDateTime, Long> removeSmallSlots(Map<LocalDateTime, Long> allFreeSlots, long sessionLength){
+        for (LocalDateTime time: allFreeSlots.keySet()){
+            if (allFreeSlots.get(time) < sessionLength){
+                allFreeSlots.remove(time);
+            }
+        }
+        return allFreeSlots;
+    }
+
+    private Map<LocalDate, List<Event>> removeFullDays(LocalDateTime start, LocalDateTime end, Map<LocalDate, List<Event>> schedule, long sessionLength){
+        EventManager em = new EventManager();
+        for (LocalDate day: schedule.keySet()){
+            if (day.isEqual(start.toLocalDate())){
+                if (this.removeSmallSlots(em.freeSlots(start, schedule.get(day), LocalDateTime.of(day, LocalTime.of(23, 59))), sessionLength).isEmpty()){
+                    schedule.remove(day);
+                }
+            } else if (day.isEqual(end.toLocalDate())){
+                if (this.removeSmallSlots(em.freeSlots(LocalDateTime.of(day, LocalTime.of(0, 0)), schedule.get(day), end), sessionLength).isEmpty()){
+                    schedule.remove(day);
+                }
+            } else if (day.isAfter(start.toLocalDate()) && day.isBefore(end.toLocalDate())) {
+                if (this.removeSmallSlots(em.freeSlots(LocalDateTime.of(day, LocalTime.of(0, 0)), schedule.get(day), LocalDateTime.of(day, LocalTime.of(23, 59))), sessionLength).isEmpty()) {
+                    schedule.remove(day);
+                }
+            }
+        }
+        return schedule;
+    }
+
+    private LocalDate getEmptiestDay(Map<LocalDate, List<Event>> schedule){
+        EventManager eventManager = new EventManager();
+        LocalDate emptiest = schedule.keySet().toArray(new LocalDate[0])[0];
+        for (LocalDate day: schedule.keySet()){
+            if (eventManager.totalHours(schedule.get(day)) < eventManager.totalHours(schedule.get(emptiest))){
+                emptiest = day;
+            }
+        }
+        return emptiest;
+    }
+
+    private LocalDateTime getSmallestSlot(Map<LocalDateTime, Long> freeSlots){
+        LocalDateTime smallestSlot = freeSlots.keySet().toArray(new LocalDateTime[0])[0];
+        for (LocalDateTime slot: freeSlots.keySet()){
+            if (freeSlots.get(slot) < freeSlots.get(smallestSlot)){
+                smallestSlot = slot;
+            }
+        }
+        return smallestSlot;
+    }
+
+    private void autoSchedule(Integer ID, EventManager eventManager){
+        Event deadline = eventManager.get(ID);
+        deadline.setWorkSessions(deadline.pastWorkSessions());
+        long totalHours = deadline.getHoursNeeded() - (long) eventManager.totalHours(deadline.getWorkSessions());
+        while (totalHours > 0){
+            long sessionLength = deadline.getSessionLength();
+            if (totalHours < deadline.getSessionLength()){
+                sessionLength = totalHours;
+            }
+            Map<LocalDate, List<Event>> schedule = eventManager.getRange(LocalDate.now(), deadline.getEndTime().toLocalDate());
+            System.out.println(schedule.values());
+            this.removeFullDays(LocalDateTime.now(), deadline.getEndTime(), schedule, deadline.getSessionLength());
+            LocalDate day = this.getEmptiestDay(schedule);
+            Map<LocalDateTime, Long> freeSlots = eventManager.freeSlots(LocalDateTime.of(day, LocalTime.of(0, 0)), schedule.get(day),
+                    LocalDateTime.of(day, LocalTime.of(23, 59)));
+
+            this.removeSmallSlots(freeSlots, sessionLength);
+            LocalDateTime bestTime = this.getSmallestSlot(freeSlots);
+
+            deadline.addWorkSession(bestTime, bestTime.plusHours(sessionLength));
+            totalHours -= sessionLength;
+        }
+    }
+
     /**
      *
      * @param durations Array of Long type values
@@ -168,7 +243,8 @@ public class WorkSessionScheduler implements EventListObserver {
      */
     public String sessionsString(Event event){
         EventManager eventManager = new EventManager();
-        return "Past sessions --------:\n " + this.sessionOptionsString(eventManager.timeOrder(event.pastWorkSessions())) + "\nFuture Sessions -------:\n " +
+        return "Past sessions --------:\n " + this.sessionOptionsString(eventManager.timeOrder(event.pastWorkSessions()))
+                + "\nFuture Sessions -------:\n " +
                 this.sessionOptionsString(eventManager.timeOrder(event.futureWorkSessions()));
     }
 
@@ -178,7 +254,6 @@ public class WorkSessionScheduler implements EventListObserver {
      * @return A string which gives the details of the session
      */
     private String sessionOptionsString(List<Event> sessions){
-        EventManager eventManager = new EventManager();
         StringBuilder options = new StringBuilder();
         int i=0;
         for (Event session: sessions) {
@@ -199,7 +274,7 @@ public class WorkSessionScheduler implements EventListObserver {
         event.setHoursNeeded((long) (event.getHoursNeeded() -
                 event.getWorkSessions().get(Integer.parseInt(session.split(" ")[2])).getLength()));
         event.getWorkSessions().remove(event.getWorkSessions().get(Integer.parseInt(session.split(" ")[2])));
-        this.autoSchedule(event, eventManager);
+        this.autoSchedule(event.getID(), eventManager);
     }
 
     /**
@@ -211,31 +286,27 @@ public class WorkSessionScheduler implements EventListObserver {
     public void markInComplete(Event event, String session, EventManager eventManager){
         eventManager.timeOrder(event.getWorkSessions());
         event.getWorkSessions().remove(event.getWorkSessions().get(Integer.parseInt(session.split(" ")[2])));
-        this.autoSchedule(event, eventManager);
+        this.autoSchedule(event.getID(), eventManager);
     }
 
 
     @Override
     public void update(String addRemoveChange, ArrayList<Event>  changed, EventManager eventManager) {
         for (Event event : changed) {
-            this.autoSchedule(event, eventManager);
+            this.autoSchedule(event.getID(), eventManager);
         }
     }
 
     public static void main(String[] args){
         EventManager em = new EventManager();
-        WorkSessionScheduler ws = new WorkSessionScheduler(new HashMap<>(), true);
-        em.addEvent("hello", LocalDateTime.of(2021, 11, 10, 2,0));
-        em.get(1).setHoursNeeded(10L);
-        ws.autoSchedule(em.get(1), em);
+        WorkSessionScheduler ws = new WorkSessionScheduler(new HashMap<>(), false);
+        em.addEvent("hello", LocalDateTime.of(2021, 11, 15, 2,0));
+        ws.setHoursNeeded(em.get(1), 3L, em);
 
-        for (Event event: em.getAllEventsFlatSplit()){
-            System.out.println(em.displayEvent(event));
-            System.out.println(event.getLength());
-            System.out.println(event.getWorkSessions().size());
-            System.out.println(event.getWorkSessions().isEmpty());
-        }
-        System.out.println("---------------");
+        System.out.println(em.freeSlots(LocalDateTime.now(), em.getAllEvents(), em.get(1).getEndTime()));
+
         System.out.println(em.get(1).getWorkSessions());
+        IOController.getAnswer("what");
+        System.out.println(ws.sessionsString(em.get(1)));
     }
 }
