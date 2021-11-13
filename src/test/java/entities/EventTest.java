@@ -53,14 +53,14 @@ public class EventTest {
     }
     @Test
     public void pastWorkSessions(){
-        LocalDateTime start = LocalDateTime.of(2002, 12, 5, 2, 30);
-        LocalDateTime end = LocalDateTime.of(2002, 12, 5, 3, 30);
+        LocalDateTime start = LocalDateTime.now().minusMinutes(10);
+        LocalDateTime end = LocalDateTime.now().minusMinutes(2);
         LocalDateTime start2 = LocalDateTime.now().plusDays(7L);
         LocalDateTime end2 = start2.plusHours(3L);
         this.event1.addWorkSession(start, end);
         this.event1.addWorkSession(start2, end2);
         assertEquals(this.event1.pastWorkSessions(), new ArrayList<>
-                (List.of(new Event[]{new Event(event1.getID(), event1.getName(), start, end)})));
+                (List.of(new Event[]{new Event(event1.getID(), event1.getName() + " session", start, end)})));
     }
 
     @Test
@@ -74,6 +74,7 @@ public class EventTest {
         assertEquals(this.event1.futureWorkSessions(), new ArrayList<>
                 (List.of(new Event[]{new Event(event1.getID(), event1.getName(), start2, end2)})));
     }
+
     @Test
     public void resetWorkSessions(){
         LocalDateTime start = LocalDateTime.of(2002, 12, 5, 2, 30);

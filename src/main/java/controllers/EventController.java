@@ -46,6 +46,7 @@ public class EventController {
         this.recursionController = new RecursionController();
     }
 
+
     /**
      *
      * @param hasSavedData
@@ -69,7 +70,6 @@ public class EventController {
      */
     public void createDefaultEvent(){
         String title = IOController.getName();
-        String course = IOController.getCourse();
         String date = IOController.getAnswer("Enter the date of the event in the form YYYY-MM-DD");
         String time = IOController.getAnswer("Enter the time of the event in the form HH:MM");
         try {
@@ -110,24 +110,30 @@ public class EventController {
      * @param ID
      */
     private void getAction(String command, Integer ID){
-        String[] nextArgs = command.split(": ");
-        if (nextArgs[0].equals("start date")){
-            this.changeStartDate(ID, nextArgs[1]);
-        }else if (nextArgs[0].equalsIgnoreCase("end date")){
-            this.changeEndDate(ID, nextArgs[1]);
-        }else if (nextArgs[0].equalsIgnoreCase("start time")){
-            this.changeStartTime(ID, nextArgs[1]);
-        }else if (nextArgs[0].equalsIgnoreCase("end time")){
-            this.changeEndTime(ID, nextArgs[1]);
+        try{
+            String[] nextArgs = command.split(": ");
+            if (nextArgs[0].equals("start date")) {
+                this.changeStartDate(ID, nextArgs[1]);
+            } else if (nextArgs[0].equalsIgnoreCase("end date")) {
+                this.changeEndDate(ID, nextArgs[1]);
+            } else if (nextArgs[0].equalsIgnoreCase("prep")) {
+                this.prep(ID);
+            } else if (nextArgs[0].equalsIgnoreCase(("recurse"))) {
+                this.recurse(ID);
+            } else if (nextArgs[1].equalsIgnoreCase("start time")) {
+                this.changeStartTime(ID, nextArgs[1]);
+            } else if (nextArgs[1].equalsIgnoreCase("end time")) {
+                this.changeEndTime(ID, nextArgs[1]);
+            } else if (nextArgs[0].equalsIgnoreCase("description")) {
+                this.changeDescription(ID, nextArgs[1]);
+            } else if (nextArgs[0].equalsIgnoreCase("name")) {
+                this.changeName(ID, nextArgs[1]);
+            }
         }
-        else if (nextArgs[0].equalsIgnoreCase("description")){
-            this.changeDescription(ID, nextArgs[1]);
-        }else if (nextArgs[0].equalsIgnoreCase("name")){
-            this.changeName(ID, nextArgs[1]);
-        }else if (nextArgs[0].equalsIgnoreCase("prep")){
-            this.prep(ID);
-        }else if (nextArgs[0].equalsIgnoreCase(("recurse"))){
-            this.recurse(ID);
+        catch (Exception exception){
+            System.out.println("Please check your input");
+            String next = IOController.getAnswer("");
+            getAction(next, ID);
         }
     }
 
@@ -228,7 +234,7 @@ public class EventController {
         String nextStep = IOController.getAnswer("Enter 'Create' to create new recursion" +
                 "'edit' to modify an existing one and 'delete' to remove all repetitions of this event");
         if (nextStep.equalsIgnoreCase("Create")){
-            this.recursionController.createNewRecursion(this.eventManager.get(ID), this.eventManager);
+            this.recursionController.createNewRecursion(this.eventManager.get(ID), this.eventManager, this);
         }
         //TODO: add more options to delete or modify a recursion (now can only add).
     }

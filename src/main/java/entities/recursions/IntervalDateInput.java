@@ -3,6 +3,7 @@ package entities.recursions;
 import entities.ConstantID;
 import entities.Event;
 import interfaces.DateGetter;
+import usecases.events.EventManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,28 +20,42 @@ public class IntervalDateInput implements DateGetter {
         this.periodOfRepetition[1] = endOfCycles;
     }
 
+    private LocalDateTime startTimeGetter(Event event){
+        if(event.getStartTime() == null){
+            return event.getEndTime();
+        }
+        else{
+            return event.getStartTime();
+        }
+    }
+
     private Event getEventAfterStartDate(Event event, Period period){
-        LocalDateTime startTime = event.getStartTime();
-        Period startEndTimeDifference = Period.between(LocalDate.from(event.getStartTime()), LocalDate.from(event.getEndTime()));
+        LocalDateTime startTime = this.startTimeGetter(event);
+        Period startEndTimeDifference = Period.between(LocalDate.from(startTime), LocalDate.from(event.getEndTime()));
+        LocalDateTime hoursDifference = event.getEndTime().minusHours(startTime.getHour());
         while(startTime.isBefore(this.periodOfRepetition[0])){
             startTime = startTime.plus(period);
         }
-        return new Event(ConstantID.get(), event.getName(), startTime, event.getEndTime().plus(startEndTimeDifference));
+        if (startEndTimeDifference == Period.ZERO & hoursDifference.getHour() == 0){
+            return new Event(ConstantID.get(), event.getName(), startTime);
+        }
+        else{
+            LocalDateTime endTime = startTime.plusHours(hoursDifference.getHour());
+            endTime = endTime.plus(startEndTimeDifference);
+            return new Event(ConstantID.get(), event.getName(), startTime, endTime);
+        }
+
     }
 
     private ArrayList<Event> getEventListAfterBeginningOfCycles(ArrayList<Event> events, Period period){
         ArrayList<Event> result = new ArrayList<>();
-        result.add(getEventAfterStartDate(events.get(0), period));
         for(Event event : events){
             Event newEvent = getEventAfterStartDate(event, period);
-            if(newEvent.getStartTime().isBefore(result.get(0).getStartTime())){
-                result.add(0, newEvent);
-            }
-            else{
-                result.add(newEvent);
-            }
+            result.add(newEvent);
         }
-        return result;
+        EventManager e = new EventManager();
+        ArrayList<Event> newResult = (ArrayList<Event>) e.timeOrder(result);
+        return newResult;
     }
 
 
@@ -55,23 +70,30 @@ public class IntervalDateInput implements DateGetter {
         Period period = Period.between(LocalDate.from(eventDate1), LocalDate.from(eventDate2));
         ArrayList<Event> newEvents = getEventListAfterBeginningOfCycles(events, period);
         ArrayList<Event> result = new ArrayList<>();
-        LocalDateTime currentDate = newEvents.get(0).getStartTime();
+        LocalDateTime currentDate = this.startTimeGetter(newEvents.get(0));
+        if (this.periodOfRepetition[0].isAfter(eventDate1)){
+            result.addAll(newEvents);
+        }
         int i = 2;
         int eventIndex = 0;
         while(currentDate.plus(period).isBefore(this.periodOfRepetition[1])){
+            String name = newEvents.get(eventIndex).getName();
             Event thisEvent = newEvents.get(eventIndex);
-            LocalDateTime newStartTime = thisEvent.getStartTime().plus(period);
             LocalDateTime newEndTime = thisEvent.getEndTime().plus(period);
-            Event newThisEvent = new Event(ConstantID.get(), thisEvent.getName() + "-" + i, newStartTime, newEndTime);
+            Event newThisEvent = new Event(ConstantID.get(), name + "-" + i, newEndTime);
+            if(thisEvent.getStartTime() != null){
+                LocalDateTime newStartTime = thisEvent.getStartTime().plus(period);
+                newThisEvent.setStartTime(newStartTime);
+            }
             result.add(newThisEvent);
             newEvents.remove(eventIndex);
-            newEvents.add(eventIndex, newThisEvent);
+            newEvents.add(eventIndex, newThisEvent); // To keep adding only one period instead of multiplying by scalar.
             eventIndex++;
             if(eventIndex == cycleLength){
                 eventIndex = 0;
                 i ++;
             }
-            currentDate = newEvents.get(eventIndex).getStartTime();
+            currentDate = this.startTimeGetter(newEvents.get(eventIndex));
         }
         events.add(firstEvent2);
         return result;

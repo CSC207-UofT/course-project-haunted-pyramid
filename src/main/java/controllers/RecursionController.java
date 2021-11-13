@@ -9,17 +9,16 @@ import usecases.events.EventManager;
 import java.util.ArrayList;
 
 public class RecursionController {
-
-    public void createNewRecursion(Event event, EventManager eventManager){
+    public void createNewRecursion(Event event, EventManager eventManager, EventController eventController){
         boolean done = false;
         while (!done){
             boolean cycleCreation = false;
             ArrayList<Event> cycle = new ArrayList<>();
+            cycle.add(event);
             DateGetter methodToGetDates;
             while (!cycleCreation){
-                cycle.add(event);
                 String chooseOrAdd = IOController.getAnswer("enter 'choose' to add an existing event into this recursion" +
-                        "and 'new' to create a new event to add to this recursion");
+                        " and 'new' to create a new event to add to this recursion");
                 if (chooseOrAdd.equalsIgnoreCase("choose")){
                     String ids = IOController.getAnswer("enter the number before the name of the event you" +
                             "want to add in this format: num_1-num_2-...-num_n");
@@ -30,8 +29,10 @@ public class RecursionController {
                     }
                 }
                 else{
-                    //TODO create event by prompt
-                    Event newEvent = eventManager.addEvent("ATTENTION", "2021-12-12T10:00");
+                    System.out.println("After creating the event, enter 'save'");
+                    eventController.createDefaultEvent();
+                    String id = IOController.getAnswer("enter the id of the event just created");
+                    Event newEvent = eventManager.get(Integer.parseInt(id));
                     cycle.add(newEvent);
                 }
                 String doneOrContinue = IOController.getAnswer("enter 'done' or 'continue' adding events");
@@ -53,9 +54,9 @@ public class RecursionController {
             }
             else{
                 String beginningOfCycles = IOController.getAnswer("Enter the date when this cycle should begin" +
-                        "in the form YYYY-MM-DD");
+                        "in the form YYYY-MM-DDTHH:MM");
                 String endOfCycles = IOController.getAnswer("Enter the date when this cycle should end" +
-                        "in the form YYYY-MM-DD");
+                        "in the form YYYY-MM-DDTHH:MM");
                 methodToGetDates = new IntervalDateInput(eventManager.stringToDate(beginningOfCycles),
                         eventManager.stringToDate(endOfCycles));
             }
