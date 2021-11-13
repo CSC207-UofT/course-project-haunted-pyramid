@@ -20,7 +20,7 @@ public class WorkSessionController {
     public void edit(Event event, EventManager eventManager){
         boolean done = false;
         while (!done){
-            System.out.println(this.workSessionScheduler.sessionsString(event));
+            System.out.println(event.getWorkSessions());
             System.out.println("to mark a work session as complete/incomplete, type 'c/ic: session #'");
             System.out.println("\nsession length: " + event.getSessionLength());
             System.out.println("\nhours needed: " + event.getHoursNeeded());

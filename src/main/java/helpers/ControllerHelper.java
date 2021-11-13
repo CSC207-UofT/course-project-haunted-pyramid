@@ -32,7 +32,11 @@ public class ControllerHelper {
         return input;
     }
 
-
+    /**
+     * return the list of all the integers that starts from 1 and goes up to number (inclusive)
+     * @param number the highest number that will be included in the list
+     * @return the list of integers
+     */
     private List<Integer> listOfOptions(int number){
         List<Integer> intList = new ArrayList<>();
         for (int i = 1; i <= number; i++){
@@ -41,6 +45,11 @@ public class ControllerHelper {
         return intList;
     }
 
+    /**
+     * return the list of integer strings that are considered to be valid options
+     * @param options list of integers that are to be converted into integer strings
+     * @return list of the integer strings that will be used as valid options
+     */
     public List<String> validOption(List<Integer> options){
         List<String> temp = new ArrayList<>();
         for (Integer number : options){

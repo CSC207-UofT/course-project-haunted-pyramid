@@ -188,25 +188,5 @@ public class OurCalendar {
             }
         }
     }
-
-    /**
-     * Remove an event
-     * If there is no such event, do nothing
-     * @param event event that will be removed
-     */
-    public void removeEvent(Event event) {
-        for (int i = 1; i <= this.dateInfo.get(2); i++) {
-            this.calendarMap.get(i).removeIf(item -> item == event);
-        }
-    }
-
-    /**
-     * Remove an event for the specific date
-     * @param event event that will be removed
-     * @param date date that the event will be removed from
-     */
-    public void removeEvent(Event event, int date){
-        this.calendarMap.get(date).removeIf(item -> item == event);
-    }
 }
 
