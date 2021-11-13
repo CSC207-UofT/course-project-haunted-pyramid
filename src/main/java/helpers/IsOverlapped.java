@@ -18,16 +18,16 @@ public class IsOverlapped {
 
     public IsOverlapped(List<Double> ex1, List<Double> ex2){
         this.check = false;
-        if ((ex1.get(0) <= ex2.get(0)) && (ex2.get(0) <= ex1.get(1))){
+        if ((ex1.get(0) <= ex2.get(0)) && (ex2.get(0) < ex1.get(1))){
             this.check = true;
         }
-        else if (ex1.get(0) <= ex2.get(1) && ex2.get(1) <= ex1.get(1)){
+        else if (ex1.get(0) < ex2.get(1) && ex2.get(1) <= ex1.get(1)){
             this.check = true;
         }
-        else if (ex2.get(0) <= ex1.get(0) && ex1.get(0) <= ex2.get(1)){
+        else if (ex2.get(0) <= ex1.get(0) && ex1.get(0) < ex2.get(1)){
             this.check = true;
         }
-        else if (ex2.get(0) <= ex1.get(1) && ex1.get(1) <= ex2.get(1)){
+        else if (ex2.get(0) < ex1.get(1) && ex1.get(1) <= ex2.get(1)){
             this.check = true;
         }
     }

@@ -71,6 +71,7 @@ public class MainController {
 
     /**
      * Display the main screen. Used at and only at launch after initialization via login/signup.
+     * User will be directed to different controllers depending on what they want to achieve
      */
     public void displayScreen() {
         while (this.loginController.isLoggedIn()) {
