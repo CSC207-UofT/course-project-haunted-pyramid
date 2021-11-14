@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 public class DisplayCalendarHelper {
-
+    private final int year;
+    private final int month;
     private final ArrayList<String> DATES = new ArrayList<>() {
         {
             add("SUNDAY");
@@ -23,9 +24,6 @@ public class DisplayCalendarHelper {
             add("SATURDAY");
         }
     };
-
-    private final int year;
-    private final int month;
 
     public DisplayCalendarHelper(int year, int month){
         this.year = year;
@@ -114,7 +112,7 @@ public class DisplayCalendarHelper {
     }
 
     /**
-     * add all the items from addLst to toBeUpdated. Avoid adding duplicates.
+     * Add all the items from addLst to toBeUpdated. Avoid adding duplicates.
      * Sort the items (the elements of the list are all numerical strings) and return the sorted result
      * @param toBeUpdated the list that will act as a base
      * @param addLst the list that will be added to toBeUpdated
@@ -137,6 +135,12 @@ public class DisplayCalendarHelper {
         return sortedList;
     }
 
+    /**
+     * Convert the numbers into time string and add them to sortedList
+     * For example, 0 -> 00:00, 13 -> 13:00 etc...
+     * @param container list of integers that will be converted to time string
+     * @param sortedList sorted time list string that will have time strings added from container
+     */
     private void addTimeString(List<Integer> container, List<String> sortedList) {
         for (Integer number : container) {
             String convertedTime = String.valueOf(number);
@@ -152,7 +156,13 @@ public class DisplayCalendarHelper {
         }
     }
 
-
+    /**
+     * Return the string of day of week of the given year, month and date
+     * @param year provided year
+     * @param month provided month
+     * @param date provided date
+     * @return the string of day of week for the given year, month and date
+     */
     public String findStartDayOfWeekString(int year, int month, int date){
         int startingDayOfWeek = findStartDayOfWeekInteger(year, month, date);
         String chosenDayOfWeek = "Monday";
@@ -182,12 +192,25 @@ public class DisplayCalendarHelper {
         return chosenDayOfWeek;
     }
 
+    /**
+     * Return the day of week in terms of integer where, 1 = MONDAY, 7 = SUNDAY
+     * @param year the given year
+     * @param month the given month
+     * @param date the given date
+     * @return the day of week in terms of integer
+     */
     public int findStartDayOfWeekInteger(int year, int month, int date){
         LocalDate localDate = LocalDate.of(year, month, date);
         DayOfWeek dayOfWeek = DayOfWeek.from(localDate);
         return dayOfWeek.getValue();
     }
 
+    /**
+     * Convert the time string into Integer.
+     * For example, 20:00 = 2000, 03:00 = 300 etc...
+     * @param time time string that will be converted
+     * @return integer that represents the time string
+     */
     public int convertTimeToInt(String time){
         String temp = time.substring(0, 2) + time.substring(3, 5);
         return Integer.parseInt(temp);
