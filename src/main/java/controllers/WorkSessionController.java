@@ -5,7 +5,7 @@ import helpers.ControllerHelper;
 import presenters.DisplayMenu;
 import presenters.MenuStrategies.WorkSessionMenu;
 import usecases.events.EventManager;
-import usecases.WorkSessionScheduler;
+import usecases.events.worksessions.WorkSessionScheduler;
 
 public class WorkSessionController {
     private final WorkSessionScheduler workSessionScheduler;

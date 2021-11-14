@@ -1,10 +1,9 @@
-package usecases;
+package usecases.events.worksessions;
 
 import entities.Event;
 import interfaces.EventListObserver;
 import usecases.events.EventManager;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.time.LocalTime;
@@ -58,97 +57,13 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param eventManager An EventManager
      */
     private void autoSchedule(Event deadline, EventManager eventManager){
-
-        // past work sessions are now the work sessions associated with the deadline event
-        //deadline.resetWorkSessions(deadline.pastWorkSessions());
-
-        // Calculate hours which are required for the deadline event after previous
-        // work sessions are taken into account
-        long totalNeeded = (long) (deadline.getHoursNeeded() - eventManager.totalHours(deadline.pastWorkSessions()));
-
-        if (!this.procrastinate) {
-
-            while (totalNeeded > 0) {
-
-                // returns a Map of events incl. work sessions for the dates inputted
-                Map<LocalDate, List<Event>> tempSchedule = eventManager.getRange(LocalDate.now(),
-                        deadline.getEndTime().toLocalDate());
-
-                tempSchedule.remove(deadline.getEndTime().toLocalDate());
-
-
-                for (LocalDate day : tempSchedule.keySet()) {
-
-                    LocalDateTime bestSlot = day.atTime(9, 0);
-
-                    if (tempSchedule.get(day).size() == 0){
-
-                        deadline.addWorkSession(bestSlot, bestSlot.plusHours(deadline.getSessionLength()));
-                        totalNeeded = totalNeeded - deadline.getSessionLength();
-                    }
-
-                    else{
-
-                        // Get freeSlots for that day
-                        Map<LocalDateTime, Long> freeSlots = eventManager.freeSlots(day.atTime(9, 0),
-                                tempSchedule.get(day),
-                                day.atTime(23, 59));
-
-                        for (LocalDateTime slot: freeSlots.keySet()){
-                            if (freeSlots.get(slot) >= deadline.getSessionLength()){
-                                deadline.addWorkSession(slot, slot.plusHours(deadline.getSessionLength()));
-                                totalNeeded = totalNeeded - deadline.getSessionLength();
-                                break;
-                            }
-                        }
-
-                    }
-                }
-            }
-        } else{
-
-            // Divide the total hours needed by 3 to get time for each work session
-            Long sessionLength = totalNeeded / 3L;
-
-            // Get the three days before the enddate of the deadline event
-            LocalDateTime firstDay = deadline.getEndTime().minusDays(3);
-            LocalDateTime secondDay = deadline.getEndTime().minusDays(2);
-            LocalDateTime thirdDay = deadline.getEndTime().minusDays(1);
-
-            Map<LocalDate, List<Event>> tempSchedule = eventManager.getRange(firstDay.toLocalDate(),
-                    thirdDay.toLocalDate());
-
-            ArrayList<LocalDateTime> daysList = new ArrayList<>(){
-                {
-                    add(firstDay);
-                    add(secondDay);
-                    add(thirdDay);
-
-                }
-            };
-
-            for (LocalDateTime day: daysList){
-                if (tempSchedule.get(day.toLocalDate()).size() == 0){
-                    LocalDate infoDay = day.toLocalDate();
-                    LocalDateTime startTimeForDay = infoDay.atTime(12, 0);
-                    deadline.addWorkSession(startTimeForDay, startTimeForDay.plusHours(sessionLength));
-                }
-                else{
-                    // freeSlots for each day
-                    Map<LocalDateTime, Long> freeSlots = eventManager.freeSlots(day.toLocalDate().atTime(9,0),
-                            tempSchedule.get(day.toLocalDate()), day.toLocalDate().atTime(23, 59));
-
-                    for (LocalDateTime slot: freeSlots.keySet()){
-                        if (freeSlots.get(slot) >= sessionLength){
-                            deadline.addWorkSession(slot, slot.plusHours(sessionLength));
-                            break;
-                    }
-                }
-
-                }
-            }
-        }
-
+        LocalDateTime deadlineTime = eventManager.getEnd(deadline);
+        Integer ID = eventManager.getID(deadline);
+        eventManager.addEvent(deadline);
+        SorterFactory sorterFactory = new SorterFactory();
+        Long hoursToSchedule = (long) (eventManager.getTotalHoursNeeded(ID) -
+                eventManager.totalHours(eventManager.getPastWorkSession(ID)));
+        sorterFactory.getDaySorter(this.procrastinate, this.freeTime);
     }
 
     /**

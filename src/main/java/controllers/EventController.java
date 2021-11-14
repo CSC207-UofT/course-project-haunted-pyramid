@@ -6,7 +6,7 @@ import gateways.IOSerializable;
 import presenters.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
 import usecases.events.EventManager;
-import usecases.WorkSessionScheduler;
+import usecases.events.worksessions.WorkSessionScheduler;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

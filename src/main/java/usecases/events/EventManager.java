@@ -712,4 +712,14 @@ public class EventManager {
             return null;
         }
     }
+
+    public LocalDateTime getEnd(Event event){
+        return event.getEndTime();
+    }
+    public LocalDateTime getStart(Event event){
+        if (event.hasStart()){
+            return event.getStartTime();
+        }
+        return null;
+    }
 }
