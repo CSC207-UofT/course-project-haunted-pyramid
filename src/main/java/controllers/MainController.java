@@ -1,7 +1,6 @@
 package controllers;
 
 // Just to type cast, never uses any variables or methods in entities.User
-
 import entities.Event;
 import entities.User;
 
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 
 public class MainController {
@@ -32,11 +30,7 @@ public class MainController {
     private final Scanner scanner = new Scanner(System.in);
     private final ControllerHelper helper = new ControllerHelper();
 
-    // Variables below are only for the final serialization process
-    private IOSerializable tempIoSerializable;
-    private UserController tempUserController;
-    private EventController tempEventController;
-    private DisplayMenu displayMenu;
+    private final DisplayMenu displayMenu;
 
     public MainController() {
         this.ioSerializable = new IOSerializable(true);
@@ -140,12 +134,14 @@ public class MainController {
      * Save and exit the program. Only save students into students.ser for now.
      */
     public void saveAndExitProgram() {
-        this.tempIoSerializable = new IOSerializable(false);
-        this.tempUserController = new UserController(true, this.tempIoSerializable);
-        this.tempEventController = new EventController(true, this.tempIoSerializable);
-        this.tempIoSerializable.eventsWriteToSerializable(new ArrayList<>(this.eventController.getEventManager().getAllEvents()));
-        this.tempIoSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(), this.tempUserController.getUserManager()));
-        this.tempIoSerializable.saveToDropbox();
+        // Variables below are only for the final serialization process
+        IOSerializable tempIoSerializable = new IOSerializable(false);
+        UserController tempUserController = new UserController(true, tempIoSerializable);
+        tempIoSerializable.eventsWriteToSerializable(new ArrayList<>(this.eventController.getEventManager().
+                getAllEvents()));
+        tempIoSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(),
+                tempUserController.getUserManager()));
+        tempIoSerializable.saveToDropbox();
         this.ioSerializable.deleteOldFiles();
         this.ioSerializable.deleteNewFiles();
         System.exit(0);
