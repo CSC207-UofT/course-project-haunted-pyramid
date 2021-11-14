@@ -11,7 +11,6 @@ import java.util.Scanner;
 
 /**
  * @author Taite Cullen
- * @author Sean Yi
  */
 public class IOController {
     private final Scanner scanner = new Scanner(System.in);
