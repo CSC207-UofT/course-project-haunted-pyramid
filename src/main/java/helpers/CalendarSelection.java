@@ -1,5 +1,8 @@
 package helpers;
 
+/**
+ * @author Seo Won Yi
+ */
 public class CalendarSelection {
     private int year;
     private int month;

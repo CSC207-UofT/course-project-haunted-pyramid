@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author Seo Won Yi
+ */
 public class ControllerHelper {
     private final Scanner scanner = new Scanner(System.in);
 
@@ -21,14 +24,28 @@ public class ControllerHelper {
      */
     public String invalidCheck(DisplayMenu displayMenu, String input, int numberOfOptions,
                                 MenuContent menuContentType) {
-        if (input.equalsIgnoreCase("return")){
+        if (input.equalsIgnoreCase("return")) {
             return "Return";
         }
-        while (!validOption(listOfOptions(numberOfOptions)).contains(input)){
+        while (!validOption(listOfOptions(numberOfOptions)).contains(input)) {
             System.out.println("Please select the valid number from the menu");
             System.out.println(displayMenu.displayMenu(menuContentType));
             input = scanner.nextLine();
-            if (input.equalsIgnoreCase("return")){
+            if (input.equalsIgnoreCase("return")) {
+                return "Return";
+            }
+        }
+        return input;
+    }
+
+    public String invalidCheckNoMenu(String input, int numberOfOptions, String question) {
+        if (input.equalsIgnoreCase("return")) {
+            return "Return";
+        }
+        while (!validOption(listOfOptions(numberOfOptions)).contains(input)) {
+            System.out.println(question);
+            input = scanner.nextLine();
+            if (input.equalsIgnoreCase("return")) {
                 return "Return";
             }
         }

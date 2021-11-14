@@ -18,6 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author Seo Won Yi
+ */
+
 public class CalendarController {
     private final Scanner scanner = new Scanner(System.in);
     private final ControllerHelper helper = new ControllerHelper();

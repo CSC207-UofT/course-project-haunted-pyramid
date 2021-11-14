@@ -8,6 +8,9 @@ import usecases.calendar.MonthlyCalendar;
 
 import java.util.*;
 
+/**
+ * @author Seo Won Yi
+ */
 public class DisplayMonthlyCalendar extends DisplayCalendar {
     private final int year;
     private final int month;

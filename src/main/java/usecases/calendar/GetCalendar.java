@@ -1,11 +1,13 @@
 package usecases.calendar;
 
 import entities.Event;
-import usecases.calendar.CalendarManager;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Seo Won Yi
+ */
 public abstract class GetCalendar {
     /**
      * return the map of the calendar (key: date, value: list of event)

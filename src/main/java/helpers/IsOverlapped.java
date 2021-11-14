@@ -2,6 +2,9 @@ package helpers;
 
 import java.util.List;
 
+/**
+ * @author Seo Won Yi
+ */
 public class IsOverlapped {
     boolean check;
 

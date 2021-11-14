@@ -4,6 +4,9 @@ import helpers.Constants;
 
 import java.util.List;
 
+/**
+ * @author Seo Won Yi
+ */
 public interface MenuContent {
 
     /**

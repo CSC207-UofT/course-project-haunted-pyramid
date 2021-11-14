@@ -4,6 +4,9 @@ import java.util.*;
 import java.time.YearMonth;
 import helpers.IsOverlapped;
 
+/**
+ * @author Seo Won Yi
+ */
 public class OurCalendar {
 
     private final List<Integer> dateInfo; //in the form of [year, month, # of days in the month]

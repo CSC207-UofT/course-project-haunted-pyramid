@@ -2,7 +2,9 @@ package presenters;
 
 import usecases.calendar.CalendarManager;
 
-
+/**
+ * @author Seo Won Yi
+ */
 public abstract class DisplayCalendar {
     public CalendarManager cm;
 

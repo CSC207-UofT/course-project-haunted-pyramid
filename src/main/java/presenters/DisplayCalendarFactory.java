@@ -1,7 +1,9 @@
 package presenters;
 import usecases.calendar.CalendarManager;
 
-
+/**
+ * @author Seo Won Yi
+ */
 public class DisplayCalendarFactory {
     private final CalendarManager calendarManager;
 

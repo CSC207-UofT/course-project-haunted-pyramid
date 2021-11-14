@@ -7,12 +7,16 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * return the year, month, number of days associated with given date. The date information is based on the month
- * that is being added by the amount of index.
- * For example, index 1 will return the next month's (current month + 1) year, month and number of days in the month
- * information
+ * @author Seo Won Yi
  */
 public class DateInfo {
+
+    /**
+     * return the year, month, number of days associated with given date. The date information is based on the month
+     * that is being added by the amount of index.
+     * For example, index 1 will return the next month's (current month + 1) year, month and number of days in the month
+     * information
+     */
     public List<Integer> getDateInfo(int index) {
         Date today = new Date();
         Calendar cal = Calendar.getInstance();

@@ -1,5 +1,6 @@
 package usecases.events;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -607,7 +608,8 @@ public class EventManager {
         return date[2].substring(3, 8);
     }
 
-    public String getStartDateString(Integer ID) {
+
+    public String getStartDateString(Integer ID){
         if (this.containsID(ID) && this.get(ID).hasStart()) {
             return this.get(ID).getStartTime().toLocalDate().toString();
         } else {
@@ -615,10 +617,67 @@ public class EventManager {
         }
     }
 
-    public String getEndDateString(Integer ID) {
+    public String getEndDateString(Integer ID){
         if (this.containsID(ID)) {
             return this.get(ID).getEndTime().toLocalDate().toString();
         } else {
+            return null;
+        }
+    }
+
+    public Long getEventSessionLength(Integer ID) {
+        if (this.containsID(ID)) {
+            return this.get(ID).getSessionLength();
+        }
+        else {
+            return null;
+        }
+    }
+
+    public List<Event> getTotalWorkSession(Integer ID) {
+        if (this.containsID(ID)) {
+            return this.get(ID).getWorkSessions();
+        }
+        return null;
+    }
+
+    public List<Event> getPastWorkSession(Integer ID) {
+        if (this.containsID(ID)) {
+            List<Event> totalWorkSession = this.get(ID).getWorkSessions();
+            List<Event> pastWorkSession = new ArrayList<>();
+            for (Event event : totalWorkSession) {
+                if (event.getEndTime().isBefore(LocalDateTime.now())) {
+                    pastWorkSession.add(event);
+                }
+            }
+            return pastWorkSession;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public List<Event> getFutureWorkSession(Integer ID) {
+        if (this.containsID(ID)) {
+            List<Event> totalWorkSession = this.get(ID).getWorkSessions();
+            List<Event> futureWorkSession = new ArrayList<>();
+            for (Event event : totalWorkSession) {
+                if (event.getEndTime().isAfter(LocalDateTime.now())) {
+                    futureWorkSession.add(event);
+                }
+            }
+            return futureWorkSession;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public Long getTotalHoursNeeded(Integer ID) {
+        if (this.containsID(ID)) {
+            return this.get(ID).getHoursNeeded();
+        }
+        else {
             return null;
         }
     }

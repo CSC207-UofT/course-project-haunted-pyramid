@@ -242,8 +242,9 @@ public class EventController {
      * @param ID the id of the event to be edited
      * @see WorkSessionController#edit
      */
-    public void prep(Integer ID) {
-        this.workSessionController.edit(this.eventManager.get(ID), this.eventManager);
+
+    public void prep(Integer ID){
+        this.workSessionController.edit(ID, this.eventManager);
     }
 
     /**
