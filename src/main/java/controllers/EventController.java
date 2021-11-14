@@ -166,7 +166,7 @@ public class EventController {
      * @param ID the id of the event to be changed
      */
     public void changeStartDate(Integer ID){
-        LocalDate newStart = ioController.getDate1("enter a new start date");
+        LocalDate newStart = ioController.getDate("enter a new start date");
         if (this.eventManager.getStartTime(ID) == null){
             this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
         } else {
@@ -179,7 +179,7 @@ public class EventController {
      * @param ID the id of the event to be changed
      */
     public void changeEndDate(Integer ID){
-        LocalDate newEnd = ioController.getDate1("please enter a new end date");
+        LocalDate newEnd = ioController.getDate("please enter a new end date");
         this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
     }
 
@@ -188,7 +188,7 @@ public class EventController {
      * @param ID the id of the event to be changed
      */
     public void changeEndTime(Integer ID){
-        LocalTime newEnd = ioController.getTime1("please enter a new end time");
+        LocalTime newEnd = ioController.getTime("please enter a new end time");
         this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
     }
 
@@ -197,7 +197,7 @@ public class EventController {
      * @param ID the id of the event to be changed
      */
     public void changeStartTime(Integer ID){
-        LocalTime newStart = ioController.getTime1("please enter a new start time");
+        LocalTime newStart = ioController.getTime("please enter a new start time");
         if (this.eventManager.get(ID).getStartTime() == null){
             this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
         }else{
