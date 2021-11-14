@@ -15,6 +15,7 @@ import java.util.UUID;
 
 /**
  * A controller for accessing (after login) User info and allowing a user to edit their profile
+ *
  * @author Taite Cullen
  * @author Sean Yi
  */
@@ -29,7 +30,8 @@ public class UserController {
      * Instantiates a UserController from serialized data
      * creates UserManager from serialized data (or blank if hasSavedData is false),
      * instantiates IOController and ControllerHelper
-     * @param hasSavedData hasSavedData, boolean
+     *
+     * @param hasSavedData   hasSavedData, boolean
      * @param ioSerializable ioSerializable
      */
     public UserController(boolean hasSavedData, IOSerializable ioSerializable) {
@@ -44,6 +46,7 @@ public class UserController {
 
     /**
      * sets current user UUID - to access logged-in User during runtime
+     *
      * @param currentUser UUID of the logged-in user that can be accessed and edited
      */
     public void setCurrentUser(UUID currentUser) {
@@ -52,41 +55,47 @@ public class UserController {
 
     /**
      * gets the username of the current User
+     *
      * @return the String username
      */
-    public String getCurrentUsername(){
+    public String getCurrentUsername() {
         return this.userManager.getName(this.currentUser);
     }
 
     /**
      * the UserManager created from IOSerializable <code>this.userManager</code>
+     *
      * @return <code>this.userManager</code>
      */
-    public UserManager getUserManager() { return this.userManager; }
+    public UserManager getUserManager() {
+        return this.userManager;
+    }
 
     /**
      * gets the map of the start=end times of the users usual free time
-     * @see User#getFreeTime()
+     *
      * @return <code>currentUser.freeTime</code>
+     * @see User#getFreeTime()
      */
-    public Map<LocalTime, LocalTime> getCurrentFreeTime(){
+    public Map<LocalTime, LocalTime> getCurrentFreeTime() {
         return this.userManager.getFreeTime(this.currentUser);
     }
 
     /**
      * gets the current users setting for procrastinate
+     *
      * @return true if currentUser.getProcrastinate is true, otherwise false
      */
-    public boolean getCurrentProcrastinate(){
+    public boolean getCurrentProcrastinate() {
         return this.userManager.getProcrastinate(this.currentUser);
     }
 
     /**
      * prompts the user to choose from a menu how they would like to edit their profile then runs <code>this.getAction</code>
      */
-    public void editProfile(){
+    public void editProfile() {
         boolean done = false;
-        while (!done){
+        while (!done) {
             DisplayMenu dm = new DisplayMenu();
             ProfileMenuContent profileMenuContent = new ProfileMenuContent(this.currentUser, this.getUserManager());
             System.out.println("Note:");
@@ -94,7 +103,7 @@ public class UserController {
             System.out.println("If Procrastinate is on, Work Sessions will be scheduled more towards the Deadline");
             String firstAction = ioController.getAnswer(dm.displayMenu(profileMenuContent));
             firstAction = helper.invalidCheck(dm, firstAction, profileMenuContent.numberOfOptions(), profileMenuContent);
-            if (firstAction.equalsIgnoreCase("Return")){
+            if (firstAction.equalsIgnoreCase("Return")) {
                 return;
             }
             done = getAction(firstAction);
@@ -103,10 +112,11 @@ public class UserController {
 
     /**
      * passes to next method depending on input String (a number between 1 and 5)"
+     *
      * @param action String, "1" - "5"
      * @return done if the user is done editing
      */
-    private boolean getAction(String action){
+    private boolean getAction(String action) {
         boolean indicator = false;
         switch (action) {
             case "1":
@@ -131,10 +141,10 @@ public class UserController {
     /**
      * prompts the user to enter a new name, and changes the users name
      */
-    private void changeName(){
+    private void changeName() {
         System.out.println("You may type Return to return to the menu");
         String name = ioController.getAnswer("What is your new name?");
-        if (name.equalsIgnoreCase("Return")){
+        if (name.equalsIgnoreCase("Return")) {
             return;
         }
         this.userManager.getUserInfo().get(this.currentUser).setName(name);
@@ -143,14 +153,14 @@ public class UserController {
     /**
      * prompts the user to enter the start time and end time of new usual free time, and adds free time
      */
-    private void addFreeTime(){
+    private void addFreeTime() {
         System.out.println("You may type Return to return to the menu");
         List<Integer> start = ioController.getTime("Enter the start time of your regular free time");
-        if (start.equals(new ArrayList<>())){
+        if (start.equals(new ArrayList<>())) {
             return;
         }
         List<Integer> end = ioController.getTime("Enter the end time of your regular free time");
-        if (end.equals(new ArrayList<>())){
+        if (end.equals(new ArrayList<>())) {
             return;
         }
         this.userManager.addFreeTime(this.currentUser, LocalTime.of(start.get(0), start.get(1)),
@@ -160,10 +170,10 @@ public class UserController {
     /**
      * prompts the user to enter start time for free time they would like to remove - removes free time
      */
-    private void removeFreeTime(){
+    private void removeFreeTime() {
         System.out.println("You may type Return to return to the menu");
         List<Integer> start = ioController.getTime("Enter the start time of your regular free time");
-        if (start.equals(new ArrayList<>())){
+        if (start.equals(new ArrayList<>())) {
             return;
         }
         this.userManager.removeFreeTime(this.currentUser, LocalTime.of(start.get(0), start.get(1)));
@@ -172,7 +182,7 @@ public class UserController {
     /**
      * changes the current user's value for procrastinate (false -> true, true -> false)
      */
-    private void toggleProcrastinate(){
+    private void toggleProcrastinate() {
         this.userManager.toggleProcrastinate(this.currentUser);
     }
 }

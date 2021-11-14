@@ -1,4 +1,5 @@
 package controllers;
+
 import entities.ConstantID;
 import entities.Event;
 import gateways.IOSerializable;
@@ -16,6 +17,7 @@ import java.util.HashMap;
  * Controller for creating then editing, or editing selected individual events - change name, description
  * start time, end time, delete
  * passes to RecursiveController and WorkSessionController to edit recursion or prep of an individual event
+ *
  * @author Taite Cullen
  * @see Event
  * @see EventManager
@@ -33,11 +35,12 @@ public class EventController {
      * constructor for EventController from serialized Events
      * creates <code>this.eventManager</code> of current User's events, sets ID counter to maximum ID in eventManager,
      * with pre-made WorkSessionController
-     * @param hasSavedData boolean
-     * @param ioSerializable serialized
+     *
+     * @param hasSavedData          boolean
+     * @param ioSerializable        serialized
      * @param workSessionController workSessionController
      */
-    public EventController(boolean hasSavedData, IOSerializable ioSerializable, WorkSessionController workSessionController){
+    public EventController(boolean hasSavedData, IOSerializable ioSerializable, WorkSessionController workSessionController) {
         this.workSessionController = workSessionController;
         if (hasSavedData) {
             this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
@@ -54,10 +57,11 @@ public class EventController {
      * constructor for EventController from serialized Events
      * creates <code>this.eventManager</code> of current User's events, sets ID counter to maximum ID in eventManager,
      * creates new workSessionController
-     * @param hasSavedData boolean
+     *
+     * @param hasSavedData   boolean
      * @param ioSerializable serialized
      */
-    public EventController(boolean hasSavedData, IOSerializable ioSerializable){
+    public EventController(boolean hasSavedData, IOSerializable ioSerializable) {
         this.workSessionController = new WorkSessionController(new WorkSessionScheduler(new HashMap<>(),
                 true));
         if (hasSavedData) {
@@ -75,7 +79,7 @@ public class EventController {
      * allows the user to create a default event through terminal - asks for title, start date, start time,
      * otherwise default values - passes to <code>EventController.edit(the new event)</code>
      */
-    public void createDefaultEvent(){
+    public void createDefaultEvent() {
         String title = ioController.getName();
         LocalDateTime dateTime = ioController.getDateTime("Enter the end time of the event",
                 "Enter the end date of the event");
@@ -85,13 +89,14 @@ public class EventController {
 
     /**
      * Allows the user to edit an event from a list of actions
-     * @see EventController#getAction
+     *
      * @param ID the ID of the event to be edited by the user
+     * @see EventController#getAction
      */
-    public void edit(Integer ID){
+    public void edit(Integer ID) {
         boolean save = false;
-        if (this.eventManager.containsID(ID)){
-            while(!save){
+        if (this.eventManager.containsID(ID)) {
+            while (!save) {
                 DisplayMenu dm = new DisplayMenu();
                 EventEditMenuContent content = new EventEditMenuContent(this.eventManager.get(ID));
                 System.out.println(dm.displayMenu(content));
@@ -103,12 +108,13 @@ public class EventController {
 
     /**
      * allows determines by a list of actions which method to complete next
+     *
      * @param command number from 1-10 completes corresponding command from list
-     * @param ID the ID of the event being passed to the next method
+     * @param ID      the ID of the event being passed to the next method
      * @return true if event was saved (or deleted), false otherwise
      */
-    private boolean getAction(String command, Integer ID){
-        switch(command){
+    private boolean getAction(String command, Integer ID) {
+        switch (command) {
             case "1":
                 this.changeStartDate(ID);
                 break;
@@ -134,7 +140,7 @@ public class EventController {
                 this.prep(ID);
                 break;
             case "9":
-                if (this.delete(ID)){
+                if (this.delete(ID)) {
                     return true;
                 }
                 break;
@@ -146,15 +152,16 @@ public class EventController {
 
     /**
      * prompts a user to confirm that they wish to delete an event, then removes event from eventManager
+     *
      * @param ID the Id of the event to be deleted
      * @return true if the event was deleted
      */
-    public boolean delete(Integer ID){
+    public boolean delete(Integer ID) {
         String confirm = ioController.getAnswer("are you sure you want to delete this event? please enter y/n");
-        if (confirm.equalsIgnoreCase("y")){
+        if (confirm.equalsIgnoreCase("y")) {
             this.eventManager.remove(ID);
             return true;
-        } else if (!confirm.equalsIgnoreCase("n")){
+        } else if (!confirm.equalsIgnoreCase("n")) {
             return this.delete(ID);
         }
         return false;
@@ -163,11 +170,12 @@ public class EventController {
     /**
      * prompts a user to enter a new start date and changes the event start date, setting the start time to 00:00
      * if it was previously null
+     *
      * @param ID the id of the event to be changed
      */
-    public void changeStartDate(Integer ID){
+    public void changeStartDate(Integer ID) {
         LocalDate newStart = ioController.getDate1("enter a new start date");
-        if (this.eventManager.getStartTime(ID) == null){
+        if (this.eventManager.getStartTime(ID) == null) {
             this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
         } else {
             this.eventManager.setStart(ID, LocalDateTime.of(newStart, this.eventManager.getStartTime(ID)));
@@ -176,58 +184,65 @@ public class EventController {
 
     /**
      * prompts a user to enter a new end date and changes the event end date
+     *
      * @param ID the id of the event to be changed
      */
-    public void changeEndDate(Integer ID){
+    public void changeEndDate(Integer ID) {
         LocalDate newEnd = ioController.getDate1("please enter a new end date");
         this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
     }
 
     /**
      * promps a user to enter a new end time and changes the event end time
+     *
      * @param ID the id of the event to be changed
      */
-    public void changeEndTime(Integer ID){
+    public void changeEndTime(Integer ID) {
         LocalTime newEnd = ioController.getTime1("please enter a new end time");
         this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
     }
 
     /**
      * change the start time of the event, set the date to the same a the end date if it was previously null
+     *
      * @param ID the id of the event to be changed
      */
-    public void changeStartTime(Integer ID){
+    public void changeStartTime(Integer ID) {
         LocalTime newStart = ioController.getTime1("please enter a new start time");
-        if (this.eventManager.get(ID).getStartTime() == null){
+        if (this.eventManager.get(ID).getStartTime() == null) {
             this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
-        }else{
+        } else {
             this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
         }
     }
 
     /**
      * prompts the user to enter a new description for the event. changes the description
+     *
      * @param ID the id of the event to modify
      */
-    public void changeDescription(Integer ID){
+    public void changeDescription(Integer ID) {
         String description = ioController.getAnswer("please enter a description for this event and press enter");
         this.eventManager.setDescription(this.eventManager.get(ID), description);
     }
 
     /**
      * prompts the user to enter a new event name and changes the name of the event
+     *
      * @param ID the id of the event to be changed
      */
-    public void changeName(Integer ID){
+    public void changeName(Integer ID) {
         String name = ioController.getAnswer("please enter a name for this event and press enter");
         this.eventManager.setName(this.eventManager.get(ID), name);
     }
 
     /**
      * runs <code>workSessionController.edit(ID, this.eventManager)</code>
-     * @see WorkSessionController#edit
+     *
      * @param ID the id of the event to be edited
+     * @see WorkSessionController#edit
      */
+
     public void prep(Integer ID){
         this.workSessionController.edit(ID, this.eventManager);
     }
@@ -235,13 +250,14 @@ public class EventController {
     /**
      * prompts the user to choose an action for modifying the recursion of the event, then runs
      * <code>recursiveController.edit()</code>
-     * @see RecursionController#createNewRecursion(Event, EventManager, EventController)
+     *
      * @param ID the id of the event to be modified
+     * @see RecursionController#createNewRecursion(Event, EventManager, EventController)
      */
-    public void recurse(Integer ID){
+    public void recurse(Integer ID) {
         String nextStep = ioController.getAnswer("Enter 'Create' to create new recursion" +
                 "'edit' to modify an existing one and 'delete' to remove all repetitions of this event");
-        if (nextStep.equalsIgnoreCase("Create")){
+        if (nextStep.equalsIgnoreCase("Create")) {
             this.recursionController.createNewRecursion(this.eventManager.get(ID), this.eventManager, this);
         }
         //TODO: add more options to delete or modify a recursion (now can only add).
@@ -249,7 +265,10 @@ public class EventController {
 
     /**
      * gets this.EventManager
+     *
      * @return this.EventManager
      */
-    public EventManager getEventManager() { return this.eventManager; }
+    public EventManager getEventManager() {
+        return this.eventManager;
+    }
 }

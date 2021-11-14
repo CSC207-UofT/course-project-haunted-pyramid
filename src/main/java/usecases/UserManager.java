@@ -10,6 +10,7 @@ import java.util.UUID;
 
 /**
  * A class for editing User Entity classes and storing/accessing a list of Users in a map, with key= UUID user id
+ *
  * @author Taite Cullen
  * @author Malik Lahlou
  * @see User
@@ -23,86 +24,96 @@ public class UserManager {
      */
     public UserManager(ArrayList<User> users) {
         this.userInfo = new HashMap<>();
-        for(User user : users) {
+        for (User user : users) {
             this.userInfo.put(user.getId(), user);
         }
     }
 
-    public UserManager(){
+    public UserManager() {
         this.userInfo = new HashMap<>();
     }
 
     /**
      * changes value of procrastinate for user
+     *
      * @param user the id of the user to be edited
      */
-    public void toggleProcrastinate(UUID user){
+    public void toggleProcrastinate(UUID user) {
         this.userInfo.get(user).setProcrastinate(!userInfo.get(user).getProcrastinate());
     }
 
     /**
      * gets the value of procrastinate for the user (true/false)
+     *
      * @param user the id of the user to be accessed
      * @return boolean procrastinate (for user)
      */
-    public boolean getProcrastinate(UUID user){return this.userInfo.get(user).getProcrastinate();}
+    public boolean getProcrastinate(UUID user) {
+        return this.userInfo.get(user).getProcrastinate();
+    }
 
     /**
      * sets the name of the user to new name
+     *
      * @param user id of the user to me modified
      * @param name new name
      */
-    public void setName(UUID user, String name){
+    public void setName(UUID user, String name) {
         this.userInfo.get(user).setName(name);
     }
 
     /**
      * gets the name of the user
+     *
      * @param user the id of the user to be accessed
      * @return the name of the user
      */
-    public String getName(UUID user){
+    public String getName(UUID user) {
         return this.userInfo.get(user).getName();
     }
 
     /**
      * gets the Map with key=start time, value=end time of free time periods of the user
+     *
      * @param user the id of the user to be accessed
      * @return the free time of the user Map<LocalTime, LocalTime>
      */
-    public Map<LocalTime, LocalTime> getFreeTime(UUID user){
+    public Map<LocalTime, LocalTime> getFreeTime(UUID user) {
         return this.userInfo.get(user).getFreeTime();
     }
 
     /**
      * adds a free time section to the users free time. if start is before end, end will be the start time
-     * @param user the id of the user to be modified
+     *
+     * @param user  the id of the user to be modified
      * @param start the start time of the free time slot
-     * @param end the end time of the free time slot
+     * @param end   the end time of the free time slot
      */
-    public void addFreeTime(UUID user, LocalTime start, LocalTime end){
-        if (start.isAfter(end)){
+    public void addFreeTime(UUID user, LocalTime start, LocalTime end) {
+        if (start.isAfter(end)) {
             this.userInfo.get(user).setFreeTime(end, start);
-        } else{
+        } else {
             this.userInfo.get(user).setFreeTime(start, end);
         }
     }
 
     /**
      * removes a free time period from the user's free time
-     * @param user the id of the user to be modified
+     *
+     * @param user  the id of the user to be modified
      * @param start the start time of the free time to be removed
      */
-    public void removeFreeTime(UUID user, LocalTime start){
-        if (this.getFreeTime(user).containsKey(start)){
+    public void removeFreeTime(UUID user, LocalTime start) {
+        if (this.getFreeTime(user).containsKey(start)) {
             this.userInfo.get(user).removeFreeTime(start);
         }
     }
 
     /**
      * adds a new user to <code>this.userInfo</code> with key=id
-     * @param id the id of the new user
-     * @param name the name of the new user
+     *
+     * @param id       the id of the new user
+     * @param name     the name of the new user
      * @param username the username of the new user
      * @param password the password of the new user
      */
@@ -113,6 +124,7 @@ public class UserManager {
 
     /**
      * returns the user with input username and password if they exist in this UserManager
+     *
      * @param username the username of the user to be checked
      * @param password the password of the user to be checked
      * @return the User with given username and password, or null

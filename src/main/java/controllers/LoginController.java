@@ -34,7 +34,7 @@ public class LoginController {
         }
     }
 
-    public void logout(){
+    public void logout() {
         this.loggedIn = false;
     }
 
