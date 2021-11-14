@@ -256,9 +256,10 @@ public class WorkSessionScheduler implements EventListObserver {
 
     public static void main(String[] args){
         EventManager em = new EventManager();
-        WorkSessionScheduler ws = new WorkSessionScheduler(new HashMap<>(), false);
+        WorkSessionScheduler ws = new WorkSessionScheduler(new HashMap<>(), true);
         em.addEvent("hello", LocalDateTime.of(2021, 11, 19, 2,0));
-        Event e = new Event(3, "this", LocalDateTime.of(2021,11,17,2,30));
+        Event e = new Event(3, "this", LocalDateTime.of(2021,11,17,13,30),
+                LocalDateTime.of(2021, 11, 17, 14, 30));
         em.addEvent(e);
         em.get(1).setHoursNeeded(10L);
         ws.autoSchedule(em.get(1), em);
