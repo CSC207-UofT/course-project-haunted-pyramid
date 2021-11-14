@@ -81,7 +81,7 @@ public class EventController {
      */
     public void createDefaultEvent() {
         String title = ioController.getName();
-        LocalDateTime dateTime = ioController.getDateTime("Enter the end time of the event",
+        LocalDateTime dateTime = ioController.getDateTime("Enter the End Time of the Event",
                 "Enter the end date of the event");
         Event event = this.eventManager.addEvent(title, dateTime);
         this.edit(this.eventManager.getID(event));
@@ -100,7 +100,7 @@ public class EventController {
                 DisplayMenu dm = new DisplayMenu();
                 EventEditMenuContent content = new EventEditMenuContent(this.eventManager.get(ID));
                 System.out.println(dm.displayMenu(content));
-                String next = ioController.getAnswer("enter the number of the action you would like to perform");
+                String next = ioController.getAnswer("Enter the Number of the Action You would like to Perform");
                 save = this.getAction(next, ID);
             }
         }
@@ -157,7 +157,8 @@ public class EventController {
      * @return true if the event was deleted
      */
     public boolean delete(Integer ID) {
-        String confirm = ioController.getAnswer("are you sure you want to delete this event? please enter y/n");
+        System.out.println("Are you sure you want to delete this event?");
+        String confirm = ioController.getAnswer("Please Enter y/n");
         if (confirm.equalsIgnoreCase("y")) {
             this.eventManager.remove(ID);
             return true;
@@ -174,7 +175,7 @@ public class EventController {
      * @param ID the id of the event to be changed
      */
     public void changeStartDate(Integer ID) {
-        LocalDate newStart = ioController.getDate("enter a new start date");
+        LocalDate newStart = ioController.getDate("Please Enter a New Start Date");
         if (this.eventManager.getStartTime(ID) == null) {
             this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
         } else {
@@ -188,7 +189,7 @@ public class EventController {
      * @param ID the id of the event to be changed
      */
     public void changeEndDate(Integer ID) {
-        LocalDate newEnd = ioController.getDate("please enter a new end date");
+        LocalDate newEnd = ioController.getDate("Please Enter a New End Date");
         this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
     }
 
@@ -198,7 +199,7 @@ public class EventController {
      * @param ID the id of the event to be changed
      */
     public void changeEndTime(Integer ID) {
-        LocalTime newEnd = ioController.getTime("please enter a new end time");
+        LocalTime newEnd = ioController.getTime("Please Enter a New End Time");
         this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
     }
 
@@ -208,7 +209,7 @@ public class EventController {
      * @param ID the id of the event to be changed
      */
     public void changeStartTime(Integer ID) {
-        LocalTime newStart = ioController.getTime("please enter a new start time");
+        LocalTime newStart = ioController.getTime("Please Enter a New Start Time");
         if (this.eventManager.get(ID).getStartTime() == null) {
             this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
         } else {
@@ -222,7 +223,7 @@ public class EventController {
      * @param ID the id of the event to modify
      */
     public void changeDescription(Integer ID) {
-        String description = ioController.getAnswer("please enter a description for this event and press enter");
+        String description = ioController.getAnswer("Please Enter a Description for This Event");
         this.eventManager.setDescription(this.eventManager.get(ID), description);
     }
 
@@ -232,7 +233,7 @@ public class EventController {
      * @param ID the id of the event to be changed
      */
     public void changeName(Integer ID) {
-        String name = ioController.getAnswer("please enter a name for this event and press enter");
+        String name = ioController.getAnswer("please Enter a New Name");
         this.eventManager.setName(this.eventManager.get(ID), name);
     }
 
