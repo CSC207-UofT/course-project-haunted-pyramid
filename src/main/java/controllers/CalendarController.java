@@ -201,6 +201,9 @@ public class CalendarController {
         System.out.println("Please select the type of calendar you would like to view");
         System.out.println(displayMenu.displayMenu(calendarTypeMenu));
         String typeCalendar = scanner.nextLine();
+        if (typeCalendar.equalsIgnoreCase("Return")){
+            return "Return";
+        }
         typeCalendar = helper.invalidCheck(displayMenu, typeCalendar, calendarTypeMenu.numberOfOptions(), calendarTypeMenu);
         return typeCalendar;
     }
