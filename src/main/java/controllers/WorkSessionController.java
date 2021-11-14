@@ -8,10 +8,12 @@ public class WorkSessionController {
 
     //TODO should be created based on user preferences
     private final WorkSessionScheduler workSessionScheduler;
+    private final IOController ioController;
 
 
     public WorkSessionController(WorkSessionScheduler workSessionScheduler){
         this.workSessionScheduler = workSessionScheduler;
+        this.ioController = new IOController();
     }
     public WorkSessionScheduler getWorkSessionScheduler(){
         return this.workSessionScheduler;
@@ -25,7 +27,7 @@ public class WorkSessionController {
             System.out.println("\nsession length: " + event.getSessionLength());
             System.out.println("\nhours needed: " + event.getHoursNeeded());
             System.out.println("to edit a field, type the field name followed by the new value [i.e. session length: 2]");
-            String next = IOController.getAnswer("please enter your next request, or \ndone");
+            String next = ioController.getAnswer("please enter your next request, or \ndone");
             if (next.equalsIgnoreCase("done")) {
                 done = true;
             } else {

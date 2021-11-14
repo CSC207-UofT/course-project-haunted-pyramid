@@ -46,7 +46,7 @@ public class CalendarController {
         if (typeCalendar.equalsIgnoreCase("Return")){
             return;
         }
-        String dateInput = getCalendarDateInput(displayMenu);
+        String dateInput = getCalendarDateInput(displayMenu, "view");
         if (dateInput.equalsIgnoreCase("Return")){
             return;
         }
@@ -64,8 +64,7 @@ public class CalendarController {
     public void dailyCalendarForModification(EventController eventController){
         DisplayMenu displayMenu = new DisplayMenu();
         System.out.println("You may type Return to return to the main menu at any time (except Date selection)");
-        System.out.println("Choose the Year/Month that you would like to modify the Event from");
-        String dateInput = getCalendarDateInput(displayMenu);
+        String dateInput = getCalendarDateInput(displayMenu, "modify");
         CalendarSelection calendarSelection = new CalendarSelection(new DateInfo(), dateInput);
         int year = calendarSelection.getYear();
         int month = calendarSelection.getMonth();
@@ -180,10 +179,16 @@ public class CalendarController {
     /**
      * Asks and confirms the year and month input from the user
      * @param displayMenu display menu object used to show the menu
+     * @param question decide an appropriate question message
      * @return the year and month choice made by the user
      */
-    private String getCalendarDateInput(DisplayMenu displayMenu) {
-        System.out.println("Please select the Year and Month that you would like to view the calendar from");
+    private String getCalendarDateInput(DisplayMenu displayMenu, String question) {
+        if (question.equalsIgnoreCase("View")) {
+            System.out.println("Please select the Year and Month that you would like to view the calendar from");
+        }
+        else if (question.equalsIgnoreCase("Modify")){
+            System.out.println("Choose the Year/Month that you would like to modify the Event from");
+        }
         MenuContent calendarDateInfoMenu = new CalendarYearMonthMenuContent();
         System.out.println(displayMenu.displayMenu(calendarDateInfoMenu));
         String dateInput = scanner.nextLine();
