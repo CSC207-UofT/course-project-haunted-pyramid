@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Seo Won Yi
+ */
+
 public class DailyCalendar extends GetCalendar {
 
     /**

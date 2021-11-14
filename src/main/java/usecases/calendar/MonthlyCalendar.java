@@ -7,6 +7,10 @@ import usecases.calendar.GetCalendar;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Seo Won Yi
+ */
+
 public class MonthlyCalendar extends GetCalendar {
 
     /**
