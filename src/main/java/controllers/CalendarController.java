@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
+ * Controller used for displaying calendar
  * @author Seo Won Yi
  */
 

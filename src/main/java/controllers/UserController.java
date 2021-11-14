@@ -2,6 +2,7 @@ package controllers;
 
 import entities.User;
 import gateways.IOSerializable;
+import helpers.Constants;
 import helpers.ControllerHelper;
 import presenters.DisplayMenu;
 import presenters.MenuStrategies.ProfileMenuContent;
@@ -155,16 +156,16 @@ public class UserController {
      */
     private void addFreeTime() {
         System.out.println("You may type Return to return to the menu");
-        List<Integer> start = ioController.getTime("Enter the start time of your regular free time");
-        if (start.equals(new ArrayList<>())) {
+        LocalTime start = ioController.getTime("Enter the start time of your regular free time");
+        if (start.equals(Constants.RETURN_NOTIFIER)) {
             return;
         }
-        List<Integer> end = ioController.getTime("Enter the end time of your regular free time");
-        if (end.equals(new ArrayList<>())) {
+        LocalTime end = ioController.getTime("Enter the end time of your regular free time");
+        if (end.equals(Constants.RETURN_NOTIFIER)) {
             return;
         }
-        this.userManager.addFreeTime(this.currentUser, LocalTime.of(start.get(0), start.get(1)),
-                LocalTime.of(end.get(0), end.get(1)));
+        this.userManager.addFreeTime(this.currentUser, start,
+                end);
     }
 
     /**
@@ -172,11 +173,11 @@ public class UserController {
      */
     private void removeFreeTime() {
         System.out.println("You may type Return to return to the menu");
-        List<Integer> start = ioController.getTime("Enter the start time of your regular free time");
-        if (start.equals(new ArrayList<>())) {
+        LocalTime start = ioController.getTime("Enter the start time of your regular free time");
+        if (start.equals(Constants.RETURN_NOTIFIER)){
             return;
         }
-        this.userManager.removeFreeTime(this.currentUser, LocalTime.of(start.get(0), start.get(1)));
+        this.userManager.removeFreeTime(this.currentUser, start);
     }
 
     /**

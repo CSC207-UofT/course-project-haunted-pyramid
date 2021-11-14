@@ -17,16 +17,17 @@ public class EventEditMenuContent implements MenuContent{
         EventManager em = new EventManager();
         content.addAll(List.of(em.displayEvent(this.event).split("\n")));
         content.addAll(new ArrayList<>(){{
-            add("1. change start date (or create start date if start date is null)");
-            add("2. change start time (or create start time if start time is null");
-            add("3. change end date");
-            add("4. change end time");
-            add("5. change description");
-            add("6. change name");
-            add("7. recurse");
-            add("8. prep");
-            add("9. delete");
-            add("10. save");
+            add("");
+            add("1. Add/Change Start Date");
+            add("2. Add/Change Start Time");
+            add("3. Change End Date");
+            add("4. Change End Time");
+            add("5. Add/Change Description");
+            add("6. Change Name of the Event");
+            add("7. Recurse the Event (Create Repetition)");
+            add("8. Prepare by Creating Work Sessions");
+            add("9. Remove the Event");
+            add("10. Save the Changes");
         }});
         return content;
     }
