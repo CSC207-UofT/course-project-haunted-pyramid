@@ -1,8 +1,6 @@
 package entities;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.Serializable;
-import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.Duration;
@@ -10,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A time-containing object that allows for
+ * A time-containing object that also references a list of other Events, is identified by an id, and contains
+ * descriptive Strings of information such as name and description
  * @author Taite Cullen
  * @author Malik Lahlou
  * @version %I%, %G%
- *
  */
 public class Event implements Serializable {
     private LocalDateTime startTime = null;
@@ -63,7 +61,18 @@ public class Event implements Serializable {
         this.workSessions = new ArrayList<>();
     }
 
-
+    /**
+     * instantiates an event based on integer input date time
+     * @param ID the id of the event
+     * @param name the name of the event
+     * @param year year
+     * @param month month
+     * @param day day
+     * @param startHour the start hour
+     * @param endHour the end hour
+     * @param startMin the start minute
+     * @param endMin the end minute
+     */
     public Event(int ID, String name, int year, int month, int day, int startHour, int endHour, int startMin, int endMin){
         this.name = name;
         this.ID = ID;
@@ -83,13 +92,15 @@ public class Event implements Serializable {
         this.description = description;
     }
 
+    /**
+     * @return true if this event is not a deadline, i.e. startTime is not null
+     */
     public boolean hasStart(){
         return !(this.startTime == null);
     }
 
     /**
-     * TODO @Malik
-     * @param recursiveId TODO @Malik
+     * @param recursiveId the new integer recursiveID of the event
      */
     public void setRecursiveId(int recursiveId) {this.recursiveId = recursiveId;}
 
@@ -104,8 +115,8 @@ public class Event implements Serializable {
     }
 
     /**
-     * TODO @Malik
-     * @param type TODO @Malik
+     * sets <code>this.type</code>
+     * @param type the new type of the event
      */
     public void setType(String type) {this.type = type;}
 
@@ -119,14 +130,12 @@ public class Event implements Serializable {
     }
 
     /**
-     * TODO @Malik
-     * @return TODO @Malik
+     * @return <code>this.type</code>
      */
     public String getType() {return type;}
 
     /**
-     * TODO @Malik
-     * @return TODO @Malik
+     * @return <code>this.categoryName</code>
      */
     public String getCategoryName() {return categoryName;}
 
@@ -203,7 +212,12 @@ public class Event implements Serializable {
      * @param startTime the start time
      */
     public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+        if (startTime.isAfter(this.getEndTime())){
+            this.startTime = this.getEndTime();
+            this.endTime = startTime;
+        }else {
+            this.startTime = startTime;
+        }
     }
 
     /**
@@ -211,7 +225,12 @@ public class Event implements Serializable {
      * @param endTime the end time
      */
     public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+        if (endTime.isBefore(this.getStartTime())){
+            this.endTime = this.getStartTime();
+            this.startTime = endTime;
+        }else {
+            this.endTime = endTime;
+        }
     }
 
     /**
