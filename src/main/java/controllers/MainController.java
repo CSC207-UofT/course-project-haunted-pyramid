@@ -1,6 +1,7 @@
 package controllers;
 
 // Just to type cast, never uses any variables or methods in entities.User
+
 import entities.Event;
 import entities.User;
 
@@ -85,7 +86,7 @@ public class MainController {
             System.out.println(displayMenu.displayMenu(basicMenu)); //display the basic menu
             String firstChoice = scanner.nextLine();
             firstChoice = helper.invalidCheck(displayMenu, firstChoice, basicMenu.numberOfOptions(), basicMenu);
-            switch (firstChoice){
+            switch (firstChoice) {
                 case "1":
                     this.userController.editProfile();
                     break;

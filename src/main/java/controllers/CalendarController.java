@@ -24,10 +24,11 @@ public class CalendarController {
 
     /**
      * the default current monthly calendar that will show every time the user returns to the main menu
+     *
      * @param eventController eventcontroller that stores the entire event information
      * @return the current monthly calendar image
      */
-    public String showDefaultCalendar(EventController eventController){
+    public String showDefaultCalendar(EventController eventController) {
         DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
         return calendarFactory.displayCurrentCalendarByType("Monthly").displayCalendar();
     }
@@ -35,6 +36,7 @@ public class CalendarController {
     /**
      * asks and confirms the inputs of necessary data such as type of calendar, year, month,
      * date to display the appropriate calendar
+     *
      * @param eventController event information needed to display on the calendar
      */
     public void showCalendar(EventController eventController) {
@@ -43,11 +45,11 @@ public class CalendarController {
         MenuContent calendarTypeMenu = new CalendarTypeMenuContent();
         DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
         String typeCalendar = getTypeInput(displayMenu, calendarTypeMenu);
-        if (typeCalendar.equalsIgnoreCase("Return")){
+        if (typeCalendar.equalsIgnoreCase("Return")) {
             return;
         }
         String dateInput = getCalendarDateInput(displayMenu, "view");
-        if (dateInput.equalsIgnoreCase("Return")){
+        if (dateInput.equalsIgnoreCase("Return")) {
             return;
         }
         DateInfo dateInfo = new DateInfo();
@@ -59,9 +61,10 @@ public class CalendarController {
     /**
      * Confirms year/month/date information from the user and
      * show daily calendar for the selected date to direct the user to modification of an event by ID
+     *
      * @param eventController event information that needs to be displayed in the calendar
      */
-    public void dailyCalendarForModification(EventController eventController){
+    public void dailyCalendarForModification(EventController eventController) {
         DisplayMenu displayMenu = new DisplayMenu();
         System.out.println("You may type Return to return to the main menu at any time (except Date selection)");
         String dateInput = getCalendarDateInput(displayMenu, "modify");
@@ -82,16 +85,17 @@ public class CalendarController {
 
     /**
      * asks and get eventID after confirming the validity of it
+     *
      * @param eventController eventController object used to confirm the eventID's existence
      * @return the valid eventID that will be used for modification
      */
     private String getEventID(EventController eventController) {
         System.out.println("Please type the Event ID to access the Event or type Return to return to the main menu");
         String eventID = scanner.nextLine();
-        if (eventID.equalsIgnoreCase("Return")){
+        if (eventID.equalsIgnoreCase("Return")) {
             return "Return";
         }
-        while (!(isInteger(eventID) && eventController.getEventManager().containsID(Integer.parseInt(eventID)))){
+        while (!(isInteger(eventID) && eventController.getEventManager().containsID(Integer.parseInt(eventID)))) {
             System.out.println("Please type the valid ID");
             eventID = scanner.nextLine();
         }
@@ -100,6 +104,7 @@ public class CalendarController {
 
     /**
      * Helper method that initiates DisplayCalendarFactory with the given event information
+     *
      * @param eventController the event information provided
      * @return displayCalendarFactory with the calendarManager that contains event information from eventController
      */
@@ -113,15 +118,16 @@ public class CalendarController {
 
     /**
      * choose the action at the end of the calendar display. shows appropriate menu and leads to the next phase
+     *
      * @param eventController eventController that can be used as a next phase
-     * @param displayMenu display menu object to show the menu when needed
+     * @param displayMenu     display menu object to show the menu when needed
      */
     private void finalAction(EventController eventController, DisplayMenu displayMenu) {
         System.out.println("Please choose the next action");
         MenuContent calNextActionMenu = new CalNextActionMenuContent();
         System.out.println(displayMenu.displayMenu(calNextActionMenu));
         String finalAction = scanner.nextLine();
-        if (finalAction.equalsIgnoreCase("return")){
+        if (finalAction.equalsIgnoreCase("return")) {
             return;
         }
         helper.invalidCheck(displayMenu, finalAction, calNextActionMenu.numberOfOptions(), calNextActionMenu);
@@ -143,11 +149,12 @@ public class CalendarController {
     /**
      * asks and confirms the  date (if necessary) information and uses other necessary information such as the type
      * of the calendar or year, month from the parameter to create the appropriate calendar object.
+     *
      * @param calendarFactory DisplayCalendarFactory object used to create the image of the calendar
-     * @param typeCalendar type of the calendar chosen
-     * @param dateInput choice made by the user previous to determine the year/month of the calendar to show
-     * @param dateInfo DateInfo object needed to run the helper method CalendarSelection which provides the year, month
-     *                 information
+     * @param typeCalendar    type of the calendar chosen
+     * @param dateInput       choice made by the user previous to determine the year/month of the calendar to show
+     * @param dateInfo        DateInfo object needed to run the helper method CalendarSelection which provides the year, month
+     *                        information
      * @return the DisplayCalendar object which has a method to show the image of the calendar.
      */
     private DisplayCalendar selectCalendar(DisplayCalendarFactory calendarFactory, String typeCalendar,
@@ -178,15 +185,15 @@ public class CalendarController {
 
     /**
      * Asks and confirms the year and month input from the user
+     *
      * @param displayMenu display menu object used to show the menu
-     * @param question decide an appropriate question message
+     * @param question    decide an appropriate question message
      * @return the year and month choice made by the user
      */
     private String getCalendarDateInput(DisplayMenu displayMenu, String question) {
         if (question.equalsIgnoreCase("View")) {
             System.out.println("Please select the Year and Month that you would like to view the calendar from");
-        }
-        else if (question.equalsIgnoreCase("Modify")){
+        } else if (question.equalsIgnoreCase("Modify")) {
             System.out.println("Choose the Year/Month that you would like to modify the Event from");
         }
         MenuContent calendarDateInfoMenu = new CalendarYearMonthMenuContent();
@@ -198,7 +205,8 @@ public class CalendarController {
 
     /**
      * Asks and confirms the user input for the calendar type
-     * @param displayMenu display menu object used to show the menu
+     *
+     * @param displayMenu      display menu object used to show the menu
      * @param calendarTypeMenu the type of the menu that asks calendar type
      * @return the choice that the user made
      */
@@ -206,7 +214,7 @@ public class CalendarController {
         System.out.println("Please select the type of calendar you would like to view");
         System.out.println(displayMenu.displayMenu(calendarTypeMenu));
         String typeCalendar = scanner.nextLine();
-        if (typeCalendar.equalsIgnoreCase("Return")){
+        if (typeCalendar.equalsIgnoreCase("Return")) {
             return "Return";
         }
         typeCalendar = helper.invalidCheck(displayMenu, typeCalendar, calendarTypeMenu.numberOfOptions(), calendarTypeMenu);
@@ -217,24 +225,24 @@ public class CalendarController {
     /**
      * depending on the question parameter outputs different questions. Confirms the date input and its validity
      * output the date if valid
+     *
      * @param numberOfDays number of days in the chosen month for validation purpose
-     * @param question type of question to display
+     * @param question     type of question to display
      * @return the confirmed date
      */
     private int getDateInput(int numberOfDays, String question) {
         int date;
         if (question.equalsIgnoreCase("calendar")) {
             System.out.println("Please type the date to view the calendar from");
-        }
-        else if (question.equalsIgnoreCase("event")){
+        } else if (question.equalsIgnoreCase("event")) {
             System.out.println("Please type the date to modify the Event from");
         }
         String dateStr = scanner.nextLine();
         List<Integer> tempIntList = new ArrayList<>();
-        for (int i = 1; i <= numberOfDays; i++){
+        for (int i = 1; i <= numberOfDays; i++) {
             tempIntList.add(i);
         }
-        while (!helper.validOption(tempIntList).contains(dateStr)){
+        while (!helper.validOption(tempIntList).contains(dateStr)) {
             System.out.println("Please type the valid date of the month");
             dateStr = scanner.nextLine();
         }
@@ -244,6 +252,7 @@ public class CalendarController {
 
     /**
      * confirm if the string is all numerical
+     *
      * @param str the string to check
      * @return true if the string is numerical otherwise false
      */
@@ -251,7 +260,7 @@ public class CalendarController {
         try {
             Integer.parseInt(str);
             return true;
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return false;
         }
     }
