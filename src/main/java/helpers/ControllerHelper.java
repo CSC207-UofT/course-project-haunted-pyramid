@@ -28,6 +28,9 @@ public class ControllerHelper {
             System.out.println("Please select the valid number from the menu");
             System.out.println(displayMenu.displayMenu(menuContentType));
             input = scanner.nextLine();
+            if (input.equalsIgnoreCase("return")){
+                return "Return";
+            }
         }
         return input;
     }
