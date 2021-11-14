@@ -100,6 +100,8 @@ public class IOSerializable {
                     withMode(WriteMode.OVERWRITE).uploadAndFinish(eventsInputStream);
             FileMetadata usersMetadata = client.files().uploadBuilder("/" + USERS_FILEPATH).
                     withMode(WriteMode.OVERWRITE).uploadAndFinish(usersInputStream);
+            eventsInputStream.close();
+            usersInputStream.close();
         } catch (FileNotFoundException eFNF) {
             logger.log(Level.SEVERE, "Cannot find file.", eFNF);
         } catch (IOException eIO) {
@@ -182,7 +184,21 @@ public class IOSerializable {
         }
     }
 
-// Create new events.ser and users.ser in case they are deleted. In that case, write methods must be static.
+    public void deleteNewFiles() {
+        File events1Ser = new File("events1.ser");
+        File users1Ser = new File("users1.ser");
+        Boolean a = events1Ser.delete();
+        Boolean b = users1Ser.delete();
+    }
+
+    public void deleteOldFiles() {
+        File eventsSer = new File("events.ser");
+        File usersSer = new File("users.ser");
+        Boolean a = eventsSer.delete();
+        Boolean b = usersSer.delete();
+    }
+
+// Create new ser files in case they are deleted. In that case, write methods must be static.
 //    public static void main(String[] args) {
 //        Event event1 = new Event(1, "Example Event 1", 2021, 11, 10, 0, 1, 0, 0);
 //        Event event2 = new Event(2, "Example Event 2", 2021, 11, 10, 1, 2, 0, 0);
@@ -190,12 +206,8 @@ public class IOSerializable {
 //        Event event4 = new Event(4, "Example Event 4", 2021, 11, 10, 3, 4, 0, 0);
 //        Event event5 = new Event(5, "Example Event 5", 2021, 11, 10, 4, 5, 0, 0);
 //        ArrayList<Event> events = new ArrayList<>(Arrays.asList(event1, event2, event3, event4, event5));
-//        User user1 = new User(UUID.randomUUID(), "Example User 1", "username1", "password1");
-//        User user2 = new User(UUID.randomUUID(), "Example User 2", "username2", "password2");
-//        User user3 = new User(UUID.randomUUID(), "Example User 3", "username3", "password3");
-//        User user4 = new User(UUID.randomUUID(), "Example User 4", "username4", "password4");
-//        User user5 = new User(UUID.randomUUID(), "Example User 5", "username5", "password5");
-//        ArrayList<User> users = new ArrayList<>(Arrays.asList(user1, user2, user3, user4, user5));
+//        User user1 = new User(UUID.randomUUID(), "Sebin", "sebin1", "password1");
+//        ArrayList<User> users = new ArrayList<>(List.of(user1));
 //        eventsWriteToSerializable(events);
 //        usersWriteToSerializable(users);
 //    }
