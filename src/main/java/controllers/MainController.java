@@ -14,7 +14,9 @@ import usecases.UserManager;
 import usecases.WorkSessionScheduler;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 
@@ -82,7 +84,7 @@ public class MainController {
             BasicMenuContent basicMenu = new BasicMenuContent();
             System.out.println(displayMenu.displayMenu(basicMenu)); //display the basic menu
             String firstChoice = scanner.nextLine();
-            helper.invalidCheck(displayMenu, firstChoice, basicMenu.numberOfOptions(), basicMenu);
+            firstChoice = helper.invalidCheck(displayMenu, firstChoice, basicMenu.numberOfOptions(), basicMenu);
             switch (firstChoice){
                 case "1":
                     this.userController.editProfile();
@@ -114,9 +116,10 @@ public class MainController {
     public ArrayList<User> combineTwoUserFileContents(UserManager um1, UserManager um2) {
         ArrayList<User> arrayListUM1 = new ArrayList<>(um1.getAllUsers());
         ArrayList<User> arrayListUM2 = new ArrayList<>(um2.getAllUsers());
-        arrayListUM1.removeAll(arrayListUM2);
-        arrayListUM1.addAll(arrayListUM2);
-        return arrayListUM1;
+        Set<User> set = new HashSet<>();
+        set.addAll(arrayListUM1);
+        set.addAll(arrayListUM2);
+        return new ArrayList<>(set);
     }
 
     /**
@@ -126,9 +129,10 @@ public class MainController {
     public ArrayList<Event> combineTwoEventFileContents(EventManager em1, EventManager em2) {
         ArrayList<Event> arrayListEM1 = new ArrayList<>(em1.getAllEventsFlatSplit());
         ArrayList<Event> arrayListEM2 = new ArrayList<>(em2.getAllEventsFlatSplit());
-        arrayListEM1.removeAll(arrayListEM2);
-        arrayListEM1.addAll(arrayListEM2);
-        return arrayListEM1;
+        Set<Event> set = new HashSet<>();
+        set.addAll(arrayListEM1);
+        set.addAll(arrayListEM2);
+        return new ArrayList<>(set);
     }
 
     /**
@@ -138,7 +142,7 @@ public class MainController {
         this.tempIoSerializable = new IOSerializable(false);
         this.tempUserController = new UserController(true, this.tempIoSerializable);
         this.tempEventController = new EventController(true, this.tempIoSerializable);
-        this.tempIoSerializable.eventsWriteToSerializable(combineTwoEventFileContents(this.eventController.getEventManager(), this.tempEventController.getEventManager()));
+        this.tempIoSerializable.eventsWriteToSerializable(new ArrayList<>(this.eventController.getEventManager().getAllEvents()));
         this.tempIoSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(), this.tempUserController.getUserManager()));
         this.tempIoSerializable.saveToDropbox();
         this.ioSerializable.deleteOldFiles();

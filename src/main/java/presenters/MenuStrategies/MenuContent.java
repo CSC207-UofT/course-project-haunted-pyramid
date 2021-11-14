@@ -6,8 +6,16 @@ import java.util.List;
 
 public interface MenuContent {
 
+    /**
+     * The list of contents that will be added on the menu
+     * @return the list of content strings
+     */
     List<String> getContent();
 
+    /**
+     * Return the menu image with the selections of contents
+     * @param result StringBuilder object that the image will append on
+     */
     default void addMenuContent(StringBuilder result){
         List<String> menuList = getContent();
         int longestContent = getLongestContent(menuList);
@@ -21,6 +29,12 @@ public interface MenuContent {
         result.append("\n").append(" ").append(divider);
     }
 
+    /**
+     * Get the longest length from the menuList
+     * If there are enough space provided, return 0. Otherwise, subtract the space from the result
+     * @param menuList list of Strings
+     * @return the longest length from the menulist (subtracting the default space provided)
+     */
     private int getLongestContent(List<String> menuList) {
         int longestContent = 0;
         for (String item : menuList){
@@ -35,6 +49,10 @@ public interface MenuContent {
         return longestContent;
     }
 
+    /**
+     * Get the number of items in the menu
+     * @return the number of items in the menu
+     */
     default int numberOfOptions(){
         return getContent().size();
     }
