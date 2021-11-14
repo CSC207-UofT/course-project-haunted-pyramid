@@ -1,12 +1,12 @@
 package controllers;
 
+import helpers.Constants;
+
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
 
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -25,43 +25,23 @@ public class IOController {
     }
 
     /**
-     * @return time in [HH, MM]
-     */
-    public List<Integer> getTime(String request) {
-        System.out.println(request + " (HH:MM)");
-        String time = scanner.nextLine();
-        if (time.equalsIgnoreCase("Return")) {
-            return new ArrayList<>();
-        }
-        while (!validTimeInput().contains(time)) {
-            System.out.println("Please enter the time in the right format (HH:MM)");
-            time = scanner.nextLine();
-            if (time.equalsIgnoreCase("Return")) {
-                return new ArrayList<>();
-            }
-        }
-        String[] timeParts = time.split(":");
-        return List.of(Integer.parseInt(timeParts[0]), Integer.parseInt(timeParts[1]));
-    }
-
-    /**
      * prompts the user to enter a date in the format YYYY-MM-DD and returns a date with these parameters
      *
      * @param request the request for date the user will see
      * @return a LocalDate with user input parameters
      */
-    public LocalDate getDate1(String request) {
+    public LocalDate getDate(String request) {
         System.out.println(request);
-        System.out.println("enter date in the form YYYY-MM-DD");
+        System.out.println("Enter date in the form YYYY-MM-DD");
         String date = scanner.nextLine();
         try {
             return this.stringToDate(date);
         } catch (NumberFormatException numberFormatException) {
-            System.out.println("please check format and try again");
-            return this.getDate1(request);
+            System.out.println("Please check format and try again");
+            return this.getDate(request);
         } catch (DateTimeException dateTimeException) {
             System.out.println(dateTimeException.getMessage());
-            return this.getDate1(request);
+            return this.getDate(request);
         }
     }
 
@@ -71,18 +51,21 @@ public class IOController {
      * @param request the request for time the user will see
      * @return LocalTime of user input time
      */
-    public LocalTime getTime1(String request) {
+    public LocalTime getTime(String request) {
         System.out.println(request);
-        System.out.println("enter time in the form HH:MM");
+        System.out.println("Enter time in the form HH:MM");
         String time = scanner.nextLine();
+        if (time.equalsIgnoreCase("Return")){
+            return Constants.RETURN_NOTIFIER;
+        }
         try {
             return this.stringToTime(time);
         } catch (NumberFormatException numberFormatException) {
-            System.out.println("please check format and try again");
-            return this.getTime1(request);
+            System.out.println("Please check format and try again");
+            return this.getTime(request);
         } catch (DateTimeException dateTimeException) {
             System.out.println(dateTimeException.getMessage());
-            return this.getTime1(request);
+            return this.getTime(request);
         }
     }
 
@@ -94,8 +77,8 @@ public class IOController {
      * @return LocalDateTime with user input date and time
      */
     public LocalDateTime getDateTime(String requestTime, String requestDate) {
-        LocalDate date = this.getDate1(requestDate);
-        LocalTime time = this.getTime1(requestTime);
+        LocalDate date = this.getDate(requestDate);
+        LocalTime time = this.getTime(requestTime);
         return LocalDateTime.of(date, time);
     }
 
@@ -108,35 +91,6 @@ public class IOController {
     public String getAnswer(String request) {
         System.out.println(request);
         return scanner.nextLine();
-    }
-
-    /**
-     * TODO @Sean Yi
-     *
-     * @return a list with the valid Time??
-     */
-    private List<String> validTimeInput() {
-        List<String> hours = new ArrayList<>();
-        List<String> minutes = new ArrayList<>();
-        for (int i = 0; i <= 9; i++) {
-            hours.add(String.valueOf(i));
-            hours.add("0" + i);
-            minutes.add(String.valueOf(i));
-            minutes.add("0" + i);
-        }
-        for (int j = 10; j <= 24; j++) {
-            hours.add(String.valueOf(j));
-        }
-        for (int k = 10; k <= 59; k++) {
-            minutes.add(String.valueOf(k));
-        }
-        List<String> result = new ArrayList<>();
-        for (String hour : hours) {
-            for (String minute : minutes) {
-                result.add(hour + ":" + minute);
-            }
-        }
-        return result;
     }
 
     /**
