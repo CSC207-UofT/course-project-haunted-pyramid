@@ -26,6 +26,7 @@ public class IOController {
 
     /**
      * prompts the user to enter a date in the format YYYY-MM-DD and returns a date with these parameters
+     *
      * @param request the request for date the user will see
      * @return a LocalDate with user input parameters
      */
@@ -46,6 +47,7 @@ public class IOController {
 
     /**
      * prompts the user to enter a time of the format HH:MM, and returns a LocalTime with these parameters
+     *
      * @param request the request for time the user will see
      * @return LocalTime of user input time
      */
@@ -69,6 +71,7 @@ public class IOController {
 
     /**
      * prompts the user to enter a date, then enter a time, and returns a LocalDateTime with these parameters
+     *
      * @param requestTime the request for time the user will see
      * @param requestDate the request for date the user will see
      * @return LocalDateTime with user input date and time
@@ -81,6 +84,7 @@ public class IOController {
 
     /**
      * prompts the user to give an answer and returns that answer
+     *
      * @param request the request for input the user will see
      * @return String user's answer
      */
