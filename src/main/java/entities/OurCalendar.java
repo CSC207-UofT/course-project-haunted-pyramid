@@ -5,6 +5,7 @@ import java.time.YearMonth;
 import helpers.IsOverlapped;
 
 /**
+ * Basic class that deals with calendar behaviour
  * @author Seo Won Yi
  */
 public class OurCalendar {
@@ -13,7 +14,6 @@ public class OurCalendar {
     private boolean conflict;  // if the calendar has any conflicted information
     private List<Event> conflictEvent; // All the objects that are conflicting
     private final Map<Integer, List<Event>> calendarMap; // map of calendar
-
 
     /**
      * Initialize the OurCalendar class for the given month.
@@ -131,14 +131,7 @@ public class OurCalendar {
             for (Event item :this.calendarMap.get(date)) {
                 // store start time and end time of the event as a list
                 List<Double> individualTimeInfo = new ArrayList<>();
-                if (item.getStartTime() != null) {
-                    individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
-                    individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)) + item.getLength() * 100);
-                }
-                else {
-                    individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
-                    individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
-                }
+                updateTimeInfo(item, individualTimeInfo);
                 timeInfo.add(individualTimeInfo);
             }
             // run the helper method to compare the times and update the conflictEvent
@@ -156,6 +149,28 @@ public class OurCalendar {
         }
     }
 
+    /**
+     * Helper method of updateConflict method
+     * Add start time and end time of item on individualTimeInfo
+     * @param item Event object to be accessed from
+     * @param individualTimeInfo The list that will contain start time and end time of item
+     */
+    private void updateTimeInfo(Event item, List<Double> individualTimeInfo) {
+        if (item.getStartTime() != null) {
+            individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
+            individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)) + item.getLength() * 100);
+        }
+        else {
+            individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
+            individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
+        }
+    }
+
+    /**
+     * Convert item's start time to appropriate string format
+     * @param item event object that will be accessed
+     * @return String format of start time of item
+     */
     private String getStartTimeString(Event item) {
         if (item.getStartTime() != null) {
             return item.getStartTime().toLocalTime().toString().substring(0, 2) +

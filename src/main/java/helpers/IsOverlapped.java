@@ -3,6 +3,7 @@ package helpers;
 import java.util.List;
 
 /**
+ * Check if there exists any overlap between two list of doubles
  * @author Seo Won Yi
  */
 public class IsOverlapped {

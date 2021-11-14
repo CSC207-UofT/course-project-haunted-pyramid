@@ -21,6 +21,11 @@ import java.util.Scanner;
 /**
  * Controller used for displaying calendar
  * @author Seo Won Yi
+ * @see DisplayCalendarFactory
+ * @see DisplayCalendar
+ * @see CalendarManager
+ * @see usecases.calendar.GetCalendar
+ * @see entities.OurCalendar
  */
 
 public class CalendarController {
