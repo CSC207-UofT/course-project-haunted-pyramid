@@ -1,10 +1,12 @@
 package controllers;
 
 import gateways.IOSerializable;
+import helpers.ControllerHelper;
 import presenters.DisplayMenu;
 import presenters.MenuStrategies.ProfileMenuContent;
 import usecases.UserManager;
 
+import java.sql.Array;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,8 @@ public class UserController {
 
     private final UserManager userManager;
     private UUID currentUser;
+    private final ControllerHelper helper;
+    private final IOController ioController;
 
     public UserController(boolean hasSavedData, IOSerializable ioSerializable) {
         if (hasSavedData) {
@@ -22,6 +26,8 @@ public class UserController {
         } else {
             this.userManager = new UserManager(new ArrayList<>());
         }
+        this.helper = new ControllerHelper();
+        this.ioController = new IOController();
     }
 
     public void setCurrentUser(UUID currentUser) {
@@ -31,6 +37,8 @@ public class UserController {
     public String getCurrentUsername(){
         return this.userManager.getName(this.currentUser);
     }
+
+    public UserManager getUserManager() { return this.userManager; }
 
     public Map<LocalTime, LocalTime> getCurrentFreeTime(){
         return this.userManager.getFreeTime(this.currentUser);
@@ -45,45 +53,73 @@ public class UserController {
         while (!done){
             DisplayMenu dm = new DisplayMenu();
             ProfileMenuContent profileMenuContent = new ProfileMenuContent(this.currentUser, this.getUserManager());
-            System.out.println(dm.displayMenu(profileMenuContent));
-            String next = IOController.getAnswer("");
-            if (next.equalsIgnoreCase("done")){
-                done = true;
+            System.out.println("Note:");
+            System.out.println("Work Sessions will only set up during Free Time");
+            System.out.println("If Procrastinate is on, Work Sessions will be scheduled more towards the deadline");
+            String firstAction = ioController.getAnswer(dm.displayMenu(profileMenuContent));
+            firstAction = helper.invalidCheck(dm, firstAction, profileMenuContent.numberOfOptions(), profileMenuContent);
+            if (firstAction.equalsIgnoreCase("Return")){
+                return;
             }
-            this.getAction(next);
+            done = getAction(firstAction);
         }
     }
 
-    private void getAction(String action){
-        if (action.equalsIgnoreCase("change name")){
-            this.changeName();
-        } else if(action.equalsIgnoreCase("add free time")){
-            this.addFreeTime();
-        }else if(action.equalsIgnoreCase("remove free time")){
-            this.removeFreeTime();
-        }else if(action.equalsIgnoreCase("toggle procrastinate")){
-           this.toggleProcrastinate();
+    private boolean getAction(String action){
+        boolean indicator = false;
+        switch (action) {
+            case "1":
+                this.changeName();
+                break;
+            case "2":
+                this.addFreeTime();
+                break;
+            case "3":
+                this.removeFreeTime();
+                break;
+            case "4":
+                this.toggleProcrastinate();
+                break;
+            case "5":
+                indicator = true;
+                break;
         }
+        return indicator;
     }
 
-    public void changeName(){
-        this.userManager.getUserInfo().get(this.currentUser).setName(IOController.getAnswer("what is your new name?"));
+    private void changeName(){
+        System.out.println("You may type Return to return to the menu");
+        String name = ioController.getAnswer("What is your new name?");
+        if (name.equalsIgnoreCase("Return")){
+            return;
+        }
+        this.userManager.getUserInfo().get(this.currentUser).setName(name);
     }
-    public void addFreeTime(){
-        List<Integer> start = IOController.getTime("enter the start time of your regular free time");
-        List<Integer> end = IOController.getTime("enter the end time of your regular free time");
+
+    private void addFreeTime(){
+        System.out.println("You may type Return to return to the menu");
+        List<Integer> start = ioController.getTime("Enter the start time of your regular free time");
+        if (start.equals(new ArrayList<>())){
+            return;
+        }
+        List<Integer> end = ioController.getTime("Enter the end time of your regular free time");
+        if (end.equals(new ArrayList<>())){
+            return;
+        }
         this.userManager.addFreeTime(this.currentUser, LocalTime.of(start.get(0), start.get(1)),
                 LocalTime.of(end.get(0), end.get(1)));
     }
-    public void removeFreeTime(){
-        List<Integer> start = IOController.getTime("enter the start time of your regular free time");
+
+    private void removeFreeTime(){
+        System.out.println("You may type Return to return to the menu");
+        List<Integer> start = ioController.getTime("Enter the start time of your regular free time");
+        if (start.equals(new ArrayList<>())){
+            return;
+        }
         this.userManager.removeFreeTime(this.currentUser, LocalTime.of(start.get(0), start.get(1)));
     }
 
-    public void toggleProcrastinate(){
+    private void toggleProcrastinate(){
         this.userManager.toggleProcrastinate(this.currentUser);
     }
-
-    public UserManager getUserManager() { return this.userManager; }
-
 }

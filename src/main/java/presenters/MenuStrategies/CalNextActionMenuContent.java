@@ -12,7 +12,7 @@ public class CalNextActionMenuContent implements MenuContent {
             add("1. View different Type/Date of Calendar");
             add("2. Modify Event through Calendar");
             add("3. Add a new Event");
-            add("4. Return to Main Menu");
+            add("4. Return to the Main Menu");
         }};
     }
 }

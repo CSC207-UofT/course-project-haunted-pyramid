@@ -25,6 +25,7 @@ public class EventController {
     private final EventManager eventManager;
     private final WorkSessionController workSessionController;
     private final RecursionController recursionController;
+    private final IOController ioController;
 
     /**
      * constructor for EventController from serialized Events
@@ -44,6 +45,7 @@ public class EventController {
             this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         }
         this.recursionController = new RecursionController();
+        this.ioController = new IOController();
     }
 
 
@@ -53,7 +55,7 @@ public class EventController {
      * @param ioSerializable
      */
     public EventController(boolean hasSavedData, IOSerializable ioSerializable){
-        this.workSessionController = new WorkSessionController(new WorkSessionScheduler(new HashMap<LocalTime, LocalTime>(),
+        this.workSessionController = new WorkSessionController(new WorkSessionScheduler(new HashMap<>(),
                 true));
         if (hasSavedData) {
             this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
@@ -63,15 +65,16 @@ public class EventController {
             this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         }
         this.recursionController = new RecursionController();
+        this.ioController = new IOController();
     }
 
     /**
      *
      */
     public void createDefaultEvent(){
-        String title = IOController.getName();
-        String date = IOController.getAnswer("Enter the date of the event in the form YYYY-MM-DD");
-        String time = IOController.getAnswer("Enter the time of the event in the form HH:MM");
+        String title = ioController.getName();
+        String date = ioController.getAnswer("Enter the date of the event in the form YYYY-MM-DD");
+        String time = ioController.getAnswer("Enter the time of the event in the form HH:MM");
         try {
             Event event = this.eventManager.addEvent(title, date + "T" + time);
             this.edit(this.eventManager.getID(event));
@@ -91,11 +94,11 @@ public class EventController {
                 DisplayMenu dm = new DisplayMenu();
                 EventEditMenuContent content = new EventEditMenuContent(this.eventManager.get(ID));
                 System.out.println(dm.displayMenu(content));
-                String next = IOController.getAnswer("");
+                String next = ioController.getAnswer("");
                 if (next.equalsIgnoreCase("save")){
                     save = true;
                 }else if (next.equalsIgnoreCase("delete")) {
-                    if (IOController.getAnswer("are you sure? (y/n)").equalsIgnoreCase("y")){
+                    if (ioController.getAnswer("are you sure? (y/n)").equalsIgnoreCase("y")){
                         this.delete(ID);
                         save = true;
                     }
@@ -134,7 +137,7 @@ public class EventController {
         }
         catch (Exception exception){
             System.out.println("Please check your input");
-            String next = IOController.getAnswer("");
+            String next = ioController.getAnswer("");
             getAction(next, ID);
         }
     }
@@ -233,7 +236,7 @@ public class EventController {
      * @param ID
      */
     public void recurse(Integer ID){
-        String nextStep = IOController.getAnswer("Enter 'Create' to create new recursion" +
+        String nextStep = ioController.getAnswer("Enter 'Create' to create new recursion" +
                 "'edit' to modify an existing one and 'delete' to remove all repetitions of this event");
         if (nextStep.equalsIgnoreCase("Create")){
             this.recursionController.createNewRecursion(this.eventManager.get(ID), this.eventManager, this);
