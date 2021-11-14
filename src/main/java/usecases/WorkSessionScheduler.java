@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
@@ -70,11 +69,6 @@ public class WorkSessionScheduler implements EventListObserver {
         if (!this.procrastinate) {
 
             while (totalNeeded > 0) {
-                LocalDate d0 = LocalDate.now();
-                LocalDate de = deadline.getEndTime().toLocalDate();
-                long days = ChronoUnit.DAYS.between(d0, de);
-//                long pop = deadline.getSessionLength();
-                long sessionL = deadline.getHoursNeeded() / days;
 
                 // returns a Map of events incl. work sessions for the dates inputted
                 Map<LocalDate, List<Event>> tempSchedule = eventManager.getRange(LocalDate.now(),
@@ -82,8 +76,6 @@ public class WorkSessionScheduler implements EventListObserver {
 
                 tempSchedule.remove(deadline.getEndTime().toLocalDate());
 
-                LocalDate mostFreeTime = LocalDate.now();
-//                LocalDateTime bestSlot = LocalDateTime.now();
 
                 for (LocalDate day : tempSchedule.keySet()) {
 
@@ -94,8 +86,7 @@ public class WorkSessionScheduler implements EventListObserver {
                         deadline.addWorkSession(bestSlot, bestSlot.plusHours(deadline.getSessionLength()));
                         totalNeeded = totalNeeded - deadline.getSessionLength();
                     }
-//                    else if (eventManager.totalHours(tempSchedule.get(day)) <=
-//                            eventManager.totalHours(tempSchedule.get(mostFreeTime))) {
+
                     else{
 
                         // Get freeSlots for that day
@@ -111,26 +102,8 @@ public class WorkSessionScheduler implements EventListObserver {
                             }
                         }
 
-//                        if (this.maximum(freeSlots.values().toArray(new Long[0])) < deadline.getSessionLength()) {
-//                            mostFreeTime = day;
-//                            for (LocalDateTime slot : freeSlots.keySet()) {
-//                                if (deadline.getSessionLength() < freeSlots.get(slot) && freeSlots.get(slot) <
-//                                        freeSlots.get(bestSlot)) {
-//                                    bestSlot = slot;
-//                                }
-//                            }
-//                        }
                     }
                 }
-//                if (totalNeeded > deadline.getSessionLength()) {
-//                    deadline.getWorkSessions().add(new Event(deadline.getID(), deadline.getName() + "session", bestSlot,
-//                            bestSlot.plusHours(deadline.getSessionLength())));
-//                    totalNeeded -= deadline.getSessionLength();
-//                } else {
-//                    deadline.getWorkSessions().add(new Event(deadline.getID(), deadline.getName() + "session", bestSlot,
-//                            bestSlot.plusHours(totalNeeded)));
-//                    totalNeeded = 0L;
-//                }
             }
         } else{
 
