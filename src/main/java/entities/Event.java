@@ -203,7 +203,12 @@ public class Event implements Serializable {
      * @param startTime the start time
      */
     public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+        if (startTime.isAfter(this.getEndTime())){
+            this.startTime = this.getEndTime();
+            this.endTime = startTime;
+        }else {
+            this.startTime = startTime;
+        }
     }
 
     /**
@@ -211,7 +216,12 @@ public class Event implements Serializable {
      * @param endTime the end time
      */
     public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+        if (endTime.isBefore(this.getStartTime())){
+            this.endTime = this.getStartTime();
+            this.startTime = endTime;
+        }else {
+            this.endTime = endTime;
+        }
     }
 
     /**

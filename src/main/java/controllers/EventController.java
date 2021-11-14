@@ -122,9 +122,9 @@ public class EventController {
                 this.prep(ID);
             } else if (nextArgs[0].equalsIgnoreCase(("recurse"))) {
                 this.recurse(ID);
-            } else if (nextArgs[1].equalsIgnoreCase("start time")) {
+            } else if (nextArgs[0].equalsIgnoreCase("start time")) {
                 this.changeStartTime(ID, nextArgs[1]);
-            } else if (nextArgs[1].equalsIgnoreCase("end time")) {
+            } else if (nextArgs[0].equalsIgnoreCase("end time")) {
                 this.changeEndTime(ID, nextArgs[1]);
             } else if (nextArgs[0].equalsIgnoreCase("description")) {
                 this.changeDescription(ID, nextArgs[1]);
@@ -190,12 +190,12 @@ public class EventController {
 
     public void changeStartTime(Integer ID, String newStart){
         try {
-            if (this.eventManager.getStartDateString(ID) == null){
+            if (this.eventManager.getStartDateString(ID).isEmpty()){
                 this.eventManager.setStart(this.eventManager.get(ID), this.eventManager.getEndDateString(ID) + "T" +
                         newStart);
             }else{
-                this.eventManager.setEnd(this.eventManager.get(ID), this.eventManager.getStartDateString(ID) + "T" +
-                        newStart);
+                this.eventManager.setStart(this.eventManager.get(ID), this.eventManager.getStartDateString(ID)
+                        + "T" + newStart);
             }
         } catch(IllegalArgumentException illegalArgumentException){
             System.out.println("please enter a valid time of the form \n HH:MM");
