@@ -15,13 +15,14 @@ import usecases.WorkSessionScheduler;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainController {
 
     private final UserController userController;
     private final CalendarController calendarController;
-    private final EventController eventController;
+    private EventController eventController;
     private final LoginController loginController;
 
     private final IOSerializable ioSerializable;
@@ -40,11 +41,9 @@ public class MainController {
         this.loginController = new LoginController(this.userController);
         this.calendarController = new CalendarController();
         this.displayMenu = new DisplayMenu();
+        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable);
         this.displayInitScreen();
         System.out.println("WELCOME " + this.userController.getCurrentUsername() + "!");
-        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
-                new WorkSessionController(new WorkSessionScheduler(this.userController.getCurrentFreeTime(),
-                        this.userController.getCurrentProcrastinate())));
         this.displayScreen();
     }
 
@@ -74,6 +73,9 @@ public class MainController {
      * User will be directed to different controllers depending on what they want to achieve
      */
     public void displayScreen() {
+        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
+                new WorkSessionController(new WorkSessionScheduler(this.userController.getCurrentFreeTime(),
+                        this.userController.getCurrentProcrastinate())));
         while (this.loginController.isLoggedIn()) {
             System.out.println(this.calendarController.showDefaultCalendar(this.eventController));
             System.out.println("Please choose your action");
@@ -136,9 +138,11 @@ public class MainController {
         this.tempIoSerializable = new IOSerializable(false);
         this.tempUserController = new UserController(true, this.tempIoSerializable);
         this.tempEventController = new EventController(true, this.tempIoSerializable);
-        this.ioSerializable.eventsWriteToSerializable(combineTwoEventFileContents(this.eventController.getEventManager(), this.tempEventController.getEventManager()));
-        this.ioSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(), this.tempUserController.getUserManager()));
-        this.ioSerializable.saveToDropbox();
+        this.tempIoSerializable.eventsWriteToSerializable(combineTwoEventFileContents(this.eventController.getEventManager(), this.tempEventController.getEventManager()));
+        this.tempIoSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(), this.tempUserController.getUserManager()));
+        this.tempIoSerializable.saveToDropbox();
+        this.ioSerializable.deleteOldFiles();
+        this.ioSerializable.deleteNewFiles();
         System.exit(0);
     }
 }
