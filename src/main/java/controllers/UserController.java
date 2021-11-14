@@ -6,7 +6,6 @@ import presenters.DisplayMenu;
 import presenters.MenuStrategies.ProfileMenuContent;
 import usecases.UserManager;
 
-import java.sql.Array;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;

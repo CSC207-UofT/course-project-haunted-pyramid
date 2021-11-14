@@ -285,6 +285,14 @@ public class EventManager{
         truc.add(event);
         this.update("change", truc);
     }
+
+    public void setStart(Integer id, LocalDateTime start){
+        this.get(id).setStartTime(start);
+    }
+
+    public void setEnd(Integer id, LocalDateTime end){
+        this.get(id).setEndTime(end);
+    }
     /**
      * private helper method to convert a String to a LocalDateTime by splitting an input String of the format:
      * <code>
@@ -580,4 +588,27 @@ public class EventManager{
         System.out.println(em.getRange(LocalDate.of(2021,12,4), LocalDate.of(2021, 12, 10)));
     }
 
+    public LocalDate getEndDate(Integer id) {
+        return this.get(id).getEndTime().toLocalDate();
+    }
+
+    public LocalDate getStartDate(Integer id){
+        if (this.get(id).hasStart()){
+            return this.get(id).getStartTime().toLocalDate();
+        } else{
+            return null;
+        }
+    }
+
+    public LocalTime getEndTime(Integer id){
+        return this.get(id).getEndTime().toLocalTime();
+    }
+
+    public LocalTime getStartTime(Integer id){
+        if(this.get(id).hasStart()){
+            return this.get(id).getStartTime().toLocalTime();
+        }else{
+            return null;
+        }
+    }
 }

@@ -1,8 +1,7 @@
 package entities;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.Serializable;
-import java.sql.Array;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.Duration;
