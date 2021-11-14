@@ -17,6 +17,7 @@ public class EventEditMenuContent implements MenuContent{
         EventManager em = new EventManager();
         content.addAll(List.of(em.displayEvent(this.event).split("\n")));
         content.addAll(new ArrayList<>(){{
+            add("");
             add("1. Add/Change Start Date");
             add("2. Add/Change Start Time");
             add("3. Change End Date");

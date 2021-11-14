@@ -76,6 +76,15 @@ public class EventController {
     }
 
     /**
+     * gets this.EventManager
+     *
+     * @return this.EventManager
+     */
+    public EventManager getEventManager() {
+        return this.eventManager;
+    }
+
+    /**
      * allows the user to create a default event through terminal - asks for title, start date, start time,
      * otherwise default values - passes to <code>EventController.edit(the new event)</code>
      */
@@ -156,7 +165,7 @@ public class EventController {
      * @param ID the Id of the event to be deleted
      * @return true if the event was deleted
      */
-    public boolean delete(Integer ID) {
+    private boolean delete(Integer ID) {
         System.out.println("Are you sure you want to delete this event?");
         String confirm = ioController.getAnswer("Please Enter y/n");
         if (confirm.equalsIgnoreCase("y")) {
@@ -174,7 +183,7 @@ public class EventController {
      *
      * @param ID the id of the event to be changed
      */
-    public void changeStartDate(Integer ID) {
+    private void changeStartDate(Integer ID) {
         LocalDate newStart = ioController.getDate("Please Enter a New Start Date");
         if (this.eventManager.getStartTime(ID) == null) {
             this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
@@ -188,7 +197,7 @@ public class EventController {
      *
      * @param ID the id of the event to be changed
      */
-    public void changeEndDate(Integer ID) {
+    private void changeEndDate(Integer ID) {
         LocalDate newEnd = ioController.getDate("Please Enter a New End Date");
         this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
     }
@@ -198,7 +207,7 @@ public class EventController {
      *
      * @param ID the id of the event to be changed
      */
-    public void changeEndTime(Integer ID) {
+    private void changeEndTime(Integer ID) {
         LocalTime newEnd = ioController.getTime("Please Enter a New End Time");
         this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
     }
@@ -208,7 +217,7 @@ public class EventController {
      *
      * @param ID the id of the event to be changed
      */
-    public void changeStartTime(Integer ID) {
+    private void changeStartTime(Integer ID) {
         LocalTime newStart = ioController.getTime("Please Enter a New Start Time");
         if (this.eventManager.get(ID).getStartTime() == null) {
             this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
@@ -222,7 +231,7 @@ public class EventController {
      *
      * @param ID the id of the event to modify
      */
-    public void changeDescription(Integer ID) {
+    private void changeDescription(Integer ID) {
         String description = ioController.getAnswer("Please Enter a Description for This Event");
         this.eventManager.setDescription(this.eventManager.get(ID), description);
     }
@@ -232,7 +241,7 @@ public class EventController {
      *
      * @param ID the id of the event to be changed
      */
-    public void changeName(Integer ID) {
+    private void changeName(Integer ID) {
         String name = ioController.getAnswer("please Enter a New Name");
         this.eventManager.setName(this.eventManager.get(ID), name);
     }
@@ -243,8 +252,7 @@ public class EventController {
      * @param ID the id of the event to be edited
      * @see WorkSessionController#edit
      */
-
-    public void prep(Integer ID){
+    private void prep(Integer ID){
         this.workSessionController.edit(ID, this.eventManager);
     }
 
@@ -255,21 +263,12 @@ public class EventController {
      * @param ID the id of the event to be modified
      * @see RecursionController#createNewRecursion(Event, EventManager, EventController)
      */
-    public void recurse(Integer ID) {
+    private void recurse(Integer ID) {
         String nextStep = ioController.getAnswer("Enter 'Create' to create new recursion" +
                 "'edit' to modify an existing one and 'delete' to remove all repetitions of this event");
         if (nextStep.equalsIgnoreCase("Create")) {
             this.recursionController.createNewRecursion(this.eventManager.get(ID), this.eventManager, this);
         }
         //TODO: add more options to delete or modify a recursion (now can only add).
-    }
-
-    /**
-     * gets this.EventManager
-     *
-     * @return this.EventManager
-     */
-    public EventManager getEventManager() {
-        return this.eventManager;
     }
 }
