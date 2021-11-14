@@ -5,6 +5,10 @@ import entities.Event;
 
 import java.util.*;
 
+/**
+ * @author Seo Won Yi
+ * @author Shahzada Muhammad Shameel Farooq
+ */
 public class CalendarManager {
     private final int currentMonth; // current month
     private final int currentDate; // current date

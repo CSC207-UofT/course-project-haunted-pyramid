@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Seo Won Yi
+ */
 public class DisplayDailyCalendar extends DisplayCalendar {
     private final int year;
     private final int month;

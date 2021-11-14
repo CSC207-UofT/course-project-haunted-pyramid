@@ -3,6 +3,9 @@ package presenters.MenuStrategies;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Seo Won Yi
+ */
 public class BasicMenuContent implements MenuContent {
 
     @Override

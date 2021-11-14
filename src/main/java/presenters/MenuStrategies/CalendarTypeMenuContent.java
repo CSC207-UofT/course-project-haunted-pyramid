@@ -1,10 +1,11 @@
 package presenters.MenuStrategies;
 
-import helpers.Constants;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Seo Won Yi
+ */
 public class CalendarTypeMenuContent implements MenuContent {
 
     @Override

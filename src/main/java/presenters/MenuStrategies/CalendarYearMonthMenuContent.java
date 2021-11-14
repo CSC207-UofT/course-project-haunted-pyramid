@@ -5,6 +5,9 @@ import helpers.DateInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Seo Won Yi
+ */
 public class CalendarYearMonthMenuContent implements MenuContent {
 
     @Override

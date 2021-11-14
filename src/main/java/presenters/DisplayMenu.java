@@ -2,6 +2,9 @@ package presenters;
 
 import presenters.MenuStrategies.MenuContent;
 
+/**
+ * @author Seo Won Yi
+ */
 public class DisplayMenu {
     private MenuContent menuContent;
 

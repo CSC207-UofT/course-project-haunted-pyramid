@@ -12,6 +12,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Seo Won Yi
+ */
 public class DisplayWeeklyCalendar extends DisplayCalendar {
     private final int year;
     private final int month;
