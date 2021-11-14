@@ -54,6 +54,7 @@ public class UserController {
             DisplayMenu dm = new DisplayMenu();
             ProfileMenuContent profileMenuContent = new ProfileMenuContent(this.currentUser, this.getUserManager());
             System.out.println("Note: Work Sessions will only set up during Free Time");
+            System.out.println("      If Procrastinate is on, Work Sessions will be scheduled more towards the deadline");
             String firstAction = ioController.getAnswer(dm.displayMenu(profileMenuContent));
             firstAction = helper.invalidCheck(dm, firstAction, profileMenuContent.numberOfOptions(), profileMenuContent);
             if (firstAction.equalsIgnoreCase("Return")){
