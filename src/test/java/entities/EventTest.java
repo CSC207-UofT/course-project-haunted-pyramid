@@ -8,6 +8,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * @author Taite Cullen
+ */
 public class EventTest {
     Event event1 = new Event(1, "1", LocalDateTime.of(2021, 10, 15, 0, 0,
             0), LocalDateTime.of(2021, 10, 15, 3, 0, 0));
