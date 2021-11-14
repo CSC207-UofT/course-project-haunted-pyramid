@@ -14,7 +14,7 @@ public class User implements Serializable {
     private String email;
     private String phoneNumber;
     private String homeAddress;
-    private List<Event> events;
+    private ArrayList<Event> events;
     private boolean procrastinate;
     private Map<LocalTime, LocalTime> freeTime;
 
@@ -37,7 +37,7 @@ public class User implements Serializable {
     public String getEmail() {return this.email; }
     public String getPhoneNumber() { return this.phoneNumber; }
     public String getHomeAddress() { return this.homeAddress; }
-    public List<Event> getEvents() {return this.events; }
+    public ArrayList<Event> getEvents() {return this.events; }
     public boolean getProcrastinate() {return this.procrastinate;}
     public Map<LocalTime, LocalTime> getFreeTime(){return this.freeTime;}
 
