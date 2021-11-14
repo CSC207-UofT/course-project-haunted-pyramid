@@ -10,5 +10,6 @@ public class Constants {
     public static final int CAL_ROW_SPACER = 24;
     public static final int WEEKLY_CAL_NAME_LIMIT = 16;
     public static final int MENU_DIVIDER = 35;
+    public static final int TIMELINE_SPACER = -8; // Space occupied by timeline (" xx:xx |")
 
 }

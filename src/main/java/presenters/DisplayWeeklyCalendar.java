@@ -64,7 +64,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
         else {
             result.append("|");
-            addSpace(result, -8, startingDayOfWeek + indexTwo);
+            addSpace(result, Constants.TIMELINE_SPACER, startingDayOfWeek + indexTwo);
         }
     }
 
@@ -166,7 +166,8 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
 
     private void addSpace(StringBuilder result, int length, int dayOfWeek){
         int spacer = getSpacer(dayOfWeek);
-        String tempDiv = " ".repeat(Constants.CAL_ROW_SPACER + lengthDecider() + spacer - 8 - length);
+        String tempDiv = " ".repeat(Constants.CAL_ROW_SPACER + lengthDecider() + spacer - length +
+                Constants.TIMELINE_SPACER);
         result.append(tempDiv);
     }
 
@@ -271,8 +272,9 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
                 }
             }
         }
-        if (temp >= Constants.CAL_ROW_SPACER - 10){
-            temp -= Constants.CAL_ROW_SPACER - 10;
+        int INITIAL_SPACE = 10;
+        if (temp >= Constants.CAL_ROW_SPACER - INITIAL_SPACE){
+            temp -= Constants.CAL_ROW_SPACER - INITIAL_SPACE;
         }
         else {
             temp = 0;
