@@ -47,7 +47,7 @@ public class WorkSessionScheduler implements EventListObserver {
         this.autoSchedule(deadline, eventManager);
     }
 
-    public void setProcrastinate(boolean procrastinate){
+    public void setProcrastinate(boolean procrastinate) {
         this.procrastinate = procrastinate;
     }
 
@@ -104,17 +104,13 @@ public class WorkSessionScheduler implements EventListObserver {
 
     /**
      * A Method which automatically schedules work sessions for an Event which only has a deadline associated with it
-     * has two options or strategies for scheduling work sessions
+     * has two options or strategies for scheduling work sessions - only one implemented so far
      *
      * @param deadline     An Event
      * @param eventManager An EventManager
      */
     private void autoSchedule(Event deadline, EventManager eventManager) {
-        if (this.procrastinate) {
-            this.autoScheduleNoProcrastinate(deadline, eventManager);
-        } else {
-            this.autoScheduleNoProcrastinate(deadline, eventManager);
-        }
+        this.autoScheduleNoProcrastinate(deadline, eventManager);
     }
 
     /**
@@ -136,25 +132,33 @@ public class WorkSessionScheduler implements EventListObserver {
                 length = hoursToSchedule;
             }
             hoursToSchedule -= length;
-
             Map<LocalDate, List<Event>> schedule = updateSchedule(eventManager, deadlineTime);
-
             List<LocalDate> days = (this.eligibleDays(schedule, length, deadlineTime));
-
             days = this.leastWorkSessionsOrder(days, deadline.getWorkSessions());
-
             Map<LocalDateTime, Long> freeSlots;
             if (days.isEmpty()) {
                 return;
             }
             freeSlots = getFreeSlots(deadlineTime, schedule, days.get(0));
-
             List<LocalDateTime> times = this.eligibleTimes(freeSlots, length);
             times = this.smallestSlotOrder(times, freeSlots);
-
-            deadline.addWorkSession(times.get(0), times.get(0).plusHours(length));
+            LocalDateTime time = times.get(0);
+            if (this.sessionAdjacent(time, length, eventManager.getTotalWorkSession(ID))){
+                time = time.plusHours((freeSlots.get(time) - length)/2);
+            }
+            deadline.addWorkSession(time, time.plusHours(length));
         }
 
+    }
+
+    private boolean sessionAdjacent(LocalDateTime time, Long length, List<Event> sessions) {
+        for (Event session: sessions){
+            if (session.getEndTime().isEqual(time) || (session.hasStart() &&
+                    session.getStartTime().isEqual(time.plusHours(length)))){
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -361,7 +365,7 @@ public class WorkSessionScheduler implements EventListObserver {
      */
     @Override
     public void update(String addRemoveChange, Event changed, EventManager eventManager) {
-        for (Event event: eventManager.getAllEvents()){
+        for (Event event : eventManager.getAllEvents()) {
             this.autoSchedule(event, eventManager);
         }
         System.out.println("updated");

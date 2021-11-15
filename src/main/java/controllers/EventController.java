@@ -279,5 +279,4 @@ public class EventController {
         }
         //TODO (for phase 2): add the options to edit and delete a recursion.
     }
-
 }
