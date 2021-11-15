@@ -227,6 +227,11 @@ public class EventManager {
         return new ArrayList<>(List.of(new Event[]{event}));
     }
 
+
+    public RepeatedEventManager getRepeatedEventManager() {
+        return repeatedEventManager;
+    }
+
     /**
      * @param recursiveEvent The RecursiveEvent from which the repeated events should be extracted.
      * @return Given a RecursiveEvent, this method returns all the events in the period of repetition specified in the

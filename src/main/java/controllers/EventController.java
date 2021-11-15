@@ -11,7 +11,9 @@ import usecases.events.worksessions.WorkSessionScheduler;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Controller for creating then editing, or editing selected individual events - change name, description
@@ -263,7 +265,6 @@ public class EventController {
      * <code>recursiveController.edit()</code>
      *
      * @param ID the id of the event to be modified
-     * @see RecursionController#createNewRecursion(Event, EventManager, EventController)
      */
     private void recurse(Integer ID) {
         String nextStep = ioController.getAnswer("Enter 'Create' to create new recursion");
@@ -271,12 +272,12 @@ public class EventController {
             System.out.println("Please type the valid answer");
             nextStep = ioController.getAnswer("Enter 'Create' to create new recursion");
         }
-        // TODO malik
-/*        if (nextStep.equalsIgnoreCase("Create")) {
-            this.recursionController.createNewRecursion(new ArrayList<Integer>() {
-                {
-                    add(ID);
-                }
-            });*/
+        if (nextStep.equalsIgnoreCase("Create")) {
+            List<Integer> eventIDList = new ArrayList<>();
+            eventIDList.add(ID);
+            this.recursionController.createNewRecursion(eventIDList, eventManager, this);
+        }
+        //TODO (for phase 2): add the options to edit and delete a recursion.
     }
+
 }

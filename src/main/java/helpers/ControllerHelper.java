@@ -80,4 +80,20 @@ public class ControllerHelper {
         }
         return temp;
     }
+
+    /**
+     * confirm if the string is all numerical
+     *
+     * @param str the string to check
+     * @return true if the string is numerical otherwise false
+     */
+    public boolean isInteger(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
 }
