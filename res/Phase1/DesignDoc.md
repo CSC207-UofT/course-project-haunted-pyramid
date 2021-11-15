@@ -12,7 +12,8 @@ Each controller has a separate responsibility. The MainController instantiates a
 and UserController, which in turn delegate to their more specific controllers. EventController delegates to RecursionController
 and WorkSessionController for cases that require accessing any Manager aside from EventManager. 
 The RecursiveController contains a UserSpecific RecursiveController, and user the EventController's EventManager, 
-while the WorkSessionController 
+while the WorkSessionController contains a UserSpecific workSessionScheduler that autoschedules events based on
+Event parameters and user preferences.
 
 The EventManager performs many functions, all related to the sorting, finding, filtering, modifying and creating of events. 
 To better adhere to the Single Responsibility principle, some methods for sorting and returning lists of events should be 
