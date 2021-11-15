@@ -18,6 +18,7 @@ import java.util.HashMap;
  * start time, end time, delete
  * passes to RecursiveController and WorkSessionController to edit recursion or prep of an individual event
  *
+ * @author Sebin Im
  * @author Taite Cullen
  * @see Event
  * @see EventManager
