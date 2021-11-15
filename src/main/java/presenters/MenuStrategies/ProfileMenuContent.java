@@ -30,7 +30,7 @@ public class ProfileMenuContent implements MenuContent {
             add("1. Change Name");
             add("2. Add Free Time");
             add("3. Remove Free Time");
-            add("4. Toggle Procrastinate (Change Work Session Scheduling Method)");
+            add("4. Toggle Procrastinate (Change Work Session Scheduling Method");
             add("5. Return to the Main Menu");
         }};
     }

@@ -21,8 +21,6 @@ import java.util.*;
 public class WorkSessionScheduler implements EventListObserver {
     //specified by saved user information - the time during which the user does not want to work
     private final Map<LocalTime, LocalTime> freeTime;
-    //preferences for how work sessions should be sorted
-    private final boolean procrastinate;
 
 
     /**
@@ -32,7 +30,6 @@ public class WorkSessionScheduler implements EventListObserver {
      */
     public WorkSessionScheduler(Map<LocalTime, LocalTime> freeTime, boolean procrastinate){
         this.freeTime = freeTime;
-        this.procrastinate = procrastinate;
     }
 
     /**
@@ -244,49 +241,6 @@ public class WorkSessionScheduler implements EventListObserver {
             times.remove(smallest);
         }
         return ordered;
-    }
-
-
-    /**
-     *
-     * @param durations Array of Long type values
-     * @return the maximum Long type value from the array
-     */
-    private Long maximum(Long[] durations){
-        Long max = 0L;
-        for (Long dur: durations){
-            if (dur > max){
-                max = dur;
-            }
-        }
-        return max;
-    }
-
-    /**
-     *
-     * @param event An event
-     * @return A string which details the past sessions scheduled and the Future sessions scheduled
-     */
-    public String sessionsString(Event event){
-        EventManager eventManager = new EventManager();
-        return "Past sessions --------:\n " + this.sessionOptionsString(eventManager.timeOrder(event.pastWorkSessions())) + "\nFuture Sessions -------:\n " +
-                this.sessionOptionsString(eventManager.timeOrder(event.futureWorkSessions()));
-    }
-
-    /**
-     *
-     * @param sessions List of Events
-     * @return A string which gives the details of the session
-     */
-    private String sessionOptionsString(List<Event> sessions){
-        EventManager eventManager = new EventManager();
-        StringBuilder options = new StringBuilder();
-        int i=0;
-        for (Event session: sessions) {
-            options.append("session ").append(i).append("-------\n").append(session.toString()).append("\n");
-            i += 1;
-        }
-        return options.toString();
     }
 
     /**

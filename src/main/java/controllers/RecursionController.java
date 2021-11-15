@@ -21,18 +21,19 @@ public class RecursionController {
     private final IOController ioController = new IOController();
     private final ControllerHelper helper = new ControllerHelper();
 
-    public void createNewRecursion(List<Integer> eventIDList, EventManager eventManager, EventController eventController){
+    public void createNewRecursion(List<Integer> eventIDList, EventManager eventManager){
         ArrayList<Event> cycle = new ArrayList<>();
         for (int id : eventIDList){
             cycle.add(eventManager.get(id));
         }
         eventManager.timeOrder(cycle);
         DateGetter methodToGetDates;
-        String secondFirstEventDate = ioController.getAnswer("enter the date of the second occurrence " +
-                "of the first event in the form YYYY-MM-DDTHH:MM");
-        while (eventManager.stringToDate(secondFirstEventDate).isBefore(cycle.get(cycle.size() - 1).getEndTime())){
-            secondFirstEventDate = ioController.getAnswer("Please enter a date after: " +
-                    cycle.get(cycle.size() - 1).getEndTime().toString());
+        System.out.println("Please enter the Second Occurrence date of the Event");
+        LocalDateTime secondFirstEventDate = ioController.getDateTime("Enter the time of Occurrence",
+                "Enter the Date of the Occurrence");
+        while (secondFirstEventDate.isBefore(cycle.get(cycle.size() - 1).getEndTime())){
+            System.out.println("Please enter a date after: " + cycle.get(cycle.size() - 1).getEndTime().toString());
+            secondFirstEventDate = ioController.getDateTime("Enter the Time", "Enter the Date");
         }
 
         Event newEvent = eventManager.addEvent(cycle.get(0).getName() + "-2", secondFirstEventDate);
@@ -54,18 +55,20 @@ public class RecursionController {
             }
             methodToGetDates = new NumberOfRepetitionInput(Integer.parseInt(numOfRepetitions));
         }
-        else{
-            String beginningOfCycles = ioController.getAnswer("Enter the date when this cycle should begin" +
-                    "in the form YYYY-MM-DD");
-            String endOfCycles = ioController.getAnswer("Enter the date when this cycle should end" +
-                    "in the form YYYY-MM-DD");
-            LocalDate firstDate = ioController.getDate(beginningOfCycles);
-            LocalDate lastDate = ioController.getDate(endOfCycles);
-            LocalTime time = LocalTime.of(0,0);
-            LocalDateTime realFirstDate = LocalDateTime.of(firstDate, time);
-            LocalDateTime realLastDate = LocalDateTime.of(lastDate, time);
-            methodToGetDates = new IntervalDateInput(realFirstDate, realLastDate);
+        else {
+            methodToGetDates = getDateGetter();
         }
         eventManager.getRepeatedEventManager().addRecursiveEvent(cycle, methodToGetDates);
+    }
+
+    private DateGetter getDateGetter() {
+        DateGetter methodToGetDates;
+        LocalDate firstDate = ioController.getDate("Enter the date when this cycle should begin");
+        LocalDate lastDate = ioController.getDate("Enter the date when this cycle should end");
+        LocalTime time = LocalTime.of(0,0);
+        LocalDateTime realFirstDate = LocalDateTime.of(firstDate, time);
+        LocalDateTime realLastDate = LocalDateTime.of(lastDate, time);
+        methodToGetDates = new IntervalDateInput(realFirstDate, realLastDate);
+        return methodToGetDates;
     }
 }
