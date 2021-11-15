@@ -84,9 +84,9 @@ public class MainController {
      * User will be directed to different controllers depending on what they want to achieve
      */
     public void displayScreen() {
+
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
-                new WorkSessionController(new WorkSessionScheduler(this.userController.getCurrentFreeTime(),
-                        this.userController.getCurrentProcrastinate())));
+                new WorkSessionController(userController.getWorkSessionScheduler()));
         while (this.loginController.isLoggedIn()) {
             System.out.println(this.calendarController.showDefaultCalendar(this.eventController));
             System.out.println("Please choose your action");

@@ -20,8 +20,8 @@ import java.util.*;
  */
 public class WorkSessionScheduler implements EventListObserver {
     //specified by saved user information - the time during which the user does not want to work
-    private final Map<LocalTime, LocalTime> freeTime;
-    private final boolean procrastinate;
+    private Map<LocalTime, LocalTime> freeTime;
+    private boolean procrastinate;
 
 
     /**
@@ -48,7 +48,7 @@ public class WorkSessionScheduler implements EventListObserver {
     }
 
     public void setProcrastinate(boolean procrastinate){
-
+        this.procrastinate = procrastinate;
     }
 
     /**
@@ -368,5 +368,9 @@ public class WorkSessionScheduler implements EventListObserver {
             this.autoSchedule(event, eventManager);
         }
         System.out.println("updated");
+    }
+
+    public void setFreeTime(Map<LocalTime, LocalTime> currentFreeTime) {
+        this.freeTime = currentFreeTime;
     }
 }
