@@ -8,7 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Get Daily Calendar Map
  * @author Seo Won Yi
+ * @see GetCalendar
+ * @see CalendarManager
+ * @see OurCalendar
  */
 
 public class DailyCalendar extends GetCalendar {

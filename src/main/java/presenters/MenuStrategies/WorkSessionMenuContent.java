@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Menu for WorkSessionController
  * @author Seo Won Yi
  */
-public class WorkSessionMenu implements MenuContent{
+public class WorkSessionMenuContent implements MenuContent {
+
     @Override
     public List<String> getContent(){
         return new ArrayList<>(){{

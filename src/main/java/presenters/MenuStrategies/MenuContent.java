@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * @author Seo Won Yi
+ * @see presenters.DisplayMenu
  */
 public interface MenuContent {
 
@@ -19,7 +20,7 @@ public interface MenuContent {
      * Return the menu image with the selections of contents
      * @param result StringBuilder object that the image will append on
      */
-    default void addMenuContent(StringBuilder result){
+    default void addMenuContent(StringBuilder result) {
         List<String> menuList = getContent();
         int longestContent = getLongestContent(menuList);
         String divider = "-".repeat(Constants.MENU_DIVIDER + longestContent);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Basic menu contents to be displayed at MainController
  * @author Seo Won Yi
  */
 public class BasicMenuContent implements MenuContent {
@@ -15,8 +16,9 @@ public class BasicMenuContent implements MenuContent {
             add("2. View Calendar by Type and Date");
             add("3. Add a New Event");
             add("4. View/Modify an Existing Event through Calendar");
-            add("5. Log Out");
-            add("6. Exit");
+            add("5. Create Repetition of the Existing Events");
+            add("6. Log Out");
+            add("7. Exit");
         }};
     }
 

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Build the image of weekly calendar and display if asked to
  * @author Seo Won Yi
  */
 public class DisplayWeeklyCalendar extends DisplayCalendar {
@@ -24,6 +25,13 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private final EventManager eventManager = new EventManager();
     private final DisplayCalendarHelper cf;
 
+    /**
+     * Initialize the class by setting
+     * @param cm
+     * @param year
+     * @param month
+     * @param date
+     */
     public DisplayWeeklyCalendar(CalendarManager cm, int year, int month, int date) {
         super(cm);
         this.year = year;
@@ -41,6 +49,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
 
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String displayCalendar(){
         int startingDayOfWeek = cf.findStartDayOfWeekInteger(this.year, this.month, this.date);
@@ -58,6 +70,13 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         return result.toString();
     }
 
+    /**
+     *
+     * @param startingDayOfWeek
+     * @param result StringBuilder object to be added on
+     * @param indexOne
+     * @param indexTwo
+     */
     private void addTimeLineContent(int startingDayOfWeek, StringBuilder result, int indexOne, int indexTwo) {
         List<String> newTimeLine = cf.updateTimeList(this.defaultTimeLine, gatherTimeLine(indexTwo));
         if (newTimeLine.size() > indexOne){
@@ -71,6 +90,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     private int getLongestTimeLine(){
         int length = this.defaultTimeLine.size();
         for (int i = 0; i < this.calendarMap.size(); i++){
@@ -81,6 +104,12 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
         return length;
     }
+
+    /**
+     *
+     * @param index
+     * @return
+     */
     private List<String> gatherTimeLine(int index){
         List<String> temp = new ArrayList<>();
         List<Integer> keyList = getKeys();
@@ -93,7 +122,12 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         return temp;
     }
 
-
+    /**
+     *
+     * @param startingDayOfWeek
+     * @param result StringBuilder object to be added on
+     * @param cf
+     */
     private void setUpCalendar(int startingDayOfWeek, StringBuilder result, DisplayCalendarHelper cf){
         switch (startingDayOfWeek) {
             case 1:
@@ -120,6 +154,11 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
     }
 
+    /**
+     *
+     * @param result StringBuilder object to be added on
+     * @param dayOfWeek
+     */
     private void addDate(StringBuilder result, int dayOfWeek){
         result.append("|");
         List<Integer> keyList = getKeys();
@@ -138,6 +177,13 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         result.append("\n");
     }
 
+    /**
+     *
+     * @param result StringBuilder object to be added on
+     * @param keyList
+     * @param tempDiv
+     * @param index
+     */
     private void addDateHelper(StringBuilder result, List<Integer> keyList, String tempDiv, int index) {
         int month = this.month;
         if (index != 0 && keyList.get(index) == 1){
@@ -161,12 +207,23 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
     }
 
-
+    /**
+     *
+     * @param result StringBuilder object to be added on
+     * @param timeLine
+     * @param index
+     */
     private void addTimeLine(StringBuilder result, List<String> timeLine, int index){
         result.append("|").append(" ");
         result.append(timeLine.get(index)).append(" |");
     }
 
+    /**
+     *
+     * @param result StringBuilder object to be added on
+     * @param length
+     * @param dayOfWeek
+     */
     private void addSpace(StringBuilder result, int length, int dayOfWeek){
         int spacer = getSpacer(dayOfWeek);
         String tempDiv = " ".repeat(Constants.CAL_ROW_SPACER + lengthDecider() + spacer - length +
@@ -174,6 +231,11 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         result.append(tempDiv);
     }
 
+    /**
+     *
+     * @param dayOfWeek
+     * @return
+     */
     private int getSpacer(int dayOfWeek) {
         int spacer = 0;
         if (dayOfWeek > 7){
@@ -199,6 +261,14 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         return spacer;
     }
 
+    /**
+     *
+     * @param result StringBuilder object to be added on
+     * @param timeLine
+     * @param time
+     * @param index
+     * @return
+     */
     private Integer addContent(StringBuilder result, List<String> timeLine, int time, int index){
         List<Integer> keyList = getKeys();
         int nameLength = 0;
@@ -215,8 +285,17 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         return nameLength;
     }
 
+    /**
+     *
+     * @param result StringBuilder object to be added on
+     * @param nameLength
+     * @param event
+     * @param eventStartTime
+     * @return
+     */
     private int appendNameGetNameLength(StringBuilder result, int nameLength, Event event, String eventStartTime) {
         String eventName = eventManager.getName(event);
+        eventName = "ID:" + eventManager.getID(event) + " " + eventName;
         int eventNameSize = eventName.length();
         if (eventStartTime.equals(eventManager.getEndTimeString(event))){
             eventName = eventName + " Due";
@@ -236,6 +315,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         return nameLength;
     }
 
+    /**
+     *
+     * @return
+     */
     private List<Integer> getKeys(){
         List<Integer> lst = new ArrayList<>(calendarMap.keySet());
         Collections.sort(lst);
@@ -252,6 +335,12 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         return lst;
     }
 
+    /**
+     *
+     * @param tempOne
+     * @param tempTwo
+     * @param items
+     */
     private void divideDate(List<Integer> tempOne, List<Integer> tempTwo, Integer items) {
         if (0 < items && items < 10){
             tempOne.add(items);
@@ -261,21 +350,24 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     private int lengthDecider(){
         List<Integer> keyList = getKeys();
         int temp = 0;
         for (Integer number: keyList){
             List<Event> eventList = calendarMap.get(number);
             for (int i = 0; i < eventList.size(); i++) {
-                int totalLength = Math.min(eventManager.getName(eventList.get(i)).length() + 6,
-                        Constants.WEEKLY_CAL_NAME_LIMIT);
+                int totalLength = Constants.WEEKLY_CAL_NAME_LIMIT;
                 totalLength = getTotalLength(eventList, totalLength, i);
                 if (temp < totalLength) {
                     temp = totalLength;
                 }
             }
         }
-        int INITIAL_SPACE = 10;
+        int INITIAL_SPACE = Constants.CAL_ROW_SPACER - Constants.WEEKLY_CAL_NAME_LIMIT;
         if (temp >= Constants.CAL_ROW_SPACER - INITIAL_SPACE){
             temp -= Constants.CAL_ROW_SPACER - INITIAL_SPACE;
         }
@@ -288,11 +380,19 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         return temp;
     }
 
+    /**
+     *
+     * @param eventList
+     * @param totalLength
+     * @param index
+     * @return
+     */
     private int getTotalLength(List<Event> eventList, int totalLength, int index) {
         for (int j = index + 1; j < eventList.size(); j++){
             String startTimeStringOne = eventManager.getStartTimeString(eventList.get(index));
             String startTimeStringTwo = eventManager.getStartTimeString(eventList.get(j));
             String eventName = eventManager.getName(eventList.get(j));
+            eventName = "ID:" + eventManager.getID(eventList.get(j)) + " " + eventName;
             if (eventManager.getStartTimeString(eventList.get(index)) == null){
                 startTimeStringOne = eventManager.getEndTimeString(eventList.get(index));
             }

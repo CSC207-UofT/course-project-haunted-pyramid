@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ProfileMenuContent implements MenuContent{
+public class ProfileMenuContent implements MenuContent {
     private final UUID user;
     private final UserManager userManager;
 
-    public ProfileMenuContent(UUID user, UserManager userManager){
+    public ProfileMenuContent(UUID user, UserManager userManager) {
         this.user = user;
         this.userManager = userManager;
     }

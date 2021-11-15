@@ -3,10 +3,17 @@ package controllers;
 import helpers.Constants;
 import helpers.ControllerHelper;
 import presenters.DisplayMenu;
-import presenters.MenuStrategies.WorkSessionMenu;
+import presenters.MenuStrategies.WorkSessionMenuContent;
 import usecases.events.EventManager;
 import usecases.WorkSessionScheduler;
 
+/**
+ * Controller for setting up the work session
+ * @author Seo Won Yi
+ * @author Taite Cullen
+ * @see EventController
+ * @see WorkSessionScheduler
+ */
 public class WorkSessionController {
     private final WorkSessionScheduler workSessionScheduler;
     private final IOController ioController;
@@ -38,7 +45,7 @@ public class WorkSessionController {
                 System.out.println("Total Work Session Hours: " + eventManager.getTotalHoursNeeded(eventID));
             }
             System.out.println("Please choose your next action");
-            WorkSessionMenu menu = new WorkSessionMenu();
+            WorkSessionMenuContent menu = new WorkSessionMenuContent();
             String choice = ioController.getAnswer(displayMenu.displayMenu(menu));
             choice = helper.invalidCheck(displayMenu, choice, menu.numberOfOptions(), menu);
             switch (choice) {

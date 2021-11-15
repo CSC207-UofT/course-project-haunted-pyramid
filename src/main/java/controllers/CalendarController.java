@@ -31,6 +31,7 @@ import java.util.Scanner;
 public class CalendarController {
     private final Scanner scanner = new Scanner(System.in);
     private final ControllerHelper helper = new ControllerHelper();
+    private final RecursionController recursionController = new RecursionController();
 
     /**
      * the default current monthly calendar that will show every time the user returns to the main menu
@@ -72,7 +73,7 @@ public class CalendarController {
      * Confirms year/month/date information from the user and
      * show daily calendar for the selected date to direct the user to modification of an event by ID
      *
-     * @param eventController event information that needs to be displayed in the calendar
+     * @param eventController event information that needs to be displayed on the calendar
      */
     public void dailyCalendarForModification(EventController eventController) {
         DisplayMenu displayMenu = new DisplayMenu();
@@ -94,13 +95,57 @@ public class CalendarController {
     }
 
     /**
+     * Confirms year/month information from the user and
+     * Show monthly calendar for the selected month to direct the user to set up the recursion of events by ID
+     * @param eventController event information needs to be displayed on the calendar
+     */
+    public void monthlyCalendarForRepetition(EventController eventController) {
+        DisplayMenu displayMenu = new DisplayMenu();
+        System.out.println("You may type Return to return to the main menu at any time (except Date selection)");
+        String dateInput = getCalendarDateInput(displayMenu, "repeat");
+        CalendarSelection calendarSelection = new CalendarSelection(new DateInfo(), dateInput);
+        int year = calendarSelection.getYear();
+        int month = calendarSelection.getMonth();
+        DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
+        System.out.println(calendarFactory.displaySpecificCalendarByType("Monthly",
+                year, month, 1).displayCalendar());
+        List<Integer> eventIDList = getEventIDList(eventController);
+        //TODO malik
+        //recursionController.createNewRecursion(eventIDList);
+    }
+
+    private List<Integer> getEventIDList(EventController eventController){
+        List<Integer> eventIDList = new ArrayList<>();
+        boolean check = false;
+        while (!check) {
+            String eventID = getEventID(eventController);
+            if (eventID.equalsIgnoreCase("Return")) {
+                return new ArrayList<>();
+            }
+            eventIDList.add(Integer.parseInt(eventID));
+            System.out.println("Would you like to Recurse more Events?");
+            System.out.println("y/n");
+            String answer = scanner.nextLine();
+            while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
+                System.out.println("Please type the valid input");
+                System.out.println("Would you like to Recurse more Events?");
+                System.out.println("y/n");
+            }
+            if (answer.equalsIgnoreCase("n")) {
+                    check = true;
+            }
+        }
+        return eventIDList;
+    }
+
+    /**
      * asks and get eventID after confirming the validity of it
      *
      * @param eventController eventController object used to confirm the eventID's existence
      * @return the valid eventID that will be used for modification
      */
     private String getEventID(EventController eventController) {
-        System.out.println("Please type the Event ID to access the Event or type Return to return to the main menu");
+        System.out.println("Please type the Event ID that applies or type Return to return to the main menu");
         String eventID = scanner.nextLine();
         if (eventID.equalsIgnoreCase("Return")) {
             return "Return";
@@ -205,6 +250,9 @@ public class CalendarController {
             System.out.println("Please select the Year and Month that you would like to view the calendar from");
         } else if (question.equalsIgnoreCase("Modify")) {
             System.out.println("Choose the Year/Month that you would like to modify the Event from");
+        }
+        else if (question.equalsIgnoreCase("Repeat")) {
+            System.out.println("Choose the Year/Month that you would like to repeat the Event from");
         }
         MenuContent calendarDateInfoMenu = new CalendarYearMonthMenuContent();
         System.out.println(displayMenu.displayMenu(calendarDateInfoMenu));
