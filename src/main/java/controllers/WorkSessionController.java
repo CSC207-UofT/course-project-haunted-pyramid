@@ -67,7 +67,7 @@ public class WorkSessionController {
 
     private void changeTotalHour(Integer eventID, EventManager eventManager) {
         System.out.println("Original Total Work Session Hour: " + eventManager.getTotalHoursNeeded(eventID));
-        String chosenHour = ioController.getAnswer("Please type the new Total Hour (Max: 50");
+        String chosenHour = ioController.getAnswer("Please type the new Total Hour (Max: 50)");
         chosenHour = helper.invalidCheckNoMenu(chosenHour, Constants.MAXIMUM_WORK_SESSION_HOUR,
                 "Please type the valid Total Work Session Hour (Max: 50)");
         this.workSessionScheduler.setHoursNeeded(eventManager.get(eventID), Long.valueOf(chosenHour), eventManager);
@@ -98,6 +98,10 @@ public class WorkSessionController {
         if (marking.equalsIgnoreCase("complete")){
             this.workSessionScheduler.markComplete(eventManager.get(eventID), sessionNumber, eventManager);
             System.out.println("The session was marked Complete");
+        }
+        else if (marking.equalsIgnoreCase("incomplete")){
+            this.workSessionScheduler.markInComplete(eventManager.get(eventID), sessionNumber, eventManager);
+            System.out.println("The session was marked Incomplete");
         }
     }
 
