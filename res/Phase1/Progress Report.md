@@ -1,4 +1,4 @@
-Progress Report:
+####Progress Report:
     Our program is not only runnable, but also has exclusive features that we believe is ahead of many other groups. We
     have data serialization, textual visualization, algorithmic scheduling devices, easy-to-follow instructions and much
     more. Since Phase 0, we have expanded our program to be like an actual program that people would see in an app
@@ -9,7 +9,7 @@ Progress Report:
     violations and thus required refactoring work on itself for Phase 1. Our progress seems far ahead and superior to
     other groups, and we will strive and continue to follow this path of enhancement and achievement.
 
-Struggles:
+####Struggles:
     One of our groupmates left the course right before the due date, which made our work distribution disorganized
     and resulted in loss of strict division in work. It would have been nice to either get an extension to make up
     for the loss in the workforce, or provided a portion of the final mark that we would be given by default.
@@ -21,7 +21,7 @@ Struggles:
     The instructions of Phase 1 requirements were not clear enough; it would have been nice to see an example case or
     a descriptive list of things to look out for when creating submission documents.
 
-Perks:
+####Perks:
     We implemented a lot of design patterns and packaging strategies into our program, while avoiding to violate Clean
     Architecture.
     Serialization is probably the most unique, where our program makes use of the Dropbox cloud services to store and
@@ -34,7 +34,7 @@ Perks:
     Since this was our first time in trying to code a lot in such a short time window along with other people, it was
     a refreshing experience which enhanced our cooperative skills in teamwork using communication and version control.
 
-Member Works
+####Member Works
     Seo Won Yi
         Work Done:
             Created and refactored most, if not all classes related to the calendar
