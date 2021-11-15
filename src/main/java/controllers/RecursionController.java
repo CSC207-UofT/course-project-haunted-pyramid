@@ -66,7 +66,6 @@ public class RecursionController {
                 methodToGetDates = new IntervalDateInput(eventManager.stringToDate(beginningOfCycles),
                         eventManager.stringToDate(endOfCycles));
             }
-            eventManager.getRepeatedEventManager().addRecursiveEvent(cycle, methodToGetDates);
             done = true;
         }
     }
