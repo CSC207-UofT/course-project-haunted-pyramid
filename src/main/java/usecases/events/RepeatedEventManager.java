@@ -8,6 +8,7 @@ import interfaces.EventListObserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,9 +68,9 @@ public class RepeatedEventManager implements EventListObserver {
      * of repetition as values.
      */
 
-    public HashMap<Integer, ArrayList<Event>> getEventMapFromRecursion(Integer id){
-        HashMap<Integer, ArrayList<Event>> result = new HashMap<>();
-        ArrayList<Event> eventsInOneCycle = this.recursiveEventMap.get(id).getEventsInOneCycle();
+    public Map<Integer, List<Event>> getEventMapFromRecursion(Integer id){
+        Map<Integer, List<Event>> result = new HashMap<>();
+        List<Event> eventsInOneCycle = this.recursiveEventMap.get(id).getEventsInOneCycle();
         int realSize = eventsInOneCycle.size() - 1;
         for(int eventIndex = 0; eventIndex < realSize; eventIndex++){
             Event event = eventsInOneCycle.get(eventIndex);
@@ -87,8 +88,8 @@ public class RepeatedEventManager implements EventListObserver {
      * of repetition as values.
      */
 
-    public ArrayList<Event> getEventsFromRecursion(Integer id){
-        ArrayList<Event> eventsInOneCycle = this.recursiveEventMap.get(id).getEventsInOneCycle();
+    public List<Event> getEventsFromRecursion(Integer id){
+        List<Event> eventsInOneCycle = this.recursiveEventMap.get(id).getEventsInOneCycle();
         return this.recursiveEventMap.get(id).listOfEventsInCycles(eventsInOneCycle);
     }
 

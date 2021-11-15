@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -32,7 +33,7 @@ public class NumberOfRepetitionInputTest {
 
     @Test
     public void listOfDatesInCyclesWith2Events() {
-        ArrayList<Event> y = x.listOfDatesInCycles(z);
+        List<Event> y = x.listOfDatesInCycles(z);
         assertEquals(y.get(0).getEndTime(), LocalDateTime.of(2021, 11, 18, 11,0));
         assertEquals(y.get(1).getEndTime(), LocalDateTime.of(2021, 11, 21, 11,0));
     }
@@ -40,7 +41,7 @@ public class NumberOfRepetitionInputTest {
     @Test
     public void listOfDatesInCyclesWith3Events() {
         z.add(e3);
-        ArrayList<Event> y = x.listOfDatesInCycles(z);
+        List<Event> y = x.listOfDatesInCycles(z);
         assertEquals(y.get(1).getEndTime(), LocalDateTime.of(2021, 11, 23, 11,0));
         assertEquals(y.get(2).getEndTime(), LocalDateTime.of(2021, 11, 25, 11,0));
     }
