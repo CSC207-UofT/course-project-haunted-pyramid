@@ -236,7 +236,11 @@ public class EventManager {
      */
 
     public ArrayList<Event> eventsInSomeRecursion(RecursiveEvent recursiveEvent) {
-        return repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId());
+        ArrayList<Event> thisList = repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId());
+        for (Event event: thisList){
+            this.eventMap.put(event.getID(), event);
+        }
+        return thisList;
     }
 
 
