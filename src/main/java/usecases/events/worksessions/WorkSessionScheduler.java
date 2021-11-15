@@ -21,6 +21,7 @@ import java.util.*;
 public class WorkSessionScheduler implements EventListObserver {
     //specified by saved user information - the time during which the user does not want to work
     private final Map<LocalTime, LocalTime> freeTime;
+    private boolean procrastinate;
 
 
     /**
@@ -31,6 +32,7 @@ public class WorkSessionScheduler implements EventListObserver {
      */
     public WorkSessionScheduler(Map<LocalTime, LocalTime> freeTime, boolean procrastinate) {
         this.freeTime = freeTime;
+        this.procrastinate = procrastinate;
     }
 
     /**
@@ -104,7 +106,7 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param eventManager An EventManager
      */
     private void autoSchedule(Event deadline, EventManager eventManager) {
-        if (procrastinate) {
+        if (this.procrastinate) {
             this.autoSchedulep(deadline, eventManager);
         } else {
             this.autoSchedulenp(deadline, eventManager);
