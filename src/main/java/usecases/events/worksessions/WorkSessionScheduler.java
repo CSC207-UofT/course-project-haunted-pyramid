@@ -143,21 +143,17 @@ public class WorkSessionScheduler implements EventListObserver {
 
             days = this.leastWorkSessionsOrder(days, deadline.getWorkSessions());
 
-            System.out.println(days);
-
             Map<LocalDateTime, Long> freeSlots;
             if (days.isEmpty()) {
                 return;
             }
             freeSlots = getFreeSlots(deadlineTime, schedule, days.get(0));
-            System.out.println(freeSlots);
 
             List<LocalDateTime> times = this.eligibleTimes(freeSlots, length);
             times = this.smallestSlotOrder(times, freeSlots);
 
             deadline.addWorkSession(times.get(0), times.get(0).plusHours(length));
         }
-        System.out.println("------");
 
     }
 
