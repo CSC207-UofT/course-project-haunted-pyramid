@@ -255,6 +255,9 @@ public class EventManager {
         for (Event event : this.flattenWorkSessions(new ArrayList<>(this.eventMap.values()))) {
             events.addAll(this.splitByDay(event));
         }
+        for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()){
+            ArrayList<Event> repeatedEvents = this.eventsInSomeRecursion(recursiveEvent);
+        }
         return events;
     }
 
