@@ -47,14 +47,6 @@ public class EventTest {
     }
 
     @Test
-    public void addWorkSession(){
-        LocalDateTime start = LocalDateTime.of(2002, 12, 5, 2, 30);
-        LocalDateTime end = LocalDateTime.of(2002, 12, 5, 3, 30);
-        this.event1.addWorkSession(start, end);
-        assertEquals(this.event1.getWorkSessions(), new ArrayList<>
-                (List.of(new Event[]{new Event(event1.getID(), event1.getName(), start, end)})));
-    }
-    @Test
     public void pastWorkSessions(){
         LocalDateTime start = LocalDateTime.now().minusMinutes(10);
         LocalDateTime end = LocalDateTime.now().minusMinutes(2);
@@ -66,17 +58,6 @@ public class EventTest {
                 (List.of(new Event[]{new Event(event1.getID(), event1.getName() + " session", start, end)})));
     }
 
-    @Test
-    public void futureWorkSessions(){
-        LocalDateTime start = LocalDateTime.of(2002, 12, 5, 2, 30);
-        LocalDateTime end = LocalDateTime.of(2002, 12, 5, 3, 30);
-        LocalDateTime start2 = LocalDateTime.now().plusDays(7L);
-        LocalDateTime end2 = start2.plusHours(3L);
-        this.event1.addWorkSession(start, end);
-        this.event1.addWorkSession(start2, end2);
-        assertEquals(this.event1.futureWorkSessions(), new ArrayList<>
-                (List.of(new Event[]{new Event(event1.getID(), event1.getName(), start2, end2)})));
-    }
 
     @Test
     public void resetWorkSessions(){
@@ -88,19 +69,5 @@ public class EventTest {
         this.event1.addWorkSession(start2, end2);
         this.event1.setWorkSessions(new ArrayList<>());
         assertEquals(this.event1.getWorkSessions(), new ArrayList<>());
-    }
-    @Test
-    public void completeSession(){
-        LocalDateTime start = LocalDateTime.of(2002, 12, 5, 2, 30);
-        LocalDateTime end = LocalDateTime.of(2002, 12, 5, 3, 30);
-        LocalDateTime start2 = LocalDateTime.now().plusDays(7L);
-        LocalDateTime end2 = start2.plusHours(3L);
-        this.event1.setHoursNeeded(10L);
-        this.event1.addWorkSession(start, end);
-        this.event1.addWorkSession(start2, end2);
-        this.event1.completeSession(this.event1.getWorkSessions().get(0));
-        assertEquals(this.event1.getWorkSessions(), new ArrayList<>
-                (List.of(new Event[]{new Event(event1.getID(), event1.getName(), start2, end2)})));
-        assertEquals((long) this.event1.getHoursNeeded(), 9L);
     }
 }
