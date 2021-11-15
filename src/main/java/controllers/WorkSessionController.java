@@ -64,24 +64,37 @@ public class WorkSessionController {
                 System.out.println("Total Work Session Hours: " + eventManager.getTotalHoursNeeded(eventID));
             }
             System.out.println("Please choose your next action");
-            WorkSessionMenuContent menu = new WorkSessionMenuContent();
-            String choice = ioController.getAnswer(displayMenu.displayMenu(menu));
-            choice = helper.invalidCheck(displayMenu, choice, menu.numberOfOptions(), menu);
-            switch (choice) {
-                case "1":
-                    markCompletion(eventID, eventManager);
-                    break;
-                case "2":
-                    changeSessionLength(eventID, eventManager);
-                    break;
-                case "3":
-                    changeTotalHour(eventID, eventManager);
-                    break;
-                case "4":
-                    done = true;
-                    break;
-            }
+            done = finalChoice(eventID, eventManager, done, displayMenu);
         }
+    }
+
+    /**
+     * Ask and confirm what the user wants to do with the work session related tasks
+     * @param eventID ID of the event
+     * @param eventManager eventManager that has event information
+     * @param done whether to terminate or not
+     * @param displayMenu DisplayMenu class to show the appropriate menu
+     * @return perform the task, unless chosen to, do not return to the main menu
+     */
+    private boolean finalChoice(Integer eventID, EventManager eventManager, boolean done, DisplayMenu displayMenu) {
+        WorkSessionMenuContent menu = new WorkSessionMenuContent();
+        String choice = ioController.getAnswer(displayMenu.displayMenu(menu));
+        choice = helper.invalidCheck(displayMenu, choice, menu.numberOfOptions(), menu);
+        switch (choice) {
+            case "1":
+                markCompletion(eventID, eventManager);
+                break;
+            case "2":
+                changeSessionLength(eventID, eventManager);
+                break;
+            case "3":
+                changeTotalHour(eventID, eventManager);
+                break;
+            case "4":
+                done = true;
+                break;
+        }
+        return done;
     }
 
     /**
