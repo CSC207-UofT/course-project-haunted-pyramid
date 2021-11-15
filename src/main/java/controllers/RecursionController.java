@@ -8,6 +8,10 @@ import usecases.events.EventManager;
 
 import java.util.ArrayList;
 
+/**
+ * @author Malik Lahlou
+ */
+
 public class RecursionController {
     private final IOController ioController = new IOController();
 
@@ -62,7 +66,6 @@ public class RecursionController {
                 methodToGetDates = new IntervalDateInput(eventManager.stringToDate(beginningOfCycles),
                         eventManager.stringToDate(endOfCycles));
             }
-            eventManager.getRepeatedEventManager().addRecursiveEvent(cycle, methodToGetDates);
             done = true;
         }
     }

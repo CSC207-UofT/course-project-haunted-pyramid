@@ -250,6 +250,7 @@ public class EventManager {
 
     public void setRepeatedEventManager(RepeatedEventManager repeatedEventManager) {
         this.repeatedEventManager = repeatedEventManager;}
+
     public RepeatedEventManager getRepeatedEventManager() {
         return repeatedEventManager;
     }
