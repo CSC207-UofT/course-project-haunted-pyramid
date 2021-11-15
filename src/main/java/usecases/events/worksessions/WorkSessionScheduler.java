@@ -21,7 +21,7 @@ import java.util.*;
 public class WorkSessionScheduler implements EventListObserver {
     //specified by saved user information - the time during which the user does not want to work
     private final Map<LocalTime, LocalTime> freeTime;
-    private boolean procrastinate;
+    private final boolean procrastinate;
 
 
     /**
@@ -50,7 +50,7 @@ public class WorkSessionScheduler implements EventListObserver {
     /**
      * @param deadline     the deadline event
      * @param hoursNeeded  whole long number of hours of this event to be scheduled
-     * @param eventManager the eventManager to autoschedule around
+     * @param eventManager the eventManager to autoSchedule around
      */
     public void setHoursNeeded(Event deadline, Long hoursNeeded, EventManager eventManager) {
         deadline.setHoursNeeded(hoursNeeded);
@@ -61,7 +61,7 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param deadlineTime the deadline event - end of last freeSlot
      * @param schedule     the schedule to get free slots between events
      * @param day          the day to get the freeSlots from
-     * @return freeslots over the whole day if it is not today or deadline day, otherwise start or end free
+     * @return freeSlots over the whole day if it is not today or deadline day, otherwise start or end free
      * slots at now or deadline time
      */
     private Map<LocalDateTime, Long> getFreeSlots(LocalDateTime deadlineTime, Map<LocalDate, List<Event>> schedule, LocalDate day) {
@@ -99,7 +99,7 @@ public class WorkSessionScheduler implements EventListObserver {
     }
 
     /**
-     * A Method which automatically schedules work sessions for an Event which only has a deadline assocaited with it
+     * A Method which automatically schedules work sessions for an Event which only has a deadline associated with it
      * has two options or strategies for scheduling work sessions
      *
      * @param deadline     An Event
@@ -107,20 +107,20 @@ public class WorkSessionScheduler implements EventListObserver {
      */
     private void autoSchedule(Event deadline, EventManager eventManager) {
         if (this.procrastinate) {
-            this.autoSchedulep(deadline, eventManager);
+            this.autoScheduleProcrastinate(deadline, eventManager);
         } else {
-            this.autoSchedulenp(deadline, eventManager);
+            this.autoScheduleNoProcrastinate(deadline, eventManager);
         }
     }
 
     /**
-     * autoscheduling if set to not procrastinate. creates work sessions on days with the fewest work session
+     * autoScheduling if set to not procrastinate. creates work sessions on days with the fewest work session
      * starting as soon as possible and ending the day before the deadline
      *
      * @param deadline     the deadline event
      * @param eventManager the eventManager to be scheduled around
      */
-    private void autoSchedulenp(Event deadline, EventManager eventManager) {
+    private void autoScheduleNoProcrastinate(Event deadline, EventManager eventManager) {
         LocalDateTime deadlineTime = eventManager.getEnd(deadline);
         Integer ID = eventManager.getID(deadline);
         eventManager.addEvent(deadline);
@@ -165,13 +165,13 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param deadline     the deadline event
      * @param eventManager the event manager to schedule around
      */
-    private void autoSchedulep(Event deadline, EventManager eventManager) {
+    private void autoScheduleProcrastinate(Event deadline, EventManager eventManager) {
 
         long totalNeeded = (long) (deadline.getHoursNeeded() - eventManager.totalHours(deadline.pastWorkSessions()));
         // Divide the total hours needed by 3 to get time for each work session
         Long sessionLength = totalNeeded / 3L;
 
-        // Get the three days before the enddate of the deadline event
+        // Get the three days before the end date of the deadline event
         LocalDateTime firstDay = deadline.getEndTime().minusDays(3);
         LocalDateTime secondDay = deadline.getEndTime().minusDays(2);
         LocalDateTime thirdDay = deadline.getEndTime().minusDays(1);
@@ -262,7 +262,7 @@ public class WorkSessionScheduler implements EventListObserver {
      *
      * @param days         the days to order
      * @param workSessions the work sessions to count
-     * @return ordered list of days, least work sessions to most work sessions
+     * @return ordered list of days, the least work sessions to most work sessions
      */
     private List<LocalDate> leastWorkSessionsOrder(List<LocalDate> days, List<Event> workSessions) {
         List<LocalDate> ordered = new ArrayList<>();
@@ -303,7 +303,7 @@ public class WorkSessionScheduler implements EventListObserver {
     }
 
     /**
-     * returns a list of LocalDateTimes in a map in order from smallest key to largest key
+     * returns a list of LocalDateTimes in a map in order from the smallest key to the largest key
      *
      * @param times a list of keys for slots
      * @param slots a map with key=LocalDateTime, value=long to find the minimum value key pair in
