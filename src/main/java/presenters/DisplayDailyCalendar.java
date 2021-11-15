@@ -307,7 +307,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
     /**
      * Trim the longest length by the default space provided
      * @param longestLength possible longest length of the events' names compiled at the same time
-     * @return trimmed length
+     * @return trimmed longest length
      */
     private int trimLength(int longestLength) {
         if (longestLength > 90){
