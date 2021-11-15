@@ -52,7 +52,7 @@ public class RecursionController {
             secondFirstEventDateTime = LocalDateTime.of(secondFirstEventDate, secondFirstEventTime);
         }
         String eventName = eventManager.getName(cycle.get(0));
-        Event newEvent = eventManager.addEvent(eventName + "-2", secondFirstEventDateTime);
+        Event newEvent = eventManager.getEvent(eventName + "-2", secondFirstEventDateTime);
         cycle.add(newEvent);
 
         String repetitionMethod = ioController.getAnswer("Enter either: 'num' if there is a " +
@@ -74,7 +74,6 @@ public class RecursionController {
         else {
             methodToGetDates = getDateGetter();
         }
-        cycle.remove(0);
         eventManager.getRepeatedEventManager().addRecursiveEvent(cycle, methodToGetDates);
     }
 
