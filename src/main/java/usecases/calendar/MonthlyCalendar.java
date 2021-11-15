@@ -2,8 +2,6 @@ package usecases.calendar;
 
 import entities.Event;
 import entities.OurCalendar;
-import usecases.calendar.CalendarManager;
-import usecases.calendar.GetCalendar;
 
 import java.util.List;
 import java.util.Map;

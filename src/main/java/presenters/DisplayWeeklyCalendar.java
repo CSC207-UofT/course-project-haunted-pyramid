@@ -27,10 +27,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
 
     /**
      * Initialize the class by setting
-     * @param cm
-     * @param year
-     * @param month
-     * @param date
+     * @param cm CalendarManager object that will provide calendar information
+     * @param year given year
+     * @param month given month
+     * @param date given date
      */
     public DisplayWeeklyCalendar(CalendarManager cm, int year, int month, int date) {
         super(cm);
@@ -50,8 +50,8 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
-     * @return
+     * Display the String image of weekly calendar by running various methods
+     * @return string image of weekly calendar
      */
     @Override
     public String displayCalendar(){
@@ -71,11 +71,11 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
-     * @param startingDayOfWeek
+     * Add timeline and the contents to the calendar
+     * @param startingDayOfWeek starting day of week of the weekly calendar
      * @param result StringBuilder object to be added on
-     * @param indexOne
-     * @param indexTwo
+     * @param indexOne index of timelines
+     * @param indexTwo index of day of weeks
      */
     private void addTimeLineContent(int startingDayOfWeek, StringBuilder result, int indexOne, int indexTwo) {
         List<String> newTimeLine = cf.updateTimeList(this.defaultTimeLine, gatherTimeLine(indexTwo));
@@ -91,8 +91,8 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
-     * @return
+     * Get the length of the longest timeline in the week
+     * @return the length of the longest timeline
      */
     private int getLongestTimeLine(){
         int length = this.defaultTimeLine.size();
@@ -106,9 +106,9 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
-     * @param index
-     * @return
+     * get a list of timelines based on start / end time of events in a day
+     * @param index determines which date to access
+     * @return list of timelines
      */
     private List<String> gatherTimeLine(int index){
         List<String> temp = new ArrayList<>();
@@ -123,10 +123,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
-     * @param startingDayOfWeek
+     * Set up the initial frame of weekly calendar
+     * @param startingDayOfWeek starting day of week in integer (1 = MONDAY, 7 = SUNDAY etc...)
      * @param result StringBuilder object to be added on
-     * @param cf
+     * @param cf DisplayCalendarHelper object to provide required methods
      */
     private void setUpCalendar(int startingDayOfWeek, StringBuilder result, DisplayCalendarHelper cf){
         switch (startingDayOfWeek) {
@@ -155,9 +155,9 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
+     * Add dates to the StringBuilder result
      * @param result StringBuilder object to be added on
-     * @param dayOfWeek
+     * @param dayOfWeek day of week indicator to provide appropriate spacing
      */
     private void addDate(StringBuilder result, int dayOfWeek){
         result.append("|");
@@ -178,11 +178,11 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
+     * Helper method of addDate to add dates in the appropriate format
      * @param result StringBuilder object to be added on
-     * @param keyList
-     * @param tempDiv
-     * @param index
+     * @param keyList list of days
+     * @param tempDiv space to be provided in between
+     * @param index index for determining days in keyList
      */
     private void addDateHelper(StringBuilder result, List<Integer> keyList, String tempDiv, int index) {
         int month = this.month;
@@ -208,10 +208,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
+     * Add timeline to the StringBuilder result
      * @param result StringBuilder object to be added on
-     * @param timeLine
-     * @param index
+     * @param timeLine timeline of the day
+     * @param index index to track the access a certain timeline
      */
     private void addTimeLine(StringBuilder result, List<String> timeLine, int index){
         result.append("|").append(" ");
@@ -219,10 +219,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
+     * Add blank space for appropriate formatting
      * @param result StringBuilder object to be added on
-     * @param length
-     * @param dayOfWeek
+     * @param length total length of events' names
+     * @param dayOfWeek day of week when the space will be applied on
      */
     private void addSpace(StringBuilder result, int length, int dayOfWeek){
         int spacer = getSpacer(dayOfWeek);
@@ -232,9 +232,9 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
-     * @param dayOfWeek
-     * @return
+     * Get appropriate spacing depending on the day of week of the date
+     * @param dayOfWeek day of week
+     * @return the space needed to cover the day of week
      */
     private int getSpacer(int dayOfWeek) {
         int spacer = 0;
@@ -262,12 +262,13 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
+     * Add content (events' names, IDs, etc...) to the StringBuilder result
+     * Return the length of the content
      * @param result StringBuilder object to be added on
-     * @param timeLine
-     * @param time
-     * @param index
-     * @return
+     * @param timeLine list of timeline
+     * @param time index of timeline to specify the time
+     * @param index index needed to determine the specific date
+     * @return length of the content
      */
     private Integer addContent(StringBuilder result, List<String> timeLine, int time, int index){
         List<Integer> keyList = getKeys();
@@ -286,12 +287,12 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
+     * Helper method of addContent. Add event's information to the StringBuilder result and get its length
      * @param result StringBuilder object to be added on
-     * @param nameLength
-     * @param event
-     * @param eventStartTime
-     * @return
+     * @param nameLength length of the name
+     * @param event event that will be access
+     * @param eventStartTime start time of the event
+     * @return length of the event's information
      */
     private int appendNameGetNameLength(StringBuilder result, int nameLength, Event event, String eventStartTime) {
         String eventName = eventManager.getName(event);
@@ -316,8 +317,9 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
-     * @return
+     * Get the list of dates in the right order
+     * For example, if Nov 29, Nov 30, Dec 1, Dec 2, ..., the order should be 29, 30, 1, 2, ...
+     * @return the sorted list of dates
      */
     private List<Integer> getKeys(){
         List<Integer> lst = new ArrayList<>(calendarMap.keySet());
@@ -336,10 +338,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
-     * @param tempOne
-     * @param tempTwo
-     * @param items
+     * Helper method of getKey. Divide up the Dates and add to two different list to help to sort
+     * @param tempOne list of dates less than 10
+     * @param tempTwo list of dates larger than 20
+     * @param items date
      */
     private void divideDate(List<Integer> tempOne, List<Integer> tempTwo, Integer items) {
         if (0 < items && items < 10){
@@ -351,8 +353,8 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
-     * @return
+     * Decide if the calendar needs extra space to display the entire content
+     * @return the required extra horizontal space
      */
     private int lengthDecider(){
         List<Integer> keyList = getKeys();
@@ -381,11 +383,11 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     }
 
     /**
-     *
-     * @param eventList
-     * @param totalLength
-     * @param index
-     * @return
+     * Update totalLength of events' contents based on the events' information that are happening at the same timeline.
+     * @param eventList List of events to access
+     * @param totalLength Previous total length
+     * @param index index of eventList that were chosen previously at the method lengthDecider
+     * @return the updated totalLength of event's contents
      */
     private int getTotalLength(List<Event> eventList, int totalLength, int index) {
         for (int j = index + 1; j < eventList.size(); j++){

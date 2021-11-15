@@ -23,7 +23,7 @@ import java.util.Set;
  * Takes user input and utilizes them as the program sees fit.
  *
  * @author Sebin Im
- * @author Sean Yi
+ * @author Seo Won Yi
  * @see main.ProgramRun
  * @see IOController
  * @see LoginController

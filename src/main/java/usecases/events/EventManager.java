@@ -1,19 +1,15 @@
 package usecases.events;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.time.LocalDate;
 
-import entities.ConstantID;
+import helpers.ConstantID;
 import entities.Event;
 import entities.recursions.RecursiveEvent;
 import interfaces.EventListObserver;
-import usecases.events.RepeatedEventManager;
-
-import javax.swing.text.TabableView;
 
 /**
  * stores and Manages events
@@ -546,7 +542,7 @@ public class EventManager {
     /**
      * TODO Malik
      *
-     * @param repeatedEventManager
+     * @param repeatedEventManager To be added
      */
     public void setRepeatedEventManager(RepeatedEventManager repeatedEventManager) {
         this.repeatedEventManager = repeatedEventManager;

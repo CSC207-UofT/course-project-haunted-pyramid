@@ -1,12 +1,11 @@
 package usecases.events;
 
-import entities.ConstantID;
+import helpers.ConstantID;
 import entities.Event;
 import entities.recursions.IntervalDateInput;
 import entities.recursions.RecursiveEvent;
 import org.junit.Before;
 import org.junit.Test;
-import usecases.events.RepeatedEventManager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
