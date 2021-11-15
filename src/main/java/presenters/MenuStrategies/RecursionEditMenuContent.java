@@ -1,5 +1,13 @@
 package presenters.MenuStrategies;
 
-public class RecursionEditMenuContent {
+import java.util.List;
+
+public class RecursionEditMenuContent implements MenuContent{
+
+    @Override
+    public List<String> getContent() {
+        return null;
+    }
+
 
 }

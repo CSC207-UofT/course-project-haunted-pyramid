@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class IntervalDateInputTest {
     LocalDateTime l =  LocalDateTime.of(2021, 11, 15, 11,0);

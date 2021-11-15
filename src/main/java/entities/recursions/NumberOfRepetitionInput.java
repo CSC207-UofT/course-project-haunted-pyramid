@@ -13,10 +13,21 @@ public class NumberOfRepetitionInput implements DateGetter {
 
     private int numberOfRepetitions;
 
+    /**
+     * constructor of NumberOfRepetitionInput.
+     * @param numberOfRepetitions the number of times I want to repeat a cycle.
+     */
+
     public NumberOfRepetitionInput(int numberOfRepetitions){
         this.numberOfRepetitions = numberOfRepetitions;
     }
 
+    /**
+     * returns repetitions of event in events by adding the period between the first and last event in the list to
+     * each event in the list a numberOfRepetitions of times
+     * @param events the list of events I want to repeat.
+     * @return list of repetitions of event in events
+     */
 
     @Override
     public ArrayList<Event> listOfDatesInCycles(ArrayList<Event> events) {
