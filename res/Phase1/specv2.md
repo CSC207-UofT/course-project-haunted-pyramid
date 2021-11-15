@@ -32,4 +32,4 @@ In phase 0, we were storing data in local serializable files. Now, the files exi
 
 #### Cooperation
 
-In phase 0, we've dealt with individual classes and tried to have single responsibility for each person. In phase 1, we had multiple people working on the same goal (developing and implementing various features of event) by fully utilizing the github features. We've had frequent meetings to keep up everyone's motivation and share opinions. 
+In phase 0, we've dealt with individual classes separately and tried to have single responsibility for each person. In phase 1, we had multiple people working on the same goal (developing and implementing various features of event) by fully utilizing the github features. We've had frequent meetings to keep up everyone's motivation and share opinions. 
