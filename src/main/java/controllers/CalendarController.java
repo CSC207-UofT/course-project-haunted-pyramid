@@ -113,7 +113,7 @@ public class CalendarController {
         if (eventIDList.size() == 0) {
             return;
         }
-        recursionController.createNewRecursion(eventIDList, eventController.getEventManager(), eventController);
+        recursionController.createNewRecursion(eventIDList, eventController.getEventManager());
     }
 
     private List<Integer> getEventIDList(EventController eventController){

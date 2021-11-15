@@ -46,7 +46,6 @@ public class RecursiveEvent {
 
     public Integer getId() {return id;}
     public ArrayList<Event> getEventsInOneCycle() {return eventsInOneCycle;}
-    public DateGetter getMethodToGetDate() {return methodToGetDate;}
     public int getCycleLength(){
         return eventsInOneCycle.size() -1;
     }

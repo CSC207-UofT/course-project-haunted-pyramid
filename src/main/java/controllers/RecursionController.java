@@ -21,7 +21,7 @@ public class RecursionController {
     private final IOController ioController = new IOController();
     private final ControllerHelper helper = new ControllerHelper();
 
-    public void createNewRecursion(List<Integer> eventIDList, EventManager eventManager, EventController eventController){
+    public void createNewRecursion(List<Integer> eventIDList, EventManager eventManager){
         ArrayList<Event> cycle = new ArrayList<>();
         for (int id : eventIDList){
             cycle.add(eventManager.get(id));
