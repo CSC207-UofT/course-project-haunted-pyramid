@@ -8,6 +8,10 @@ import usecases.events.EventManager;
 
 import java.util.ArrayList;
 
+/**
+ * @author Malik Lahlou
+ */
+
 public class RecursionController {
     private final IOController ioController = new IOController();
 
