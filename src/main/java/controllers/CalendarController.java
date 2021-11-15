@@ -149,9 +149,11 @@ public class CalendarController {
                 if (answer.equalsIgnoreCase("n")) {
                         check = true;
                 }
-                else{
+                else {
                     String eventID2 = getEventID(eventController);
-                    eventIDList.add(Integer.parseInt(eventID2));
+                    if (!eventIDList.contains(Integer.parseInt(eventID2))) {
+                        eventIDList.add(Integer.parseInt(eventID2));
+                    }
                 }
             }
         }
