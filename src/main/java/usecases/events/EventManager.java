@@ -24,7 +24,7 @@ import interfaces.EventListObserver;
  */
 public class EventManager {
     private final Map<Integer, Event> eventMap;
-    private RepeatedEventManager repeatedEventManager;
+    private final RepeatedEventManager repeatedEventManager;
     private EventListObserver[] toUpdate;
 
     /**
@@ -163,6 +163,22 @@ public class EventManager {
     public Event addEvent(String title, String endString) {
         Event event = new Event(ConstantID.get(), title, this.stringToDate(endString));
         this.addEvent(event);
+        return event;
+    }
+
+    /**
+     * creates an event of the given parameters and adds it to <code>this.eventMap</code> by unique ID
+     *
+     * @param name  String name of event
+     * @param start LocalDateTime start time of event
+     * @param end   LocalDateTime end time of event
+     */
+    public Event addEvent(String name, LocalDateTime start, LocalDateTime end) {
+        Event event = new Event(ConstantID.get(), name, start, end);
+        this.eventMap.put(event.getID(), event);
+        ArrayList<Event> truc = new ArrayList<>();
+        truc.add(event);
+        this.update("add", truc);
         return event;
     }
 
