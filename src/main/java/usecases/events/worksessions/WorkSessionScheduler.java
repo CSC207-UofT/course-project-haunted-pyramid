@@ -87,6 +87,9 @@ public class WorkSessionScheduler implements EventListObserver {
             System.out.println(days);
 
             Map<LocalDateTime, Long> freeSlots;
+            if (days.isEmpty()){
+                return;
+            }
             if (days.get(0).isEqual(LocalDate.now())) {
                 freeSlots = eventManager.freeSlots(LocalDateTime.now(), schedule.get(days.get(0)),
                         LocalDateTime.of(days.get(0),LocalTime.of(23, 59)));

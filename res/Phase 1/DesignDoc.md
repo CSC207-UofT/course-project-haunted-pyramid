@@ -23,9 +23,18 @@ between events in EventManager would make this Class smaller and easier to under
 
 
 
+the Event and Event collection handling classes are open for extension - an Event is a very basic object that contains 
+general references to other Events that can be handled in different ways by different kinds of Managers. 
+our idea to generalize repetition and courses to the more broad collections - courses whose times are related 
+by some pattern or reference eachother in some way - makes the event handling functionality open for extension.
+events and collections of events.
 - Liskov Substitution Principle
 
 - Interface Segregation Principle
+
+The EventListObserver interface contains only one method, used by the EventManager to update observers whenever an Event 
+in its map is changed. This adheres to the Interface segregation principle. There is no case of an object having unused
+implementations of methods in an interface it inherits from.
 
 - Dependency Inversion Principle
 
