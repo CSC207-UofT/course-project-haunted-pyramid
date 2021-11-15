@@ -90,7 +90,7 @@ Syntax and logic error debugging
 Work To Be Done:
 
 Feature additions and minor error debugging
-Improvements on the interactions of work session
+Improvements and extension of the interactions of work session and User Preferences
 
 ####Mailk Lahlou
 
