@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,7 +23,7 @@ public class RecursiveEventTest {
     Event e1 = new Event(1, "e1", l);
     Event e2 = new Event(2, "e2", 2021, 11, 18, 10, 11, 0, 0);
     Event e3 = new Event(3, "e3", 2021, 11, 20, 10, 11, 0, 0);
-    ArrayList<Event> z = new ArrayList<>();
+    List<Event> z = new ArrayList<>();
     RecursiveEvent recursiveEvent = new RecursiveEvent(ConstantID.get());
 
     @Before
