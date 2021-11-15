@@ -33,7 +33,7 @@ public class OurCalendarTest {
         Event eventOne = new Event(1, "Test1",
                 2021, 10, 15, 7, 10, 0, 0);
         Event eventTwo = new Event(2, "Test2",
-                2021, 10, 15, 7, 10, 0, 0);
+                2021, 10, 15, 8, 9, 0, 0);
         calendar.addEvent(eventOne);
         calendar.addEvent(eventTwo);
         calendar.updateConflict();
@@ -76,7 +76,7 @@ public class OurCalendarTest {
         Event eventOne = new Event(1, "Test1",
                 2021, 10, 15, 7, 10, 0, 0);
         Event eventTwo = new Event(2, "Test2",
-                2021, 10, 15, 7, 10, 0, 0);
+                2021, 10, 15, 8, 9, 0, 0);
         calendar.addEvent(eventOne);
         calendar.addEvent(eventTwo);
         calendar.updateConflict();

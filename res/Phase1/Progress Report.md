@@ -43,80 +43,80 @@ a refreshing experience which enhanced our cooperative skills in teamwork using 
 
 Work Done:
 
-Created and refactored most, if not all classes related to the calendar
-Textual visualization of the calendar in the console
-Presenters and their connections with the controller
-Assisted in debugging and refactoring other classes responsible by groupmates
-Altered many classes and methods to be abstract and also cleaner
-Founded and created menus and helpers to process user input
-Class structure and working path organization
+Created and refactored most, if not all classes related to the calendar\
+Textual visualization of the calendar in the console\
+Presenters and their connections with the controller\
+Assisted in debugging and refactoring other classes responsible by groupmates\
+Altered many classes and methods to be abstract and also cleaner\
+Founded and created menus and helpers to process user input\
+Class structure and working path organization\
 Syntax and logic error debugging
 
 Work To Be Done:
 
-Research and implementation of new interface, such as executables or HTML/CSS
+Research and implementation of new interface, such as executables or HTML/CSS\
 Feature additions and minor error debugging
 
 ####Sebin Im
 
 Work Done:
 
-Altered most of the controllers and managers, and their interactions between each other
-Made sure that interface adapters are following clean architecture as specified
-Implemented log in and user verification
-Research, learning and applying Dropbox API into our program for enhanced security
-Founded and implemented data serialization and deserialization of files to read/write required objects
-Updated project structure to enhance security of important files
-Class structure and working path organization
+Altered most of the controllers and managers, and their interactions between each other\
+Made sure that interface adapters are following clean architecture as specified\
+Implemented log in and user verification\
+Research, learning and applying Dropbox API into our program for enhanced security\
+Founded and implemented data serialization and deserialization of files to read/write required objects\
+Updated project structure to enhance security of important files\
+Class structure and working path organization\
 Syntax and logic error debugging
 
 Work To Be Done:
 
-Research and implementation of new interface, such as executables or HTML/CSS
-Further improvement in serialization
+Research and implementation of new interface, such as executables or HTML/CSS\
+Further improvement in serialization\
 Feature additions and minor error debugging
 
 ####Taite Cullen
 
 Work Done:
 
-Added menus and implemented user input comprehension system
-Created methods that allow various alterations on an event
-Founded and added work sessions and its interaction with other classes
-Worked on event modification improvements
-Class structure and working path organization
+Added menus and implemented user input comprehension system\
+Created methods that allow various alterations on an event\
+Founded and added work sessions and its interaction with other classes\
+Worked on event modification improvements\
+Class structure and working path organization\
 Syntax and logic error debugging
 
 Work To Be Done:
 
-Feature additions and minor error debugging
+Feature additions and minor error debugging\
 Improvements and extension of the interactions of work session and User Preferences
 
 ####Mailk Lahlou
 
 Work Done:
 
-Founded and added categories
-Implemented recursions and its corresponding classes
-Worked on event modification improvements
-Class structure and working path organization
+Founded and added categories\
+Implemented recursions and its corresponding classes\
+Worked on event modification improvements\
+Class structure and working path organization\
 Syntax and logic error debugging
 
 Work To Be Done:
 
-Feature additions and minor error debugging
+Feature additions and minor error debugging\
 Improvements on the interactions of recursion and its corresponding classes
 
 ####Shahzada Muhammad Shameel Farooq
 
 Work Done:
 
-Researched and implemented algorithm for scheduler
-Added work sessions and its interaction with other classes
+Researched and implemented algorithm for scheduler\
+Added work sessions and its interaction with other classes\
 Syntax and logic error debugging
 
 Work To Be Done:
 
-Research on possible Java libraries to be used in Phase 2
-Feature additions and minor error debugging
+Research on possible Java libraries to be used in Phase 2\
+Feature additions and minor error debugging\
 Improvements on the interactions of scheduler algorithm
