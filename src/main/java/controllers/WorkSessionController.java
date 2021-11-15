@@ -47,8 +47,19 @@ public class WorkSessionController {
                 System.out.println("Please Set up the Work Session");
             } else {
                 System.out.println("The following Work Sessions are assigned for this Event");
-                System.out.println("Past: " + eventManager.getPastWorkSession(eventID));
-                System.out.println("Current: " + eventManager.getFutureWorkSession(eventID));
+                if (eventManager.getPastWorkSession(eventID).size() == 0) {
+                    System.out.println("There is no Past Work Sessions");
+                }
+                else {
+                    System.out.println("Past: " + eventManager.getPastWorkSession(eventID));
+                }
+                if (eventManager.getFutureWorkSession(eventID).size() == 0) {
+                    System.out.println("All Work Sessions were assigned for the Past.");
+                    System.out.println("Please mark them to update or change Total Work Session Hours");
+                }
+                else {
+                    System.out.println("Current: " + eventManager.getFutureWorkSession(eventID));
+                }
                 System.out.println("Current Session Length: " + eventManager.getEventSessionLength(eventID));
                 System.out.println("Total Work Session Hours: " + eventManager.getTotalHoursNeeded(eventID));
             }
