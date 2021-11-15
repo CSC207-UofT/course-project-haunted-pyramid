@@ -162,7 +162,7 @@ public class EventManager {
         return new Event(ConstantID.get(), title, endTime);
     }
 
-     /**
+    /**
      * adds an already existing event to <code>this.eventMap</code>. will overwrite event of same ID
      *
      * @param event event to be added
@@ -235,11 +235,8 @@ public class EventManager {
      * RecursiveEvent object.
      */
 
-    public void eventsInSomeRecursion(RecursiveEvent recursiveEvent) {
-        ArrayList<Event> thisList = repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId());
-        for (Event event: thisList) {
-            this.eventMap.put(event.getID(), event);
-        }
+    public ArrayList<Event> eventsInSomeRecursion(RecursiveEvent recursiveEvent) {
+        return repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId());
     }
 
 
@@ -255,7 +252,10 @@ public class EventManager {
             events.addAll(this.splitByDay(event));
         }
         for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()){
-            this.eventsInSomeRecursion(recursiveEvent);
+            ArrayList<Event> repeatedEvents = this.eventsInSomeRecursion(recursiveEvent);
+            for (Event event : repeatedEvents){
+                events.addAll(this.splitByDay(event));
+            }
         }
         return events;
     }
