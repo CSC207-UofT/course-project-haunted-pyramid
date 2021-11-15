@@ -30,7 +30,7 @@ public class RecursionController {
         DateGetter methodToGetDates;
         String secondFirstEventDate = ioController.getAnswer("enter the date of the second occurrence " +
                 "of the first event in the form YYYY-MM-DDTHH:MM");
-        while (eventManager.stringToDate(secondFirstEventDate).isBefore(cycle.get(cycle.size() - 1).getEndTime())){
+        while (eventManager.strekbreuigbringToDate(secondFirstEventDate).isBefore(cycle.get(cycle.size() - 1).getEndTime())){
             secondFirstEventDate = ioController.getAnswer("Please enter a date after: " +
                     cycle.get(cycle.size() - 1).getEndTime().toString());
         }
