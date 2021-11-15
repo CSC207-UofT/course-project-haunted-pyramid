@@ -2,13 +2,15 @@ package entities.recursions;
 
 import entities.Event;
 import interfaces.DateGetter;
-import interfaces.EventListObserver;
-import usecases.events.EventManager;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class RecursiveEvent implements EventListObserver {
+/**
+ * @author Malik Lahlou
+ */
+
+public class RecursiveEvent {
 
 
     /**
@@ -21,7 +23,7 @@ public class RecursiveEvent implements EventListObserver {
      */
 
 
-    private Integer id;
+    private final Integer id;
     private ArrayList<Event> eventsInOneCycle;
     private DateGetter methodToGetDate;
 
@@ -35,6 +37,9 @@ public class RecursiveEvent implements EventListObserver {
         this.methodToGetDate = methodToGetDate;
     }
 
+    public RecursiveEvent(Integer id){
+        this.id = id;
+    }
     /**
      * Getter methods.
      */
@@ -55,6 +60,11 @@ public class RecursiveEvent implements EventListObserver {
     /**
      * If user were to Remove/add/change an event from/to a recursion, these methods return cycle in which they will be.
      */
+
+    // TODO (for phase 2): give the user the choice to modify cycles by include cycleAfterAdditionOrChange and
+    //  cycleAfterRemoval in event manager and controller
+    // TODO (for phase 2): test these methods after including them.
+    // TODO (for phase 2): make cycleAfterAdditionOrChange shorter by creating private helper methods
 
     public void addOrChange(String addChange, ArrayList<Event> objects, Event object, int index){
         if (!Objects.equals(addChange, "add")) {
@@ -120,7 +130,8 @@ public class RecursiveEvent implements EventListObserver {
      *
      * Uses the classes that implement the date getter interface to return the dates of all the events in the
      * period of repetition.
-     * @return
+     * @param events The events in one repetition cycle.
+     * @return list of repetitions of event in events
      */
 
     public ArrayList<Event> listOfEventsInCycles(ArrayList<Event> events){
@@ -129,8 +140,10 @@ public class RecursiveEvent implements EventListObserver {
 
     /**
      *
-     * Given a specific event in a cycle, this method returns all the dates in the period of repetition of the specific
-     * event (don't include original event in this.eventsInOneCycle).
+     * @param event The specific event.
+     * @return Given a specific event in a cycle, this method returns an arrayList of all the events
+     * (which are repetitions of this specific event) in the period of repetition (don't include original event
+     * in this.eventsInOneCycle).
      */
 
     public ArrayList<Event> createEventInCycles(Event event){
@@ -138,7 +151,7 @@ public class RecursiveEvent implements EventListObserver {
         int indexOfEvent = this.eventsInOneCycle.indexOf(event);
         ArrayList<Event> listOfDatesInCycles = this.listOfEventsInCycles(this.eventsInOneCycle);
         int cyclesLength = listOfDatesInCycles.size();
-        int i = 1;
+        int i = 0;
         while(indexOfEvent + this.getCycleLength()*i < cyclesLength){
             listOfDatesInCycles.get(indexOfEvent + this.getCycleLength()*i).setRecursiveId(this.id);
             result.add(listOfDatesInCycles.get(indexOfEvent + this.getCycleLength()*i));
@@ -147,36 +160,5 @@ public class RecursiveEvent implements EventListObserver {
         return result;
     }
 
-    @Override
-    public void update(String addRemoveChange, ArrayList<Event> changed, EventManager eventManager) {
-
-    }
-
-    /**
-     *
-     * The listOfDatesInCyclesForSpecificEvent returns all the dates in a period of repetition for a specific event.
-     * This method creates events with those dates. Looping through the events in this.eventsInOneCycle will
-     * create all the events in the period of repetition. (Temporary: ids parameter until I ask group how they plan to
-     * get ids)
-     * Assumptions: the start and end time of an event are in the same year, month and day (to remedy this, need to
-     * change the listOfDatesInCycles method to return an arrayList of 2 element array (the 2 elements are the
-     * start time and end time)).
-     */
-
-//    public ArrayList<Event> createEventInCycles(Event event){
-//        String name = event.getName();
-//        ArrayList<Event> result = new ArrayList<>();
-//        ArrayList<LocalDateTime> dateList = this.listOfDatesInCyclesForSpecificEvent(event);
-//        int i = 1;
-//        for(LocalDateTime date : dateList){
-//            LocalDateTime eventStartDate = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(),
-//                    event.getStartTime().getHour(), event.getStartTime().getMinute());
-//            Event event1 = new Event(ConstantID.get(), name + "-" + i, eventStartDate, date);
-//            i ++;
-//            result.add(event1);
-//        }
-//        return result;
-//    }
-//
 
 }

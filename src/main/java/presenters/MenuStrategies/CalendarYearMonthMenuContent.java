@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Calendar Date Selection menu content
  * @author Seo Won Yi
  */
 public class CalendarYearMonthMenuContent implements MenuContent {

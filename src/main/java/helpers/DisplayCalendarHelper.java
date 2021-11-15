@@ -11,7 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Helper class that contains lots of common methods being used by different types of DisplayCalendar Classes
  * @author Seo Won Yi
+ * @see presenters.DisplayCalendar
+ * @see presenters.DisplayDailyCalendar
+ * @see presenters.DisplayWeeklyCalendar
+ * @see presenters.DisplayMonthlyCalendar
  */
 public class DisplayCalendarHelper {
     private final int year;

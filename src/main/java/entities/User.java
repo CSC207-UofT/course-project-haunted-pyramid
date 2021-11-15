@@ -8,7 +8,10 @@ import java.util.*;
 /**
  * @author Malik Lahlou
  * @author Taite Cullen
+ * @author Sebin Im
  */
+
+// TODO (for Phase 2) add more user information
 public class User implements Serializable {
     private UUID id;
     private String name;
@@ -20,7 +23,7 @@ public class User implements Serializable {
     private String homeAddress;
     private ArrayList<Event> events;
     private boolean procrastinate;
-    private Map<LocalTime, LocalTime> freeTime;
+    private final Map<LocalTime, LocalTime> freeTime;
 
     public User(UUID id, String name, String username, String password) {
         this.id = id;
@@ -50,21 +53,21 @@ public class User implements Serializable {
         return this.password;
     }
 
-    public LocalDate getBirthDate() {
-        return this.birthDate;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public String getPhoneNumber() {
-        return this.phoneNumber;
-    }
-
-    public String getHomeAddress() {
-        return this.homeAddress;
-    }
+//    public LocalDate getBirthDate() {
+//        return this.birthDate;
+//    }
+//
+//    public String getEmail() {
+//        return this.email;
+//    }
+//
+//    public String getPhoneNumber() {
+//        return this.phoneNumber;
+//    }
+//
+//    public String getHomeAddress() {
+//        return this.homeAddress;
+//    }
 
     public ArrayList<Event> getEvents() {
         return this.events;
@@ -86,29 +89,30 @@ public class User implements Serializable {
         this.name = name;
     }
 
+    // Need this later to allow change of username of user
     public void setUsername(String username) {
         this.username = username;
     }
-
+    // Need this later to allow change of password of user
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setHomeAddress(String homeAddress) {
-        this.homeAddress = homeAddress;
-    }
+//    public void setBirthDate(LocalDate birthDate) {
+//        this.birthDate = birthDate;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
+//
+//    public void setPhoneNumber(String phoneNumber) {
+//        this.phoneNumber = phoneNumber;
+//    }
+//
+//    public void setHomeAddress(String homeAddress) {
+//        this.homeAddress = homeAddress;
+//    }
 
     public void setEvents(ArrayList<Event> events) {
         this.events = events;

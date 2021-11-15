@@ -19,6 +19,11 @@ import entities.User;
 
 /**
  * This class will allow (de)serialization of files.
+ * It reads from dropbox and saves the data in real time.
+ * Debugging must be done by Sebin since all data is serialized in his personal repository that no one can access.
+ * The entities being imported are not for violating clean architecture; rather they only exist for type casting.
+ *
+ * @author Sebin Im
  */
 public class IOSerializable {
     // Logging
@@ -32,15 +37,24 @@ public class IOSerializable {
     private static final String ACCESS_TOKEN = "EfBUX9G7zxkAAAAAAAAAAaXr-kGtiOL1cwBhwIe7BcI0hvt-uH5LBsEh4FXJ31Ry";
 
     // A public Dropbox link where the serialized files are stored
-    private static final String eventsURL = "https://www.dropbox.com/s/shrv0qs6rngwhqj/events.ser?dl=1";
-    private static final String usersURL = "https://www.dropbox.com/s/1l7g7qoqqhgf1eg/users.ser?dl=1";
+    private static final String eventsURL = "https://www.dropbox.com/s/d6f0dkbpswa91fd/events.ser?dl=1";
+    private static final String usersURL = "https://www.dropbox.com/s/ulkxj7p7yztdkgn/users.ser?dl=1";
 
+    /**
+     * Initialize an instance of IOSerializable.
+     *
+     * @param intro boolean value of the process being in introduction or conclusion
+     */
     public IOSerializable(Boolean intro) {
         readFromDropbox(intro);
     }
 
+    /**
+     * Download from public Dropbox repository these two files, and save them in the directory temporarily.
+     *
+     * @param intro boolean value of the process being in introduction or conclusion
+     */
     public void readFromDropbox(Boolean intro) {
-        // Download from public Dropbox repository these two files, and save them in the directory temporarily.
         try {
             URL eventsDownload = new URL(eventsURL);
             URL usersDownload = new URL(usersURL);
@@ -60,6 +74,12 @@ public class IOSerializable {
         }
     }
 
+    /**
+     * A helper method that checks if this file retrieval process is for the beginning or for the end of the program.
+     *
+     * @param intro boolean value of the process being in introduction or conclusion
+     * @return A stream of FileOutput that corresponds to which filename it should have
+     */
     public ArrayList<FileOutputStream> introOrEnd(Boolean intro) {
         try {
             if (intro) {
@@ -75,6 +95,11 @@ public class IOSerializable {
         return null;
     }
 
+    /**
+     * A method that saves to the dropbox repository.
+     * It first creates a client of Sebin Im, which uses the access token to verify itself.
+     * Then creates an instance of builder that uploads the files to the repository.
+     */
     public void saveToDropbox() {
         // Create Dropbox Client
         DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/Sebin").build();
@@ -91,7 +116,7 @@ public class IOSerializable {
 
         // Delete files in the directory to avoid file duplication error and upload serializable files to Dropbox
         try {
-// Commenting out delete to check if overwrite is viable.
+//          Commenting out delete for now, since these lines are valuable.
 //            DeleteResult delEvents1 = client.files().deleteV2("/" + EVENTS_FILEPATH);
 //            DeleteResult delUsers1 = client.files().deleteV2("/" + USERS_FILEPATH);
             InputStream eventsInputStream = new FileInputStream(EVENTS_FILEPATH);
@@ -114,7 +139,8 @@ public class IOSerializable {
     /**
      * Checks if the user has save files for all supported data types.
      * Returns true if and only if all data types are saved.
-     * @return A boolean whether the user has save files.
+     *
+     * @return A boolean whether the user has save files
      */
     public boolean hasSavedData() {
         List<String> paths = List.of(EVENTS_FILEPATH, USERS_FILEPATH);
@@ -124,6 +150,12 @@ public class IOSerializable {
         return true;
     }
 
+    /**
+     * Read the file contents from the serialized files obtained from the dropbox repository.
+     * Then type cast them into an ArrayList of Events.
+     *
+     * @return an ArrayList of all Events stored in the file
+     */
     public ArrayList<Event> eventsReadFromSerializable() {
         try {
             InputStream file = new FileInputStream(EVENTS_FILEPATH);
@@ -142,6 +174,12 @@ public class IOSerializable {
         }
     }
 
+    /**
+     * Write the serialized file to the filepath as specified.
+     * The written object should be an ArrayList of Events.
+     *
+     * @param events an ArrayList of events to be serialized
+     */
     public void eventsWriteToSerializable(ArrayList<Event> events) {
         try {
             OutputStream file = new FileOutputStream(EVENTS_FILEPATH);
@@ -154,6 +192,12 @@ public class IOSerializable {
         }
     }
 
+    /**
+     * Read the file contents from the serialized files obtained from the dropbox repository.
+     * Then type cast them into an ArrayList of Users.
+     *
+     * @return an ArrayList of all Users stored in the file
+     */
     public ArrayList<User> usersReadFromSerializable() {
         try {
             InputStream file = new FileInputStream(USERS_FILEPATH);
@@ -172,6 +216,12 @@ public class IOSerializable {
         }
     }
 
+    /**
+     * Write the serialized file to the filepath as specified.
+     * The written object should be an ArrayList of Users.
+     *
+     * @param users an ArrayList of users to be serialized
+     */
     public void usersWriteToSerializable(ArrayList<User> users) {
         try {
             OutputStream file = new FileOutputStream(USERS_FILEPATH);
@@ -184,6 +234,9 @@ public class IOSerializable {
         }
     }
 
+    /**
+     * Delete files that are newly created to avoid data breach.
+     */
     public void deleteNewFiles() {
         File events1Ser = new File("events1.ser");
         File users1Ser = new File("users1.ser");
@@ -191,24 +244,13 @@ public class IOSerializable {
         Boolean b = users1Ser.delete();
     }
 
+    /**
+     * Delete files that have been in the directory since the beginning to avoid data breach.
+     */
     public void deleteOldFiles() {
         File eventsSer = new File("events.ser");
         File usersSer = new File("users.ser");
         Boolean a = eventsSer.delete();
         Boolean b = usersSer.delete();
     }
-
-// Create new ser files in case they are deleted. In that case, write methods must be static.
-//    public static void main(String[] args) {
-//        Event event1 = new Event(1, "Example Event 1", 2021, 11, 10, 0, 1, 0, 0);
-//        Event event2 = new Event(2, "Example Event 2", 2021, 11, 10, 1, 2, 0, 0);
-//        Event event3 = new Event(3, "Example Event 3", 2021, 11, 10, 2, 3, 0, 0);
-//        Event event4 = new Event(4, "Example Event 4", 2021, 11, 10, 3, 4, 0, 0);
-//        Event event5 = new Event(5, "Example Event 5", 2021, 11, 10, 4, 5, 0, 0);
-//        ArrayList<Event> events = new ArrayList<>(Arrays.asList(event1, event2, event3, event4, event5));
-//        User user1 = new User(UUID.randomUUID(), "Sebin", "sebin1", "password1");
-//        ArrayList<User> users = new ArrayList<>(List.of(user1));
-//        eventsWriteToSerializable(events);
-//        usersWriteToSerializable(users);
-//    }
 }

@@ -63,7 +63,6 @@ public class RecursionController {
                         eventManager.stringToDate(endOfCycles));
             }
             eventManager.getRepeatedEventManager().addRecursiveEvent(cycle, methodToGetDates);
-            eventManager.addEventsInRecursion();
             done = true;
         }
     }

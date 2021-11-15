@@ -1,6 +1,6 @@
 package entities.recursions;
 
-import entities.ConstantID;
+import helpers.ConstantID;
 import entities.Event;
 import interfaces.DateGetter;
 import usecases.events.EventManager;
@@ -10,15 +10,31 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 
+/**
+ * @author Malik Lahlou
+ */
+
 public class IntervalDateInput implements DateGetter {
 
-    private LocalDateTime[] periodOfRepetition;
+    private final LocalDateTime[] periodOfRepetition;
+
+    /**
+     * constructor of IntervalDateInput.
+     * @param beginningOfCycles The date this repetition should begin.
+     * @param endOfCycles The date this repetition ends.
+     */
 
     public IntervalDateInput(LocalDateTime beginningOfCycles, LocalDateTime endOfCycles){
         this.periodOfRepetition = new LocalDateTime[2];
         this.periodOfRepetition[0] = beginningOfCycles;
         this.periodOfRepetition[1] = endOfCycles;
     }
+
+    /**
+     * helper method
+     * @param event The date this repetition should begin.
+     * @return the end date if there is no start date, and the start date otherwise.
+     */
 
     private LocalDateTime startTimeGetter(Event event){
         if(event.getStartTime() == null){
@@ -28,6 +44,14 @@ public class IntervalDateInput implements DateGetter {
             return event.getStartTime();
         }
     }
+
+    /**
+     * helper method.
+     * @param event the event I want to copy.
+     * @param period the time period that should be added to event start/end time until it's after periodOfRepetition[0].
+     * @return creates an event after periodOfRepetition[0] by adding period to the event start or end date (if there
+     * is no start date).
+     */
 
     private Event getEventAfterStartDate(Event event, Period period){
         LocalDateTime startTime = this.startTimeGetter(event);
@@ -47,17 +71,29 @@ public class IntervalDateInput implements DateGetter {
 
     }
 
-    private ArrayList<Event> getEventListAfterBeginningOfCycles(ArrayList<Event> events, Period period){
+    /**
+     * helper method.
+     * @param events the list of events getEventAfterStartDate should be applied to.
+     * @param period the time period that should be added to event start/end time until it's after periodOfRepetition[0].
+     * @return apply getEventAfterStartDate to events in the list, then order them in chronological order.
+     */
+
+    private ArrayList<Event> getEventListAfterBeginningOfCycles(ArrayList<Event> events, Period period) {
         ArrayList<Event> result = new ArrayList<>();
-        for(Event event : events){
+        for (Event event : events) {
             Event newEvent = getEventAfterStartDate(event, period);
             result.add(newEvent);
         }
         EventManager e = new EventManager();
-        ArrayList<Event> newResult = (ArrayList<Event>) e.timeOrder(result);
-        return newResult;
+        return (ArrayList<Event>) e.timeOrder(result);
     }
 
+    /**
+     * returns repetitions of event in events by adding the period between the first and last event in the list to
+     * each event in the list until one become after periodOfRepetition[1].
+     * @param events the list of events I want to repeat.
+     * @return list of repetitions of event in events
+     */
 
     @Override
     public ArrayList<Event> listOfDatesInCycles(ArrayList<Event> events) {

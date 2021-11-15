@@ -2,15 +2,17 @@ package usecases.calendar;
 
 import entities.Event;
 import entities.OurCalendar;
-import usecases.calendar.CalendarManager;
-import usecases.calendar.GetCalendar;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * Get Weekly Calendar Map
  * @author Seo Won Yi
+ * @see GetCalendar
+ * @see CalendarManager
+ * @see OurCalendar
  */
 
 public class WeeklyCalendar extends GetCalendar {

@@ -6,8 +6,10 @@ import entities.Event;
 import java.util.*;
 
 /**
+ * Use case of OurCalendar class that will be used for various calendar related classes
  * @author Seo Won Yi
  * @author Shahzada Muhammad Shameel Farooq
+ * @see OurCalendar
  */
 public class CalendarManager {
     private final int currentMonth; // current month
@@ -228,6 +230,38 @@ public class CalendarManager {
             }
         }
         return timeList;
+    }
+
+    /**
+     * Get all the Events' ID information from the specific date of the calendar
+     * @param year year of the calendar
+     * @param month month of the calendar
+     * @param date date of the calendar that ID's will get extracted from
+     * @return the list of ID's in the specific date
+     */
+    public List<Integer> getEventID(int year, int month, int date) {
+        int adjustedMonth = adjustMonth(year, month);
+        List<Integer> listID = new ArrayList<>();
+        if (adjustedMonth == this.currentMonth) {
+            for (Event item : this.currentCalendar.getCalendarMap().get(date)) {
+                listID.add(item.getID());
+            }
+        }
+        for (int i = 0; i < 3; i++){
+            if (adjustedMonth == this.currentMonth + i + 1){
+                for (Event item : this.futureCalendar.get(i).getCalendarMap().get(date)) {
+                    listID.add(item.getID());
+                }
+            }
+        }
+        for (int j = 0; j < 3; j++){
+            if (adjustedMonth == this.currentMonth - j - 1){
+                for (Event item : this.pastCalendar.get(j).getCalendarMap().get(date)) {
+                    listID.add(item.getID());
+                }
+            }
+        }
+        return listID;
     }
 
     /**

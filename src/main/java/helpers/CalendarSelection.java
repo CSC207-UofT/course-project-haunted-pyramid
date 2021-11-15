@@ -1,7 +1,11 @@
 package helpers;
 
 /**
+ * Using DateInfo class, choose the available calendars for viewing
+ * Only past 3 months, future 3 months, and current month's calendars are available for display
  * @author Seo Won Yi
+ * @see controllers.CalendarController
+ * @see DateInfo
  */
 public class CalendarSelection {
     private int year;

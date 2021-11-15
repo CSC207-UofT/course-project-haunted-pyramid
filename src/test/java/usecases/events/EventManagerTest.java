@@ -1,5 +1,5 @@
 
-package usecases;
+package usecases.events;
 import entities.Event;
 
 import static org.junit.Assert.*;

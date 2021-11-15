@@ -7,7 +7,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * Return year, month, and number of days in a month as a list.
  * @author Seo Won Yi
+ * @see controllers.CalendarController
+ * @see CalendarSelection
  */
 public class DateInfo {
 

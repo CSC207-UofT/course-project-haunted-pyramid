@@ -10,6 +10,10 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
+/**
+ * @author Malik Lahlou
+ */
+
 
 public class NumberOfRepetitionInputTest {
     NumberOfRepetitionInput x = new NumberOfRepetitionInput(2);
