@@ -110,10 +110,14 @@ public class IntervalDateInput implements DateGetter {
         if (this.periodOfRepetition[0].isAfter(eventDate1)){
             result.addAll(newEvents);
         }
+        ArrayList<String> nameList = new ArrayList<>();
+        for (Event event : newEvents){
+            nameList.add(event.getName());
+        }
         int i = 2;
         int eventIndex = 0;
         while(currentDate.plus(period).isBefore(this.periodOfRepetition[1])){
-            String name = newEvents.get(eventIndex).getName();
+            String name = nameList.get(eventIndex);
             Event thisEvent = newEvents.get(eventIndex);
             LocalDateTime newEndTime = thisEvent.getEndTime().plus(period);
             Event newThisEvent = new Event(ConstantID.get(), name + "-" + i, newEndTime);

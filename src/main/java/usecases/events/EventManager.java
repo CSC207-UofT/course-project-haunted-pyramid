@@ -150,7 +150,19 @@ public class EventManager {
         return event;
     }
 
-     /**
+
+    /**
+     * creates an event with given name and end time.
+     *
+     * @param title   String title of the Event
+     * @param endTime LocalDateTime end time of the event
+     * @return the event that was created with given title, endTime, and unique ID
+     */
+    public Event getEvent(String title, LocalDateTime endTime) {
+        return new Event(ConstantID.get(), title, endTime);
+    }
+
+    /**
      * adds an already existing event to <code>this.eventMap</code>. will overwrite event of same ID
      *
      * @param event event to be added
