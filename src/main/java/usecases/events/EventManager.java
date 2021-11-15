@@ -236,7 +236,11 @@ public class EventManager {
      */
 
     public ArrayList<Event> eventsInSomeRecursion(RecursiveEvent recursiveEvent) {
-        return repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId());
+        ArrayList<Event> thisList = repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId());
+        for (Event event: thisList){
+            this.eventMap.put(event.getID(), event);
+        }
+        return thisList;
     }
 
 
@@ -250,12 +254,6 @@ public class EventManager {
         List<Event> events = new ArrayList<>();
         for (Event event : this.flattenWorkSessions(new ArrayList<>(this.eventMap.values()))) {
             events.addAll(this.splitByDay(event));
-        }
-        for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()){
-            ArrayList<Event> repeatedEvents = this.eventsInSomeRecursion(recursiveEvent);
-            for (Event event : repeatedEvents){
-                events.addAll(this.splitByDay(event));
-            }
         }
         return events;
     }
