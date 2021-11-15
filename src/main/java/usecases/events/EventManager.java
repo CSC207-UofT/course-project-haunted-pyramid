@@ -33,7 +33,7 @@ public class EventManager {
      *
      * @param events a list of events to be stored in <code>this.eventMap</code>
      */
-    public EventManager(ArrayList<Event> events) {
+    public EventManager(List<Event> events) {
         if (events.isEmpty()) {
             this.eventMap = new HashMap<>();
         } else {
@@ -343,7 +343,7 @@ public class EventManager {
      * @param obs the observer to be added
      */
     public void addObserver(EventListObserver obs) {
-        ArrayList<EventListObserver> inter = new ArrayList<>(List.of(this.toUpdate));
+        List<EventListObserver> inter = new ArrayList<>(List.of(this.toUpdate));
         inter.add(obs);
         this.toUpdate = inter.toArray(new EventListObserver[0]);
     }

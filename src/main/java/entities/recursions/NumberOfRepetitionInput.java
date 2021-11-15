@@ -42,7 +42,7 @@ public class NumberOfRepetitionInput implements DateGetter {
         LocalDateTime eventDate1 = firstEvent1.getEndTime();
         LocalDateTime eventDate2 = firstEvent2.getEndTime();
         Period period = Period.between(LocalDate.from(eventDate1), LocalDate.from(eventDate2));
-        ArrayList<Event> result = new ArrayList<>();
+        List<Event> result = new ArrayList<>();
         int repetitionIndex = 0;
         int i = 2;
         while(repetitionIndex < this.numberOfRepetitions){

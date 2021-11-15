@@ -43,7 +43,7 @@ public class RepeatedEventManager implements EventListObserver {
      * object to the RepeatedEventManager map.
      */
 
-    public void addRecursiveEvent(ArrayList<Event> eventsInCycle, DateGetter methodToGetDate){
+    public void addRecursiveEvent(List<Event> eventsInCycle, DateGetter methodToGetDate){
         RecursiveEvent recursiveEvent = new RecursiveEvent(ConstantID.get(), eventsInCycle, methodToGetDate);
         this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
     }

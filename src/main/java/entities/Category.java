@@ -2,6 +2,8 @@ package entities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Malik Lahlou
@@ -14,23 +16,23 @@ public class Category {
 
     private int id;
     private String name;
-    private ArrayList<String> typesInCategory;
-    private HashMap<String, ArrayList<Event>> eventMap;
+    private List<String> typesInCategory;
+    private Map<String, List<Event>> eventMap;
 
     public Category(int id, String name, Event event){
         this.id = id;
         this.name = name;
         this.typesInCategory = new ArrayList<>(){{add(event.getType());}};
         this.eventMap = new HashMap<>();
-        ArrayList<Event> eventList = new ArrayList<>();
+        List<Event> eventList = new ArrayList<>();
         eventList.add(event);
         this.eventMap.put(event.getType(), eventList);
     }
 
     public int getId() {return id;}
     public String getName() {return name;}
-    public ArrayList<String> getTypesInCategory() {return typesInCategory;}
-    public HashMap<String, ArrayList<Event>> getEventMap() {return eventMap;}
+    public List<String> getTypesInCategory() {return typesInCategory;}
+    public Map<String, List<Event>> getEventMap() {return eventMap;}
 
     public void addTypeToCategory(String type){this.typesInCategory.add(type);}
     public void addEvent(Event event){
@@ -38,7 +40,7 @@ public class Category {
             this.eventMap.get(event.getType()).add(event);
         }
         else{
-            ArrayList<Event> eventList = new ArrayList<>();
+            List<Event> eventList = new ArrayList<>();
             eventList.add(event);
             this.eventMap.put(event.getType(), eventList);
         }

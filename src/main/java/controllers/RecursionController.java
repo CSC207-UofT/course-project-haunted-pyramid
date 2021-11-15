@@ -32,7 +32,7 @@ public class RecursionController {
     // TODO (phase 2): make this method shorter.
 
     public void createNewRecursion(List<Integer> eventIDList, EventManager eventManager){
-        ArrayList<Event> cycle = new ArrayList<>();
+        List<Event> cycle = new ArrayList<>();
         List<Integer> eventID = new ArrayList<>();
         for (int id : eventIDList){
             cycle.add(eventManager.get(id));
