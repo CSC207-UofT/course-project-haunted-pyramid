@@ -1,6 +1,6 @@
 package entities.recursions;
 
-import entities.ConstantID;
+import helpers.ConstantID;
 import entities.Event;
 import interfaces.DateGetter;
 
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class NumberOfRepetitionInput implements DateGetter {
 
-    private int numberOfRepetitions;
+    private final int numberOfRepetitions;
 
     /**
      * constructor of NumberOfRepetitionInput.

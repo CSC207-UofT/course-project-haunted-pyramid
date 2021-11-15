@@ -22,11 +22,19 @@ The EventManager performs many functions, all related to the sorting, finding, f
 To better adhere to the Single Responsibility principle, some methods for sorting and returning lists of events should be 
 part of a different Classes. Using strategies for sorting and returning sub-lists and information about the relationships
 between events in EventManager would make this Class smaller and easier to understand.
-- 
 
+- Open / Closed Principle Principle
+
+- Liskov Substitution Principle
+
+- Interface Segregation Principle
+
+- Dependency Inversion Principle
 
 
 #### Clean Architecture
+
+
 
 #### Design Patterns
 
@@ -50,7 +58,7 @@ CalendarManager, EventManager, and WorkSessionScheduler have mostly complete jun
 - Attempted to avoid long method (some methods go over 10 lines because of conditional statements 
 that need to be applied)
 - Attempted to keep the number of parameters to be four or less (there are few cases where the method 
-has five parameters (majorly from extractions to avoid long method code smell), but tried our best to not go over it)
+has five parameters (majorly from extractions to avoid long method code smell, but tried our best to not go over it)
 
 ####Code Organization
 

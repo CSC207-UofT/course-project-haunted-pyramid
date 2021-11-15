@@ -10,6 +10,8 @@ import java.util.*;
  * @author Taite Cullen
  * @author Sebin Im
  */
+
+// TODO (for Phase 2) add more user information
 public class User implements Serializable {
     private UUID id;
     private String name;
@@ -21,7 +23,7 @@ public class User implements Serializable {
     private String homeAddress;
     private ArrayList<Event> events;
     private boolean procrastinate;
-    private Map<LocalTime, LocalTime> freeTime;
+    private final Map<LocalTime, LocalTime> freeTime;
 
     public User(UUID id, String name, String username, String password) {
         this.id = id;

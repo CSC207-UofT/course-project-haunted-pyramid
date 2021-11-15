@@ -232,6 +232,13 @@ public class CalendarManager {
         return timeList;
     }
 
+    /**
+     * Get all the Events' ID information from the specific date of the calendar
+     * @param year year of the calendar
+     * @param month month of the calendar
+     * @param date date of the calendar that ID's will get extracted from
+     * @return the list of ID's in the specific date
+     */
     public List<Integer> getEventID(int year, int month, int date) {
         int adjustedMonth = adjustMonth(year, month);
         List<Integer> listID = new ArrayList<>();

@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import java.util.*;
 import java.time.LocalDate;
 
-import entities.ConstantID;
+import helpers.ConstantID;
 import entities.Event;
 import entities.recursions.RecursiveEvent;
 import interfaces.EventListObserver;
@@ -568,6 +568,36 @@ public class EventManager {
     }
 
 
+    /**
+     * TODO Malik
+     *
+     * @param repeatedEventManager To be added
+     */
+    public void setRepeatedEventManager(RepeatedEventManager repeatedEventManager) {
+        this.repeatedEventManager = repeatedEventManager;
+    }
+
+    public RepeatedEventManager getRepeatedEventManager() {
+        return repeatedEventManager;
+    }
+
+    public int getRecursiveEventId(RecursiveEvent recursiveEvent) {
+        return recursiveEvent.getId();
+    }
+
+    /**
+     * TODO Malik
+     * Given a RecursiveEvent, this method gets all the events in the period of repetition and adds them to the
+     * event manager event list.
+     */
+
+    public void addEventsInRecursion(RecursiveEvent recursiveEvent) {
+        for (ArrayList<Event> events : repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId()).values()) {
+            for (Event event : events) {
+                this.addEvent(event);
+            }
+        }
+    }
 
     /**
      * return the start time information of the chosen event in string

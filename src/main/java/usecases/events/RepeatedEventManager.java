@@ -1,15 +1,15 @@
 package usecases.events;
 
-        import entities.ConstantID;
-        import entities.Event;
-        import entities.recursions.RecursiveEvent;
-        import interfaces.DateGetter;
-        import interfaces.EventListObserver;
+import helpers.ConstantID;
+import entities.Event;
+import entities.recursions.RecursiveEvent;
+import interfaces.DateGetter;
+import interfaces.EventListObserver;
 
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.List;
-        import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Malik Lahlou
@@ -68,13 +68,10 @@ public class RepeatedEventManager implements EventListObserver {
 
     /**
      * @param id The id of the Recursive event.
-     * @Return the recursive event with the id.
      */
-
     public RecursiveEvent getRecursiveEvent(Integer id){
         return this.recursiveEventMap.get(id);
     }
-
 
     /**
      *

@@ -5,9 +5,7 @@ import helpers.Constants;
 import helpers.DisplayCalendarHelper;
 import usecases.calendar.CalendarManager;
 import usecases.calendar.MonthlyCalendar;
-import usecases.events.EventManager;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -22,7 +20,6 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
     private final List<Integer> keyList;
     private final Map<Integer, List<Event>> calendarMap;
     private final DisplayCalendarHelper cf;
-    private final EventManager eventManager;
     List<String> dayOfWeekCollection = new ArrayList<>() {{
         add("SUNDAY");
         add("MONDAY");
@@ -48,7 +45,6 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         calendarMap = mc.getCalendar(cm, year, month);
         Collections.sort(this.keyList);
         this.cf = new DisplayCalendarHelper(year, month);
-        this.eventManager = new EventManager();
     }
 
     /**
