@@ -51,11 +51,19 @@ CalendarController (Controller) cooperates with DisplayCalendar.
 
 - Strategy Pattern
 
-DisplayMenu utilizes strategy pattern to display different types of contents with the minimum effort.
+—> DisplayMenu utilizes strategy pattern to display different types of contents with the minimum effort.
 All the menu strategies implement MenuContent interface. The interface is used as a parameter for DisplayMenu class. 
 DisplayMenu class sets which menu content to show and applies it.
 
+—> 
+
 - Factory Method Pattern
+
+In order to display three different types of calendar effectively, we adopt factory method pattern.
+Depending on the user input different type of DisplayCalendar's child class will be initialized.
+By running the overridden method displayCalendar(), the image gets displayed.
+
+- Observer Pattern
 
 In order to display three different types of calendar effectively, we adopt factory method pattern.
 Depending on the user input different type of DisplayCalendar's child class will be initialized.
