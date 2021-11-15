@@ -11,6 +11,7 @@ public interface EventListObserver {
      *      * where 'change' indicates a change of date
      * @param changed map of days to events, where days are the
      *      * Integer days they were originally mapped to before modification
+     * @param eventManager the eventManager that was updated
      */
     void update(String addRemoveChange, ArrayList<Event> changed, EventManager eventManager);
 }
