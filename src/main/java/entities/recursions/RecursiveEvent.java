@@ -56,6 +56,20 @@ public class RecursiveEvent {
     public void setEventsInOneCycle(ArrayList<Event> eventsInOneCycle) {this.eventsInOneCycle = eventsInOneCycle;}
     public void setMethodToGetDate(DateGetter methodToGetDate) {this.methodToGetDate = methodToGetDate;}
 
+
+    /**
+     *
+     * Uses the classes that implement the date getter interface to return the dates of all the events in the
+     * period of repetition.
+     * @param events The events in one repetition cycle.
+     * @return list of repetitions of event in events
+     */
+
+    public ArrayList<Event> listOfEventsInCycles(ArrayList<Event> events){
+        return methodToGetDate.listOfDatesInCycles(events);
+    }
+
+
     /**
      * If user were to Remove/add/change an event from/to a recursion, these methods return cycle in which they will be.
      */
@@ -125,17 +139,6 @@ public class RecursiveEvent {
         }
     }
 
-    /**
-     *
-     * Uses the classes that implement the date getter interface to return the dates of all the events in the
-     * period of repetition.
-     * @param events The events in one repetition cycle.
-     * @return list of repetitions of event in events
-     */
-
-    public ArrayList<Event> listOfEventsInCycles(ArrayList<Event> events){
-        return methodToGetDate.listOfDatesInCycles(events);
-    }
 
     /**
      *
