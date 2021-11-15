@@ -2,8 +2,6 @@ package entities.recursions;
 
 import entities.Event;
 import interfaces.DateGetter;
-import interfaces.EventListObserver;
-import usecases.events.EventManager;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -25,7 +23,7 @@ public class RecursiveEvent {
      */
 
 
-    private Integer id;
+    private final Integer id;
     private ArrayList<Event> eventsInOneCycle;
     private DateGetter methodToGetDate;
 

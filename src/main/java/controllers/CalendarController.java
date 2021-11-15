@@ -197,6 +197,8 @@ public class CalendarController {
                 eventController.createDefaultEvent();
                 break;
             case "4":
+                monthlyCalendarForRepetition(eventController);
+            case "5":
                 break;
         }
     }

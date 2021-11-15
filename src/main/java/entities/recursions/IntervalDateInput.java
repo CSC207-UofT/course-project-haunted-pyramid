@@ -1,6 +1,6 @@
 package entities.recursions;
 
-import entities.ConstantID;
+import helpers.ConstantID;
 import entities.Event;
 import interfaces.DateGetter;
 import usecases.events.EventManager;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class IntervalDateInput implements DateGetter {
 
-    private LocalDateTime[] periodOfRepetition;
+    private final LocalDateTime[] periodOfRepetition;
 
     /**
      * constructor of IntervalDateInput.

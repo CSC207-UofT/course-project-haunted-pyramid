@@ -1,6 +1,6 @@
 package usecases.events;
 
-import entities.ConstantID;
+import helpers.ConstantID;
 import entities.Event;
 import entities.recursions.IntervalDateInput;
 import entities.recursions.RecursiveEvent;

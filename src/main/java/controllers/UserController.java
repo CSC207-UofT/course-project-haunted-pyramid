@@ -10,7 +10,6 @@ import usecases.UserManager;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -18,7 +17,7 @@ import java.util.UUID;
  * A controller for accessing (after login) User info and allowing a user to edit their profile
  *
  * @author Taite Cullen
- * @author Sean Yi
+ * @author Seo Won Yi
  * @author Sebin Im
  */
 public class UserController {

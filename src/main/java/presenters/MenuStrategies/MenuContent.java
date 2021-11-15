@@ -5,6 +5,7 @@ import helpers.Constants;
 import java.util.List;
 
 /**
+ * Interface used for strategy pattern. Update menu image on the input StringBuilder
  * @author Seo Won Yi
  * @see presenters.DisplayMenu
  */
