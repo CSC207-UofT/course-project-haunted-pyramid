@@ -79,6 +79,9 @@ public class CalendarController {
         DisplayMenu displayMenu = new DisplayMenu();
         System.out.println("You may type Return to return to the main menu at any time (except Date selection)");
         String dateInput = getCalendarDateInput(displayMenu, "modify");
+        if (dateInput.equalsIgnoreCase("Return")) {
+            return;
+        }
         CalendarSelection calendarSelection = new CalendarSelection(new DateInfo(), dateInput);
         int year = calendarSelection.getYear();
         int month = calendarSelection.getMonth();
@@ -103,6 +106,9 @@ public class CalendarController {
         DisplayMenu displayMenu = new DisplayMenu();
         System.out.println("You may type Return to return to the main menu at any time (except Date selection)");
         String dateInput = getCalendarDateInput(displayMenu, "repeat");
+        if (dateInput.equalsIgnoreCase("Return")) {
+            return;
+        }
         CalendarSelection calendarSelection = new CalendarSelection(new DateInfo(), dateInput);
         int year = calendarSelection.getYear();
         int month = calendarSelection.getMonth();
@@ -116,6 +122,11 @@ public class CalendarController {
         recursionController.createNewRecursion(eventIDList, eventController.getEventManager());
     }
 
+    /**
+     * Get list of event ID via confirming with the user
+     * @param eventController EventController object that has event information
+     * @return list of eventID
+     */
     private List<Integer> getEventIDList(EventController eventController){
         List<Integer> eventIDList = new ArrayList<>();
         boolean check = false;
@@ -138,9 +149,11 @@ public class CalendarController {
                 if (answer.equalsIgnoreCase("n")) {
                         check = true;
                 }
-                else{
+                else {
                     String eventID2 = getEventID(eventController);
-                    eventIDList.add(Integer.parseInt(eventID2));
+                    if (!eventIDList.contains(Integer.parseInt(eventID2))) {
+                        eventIDList.add(Integer.parseInt(eventID2));
+                    }
                 }
             }
         }

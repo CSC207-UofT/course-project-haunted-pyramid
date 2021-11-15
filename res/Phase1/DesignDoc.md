@@ -129,7 +129,7 @@ that need to be applied)
 has five parameters which are majorly from extractions to avoid long method code smell, 
 but tried our best to not go over it.
 
-####Code Organization
+####Code Organization / Packaging Choice
 
 We looked at various strategies for packaging the code. We looked at packaging by 
 Layer, by feature and by Inside/outside. We chose to package our code by Layer. It 

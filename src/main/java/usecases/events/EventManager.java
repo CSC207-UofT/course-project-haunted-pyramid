@@ -525,7 +525,7 @@ public class EventManager {
      */
     public List<Event> getTotalWorkSession(Integer id) {
         if (this.containsID(id)) {
-            return this.get(id).getWorkSessions();
+            return this.timeOrder(this.get(id).getWorkSessions());
         }
         return null;
     }
