@@ -1,12 +1,13 @@
 # Where to Find Stuff
 ## Running Instructions
 1. clone repository, make sure `src/java/main` is marked as sources root 
-1. run file `src/main/java/main/ProgramRun.java`
-2. Create username and password, then login. 
-3. Can only create tests! Select test option when prompted, otherwise
-will ask to resubmit
-4. Only submit dates in the correct format - no catch for incorrectly formatted dates yet
-5. type logout after creating any amount of events, then exit to exit the program
+2. run file `src/main/java/main/ProgramRun.java`
+3. Create username and password, then login. 
+4. Explore the Calendar Features.
+5. Make sure to exit at the end to save the information to the database.
 
-## Phase 0 other resources
-Specification, CRC model, Progress report, and scenario walkthrough are all contained in `res/phase 0` file
+## Phase 0 Other Resources
+Specification, CRC model, Progress report, and scenario walkthrough are all contained in `res/phase 0` folder
+
+## Phase 1 Other Resources
+Specification, Progress Report, Flow Chart, Design Question included in 'res/Phase1' folder
