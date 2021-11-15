@@ -36,7 +36,7 @@ public class CalendarController {
     /**
      * the default current monthly calendar that will show every time the user returns to the main menu
      *
-     * @param eventController eventcontroller that stores the entire event information
+     * @param eventController eventController that stores the entire event information
      * @return the current monthly calendar image
      */
     public String showDefaultCalendar(EventController eventController) {
