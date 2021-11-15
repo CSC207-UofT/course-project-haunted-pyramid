@@ -3,6 +3,13 @@ package entities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * @author Malik Lahlou
+ */
+
+// TODO (for phase 2): include Category in controllers. Users should be able to add events to Category and access
+//  them based on a category (like accessing all events related to a course).
+
 public class Category {
 
     private int id;

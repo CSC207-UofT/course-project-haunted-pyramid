@@ -10,6 +10,12 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
+
+/**
+ * @author Malik Lahlou
+ */
+
+
 public class RecursiveEventTest {
     LocalDateTime l =  LocalDateTime.of(2021, 11, 15, 11,0);
     LocalDateTime l2 =  LocalDateTime.of(2021, 12, 17, 11,0);

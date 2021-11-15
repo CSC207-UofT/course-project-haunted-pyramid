@@ -8,6 +8,10 @@ import usecases.events.EventManager;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * @author Malik Lahlou
+ */
+
 public class RecursiveEvent {
 
 

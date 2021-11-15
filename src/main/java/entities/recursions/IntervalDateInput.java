@@ -10,6 +10,10 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 
+/**
+ * @author Malik Lahlou
+ */
+
 public class IntervalDateInput implements DateGetter {
 
     private LocalDateTime[] periodOfRepetition;
