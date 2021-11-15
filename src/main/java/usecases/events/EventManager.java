@@ -24,7 +24,7 @@ import interfaces.EventListObserver;
  */
 public class EventManager {
     private final Map<Integer, Event> eventMap;
-    private RepeatedEventManager repeatedEventManager;
+    private final RepeatedEventManager repeatedEventManager;
     private EventListObserver[] toUpdate;
 
     /**
@@ -150,7 +150,7 @@ public class EventManager {
         return event;
     }
 
-    /**
+     /**
      * adds an already existing event to <code>this.eventMap</code>. will overwrite event of same ID
      *
      * @param event event to be added

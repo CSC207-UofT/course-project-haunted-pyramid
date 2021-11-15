@@ -22,14 +22,16 @@ between events in EventManager would make this Class smaller and easier to under
 
 - Open / Closed Principle
 
-
-
 the Event and Event collection handling classes are open for extension - an Event is a very basic object that contains 
 general references to other Events that can be handled in different ways by different kinds of Managers. 
 our idea to generalize repetition and courses to the more broad collections - courses whose times are related 
 by some pattern or reference each other in some way - makes the event handling functionality open for extension.
 events and collections of events.
+
 - Liskov Substitution Principle
+
+We've implemented several super classes (DisplayCalendar, GetCalendar). Their methods run easily by
+their subclasses and every method is being used by the subclasses.
 
 - Interface Segregation Principle
 
@@ -38,6 +40,9 @@ in its map is changed. This adheres to the Interface segregation principle. Ther
 implementations of methods in an interface it inherits from.
 
 - Dependency Inversion Principle
+
+We didn't really build any abstraction to inverse the dependency as we followed the clean architecture
+structure well. However, if we do feel necessity of it, we will implement the principle.
 
 
 #### Clean Architecture
