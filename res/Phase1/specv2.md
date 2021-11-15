@@ -24,7 +24,7 @@ In phase 0, the presentation was only available for monthly calendar. Now, you c
 
 #### Functionality
 
-In phase 0, only limited amount of work could be done (add event). Now, you can add / remove / modify information of the event as well as add additional functions such as make recursion (repetition) or set up work sessions to prepare the event. We have implemented basic algorithm that will set up the work sessions for the available times indicated by the user. 
+In phase 0, only limited amount of work could be done (add event). Now, you can add / remove / modify information of the event as well as add additional functions such as make recursion (repetition) or set up work sessions to prepare the event. We have implemented basic algorithm that will set up the work sessions for the available times indicated by the user automatically. 
 
 #### Data storage
 
@@ -32,4 +32,4 @@ In phase 0, we were storing data in local serializable files. Now, the files exi
 
 #### Cooperation
 
-In phase 0, we've dealt with individual classes and tried to have single responsibility for each person. In phase 1, we had multiple people working on the same goal (developing and implementing various features of event) by fully utilizing the github features. We've had frequent meetings to keep up everyone's motivation and share opinions. 
+In phase 0, we've dealt with individual classes separately and tried to have single responsibility for each person. In phase 1, we had multiple people working on the same goal (developing and implementing various features of event) by fully utilizing the github features. We've had frequent meetings to keep up everyone's motivation and share opinions. 
