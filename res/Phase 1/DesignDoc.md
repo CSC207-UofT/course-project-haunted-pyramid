@@ -55,7 +55,11 @@ CalendarController (Controller) cooperates with DisplayCalendar.
 All the menu strategies implement MenuContent interface. The interface is used as a parameter for DisplayMenu class. 
 DisplayMenu class sets which menu content to show and applies it.
 
-—> 
+—> RecursiveEvent utilizes strategy pattern to get different 'rules' to recurse over events. Depending on the user 
+choice, recursiveEvent can repeat a set of events a fixed amount of times, or repeat them over and over again between
+two dates. More ways of repetition can be added latter on by creating a class that implements the DateGetter interface
+and override the method listOfDatesInCycles, which returns a list of repetitions of input events, given the repetition 
+'rule' of this new class. 
 
 - Factory Method Pattern
 
@@ -65,9 +69,10 @@ By running the overridden method displayCalendar(), the image gets displayed.
 
 - Observer Pattern
 
-In order to display three different types of calendar effectively, we adopt factory method pattern.
-Depending on the user input different type of DisplayCalendar's child class will be initialized.
-By running the overridden method displayCalendar(), the image gets displayed.
+—> We created the EventListObserver interface and an update method in EventManager, but we still need to implement the 
+update method in EventManager observers. Our goal it to allow users, in case they edit or delete an event, to carry
+this change the recursion the modified event is part of, and to modify study session according to the new change as
+well.
 
 ### Use of GitHub features
 
