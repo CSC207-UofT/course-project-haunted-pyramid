@@ -79,6 +79,9 @@ public class CalendarController {
         DisplayMenu displayMenu = new DisplayMenu();
         System.out.println("You may type Return to return to the main menu at any time (except Date selection)");
         String dateInput = getCalendarDateInput(displayMenu, "modify");
+        if (dateInput.equalsIgnoreCase("Return")) {
+            return;
+        }
         CalendarSelection calendarSelection = new CalendarSelection(new DateInfo(), dateInput);
         int year = calendarSelection.getYear();
         int month = calendarSelection.getMonth();
@@ -103,6 +106,9 @@ public class CalendarController {
         DisplayMenu displayMenu = new DisplayMenu();
         System.out.println("You may type Return to return to the main menu at any time (except Date selection)");
         String dateInput = getCalendarDateInput(displayMenu, "repeat");
+        if (dateInput.equalsIgnoreCase("Return")) {
+            return;
+        }
         CalendarSelection calendarSelection = new CalendarSelection(new DateInfo(), dateInput);
         int year = calendarSelection.getYear();
         int month = calendarSelection.getMonth();

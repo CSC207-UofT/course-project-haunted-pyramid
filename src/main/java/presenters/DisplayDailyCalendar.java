@@ -220,7 +220,8 @@ public class DisplayDailyCalendar extends DisplayCalendar {
     private int getTotalLengthStart(StringBuilder result, int totalLength, String eventName, int eventID) {
         result.append(" ");
         result.append("ID:").append(eventID).append(" ").append(eventName).append(" Start;");
-        totalLength += eventName.length() + Constants.DAILY_CAL_EXTRA_NAME;
+        String extra = " " + "ID:" + eventID + " " + " Start;";
+        totalLength += eventName.length() + extra.length();
         return totalLength;
     }
 
@@ -236,7 +237,8 @@ public class DisplayDailyCalendar extends DisplayCalendar {
     private int getTotalLengthEnd(StringBuilder result, int totalLength, String eventName, int eventID) {
         result.append(" ");
         result.append("ID:").append(eventID).append(" ").append(eventName).append(" End;");
-        totalLength += eventName.length() + Constants.DAILY_CAL_EXTRA_NAME - 11;
+        String extra = " " + "ID:" + eventID + " " + " End;";
+        totalLength += eventName.length() + extra.length();
         return totalLength;
     }
 
@@ -252,7 +254,8 @@ public class DisplayDailyCalendar extends DisplayCalendar {
     private int getTotalLengthDue(StringBuilder result, int totalLength, String eventName, int eventID) {
         result.append(" ");
         result.append("ID:").append(eventID).append(" ").append(eventName).append(" Due;");
-        totalLength += eventName.length() + Constants.DAILY_CAL_EXTRA_NAME - 11;
+        String extra = " " + "ID:" + eventID + " " + " Due;";
+        totalLength += eventName.length() + extra.length();
         return totalLength;
     }
 
@@ -282,9 +285,10 @@ public class DisplayDailyCalendar extends DisplayCalendar {
             for (Event event : this.calendarMap.get(this.date)) {
                 String eventEndTime = this.eventManager.getEndTimeString(event);
                 String eventName = eventManager.getName(event);
+                eventName += " " + "ID:" + eventManager.getID(event) + " " + " Start;";
                 String eventStartTime = getStartTime(event, eventEndTime);
-                int nameMin = Math.min(eventName.length() + Constants.DAILY_CAL_EXTRA_NAME,
-                        Constants.DAILY_CAL_SIZE + Constants.DAILY_CAL_EXTRA_NAME);
+                int nameMin = Math.min(eventName.length(),
+                        Constants.DAILY_CAL_SIZE);
                 if (eventStartTime.equals(time)){
                     tempLength += nameMin;
                 }
