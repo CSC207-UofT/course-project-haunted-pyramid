@@ -94,7 +94,7 @@ public class RepeatedEventManager implements EventListObserver {
 
 
     @Override
-    public void update(String addRemoveChange, ArrayList<Event> changed, EventManager eventManager) {
+    public void update(String addRemoveChange, Event changed, EventManager eventManager) {
         // TODO (for phase 2): implement this method which will update a recursion if one of its events is modified
         //  in the EventManager.
     }

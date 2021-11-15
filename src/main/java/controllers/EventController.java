@@ -51,8 +51,8 @@ public class EventController {
             ConstantID.set(this.eventManager.getMaxID());
         } else {
             this.eventManager = new EventManager();
-            this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         }
+        this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         this.recursionController = new RecursionController();
         this.ioController = new IOController();
     }

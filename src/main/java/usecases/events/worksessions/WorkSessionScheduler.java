@@ -20,8 +20,8 @@ import java.util.*;
  */
 public class WorkSessionScheduler implements EventListObserver {
     //specified by saved user information - the time during which the user does not want to work
-    private final Map<LocalTime, LocalTime> freeTime;
-    private final boolean procrastinate;
+    private Map<LocalTime, LocalTime> freeTime;
+    private boolean procrastinate;
 
 
     /**
@@ -45,6 +45,10 @@ public class WorkSessionScheduler implements EventListObserver {
     public void setSessionLength(Event deadline, Long sessionLength, EventManager eventManager) {
         deadline.setSessionLength(sessionLength);
         this.autoSchedule(deadline, eventManager);
+    }
+
+    public void setProcrastinate(boolean procrastinate){
+        this.procrastinate = procrastinate;
     }
 
     /**
@@ -123,7 +127,6 @@ public class WorkSessionScheduler implements EventListObserver {
     private void autoScheduleNoProcrastinate(Event deadline, EventManager eventManager) {
         LocalDateTime deadlineTime = eventManager.getEnd(deadline);
         Integer ID = eventManager.getID(deadline);
-        eventManager.addEvent(deadline);
         deadline.setWorkSessions(deadline.pastWorkSessions());
         Long hoursToSchedule = (long) (eventManager.getTotalHoursNeeded(ID) -
                 eventManager.totalHours(eventManager.getPastWorkSession(ID)));
@@ -360,9 +363,14 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param eventManager    the eventManager that was updated
      */
     @Override
-    public void update(String addRemoveChange, ArrayList<Event> changed, EventManager eventManager) {
-        for (Event event : changed) {
+    public void update(String addRemoveChange, Event changed, EventManager eventManager) {
+        for (Event event: eventManager.getAllEvents()){
             this.autoSchedule(event, eventManager);
         }
+        System.out.println("updated");
+    }
+
+    public void setFreeTime(Map<LocalTime, LocalTime> currentFreeTime) {
+        this.freeTime = currentFreeTime;
     }
 }

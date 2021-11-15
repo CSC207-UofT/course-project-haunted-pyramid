@@ -7,6 +7,7 @@ import helpers.ControllerHelper;
 import presenters.DisplayMenu;
 import presenters.MenuStrategies.ProfileMenuContent;
 import usecases.UserManager;
+import usecases.events.worksessions.WorkSessionScheduler;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class UserController {
     private UUID currentUser;
     private final ControllerHelper helper;
     private final IOController ioController;
+    private WorkSessionScheduler workSessionScheduler;
 
     /**
      * Instantiates a UserController from serialized data
@@ -52,6 +54,7 @@ public class UserController {
      */
     public void setCurrentUser(UUID currentUser) {
         this.currentUser = currentUser;
+        this.workSessionScheduler = new WorkSessionScheduler(this.getCurrentFreeTime(), this.getCurrentProcrastinate());
     }
 
     /**
@@ -178,6 +181,7 @@ public class UserController {
             return;
         }
         this.userManager.removeFreeTime(this.currentUser, start);
+        this.workSessionScheduler.setFreeTime(this.getCurrentFreeTime());
     }
 
     /**
@@ -185,5 +189,10 @@ public class UserController {
      */
     private void toggleProcrastinate() {
         this.userManager.toggleProcrastinate(this.currentUser);
+        this.workSessionScheduler.setProcrastinate(this.getCurrentProcrastinate());
+    }
+
+    public WorkSessionScheduler getWorkSessionScheduler() {
+        return this.workSessionScheduler;
     }
 }
