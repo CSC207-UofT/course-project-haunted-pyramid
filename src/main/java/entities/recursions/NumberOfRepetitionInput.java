@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Malik Lahlou
@@ -34,7 +35,7 @@ public class NumberOfRepetitionInput implements DateGetter {
      */
 
     @Override
-    public ArrayList<Event> listOfDatesInCycles(ArrayList<Event> events) {
+    public List<Event> listOfDatesInCycles(List<Event> events) {
         int cycleLength = events.size() - 1;
         Event firstEvent1 = events.get(0);
         Event firstEvent2 = events.get(cycleLength);

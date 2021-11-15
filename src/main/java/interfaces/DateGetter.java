@@ -4,9 +4,10 @@ import entities.Event;
 
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface DateGetter {
-    ArrayList<Event> listOfDatesInCycles(ArrayList<Event> events);
+    List<Event> listOfDatesInCycles(List<Event> events);
 
 
     default Period periodMultiplicationByScalar(Period period, int scalar){

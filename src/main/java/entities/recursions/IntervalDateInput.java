@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Malik Lahlou
@@ -78,14 +79,14 @@ public class IntervalDateInput implements DateGetter {
      * @return apply getEventAfterStartDate to events in the list, then order them in chronological order.
      */
 
-    private ArrayList<Event> getEventListAfterBeginningOfCycles(ArrayList<Event> events, Period period) {
-        ArrayList<Event> result = new ArrayList<>();
+    private List<Event> getEventListAfterBeginningOfCycles(List<Event> events, Period period) {
+        List<Event> result = new ArrayList<>();
         for (Event event : events) {
             Event newEvent = getEventAfterStartDate(event, period);
             result.add(newEvent);
         }
         EventManager e = new EventManager();
-        return (ArrayList<Event>) e.timeOrder(result);
+        return e.timeOrder(result);
     }
 
     /**
@@ -96,7 +97,7 @@ public class IntervalDateInput implements DateGetter {
      */
 
     @Override
-    public ArrayList<Event> listOfDatesInCycles(ArrayList<Event> events) {
+    public List<Event> listOfDatesInCycles(List<Event> events) {
         int cycleLength = events.size() - 1;
         Event firstEvent1 = events.get(0);
         Event firstEvent2 = events.get(cycleLength);
@@ -104,13 +105,13 @@ public class IntervalDateInput implements DateGetter {
         LocalDateTime eventDate1 = firstEvent1.getEndTime();
         LocalDateTime eventDate2 = firstEvent2.getEndTime();
         Period period = Period.between(LocalDate.from(eventDate1), LocalDate.from(eventDate2));
-        ArrayList<Event> newEvents = getEventListAfterBeginningOfCycles(events, period);
-        ArrayList<Event> result = new ArrayList<>();
+        List<Event> newEvents = getEventListAfterBeginningOfCycles(events, period);
+        List<Event> result = new ArrayList<>();
         LocalDateTime currentDate = this.startTimeGetter(newEvents.get(0));
         if (this.periodOfRepetition[0].isAfter(eventDate1)){
             result.addAll(newEvents);
         }
-        ArrayList<String> nameList = new ArrayList<>();
+        List<String> nameList = new ArrayList<>();
         for (Event event : newEvents){
             nameList.add(event.getName());
         }
