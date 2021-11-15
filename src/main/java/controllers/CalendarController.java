@@ -122,6 +122,11 @@ public class CalendarController {
         recursionController.createNewRecursion(eventIDList, eventController.getEventManager());
     }
 
+    /**
+     * Get list of event ID via confirming with the user
+     * @param eventController EventController object that has event information
+     * @return list of eventID
+     */
     private List<Integer> getEventIDList(EventController eventController){
         List<Integer> eventIDList = new ArrayList<>();
         boolean check = false;
