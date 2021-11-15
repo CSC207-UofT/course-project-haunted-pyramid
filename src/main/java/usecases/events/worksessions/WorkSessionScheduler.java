@@ -59,6 +59,47 @@ public class WorkSessionScheduler implements EventListObserver {
     }
 
     /**
+     * @param deadlineTime the deadline event - end of last freeSlot
+     * @param schedule     the schedule to get free slots between events
+     * @param day          the day to get the freeSlots from
+     * @return freeslots over the whole day if it is not today or deadline day, otherwise start or end free
+     * slots at now or deadline time
+     */
+    private Map<LocalDateTime, Long> getFreeSlots(LocalDateTime deadlineTime, Map<LocalDate, List<Event>> schedule, LocalDate day) {
+        EventManager eventManager = new EventManager();
+        Map<LocalDateTime, Long> freeSlots;
+        if (day.isEqual(LocalDate.now())) {
+            freeSlots = eventManager.freeSlots(LocalDateTime.now(), schedule.get(day),
+                    LocalDateTime.of(day, LocalTime.of(23, 59)));
+        } else if (day.isEqual(deadlineTime.toLocalDate())) {
+            LocalDateTime start = LocalDateTime.of(day, LocalTime.of(0, 0));
+            freeSlots = eventManager.freeSlots(start, schedule.get(day), deadlineTime);
+        } else {
+            freeSlots = eventManager.freeSlots(LocalDateTime.of(day, LocalTime.of(0, 0)),
+                    schedule.get(day), LocalDateTime.of(day, LocalTime.of(23, 59)));
+        }
+        return freeSlots;
+    }
+
+    /**
+     * gets a schedule from EventManager and adds free time to each day
+     *
+     * @param eventManager the eventManager from which to get the events to schedule around
+     * @param deadlineTime the LocalDateTime deadline (end time for range)
+     * @return the Map with key=day, value=list of events on that day
+     */
+    private Map<LocalDate, List<Event>> updateSchedule(EventManager eventManager, LocalDateTime deadlineTime) {
+        Map<LocalDate, List<Event>> schedule = eventManager.getRange(LocalDate.now(), deadlineTime.toLocalDate());
+        for (LocalDate day : schedule.keySet()) {
+            for (LocalTime start : this.freeTime.keySet()) {
+                schedule.get(day).add(new Event(0, "free time", LocalDateTime.of(day, start),
+                        LocalDateTime.of(day, this.freeTime.get(start))));
+            }
+        }
+        return schedule;
+    }
+
+    /**
      * A Method which automatically schedules work sessions for an Event which only has a deadline assocaited with it
      * has two options or strategies for scheduling work sessions
      *
@@ -88,20 +129,13 @@ public class WorkSessionScheduler implements EventListObserver {
         Long hoursToSchedule = (long) (eventManager.getTotalHoursNeeded(ID) -
                 eventManager.totalHours(eventManager.getPastWorkSession(ID)));
         while (!(hoursToSchedule == 0)) {
-
             Long length = eventManager.getEventSessionLength(ID);
             if (hoursToSchedule < eventManager.getEventSessionLength(ID)) {
                 length = hoursToSchedule;
             }
             hoursToSchedule -= length;
 
-            Map<LocalDate, List<Event>> schedule = eventManager.getRange(LocalDate.now(), deadlineTime.toLocalDate());
-            for (LocalDate day : schedule.keySet()) {
-                for (LocalTime start : this.freeTime.keySet()) {
-                    schedule.get(day).add(new Event(0, "free time", LocalDateTime.of(day, start),
-                            LocalDateTime.of(day, this.freeTime.get(start))));
-                }
-            }
+            Map<LocalDate, List<Event>> schedule = updateSchedule(eventManager, deadlineTime);
 
             List<LocalDate> days = (this.eligibleDays(schedule, length, deadlineTime));
 
@@ -113,16 +147,7 @@ public class WorkSessionScheduler implements EventListObserver {
             if (days.isEmpty()) {
                 return;
             }
-            if (days.get(0).isEqual(LocalDate.now())) {
-                freeSlots = eventManager.freeSlots(LocalDateTime.now(), schedule.get(days.get(0)),
-                        LocalDateTime.of(days.get(0), LocalTime.of(23, 59)));
-            } else if (days.get(0).isEqual(deadlineTime.toLocalDate())) {
-                LocalDateTime start = LocalDateTime.of(days.get(0), LocalTime.of(0, 0));
-                freeSlots = eventManager.freeSlots(start, schedule.get(days.get(0)), deadlineTime);
-            } else {
-                freeSlots = eventManager.freeSlots(LocalDateTime.of(days.get(0), LocalTime.of(0, 0)),
-                        schedule.get(days.get(0)), LocalDateTime.of(days.get(0), LocalTime.of(23, 59)));
-            }
+            freeSlots = getFreeSlots(deadlineTime, schedule, days.get(0));
             System.out.println(freeSlots);
 
             List<LocalDateTime> times = this.eligibleTimes(freeSlots, length);

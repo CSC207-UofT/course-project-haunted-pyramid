@@ -20,6 +20,7 @@ import interfaces.EventListObserver;
  * @author Sebin Im
  * @author Taite Cullen
  * @author Malik Lahlou
+ * @author Seo Won Yi
  */
 public class EventManager {
     private final Map<Integer, Event> eventMap;
@@ -138,23 +139,6 @@ public class EventManager {
         return eventMap.remove(ID);
     }
 
-
-    /**
-     * creates an event of the given parameters and adds it to <code>this.eventMap</code> by unique ID
-     *
-     * @param name  String name of event
-     * @param start LocalDateTime start time of event
-     * @param end   LocalDateTime end time of event
-     */
-    public Event addEvent(String name, LocalDateTime start, LocalDateTime end) {
-        Event event = new Event(ConstantID.get(), name, start, end);
-        this.eventMap.put(event.getID(), event);
-        ArrayList<Event> truc = new ArrayList<>();
-        truc.add(event);
-        this.update("add", truc);
-        return event;
-    }
-
     /**
      * creates an event with given name and end time and adds to <code>this.eventMap</code>
      *
@@ -244,13 +228,6 @@ public class EventManager {
     }
 
 
-    /**
-     * Getter and Setter methods.
-     */
-
-    public void setRepeatedEventManager(RepeatedEventManager repeatedEventManager) {
-        this.repeatedEventManager = repeatedEventManager;}
-
     public RepeatedEventManager getRepeatedEventManager() {
         return repeatedEventManager;
     }
@@ -311,38 +288,6 @@ public class EventManager {
      */
     public String getName(Event event) {
         return event.getName();
-    }
-
-    /**
-     * sets the start time of the event by splitting an input String of the format:
-     * <code>
-     * YYYY-MM-DD HH:MM
-     * </code>
-     *
-     * @param event       any event (does not have to be in <code>this.eventMap</code>
-     * @param startString String in the form YYYY-MM-DD HH:MM
-     */
-    public void setStart(Event event, String startString) throws IllegalArgumentException {
-        event.setStartTime(stringToDate(startString));
-        ArrayList<Event> truc = new ArrayList<>();
-        truc.add(event);
-        this.update("change", truc);
-    }
-
-    /**
-     * sets the end time of the event by splitting an input String of the format:
-     * <code>
-     * YYYY-MM-DD HH:MM
-     * </code>
-     *
-     * @param event     any event (does not have to be in <code>this.eventMap</code>
-     * @param endString in the form YYYY-MM-DD HH:MM
-     */
-    public void setEnd(Event event, String endString) {
-        event.setEndTime(stringToDate(endString));
-        ArrayList<Event> truc = new ArrayList<>();
-        truc.add(event);
-        this.update("change", truc);
     }
 
     public void setStart(Integer id, LocalDateTime start) {
@@ -462,35 +407,9 @@ public class EventManager {
         return events;
     }
 
-    /**
-     * returns the Event.getDescription
-     *
-     * @param event the event to get description
-     * @return String of event Description or null
-     */
-    public String getDescription(Event event) {
-        return event.getDescription();
-    }
-
-    /**
-     * returns the event.toString() for Event in <code>this.eventMap</code>
-     *
-     * @param ID the ID of the event to be shown
-     * @return the Event.toString of this ID, or null if it does not exist
-     * @see Event#toString()
-     */
-    public String displayEvent(Integer ID) {
-        if (this.containsID(ID)) {
-            return this.get(ID).toString();
-        } else {
-            return null;
-        }
-    }
-
     public String displayEvent(Event event) {
         return event.toString();
     }
-
 
     /**
      * checks if an Event of this ID is contained in <code>this.eventMap</code>
@@ -535,20 +454,9 @@ public class EventManager {
         Map<LocalDateTime, Long> freeSlots = new HashMap<>();
         int taskNum = 0;
         while (taskNum < schedule.size() && (schedule.get(taskNum).getEndTime().isBefore(end) ||
-                (schedule.get(taskNum).hasStart() && schedule.get(taskNum).getStartTime().isBefore(end)))){
-
+                (schedule.get(taskNum).hasStart() && schedule.get(taskNum).getStartTime().isBefore(end)))) {
             if (schedule.get(taskNum).hasStart() && schedule.get(taskNum).getStartTime().isAfter(start)) {
-                if (taskNum != 0) {
-                    if (schedule.get(taskNum - 1).getEndTime().isBefore(start)) {
-                        freeSlots.put(start, Duration.between(start, schedule.get(taskNum).getStartTime()).toHours());
-                    } else if (schedule.get(taskNum - 1).getEndTime().isBefore(schedule.get(taskNum).getStartTime())) {
-                        freeSlots.put(schedule.get(taskNum - 1).getEndTime(),
-                                Duration.between(schedule.get((taskNum - 1)).getEndTime(),
-                                        schedule.get(taskNum).getStartTime()).toHours());
-                    }
-                } else {
-                    freeSlots.put(start, Duration.between(start, schedule.get(taskNum).getStartTime()).toHours());
-                }
+                updateFreeSlot(start, schedule, freeSlots, taskNum);
             } else if(schedule.get(taskNum).hasStart() && !schedule.get(taskNum).getEndTime().isBefore(end)){
                 return new HashMap<>();
             }
@@ -558,13 +466,7 @@ public class EventManager {
             freeSlots.put(start, Duration.between(start, end).toHours());
         } else if (taskNum < schedule.size()) {
             if (schedule.get(taskNum).hasStart() && schedule.get(taskNum).getEndTime().isBefore(end)){
-                if (schedule.get(taskNum-1).hasStart() && schedule.get(taskNum-1).getEndTime().isBefore(end)) {
-                    freeSlots.put(schedule.get(taskNum - 1).getEndTime(), Duration.between(schedule.get(taskNum - 1).getEndTime(),
-                            end).toHours());
-                } else if(schedule.get(taskNum-1).hasStart()){
-                    freeSlots.put(schedule.get(taskNum - 1).getEndTime(), Duration.between(schedule.get(taskNum - 1).getEndTime(),
-                            end).toHours());
-                }
+                updateMoreFreeSlot(end, schedule, freeSlots, taskNum);
             } else if(!schedule.get(taskNum-1).hasStart() && schedule.get(taskNum).getStartTime().isAfter(end)){
                 freeSlots.put(start, Duration.between(start, end).toHours());
             }
@@ -575,7 +477,50 @@ public class EventManager {
     }
 
     /**
-     * sets the name of any event (does not have to be in <code>this.eventMap</code>
+     * Helper method for freeSlots method. Update the free slot for the given condition
+     * (after all the events' end times are after the set end time)
+     * @param end set end time
+     * @param schedule list of events to be considered
+     * @param freeSlots map of freeSlots
+     * @param taskNum index to get the appropriate events from schedule
+     */
+    private void updateMoreFreeSlot(LocalDateTime end, List<Event> schedule, Map<LocalDateTime, Long> freeSlots,
+                                    int taskNum) {
+        if (schedule.get(taskNum - 1).hasStart() && schedule.get(taskNum - 1).getEndTime().isBefore(end)) {
+            freeSlots.put(schedule.get(taskNum - 1).getEndTime(), Duration.between(schedule.get(taskNum - 1).getEndTime(),
+                    end).toHours());
+        } else if(schedule.get(taskNum - 1).hasStart()){
+            freeSlots.put(schedule.get(taskNum - 1).getEndTime(), Duration.between(schedule.get(taskNum - 1).getEndTime(),
+                    end).toHours());
+        }
+    }
+
+    /**
+     * Helper method for freeSlots method. Update freeSlots according to the different conditions
+     * @param start the start time from which freeSlots are calculated - first start time of freeslot
+     * @param schedule list of events to be considered
+     * @param freeSlots map of freeSlots to be updated
+     * @param taskNum index to locate the event
+     */
+    private void updateFreeSlot(LocalDateTime start, List<Event> schedule, Map<LocalDateTime, Long> freeSlots,
+                                int taskNum) {
+        if (taskNum != 0) {
+            if (schedule.get(taskNum - 1).getEndTime().isBefore(start)) {
+                freeSlots.put(start, Duration.between(start, schedule.get(taskNum).getStartTime()).toHours());
+            }
+            else if (schedule.get(taskNum - 1).getEndTime().isBefore(schedule.get(taskNum).getStartTime())) {
+                freeSlots.put(schedule.get(taskNum - 1).getEndTime(),
+                        Duration.between(schedule.get((taskNum - 1)).getEndTime(),
+                                schedule.get(taskNum).getStartTime()).toHours());
+            }
+        }
+        else {
+            freeSlots.put(start, Duration.between(start, schedule.get(taskNum).getStartTime()).toHours());
+        }
+    }
+
+    /**
+     * Sets the name of any event (does not have to be in <code>this.eventMap</code>
      *
      * @param event the event to set name
      * @param name  String of new name
@@ -585,7 +530,7 @@ public class EventManager {
     }
 
     /**
-     * sets the description of an event, does not have to be in <code>this.eventMap</code>
+     * Sets the description of an event, does not have to be in <code>this.eventMap</code>
      *
      * @param event   the event with description to be set
      * @param descrip String the new description
@@ -596,8 +541,7 @@ public class EventManager {
 
 
     /**
-     * return the start time information of the chosen event in string
-     *
+     * Return the start time information of the chosen event in string
      * @param event event to investigate
      * @return the string of the start time
      */
@@ -611,8 +555,7 @@ public class EventManager {
     }
 
     /**
-     * return the end time information of the chosen event in string
-     *
+     * Return the end time information of the chosen event in string
      * @param event event to investigate
      * @return the string of the end time
      */
@@ -621,42 +564,40 @@ public class EventManager {
         return date[2].substring(3, 8);
     }
 
-
-    public String getStartDateString(Integer ID){
-        if (this.containsID(ID) && this.get(ID).hasStart()) {
-            return this.get(ID).getStartTime().toLocalDate().toString();
-        } else {
-            return null;
-        }
-    }
-
-    public String getEndDateString(Integer ID){
-        if (this.containsID(ID)) {
-            return this.get(ID).getEndTime().toLocalDate().toString();
-        } else {
-            return null;
-        }
-    }
-
-    public Long getEventSessionLength(Integer ID) {
-        if (this.containsID(ID)) {
-            return this.get(ID).getSessionLength();
+    /**
+     * Return the session length of the event given by the ID
+     * @param id ID of the event
+     * @return session length of the event
+     */
+    public Long getEventSessionLength(Integer id) {
+        if (this.containsID(id)) {
+            return this.get(id).getSessionLength();
         }
         else {
             return null;
         }
     }
 
-    public List<Event> getTotalWorkSession(Integer ID) {
-        if (this.containsID(ID)) {
-            return this.get(ID).getWorkSessions();
+    /**
+     * Return the events' total work session list
+     * @param id ID of the event
+     * @return list of the total work session
+     */
+    public List<Event> getTotalWorkSession(Integer id) {
+        if (this.containsID(id)) {
+            return this.get(id).getWorkSessions();
         }
         return null;
     }
 
-    public List<Event> getPastWorkSession(Integer ID) {
-        if (this.containsID(ID)) {
-            List<Event> totalWorkSession = this.get(ID).getWorkSessions();
+    /**
+     * Return the list of the past work sessions of the event
+     * @param id ID of the event
+     * @return list of the past work session
+     */
+    public List<Event> getPastWorkSession(Integer id) {
+        if (this.containsID(id)) {
+            List<Event> totalWorkSession = this.get(id).getWorkSessions();
             List<Event> pastWorkSession = new ArrayList<>();
             for (Event event : totalWorkSession) {
                 if (event.getEndTime().isBefore(LocalDateTime.now())) {
@@ -670,9 +611,14 @@ public class EventManager {
         }
     }
 
-    public List<Event> getFutureWorkSession(Integer ID) {
-        if (this.containsID(ID)) {
-            List<Event> totalWorkSession = this.get(ID).getWorkSessions();
+    /**
+     * Return the list of the future work sessions of the event
+     * @param id ID of the event
+     * @return the list of the future work sessions of the event
+     */
+    public List<Event> getFutureWorkSession(Integer id) {
+        if (this.containsID(id)) {
+            List<Event> totalWorkSession = this.get(id).getWorkSessions();
             List<Event> futureWorkSession = new ArrayList<>();
             for (Event event : totalWorkSession) {
                 if (event.getEndTime().isAfter(LocalDateTime.now())) {
@@ -686,26 +632,34 @@ public class EventManager {
         }
     }
 
-    public Long getTotalHoursNeeded(Integer ID) {
-        if (this.containsID(ID)) {
-            return this.get(ID).getHoursNeeded();
+    /**
+     * Return the total session hours of the event
+     * @param id ID of the event
+     * @return the total session hours set by the event
+     */
+    public Long getTotalHoursNeeded(Integer id) {
+        if (this.containsID(id)) {
+            return this.get(id).getHoursNeeded();
         }
         else {
             return null;
         }
     }
 
-    public static void main(String[] args) {
-        EventManager em = new EventManager();
-        Event event = new Event(1, "this", LocalDateTime.of(2002, 12, 5, 2, 30));
-        em.addEvent(event);
-        System.out.println(em.getRange(LocalDate.of(2021, 12, 4), LocalDate.of(2021, 12, 10)));
-    }
-
+    /**
+     * Return the End date of the event
+     * @param id ID of the event
+     * @return the end date of the event
+     */
     public LocalDate getEndDate(Integer id) {
         return this.get(id).getEndTime().toLocalDate();
     }
 
+    /**
+     * Return the start date of the event
+     * @param id ID of the event
+     * @return the start date of the event
+     */
     public LocalDate getStartDate(Integer id) {
         if (this.get(id).hasStart()) {
             return this.get(id).getStartTime().toLocalDate();
@@ -714,10 +668,20 @@ public class EventManager {
         }
     }
 
+    /**
+     * Return the end time of the event
+     * @param id ID of the event
+     * @return the end time of the event
+     */
     public LocalTime getEndTime(Integer id) {
         return this.get(id).getEndTime().toLocalTime();
     }
 
+    /**
+     * Return the start time of the event
+     * @param id ID of the event
+     * @return the start time of the event
+     */
     public LocalTime getStartTime(Integer id) {
         if (this.get(id).hasStart()) {
             return this.get(id).getStartTime().toLocalTime();
@@ -726,13 +690,12 @@ public class EventManager {
         }
     }
 
+    /**
+     * Return the end date time of the event
+     * @param event selected event
+     * @return Return the end date time of the event
+     */
     public LocalDateTime getEnd(Event event){
         return event.getEndTime();
-    }
-    public LocalDateTime getStart(Event event){
-        if (event.hasStart()){
-            return event.getStartTime();
-        }
-        return null;
     }
 }

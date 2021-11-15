@@ -1,16 +1,12 @@
 #Design Document
 ##Haunted Pyramid Productivity V 1.0
 
-#### SOLID
+### SOLID
 
 - Single Responsibility Principle
 
 Calendar related objects all focus on only one responsibility, which is to read the events information and
-display them on the calendar. 
-
-OurCalendar (entity) is being used by CalendarManager, GetCalendar and its subclasses (use cases).
-CalendarManager and GetCalendar are being used by DisplayCalendar and its subclasses (Presenters).
-CalendarController cooperates with DisplayCalendar.
+display them on the calendar.
 
 Each controller has a separate responsibility. The MainController instantiates and delegates to EventController, CalendarController
 and UserController, which in turn delegate to their more specific controllers. EventController delegates to RecursionController
@@ -23,7 +19,9 @@ To better adhere to the Single Responsibility principle, some methods for sortin
 part of a different Classes. Using strategies for sorting and returning sub-lists and information about the relationships
 between events in EventManager would make this Class smaller and easier to understand.
 
-- Open / Closed Principle Principle
+- Open / Closed Principle
+
+
 
 the Event and Event collection handling classes are open for extension - an Event is a very basic object that contains 
 general references to other Events that can be handled in different ways by different kinds of Managers. 
@@ -41,33 +39,46 @@ implementations of methods in an interface it inherits from.
 - Dependency Inversion Principle
 
 
-#### Clean Architecture
+### Clean Architecture
 
+- Calendar Classes 
 
+OurCalendar (entity) is being used by CalendarManager, GetCalendar and its subclasses (use cases).
+CalendarManager and GetCalendar are being used by DisplayCalendar and its subclasses (Presenters).
+CalendarController (Controller) cooperates with DisplayCalendar.
 
-#### Design Patterns
+### Design Patterns
 
 - Strategy Pattern
 
-DisplayMenu
+DisplayMenu utilizes strategy pattern to display different types of contents with the minimum effort.
+All the menu strategies implement MenuContent interface. The interface is used as a parameter for DisplayMenu class. 
+DisplayMenu class sets which menu content to show and applies it.
 
 - Factory Method Pattern
 
-DisplayCalendarFactory
+In order to display three different types of calendar effectively, we adopt factory method pattern.
+Depending on the user input different type of DisplayCalendar's child class will be initialized.
+By running the overridden method displayCalendar(), the image gets displayed.
 
-#### Use of GitHub features
+### Use of GitHub features
 
-#### Code Style and Documentation
 
-####Testing
-CalendarManager, EventManager, and WorkSessionScheduler have mostly complete junit test files associated. 
+### Code Style and Documentation
 
-####Refactoring
+###Testing
+
+All the major use cases classes and entities such as OurCalendar, Event, and EventManager are tested using
+junit.
+All the calendar presenter classes were tested very frequently while building it by every component. 
+
+###Refactoring
 
 - Attempted to avoid long method (some methods go over 10 lines because of conditional statements 
 that need to be applied)
-- Attempted to keep the number of parameters to be four or less (there are few cases where the method 
-has five parameters (majorly from extractions to avoid long method code smell, but tried our best to not go over it)
+- Attempted to keep the number of parameters to be four or less. There are few cases where the method 
+has five parameters which are majorly from extractions to avoid long method code smell, 
+but tried our best to not go over it.
 
 ####Code Organization
 

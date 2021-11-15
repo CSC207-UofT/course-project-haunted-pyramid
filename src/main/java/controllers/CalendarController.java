@@ -110,8 +110,10 @@ public class CalendarController {
         System.out.println(calendarFactory.displaySpecificCalendarByType("Monthly",
                 year, month, 1).displayCalendar());
         List<Integer> eventIDList = getEventIDList(eventController);
-        //TODO malik
-        //recursionController.createNewRecursion(eventIDList);
+        if (eventIDList.size() == 0) {
+            return;
+        }
+        recursionController.createNewRecursion(eventIDList, eventController.getEventManager(), eventController);
     }
 
     private List<Integer> getEventIDList(EventController eventController){
@@ -123,16 +125,23 @@ public class CalendarController {
                 return new ArrayList<>();
             }
             eventIDList.add(Integer.parseInt(eventID));
-            System.out.println("Would you like to Recurse more Events?");
-            System.out.println("y/n");
-            String answer = scanner.nextLine();
-            while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
-                System.out.println("Please type the valid input");
-                System.out.println("Would you like to Recurse more Events?");
+            while (!check){
+                System.out.println("Would you like add another Events in this repetition?");
                 System.out.println("y/n");
-            }
-            if (answer.equalsIgnoreCase("n")) {
-                    check = true;
+                String answer = scanner.nextLine();
+                while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
+                    System.out.println("Please type the valid input");
+                    System.out.println("Would you like to Recurse more Events?");
+                    System.out.println("y/n");
+                    answer = scanner.nextLine();
+                }
+                if (answer.equalsIgnoreCase("n")) {
+                        check = true;
+                }
+                else{
+                    String eventID2 = getEventID(eventController);
+                    eventIDList.add(Integer.parseInt(eventID2));
+                }
             }
         }
         return eventIDList;
@@ -150,7 +159,7 @@ public class CalendarController {
         if (eventID.equalsIgnoreCase("Return")) {
             return "Return";
         }
-        while (!(isInteger(eventID) && eventController.getEventManager().containsID(Integer.parseInt(eventID)))) {
+        while (!(helper.isInteger(eventID) && eventController.getEventManager().containsID(Integer.parseInt(eventID)))) {
             System.out.println("Please type the valid ID");
             eventID = scanner.nextLine();
         }
@@ -254,7 +263,7 @@ public class CalendarController {
             System.out.println("Choose the Year/Month that you would like to modify the Event from");
         }
         else if (question.equalsIgnoreCase("Repeat")) {
-            System.out.println("Choose the Year/Month that you would like to repeat the Event from");
+            System.out.println("Choose the Year/Month of the Event you would like to repeat");
         }
         MenuContent calendarDateInfoMenu = new CalendarYearMonthMenuContent();
         System.out.println(displayMenu.displayMenu(calendarDateInfoMenu));
@@ -310,19 +319,5 @@ public class CalendarController {
         return date;
     }
 
-    /**
-     * confirm if the string is all numerical
-     *
-     * @param str the string to check
-     * @return true if the string is numerical otherwise false
-     */
-    private boolean isInteger(String str) {
-        try {
-            Integer.parseInt(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
 
 }
