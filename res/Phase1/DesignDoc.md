@@ -22,16 +22,14 @@ between events in EventManager would make this Class smaller and easier to under
 
 - Open / Closed Principle
 
+
+
 the Event and Event collection handling classes are open for extension - an Event is a very basic object that contains 
 general references to other Events that can be handled in different ways by different kinds of Managers. 
 our idea to generalize repetition and courses to the more broad collections - courses whose times are related 
-by some pattern or reference each other in some way - makes the event handling functionality open for extension.
+by some pattern or reference eachother in some way - makes the event handling functionality open for extension.
 events and collections of events.
-
 - Liskov Substitution Principle
-
-We've implemented several super classes (DisplayCalendar, GetCalendar). Their methods run easily by
-their subclasses and every method is being used by the subclasses.
 
 - Interface Segregation Principle
 
@@ -41,18 +39,15 @@ implementations of methods in an interface it inherits from.
 
 - Dependency Inversion Principle
 
-We didn't really build any abstraction to inverse the dependency as we followed the clean architecture
-structure well. However, if we do feel necessity of it, we will implement the principle.
-
 
 #### Clean Architecture
-see `res/Phase1/classFlowChart.pdf`
 
 - Calendar Classes 
 
 OurCalendar (entity) is being used by CalendarManager, GetCalendar and its subclasses (use cases).
 CalendarManager and GetCalendar are being used by DisplayCalendar and its subclasses (Presenters).
 CalendarController (Controller) cooperates with DisplayCalendar.
+ 
 
 - Event Classes
 EventManager accesses only the Event class. All other classes consistently use the EventManager class
@@ -129,7 +124,7 @@ that need to be applied)
 has five parameters which are majorly from extractions to avoid long method code smell, 
 but tried our best to not go over it.
 
-####Code Organization / Packaging Choice
+####Code Organization
 
 We looked at various strategies for packaging the code. We looked at packaging by 
 Layer, by feature and by Inside/outside. We chose to package our code by Layer. It 
