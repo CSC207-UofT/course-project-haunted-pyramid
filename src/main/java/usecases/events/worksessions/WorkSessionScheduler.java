@@ -337,8 +337,8 @@ public class WorkSessionScheduler implements EventListObserver {
     public void markComplete(Event event, String session, EventManager eventManager) {
         eventManager.timeOrder(event.getWorkSessions());
         event.setHoursNeeded((long) (event.getHoursNeeded() -
-                event.getWorkSessions().get(Integer.parseInt(session.split(" ")[2])).getLength()));
-        event.getWorkSessions().remove(event.getWorkSessions().get(Integer.parseInt(session.split(" ")[2])));
+                event.getWorkSessions().get(Integer.parseInt(session)).getLength()));
+        event.getWorkSessions().remove(event.getWorkSessions().get(Integer.parseInt(session)));
         this.autoSchedule(event, eventManager);
     }
 
@@ -351,7 +351,7 @@ public class WorkSessionScheduler implements EventListObserver {
      */
     public void markInComplete(Event event, String session, EventManager eventManager) {
         eventManager.timeOrder(event.getWorkSessions());
-        event.getWorkSessions().remove(event.getWorkSessions().get(Integer.parseInt(session.split(" ")[2])));
+        event.getWorkSessions().remove(event.getWorkSessions().get(Integer.parseInt(session)));
         this.autoSchedule(event, eventManager);
     }
 

@@ -39,8 +39,8 @@ public class WorkSessionController {
                 System.out.println("Please Set up the Work Session");
             } else {
                 System.out.println("The following Work Sessions are assigned for this Event");
-                System.out.println("Past: " + eventManager.getPastWorkSession(eventID));
-                System.out.println("Current: " + eventManager.getFutureWorkSession(eventID));
+                System.out.println("Past: " + eventManager.getPastSessionsString(eventID));
+                System.out.println("Current: " + eventManager.getFutureSessionsString(eventID));
                 System.out.println("Current Session Length: " + eventManager.getEventSessionLength(eventID));
                 System.out.println("Total Work Session Hours: " + eventManager.getTotalHoursNeeded(eventID));
             }
@@ -84,11 +84,11 @@ public class WorkSessionController {
     }
 
     private void markCompletion(Integer eventID, EventManager eventManager) {
-        if (eventManager.getPastWorkSession(eventID).size() == 0) {
+        if (eventManager.getTotalWorkSession(eventID).size() == 0) {
             return;
         }
         String sessionNumber = ioController.getAnswer("Please type the session #");
-        sessionNumber = helper.invalidCheckNoMenu(sessionNumber, eventManager.getPastWorkSession(eventID).size(),
+        sessionNumber = helper.invalidCheckNoMenu(sessionNumber, eventManager.getTotalWorkSession(eventID).size(),
                 "Please Choose the Valid Session # from the Past Sessions");
         System.out.println("Please type Complete to indicate the completion of the session");
         String marking = ioController.getAnswer("Otherwise, please type Incomplete to perform rescheduling");
