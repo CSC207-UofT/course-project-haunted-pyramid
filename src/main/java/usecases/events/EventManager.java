@@ -593,10 +593,6 @@ public class EventManager {
         event.setDescription(descrip);
     }
 
-    public int getRecursiveEventId(RecursiveEvent recursiveEvent) {
-        return recursiveEvent.getId();
-    }
-
 
     /**
      * return the start time information of the chosen event in string

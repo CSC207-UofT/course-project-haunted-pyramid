@@ -61,6 +61,7 @@ public class WorkSessionScheduler implements EventListObserver {
         LocalDateTime deadlineTime = eventManager.getEnd(deadline);
         Integer ID = eventManager.getID(deadline);
         eventManager.addEvent(deadline);
+        deadline.setWorkSessions(deadline.pastWorkSessions());
         Long hoursToSchedule = (long) (eventManager.getTotalHoursNeeded(ID) -
                 eventManager.totalHours(eventManager.getPastWorkSession(ID)));
         while (!(hoursToSchedule == 0)){
