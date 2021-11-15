@@ -106,7 +106,7 @@ to which the Controllers refer.
 
 All the major use cases classes and entities such as OurCalendar, Event, RecursiveEvent and EventManager are tested using
 junit.
-All the calendar presenter classes were tested very frequently while building it by every component. 
+All the calendar presenter classes were tested very frequently while building it by every component.
 
 ###Refactoring
 

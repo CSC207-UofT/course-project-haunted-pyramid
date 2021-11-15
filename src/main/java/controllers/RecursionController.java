@@ -28,6 +28,8 @@ public class RecursionController {
      * This methods prompt the user to create repetitions of events with ids in eventIDList.
      */
 
+    // TODO (phase 2): make this method shorter.
+
     public void createNewRecursion(List<Integer> eventIDList, EventManager eventManager){
         ArrayList<Event> cycle = new ArrayList<>();
         for (int id : eventIDList){
