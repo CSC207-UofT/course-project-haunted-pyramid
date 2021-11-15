@@ -20,6 +20,7 @@ import java.util.HashMap;
  *
  * @author Sebin Im
  * @author Taite Cullen
+ * @author Malik Lahlou
  * @see Event
  * @see EventManager
  * @see RecursionController
