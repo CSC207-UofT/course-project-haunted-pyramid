@@ -28,7 +28,6 @@ public class RecursionController {
      * @param eventManager the event manager containing all the events of this user
      * This methods prompt the user to create repetitions of events with ids in eventIDList.
      */
-
     public void createNewRecursion(List<Integer> eventIDList, EventManager eventManager){
         ArrayList<Event> cycle = new ArrayList<>();
         List<Integer> eventID = new ArrayList<>();
