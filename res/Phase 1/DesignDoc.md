@@ -47,6 +47,15 @@ OurCalendar (entity) is being used by CalendarManager, GetCalendar and its subcl
 CalendarManager and GetCalendar are being used by DisplayCalendar and its subclasses (Presenters).
 CalendarController (Controller) cooperates with DisplayCalendar.
 
+Only one class, IOSerializable and helpers, directly interacts with the external storage dropbox and serialized data. 
+
+EventManager accesses only the Event class. All other classes consistently use the EventManager class
+to manipulate Events, either by referring to them by ID or passing Event objects to EventManager using 
+EventManager methods Events. 
+
+IOController controls the user input and handles exceptions in UserInput before passing to other Controllers. Other 
+controllers do not directly use scanner or read user input.
+
 ### Design Patterns
 
 - Strategy Pattern
@@ -55,16 +64,35 @@ DisplayMenu utilizes strategy pattern to display different types of contents wit
 All the menu strategies implement MenuContent interface. The interface is used as a parameter for DisplayMenu class. 
 DisplayMenu class sets which menu content to show and applies it.
 
+With more time, a strategy pattern should be implemented in Autoschedule to better encapsulate a variety
+of methods and steps for sorting days and times to find ideal ones based on User Preferences.
+
 - Factory Method Pattern
 
 In order to display three different types of calendar effectively, we adopt factory method pattern.
 Depending on the user input different type of DisplayCalendar's child class will be initialized.
 By running the overridden method displayCalendar(), the image gets displayed.
 
+- Observer Pattern
+
+To keep workSchedules updated by due date and Recursion up to date with exceptions eventually, every time an event is 
+changed in event manager it updates all observing managers which adjust accordingly.
+
 ### Use of GitHub features
 
+Github pull requests and commit logs were used to confirm changes and determine errors in merging.
 
 ### Code Style and Documentation
+
+All classes are fully documented other than RecursionController and WorkSessionController.
+All use case and entity classes are fully documented with descriptions of the class and authors at
+the top. 
+
+If a programmer were to open this project to a random class they would have a harder time understanding
+the managers since their output is not primarily for the user, nor is it an entity object to be used. However, the 
+core entities are clear and easy to understand, and each of the controllers performs a unique task despite the 
+programmer possibly needing to refer to the @see tags in the documentation for the presenters and Manager classes
+to which the Controllers refer.
 
 ###Testing
 
