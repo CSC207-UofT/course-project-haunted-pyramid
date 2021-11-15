@@ -51,14 +51,14 @@ public class WorkSessionController {
                     System.out.println("There is no Past Work Sessions");
                 }
                 else {
-                    System.out.println("Past: " + eventManager.getPastWorkSession(eventID));
+                    System.out.println("Past: " + eventManager.getPastSessionsString(eventID));
                 }
                 if (eventManager.getFutureWorkSession(eventID).size() == 0) {
                     System.out.println("All Work Sessions were assigned for the Past.");
                     System.out.println("Please mark them to update or change Total Work Session Hours");
                 }
                 else {
-                    System.out.println("Current: " + eventManager.getFutureWorkSession(eventID));
+                    System.out.println("Current: " + eventManager.getFutureSessionsString(eventID));
                 }
                 System.out.println("Current Session Length: " + eventManager.getEventSessionLength(eventID));
                 System.out.println("Total Work Session Hours: " + eventManager.getTotalHoursNeeded(eventID));
@@ -118,11 +118,11 @@ public class WorkSessionController {
      * @param eventManager eventManager object with the necessary function
      */
     private void markCompletion(Integer eventID, EventManager eventManager) {
-        if (eventManager.getPastWorkSession(eventID).size() == 0) {
+        if (eventManager.getTotalWorkSession(eventID).size() == 0) {
             return;
         }
         String sessionNumber = ioController.getAnswer("Please type the session #");
-        sessionNumber = helper.invalidCheckNoMenu(sessionNumber, eventManager.getPastWorkSession(eventID).size(),
+        sessionNumber = helper.invalidCheckNoMenu(sessionNumber, eventManager.getTotalWorkSession(eventID).size(),
                 "Please Choose the Valid Session # from the Past Sessions");
         System.out.println("Please type Complete to indicate the completion of the session");
         String marking = ioController.getAnswer("Otherwise, please type Incomplete to perform rescheduling");

@@ -166,7 +166,7 @@ public class EventController {
     /**
      * prompts a user to confirm that they wish to delete an event, then removes event from eventManager
      *
-     * @param ID the Id of the event to be deleted
+     * @param ID the ID of the event to be deleted
      * @return true if the event was deleted
      */
     private boolean delete(Integer ID) {
@@ -207,7 +207,7 @@ public class EventController {
     }
 
     /**
-     * promps a user to enter a new end time and changes the event end time
+     * prompts a user to enter a new end time and changes the event end time
      *
      * @param ID the id of the event to be changed
      */
@@ -217,7 +217,7 @@ public class EventController {
     }
 
     /**
-     * change the start time of the event, set the date to the same a the end date if it was previously null
+     * change the start time of the event, set the date to the same as end date if it was previously null
      *
      * @param ID the id of the event to be changed
      */

@@ -525,7 +525,7 @@ public class EventManager {
      */
     public List<Event> getTotalWorkSession(Integer id) {
         if (this.containsID(id)) {
-            return this.get(id).getWorkSessions();
+            return this.timeOrder(this.get(id).getWorkSessions());
         }
         return null;
     }
@@ -544,7 +544,7 @@ public class EventManager {
                     pastWorkSession.add(event);
                 }
             }
-            return pastWorkSession;
+            return this.timeOrder(pastWorkSession);
         }
         else {
             return null;
@@ -565,11 +565,33 @@ public class EventManager {
                     futureWorkSession.add(event);
                 }
             }
-            return futureWorkSession;
+            return this.timeOrder(futureWorkSession);
         }
         else {
             return null;
         }
+    }
+
+    /**
+     *
+     */
+
+    public String getPastSessionsString(Integer id){
+        StringBuilder options = new StringBuilder();
+        int i = 0;
+        for (Event session: this.getPastWorkSession(id)){
+            options.append("\n").append(this.getTotalWorkSession(id).indexOf(session)).append(" ----\n ").append(session);
+            i += 1;
+        }
+        return options.toString();
+    }
+
+    public String getFutureSessionsString(Integer id){
+        StringBuilder options = new StringBuilder();
+        for (Event session: this.getFutureWorkSession(id)){
+            options.append("\n").append(this.getTotalWorkSession(id).indexOf(session)).append(" ----\n ").append(session);
+        }
+        return options.toString();
     }
 
     /**
