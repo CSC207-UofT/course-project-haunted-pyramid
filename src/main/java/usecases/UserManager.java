@@ -30,9 +30,6 @@ public class UserManager {
         }
     }
 
-    public UserManager() {
-        this.userInfo = new HashMap<>();
-    }
 
     /**
      * changes value of procrastinate for user
@@ -53,15 +50,6 @@ public class UserManager {
         return this.userInfo.get(user).getProcrastinate();
     }
 
-    /**
-     * sets the name of the user to new name
-     *
-     * @param user id of the user to me modified
-     * @param name new name
-     */
-    public void setName(UUID user, String name) {
-        this.userInfo.get(user).setName(name);
-    }
 
     /**
      * gets the name of the user

@@ -275,7 +275,7 @@ public class EventController {
         if (nextStep.equalsIgnoreCase("Create")) {
             List<Integer> eventIDList = new ArrayList<>();
             eventIDList.add(ID);
-            this.recursionController.createNewRecursion(eventIDList, eventManager, this);
+            this.recursionController.createNewRecursion(eventIDList, eventManager);
         }
         //TODO (for phase 2): add the options to edit and delete a recursion.
     }

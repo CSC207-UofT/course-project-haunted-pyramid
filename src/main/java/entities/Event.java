@@ -26,8 +26,6 @@ public class Event implements Serializable {
     private Long hoursNeeded;
     private Long sessionLength;
     private Integer recursiveId;
-    private boolean inCategory;
-    private String categoryName;
 
     /**
      * constructor sets the ID, name and end time of the entities.Event, default sessionLength to 1L
@@ -111,9 +109,6 @@ public class Event implements Serializable {
         this.recursiveId = recursiveId;
     }
 
-    public Integer getRecursiveId() {
-        return this.recursiveId;
-    }
 
     /**
      * name of the Event, like the description, is for User benefit - a visual reference to identify an Event
@@ -148,13 +143,6 @@ public class Event implements Serializable {
      */
     public String getType() {
         return type;
-    }
-
-    /**
-     * @return <code>this.categoryName</code>
-     */
-    public String getCategoryName() {
-        return categoryName;
     }
 
     /**
