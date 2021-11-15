@@ -60,12 +60,18 @@ controllers do not directly use scanner or read user input.
 
 - Strategy Pattern
 
-DisplayMenu utilizes strategy pattern to display different types of contents with the minimum effort.
+- DisplayMenu utilizes strategy pattern to display different types of contents with the minimum effort.
 All the menu strategies implement MenuContent interface. The interface is used as a parameter for DisplayMenu class. 
 DisplayMenu class sets which menu content to show and applies it.
 
 With more time, a strategy pattern should be implemented in Autoschedule to better encapsulate a variety
 of methods and steps for sorting days and times to find ideal ones based on User Preferences.
+
+— RecursiveEvent utilizes strategy pattern to get different 'rules' to recurse over events. Depending on the user 
+choice, recursiveEvent can repeat a set of events a fixed amount of times, or repeat them over and over again between
+two dates. More ways of repetition can be added latter on by creating a class that implements the DateGetter interface
+and override the method listOfDatesInCycles, which returns a list of repetitions of input events, given the repetition 
+'rule' of this new class.
 
 - Factory Method Pattern
 
@@ -77,6 +83,10 @@ By running the overridden method displayCalendar(), the image gets displayed.
 
 To keep workSchedules updated by due date and Recursion up to date with exceptions eventually, every time an event is 
 changed in event manager it updates all observing managers which adjust accordingly.
+We created the EventListObserver interface and an update method in EventManager, but we still need to implement the 
+update method in EventManager observers. Our goal it to allow users, in case they edit or delete an event, to carry
+this change the recursion the modified event is part of, and to modify study session according to the new change as
+well.
 
 ### Use of GitHub features
 
