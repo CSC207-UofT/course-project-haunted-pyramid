@@ -12,7 +12,8 @@ Each controller has a separate responsibility. The MainController instantiates a
 and UserController, which in turn delegate to their more specific controllers. EventController delegates to RecursionController
 and WorkSessionController for cases that require accessing any Manager aside from EventManager. 
 The RecursiveController contains a UserSpecific RecursiveController, and user the EventController's EventManager, 
-while the WorkSessionController 
+while the WorkSessionController contains a UserSpecific workSessionScheduler that autoschedules events based on
+Event parameters and user preferences.
 
 The EventManager performs many functions, all related to the sorting, finding, filtering, modifying and creating of events. 
 To better adhere to the Single Responsibility principle, some methods for sorting and returning lists of events should be 
@@ -110,6 +111,9 @@ All the major use cases classes and entities such as OurCalendar, Event, and Eve
 junit.
 All the calendar presenter classes were tested very frequently while building it by every component. 
 
+The autoSchedule class needs to be tested more fully, included the EventManager classes related on a wider range of 
+inputs.
+
 ###Refactoring
 
 - Attempted to avoid long method (some methods go over 10 lines because of conditional statements 
@@ -120,4 +124,26 @@ but tried our best to not go over it.
 
 ####Code Organization
 
+We looked at various strategies for packaging the code. We looked at packaging by 
+Layer, by feature and by Inside/outside. We chose to package our code by Layer. It 
+became easier for everyone working on the project to navigate through various files. 
+It also allowed to not have conflicts while working on classes since different people
+working on the project were working on separate layers of the code. With the 
+Inside/outside and by feature strategy it was not easy to navigate through the code 
+and it would also cause for conflicts as different people would be working on the same 
+folder of classes. Since people were not working on front or back end strictly or on 
+different features it made more sense to package the code by Layers.
+
 ####Functionality
+
+A User can log in to access their 'account' (ability to 'load state' and save Users by serialization and dropbox file) 
+and see a calendar of the current month with their saved events listed by
+name and start/end time on each day. The User can add events with a given end time by default, as well as remove events, 
+modify the starts and end times of events, and change their view of the calendar to different months, weeks, or days
+(in a range of 7 months). They can choose events to edit by changing their calendar
+to a weekly or daily view for a specified week or day. A user can edit the recursion or 
+prep time of an event, and have automatically scheduled work sessions scheduled and updated
+depending on their input. The program allows the user to mark work sessions as complete
+and have the sessions rescheduled accordingly. The user can specify their free time during which work sessions
+are prohibited to be scheduled, and their preffered method of scheduling (procrastinating or not).
+When the user logs off, their profile info and events are serialized and saved to a dropbox. 
