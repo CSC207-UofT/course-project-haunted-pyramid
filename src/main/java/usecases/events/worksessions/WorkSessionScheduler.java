@@ -4,6 +4,7 @@ import entities.Event;
 import interfaces.EventListObserver;
 import usecases.events.EventManager;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.time.LocalTime;
@@ -60,11 +61,132 @@ public class WorkSessionScheduler implements EventListObserver {
         LocalDateTime deadlineTime = eventManager.getEnd(deadline);
         Integer ID = eventManager.getID(deadline);
         eventManager.addEvent(deadline);
-        SorterFactory sorterFactory = new SorterFactory();
         Long hoursToSchedule = (long) (eventManager.getTotalHoursNeeded(ID) -
                 eventManager.totalHours(eventManager.getPastWorkSession(ID)));
-        sorterFactory.getDaySorter(this.procrastinate, this.freeTime);
+        while (!(hoursToSchedule == 0)){
+
+            Long length = eventManager.getEventSessionLength(ID);
+            if (hoursToSchedule < eventManager.getEventSessionLength(ID)){
+                length = hoursToSchedule;
+            }
+            hoursToSchedule -= length;
+
+            Map<LocalDate, List<Event>> schedule = eventManager.getRange(LocalDate.now(), deadlineTime.toLocalDate());
+            for (LocalDate day: schedule.keySet()){
+                for (LocalTime start: this.freeTime.keySet()){
+                    schedule.get(day).add(new Event(0, "free time", LocalDateTime.of(day, start),
+                            LocalDateTime.of(day, this.freeTime.get(start))));
+                }
+            }
+
+            List<LocalDate> days = (this.eligibleDays(schedule, length, deadlineTime));
+
+            days = this.leastWorkSessionsOrder(days, deadline.getWorkSessions());
+
+            System.out.println(days);
+
+            Map<LocalDateTime, Long> freeSlots;
+            if (days.get(0).isEqual(LocalDate.now())) {
+                freeSlots = eventManager.freeSlots(LocalDateTime.now(), schedule.get(days.get(0)),
+                        LocalDateTime.of(days.get(0),LocalTime.of(23, 59)));
+            } else if (days.get(0).isEqual(deadlineTime.toLocalDate())) {
+                LocalDateTime start = LocalDateTime.of(days.get(0),LocalTime.of(0, 0));
+                freeSlots = eventManager.freeSlots(start, schedule.get(days.get(0)), deadlineTime);
+            } else {
+                freeSlots = eventManager.freeSlots(LocalDateTime.of(days.get(0),LocalTime.of(0, 0)),
+                        schedule.get(days.get(0)), LocalDateTime.of(days.get(0),LocalTime.of(23, 59)));
+            }
+            System.out.println(freeSlots);
+
+            List<LocalDateTime> times = this.removeIneligibleTimes(freeSlots, length);
+            times = this.smallestSlotOrder(times, freeSlots);
+
+            deadline.addWorkSession(times.get(0), times.get(0).plusHours(length));
+        }
+        System.out.println("------");
+
     }
+
+    private List<LocalDate> eligibleDays(Map<LocalDate, List<Event>> schedule, Long length, LocalDateTime deadline){
+        EventManager em = new EventManager();
+        List<LocalDate> eligible = new ArrayList<>();
+        for (LocalDate day: schedule.keySet()){
+            LocalTime startTime = LocalTime.of(0, 0);
+            LocalTime endTime = LocalTime.of(23, 59);
+            if (LocalDate.now().isEqual(day)){
+                startTime = LocalTime.now();
+            }
+            if (deadline.toLocalDate().isEqual(day)){
+                endTime = deadline.toLocalTime();
+            }
+
+            LocalDateTime start = LocalDateTime.of(day, startTime);
+            LocalDateTime end = LocalDateTime.of(day, endTime);
+            if (!this.removeIneligibleTimes(em.freeSlots(start, schedule.get(day), end), length).isEmpty()){
+                eligible.add(day);
+            }
+        }
+        return eligible;
+    }
+
+    private List<LocalDateTime> removeIneligibleTimes(Map<LocalDateTime, Long> slots, Long length){
+        List<LocalDateTime> eligible = new ArrayList<>();
+        for (LocalDateTime time: slots.keySet()){
+            if (slots.get(time) >= length){
+                eligible.add(time);
+            }else{
+                slots.remove(time);
+            }
+        }
+        return eligible;
+    }
+
+    private List<LocalDate> leastWorkSessionsOrder(List<LocalDate> days, List<Event> workSessions){
+        List<LocalDate> ordered = new ArrayList<>();
+
+        while (!days.isEmpty()){
+            LocalDate leastWorkSessions = this.leastWorkSessions(days, workSessions);
+            days.remove(leastWorkSessions);
+            ordered.add(leastWorkSessions);
+        }
+        return ordered;
+    }
+
+    private LocalDate leastWorkSessions(List<LocalDate> days, List<Event> workSessions){
+        EventManager eventManager = new EventManager();
+        LocalDate leastWorkSessions = days.get(0);
+        int record = workSessions.size();
+        for (LocalDate day: days){
+            int num = 0;
+            for (Event session: workSessions){
+                if (eventManager.getEnd(session).toLocalDate().isEqual(day)){
+                    num = num + 1;
+                }
+            }
+            if (num <= record){
+                leastWorkSessions = day;
+                record = num;
+            }
+        }
+
+        return leastWorkSessions;
+    }
+
+    private List<LocalDateTime> smallestSlotOrder(List<LocalDateTime> times, Map<LocalDateTime, Long> slots){
+        List<LocalDateTime> ordered = new ArrayList<>();
+        while(!times.isEmpty()){
+            LocalDateTime smallest = times.get(0);
+            for (LocalDateTime time: times){
+                if (slots.get(time) < slots.get(smallest)){
+                    smallest = time;
+                }
+            }
+            ordered.add(smallest);
+            times.remove(smallest);
+        }
+        return ordered;
+    }
+
 
     /**
      *
@@ -144,21 +266,18 @@ public class WorkSessionScheduler implements EventListObserver {
 
     public static void main(String[] args){
         EventManager em = new EventManager();
-        WorkSessionScheduler ws = new WorkSessionScheduler(new HashMap<>(), true);
-        em.addEvent("hello", LocalDateTime.of(2021, 11, 19, 2,0));
+        Map<LocalTime, LocalTime> freeTime = new HashMap<>();
+        freeTime.put(LocalTime.of(21, 0), LocalTime.of(23, 59));
+        freeTime.put(LocalTime.of(0, 0), LocalTime.of(9, 0));
+        WorkSessionScheduler ws = new WorkSessionScheduler(freeTime, true);
+        em.addEvent("hello", LocalDateTime.of(2021, 11, 19, 9,0));
         Event e = new Event(3, "this", LocalDateTime.of(2021,11,17,13,30),
                 LocalDateTime.of(2021, 11, 17, 14, 30));
         em.addEvent(e);
-        em.get(1).setHoursNeeded(10L);
-        ws.autoSchedule(em.get(1), em);
+        ws.setHoursNeeded(em.get(1), 10L, em);
 
-        for (Event event: em.getAllEventsFlatSplit()){
-            System.out.println(em.displayEvent(event));
-            System.out.println(event.getLength());
-            System.out.println(event.getWorkSessions().size());
-            System.out.println(event.getWorkSessions().isEmpty());
-        }
         System.out.println("---------------");
         System.out.println(em.get(1).getWorkSessions());
+
     }
 }
