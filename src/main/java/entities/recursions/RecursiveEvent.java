@@ -132,6 +132,7 @@ public class RecursiveEvent {
      *
      * Uses the classes that implement the date getter interface to return the dates of all the events in the
      * period of repetition.
+     * @param events The events in one repetition cycle.
      * @return list of repetitions of event in events
      */
 
@@ -141,8 +142,8 @@ public class RecursiveEvent {
 
     /**
      *
-     * @param event
-     * @ return Given a specific event in a cycle, this method returns an arrayList of all the events
+     * @param event The specific event.
+     * @return Given a specific event in a cycle, this method returns an arrayList of all the events
      * (which are repetitions of this specific event) in the period of repetition (don't include original event
      * in this.eventsInOneCycle).
      */
