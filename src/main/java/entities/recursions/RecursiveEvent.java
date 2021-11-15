@@ -150,7 +150,7 @@ public class RecursiveEvent {
         int indexOfEvent = this.eventsInOneCycle.indexOf(event);
         ArrayList<Event> listOfDatesInCycles = this.listOfEventsInCycles(this.eventsInOneCycle);
         int cyclesLength = listOfDatesInCycles.size();
-        int i = 0;
+        int i = 1;
         while(indexOfEvent + this.getCycleLength()*i < cyclesLength){
             listOfDatesInCycles.get(indexOfEvent + this.getCycleLength()*i).setRecursiveId(this.id);
             result.add(listOfDatesInCycles.get(indexOfEvent + this.getCycleLength()*i));

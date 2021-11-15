@@ -21,12 +21,10 @@ between events in EventManager would make this Class smaller and easier to under
 
 - Open / Closed Principle
 
-
-
 the Event and Event collection handling classes are open for extension - an Event is a very basic object that contains 
 general references to other Events that can be handled in different ways by different kinds of Managers. 
 our idea to generalize repetition and courses to the more broad collections - courses whose times are related 
-by some pattern or reference eachother in some way - makes the event handling functionality open for extension.
+by some pattern or reference each other in some way - makes the event handling functionality open for extension.
 events and collections of events.
 - Liskov Substitution Principle
 
@@ -81,7 +79,7 @@ well.
 
 ###Testing
 
-All the major use cases classes and entities such as OurCalendar, Event, and EventManager are tested using
+All the major use cases classes and entities such as OurCalendar, Event, RecursiveEvent and EventManager are tested using
 junit.
 All the calendar presenter classes were tested very frequently while building it by every component. 
 
