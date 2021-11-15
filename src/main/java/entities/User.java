@@ -8,6 +8,7 @@ import java.util.*;
 /**
  * @author Malik Lahlou
  * @author Taite Cullen
+ * @author Sebin Im
  */
 public class User implements Serializable {
     private UUID id;

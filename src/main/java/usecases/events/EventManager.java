@@ -21,6 +21,7 @@ import javax.swing.text.TabableView;
  * updates EventListObservers when Event is added to its eventMap, removed from its eventMap, or
  * the start or end time of an <code>Event</code> within its <code>eventMap</code> is modified
  *
+ * @author Sebin Im
  * @author Taite Cullen
  * @author Malik Lahlou
  */

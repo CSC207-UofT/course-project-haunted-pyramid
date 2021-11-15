@@ -3,6 +3,13 @@ package controllers;
 import java.util.Scanner;
 import java.util.UUID;
 
+/**
+ * A controller that must be used at every boot, to verify the user logging in.
+ * It should contact MainController and MainController only.
+ *
+ * @author Sebin Im
+ */
+
 public class LoginController {
 
     private boolean loggedIn;
@@ -52,6 +59,11 @@ public class LoginController {
         this.userController.getUserManager().addNewUser(UUID.randomUUID(), name, username, password);
     }
 
+    /**
+     * Check if this account is logged in.
+     *
+     * @return boolean variable on whether they are logged in or not
+     */
     public boolean isLoggedIn() {
         return this.loggedIn;
     }

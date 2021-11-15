@@ -11,6 +11,7 @@ import java.util.UUID;
 /**
  * A class for editing User Entity classes and storing/accessing a list of Users in a map, with key= UUID user id
  *
+ * @author Sebin Im
  * @author Taite Cullen
  * @author Malik Lahlou
  * @see User

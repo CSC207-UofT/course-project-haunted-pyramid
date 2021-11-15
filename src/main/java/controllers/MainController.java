@@ -18,7 +18,16 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-
+/**
+ * The main controller for the program, which initializes other controllers and their respective managers.
+ * Takes user input and utilizes them as the program sees fit.
+ *
+ * @author Sebin Im
+ * @author Sean Yi
+ * @see main.ProgramRun
+ * @see IOController
+ * @see LoginController
+ */
 public class MainController {
 
     private final UserController userController;
@@ -32,6 +41,11 @@ public class MainController {
 
     private final DisplayMenu displayMenu;
 
+    /**
+     * Initialize the entire program as this class is being initialized.
+     * First, initialize and run IOSerializable, to retrieve serialized data from the dropbox repository.
+     * Then asks the user to log in, which then will provide the user with the rest of the program.
+     */
     public MainController() {
         this.ioSerializable = new IOSerializable(true);
         this.userController = new UserController(this.ioSerializable.hasSavedData(), this.ioSerializable);
@@ -107,6 +121,8 @@ public class MainController {
     /**
      * Used to make sure the User files that are being imported into the dropbox is up-to-date with any new data that
      * were added whilst the program was running.
+     *
+     * @return ArrayList of the union set of all users in the dropbox repository and this program
      */
     public ArrayList<User> combineTwoUserFileContents(UserManager um1, UserManager um2) {
         ArrayList<User> arrayListUM1 = new ArrayList<>(um1.getAllUsers());
@@ -120,6 +136,8 @@ public class MainController {
     /**
      * Used to make sure the Event files that are being imported into the dropbox is up-to-date with any new data that
      * were added whilst the program was running.
+     *
+     * @return ArrayList of the union set of all events in the dropbox repository and this program
      */
     public ArrayList<Event> combineTwoEventFileContents(EventManager em1, EventManager em2) {
         ArrayList<Event> arrayListEM1 = new ArrayList<>(em1.getAllEventsFlatSplit());

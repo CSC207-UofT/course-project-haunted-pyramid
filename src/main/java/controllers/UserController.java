@@ -19,6 +19,7 @@ import java.util.UUID;
  *
  * @author Taite Cullen
  * @author Sean Yi
+ * @author Sebin Im
  */
 public class UserController {
 
