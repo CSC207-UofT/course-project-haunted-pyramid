@@ -111,7 +111,7 @@ public class WorkSessionScheduler implements EventListObserver {
      */
     private void autoSchedule(Event deadline, EventManager eventManager) {
         if (this.procrastinate) {
-            this.autoScheduleProcrastinate(deadline, eventManager);
+            this.autoScheduleNoProcrastinate(deadline, eventManager);
         } else {
             this.autoScheduleNoProcrastinate(deadline, eventManager);
         }
@@ -165,10 +165,11 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param eventManager the event manager to schedule around
      */
     private void autoScheduleProcrastinate(Event deadline, EventManager eventManager) {
-
+        // TODO implement this and other strategy method for autoScheduling for phase 2 - partially implemented
         long totalNeeded = (long) (deadline.getHoursNeeded() - eventManager.totalHours(deadline.pastWorkSessions()));
         // Divide the total hours needed by 3 to get time for each work session
         Long sessionLength = totalNeeded / 3L;
+        deadline.setWorkSessions(deadline.pastWorkSessions());
 
         // Get the three days before the end date of the deadline event
         LocalDateTime firstDay = deadline.getEndTime().minusDays(3);
