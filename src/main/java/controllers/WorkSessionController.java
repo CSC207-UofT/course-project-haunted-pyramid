@@ -19,7 +19,10 @@ public class WorkSessionController {
     private final IOController ioController;
     private final ControllerHelper helper;
 
-
+    /**
+     * Initialize WorkSessionController with workSessionScheduler
+     * @param workSessionScheduler workScheduler class to use with
+     */
     public WorkSessionController(WorkSessionScheduler workSessionScheduler){
         this.workSessionScheduler = workSessionScheduler;
         this.ioController = new IOController();
@@ -30,6 +33,11 @@ public class WorkSessionController {
         return this.workSessionScheduler;
     }
 
+    /**
+     * Add work session on the event with the given ID based on user input
+     * @param eventID ID of the event
+     * @param eventManager eventManager class with event information
+     */
     public void edit(Integer eventID, EventManager eventManager) {
         boolean done = false;
         while (!done) {
@@ -65,6 +73,11 @@ public class WorkSessionController {
         }
     }
 
+    /**
+     * Change total hour of work session of the event
+     * @param eventID id of the event
+     * @param eventManager eventManager class with event information
+     */
     private void changeTotalHour(Integer eventID, EventManager eventManager) {
         System.out.println("Original Total Work Session Hour: " + eventManager.getTotalHoursNeeded(eventID));
         String chosenHour = ioController.getAnswer("Please type the new Total Hour (Max: 50)");
@@ -74,6 +87,11 @@ public class WorkSessionController {
         System.out.println("The change has been applied");
     }
 
+    /**
+     * Change individual session length of the event
+     * @param eventID id of the event
+     * @param eventManager eventManager class with event information
+     */
     private void changeSessionLength(Integer eventID, EventManager eventManager) {
         System.out.println("Original Length: " + eventManager.getEventSessionLength(eventID));
         String chosenLength = ioController.getAnswer("Please type new Session Length (Max: 10)");
@@ -83,6 +101,11 @@ public class WorkSessionController {
         System.out.println("The change has been applied");
     }
 
+    /**
+     * Mark whether the session is completed or not
+     * @param eventID id of the event
+     * @param eventManager eventManager class with event information
+     */
     private void markCompletion(Integer eventID, EventManager eventManager) {
         if (eventManager.getPastWorkSession(eventID).size() == 0) {
             return;

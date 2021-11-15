@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,20 +31,26 @@ public class RecursionController {
 
     public void createNewRecursion(List<Integer> eventIDList, EventManager eventManager){
         ArrayList<Event> cycle = new ArrayList<>();
+        List<Integer> eventID = new ArrayList<>();
         for (int id : eventIDList){
             cycle.add(eventManager.get(id));
+            eventID.add(id);
         }
+        Collections.sort(eventID);
         eventManager.timeOrder(cycle);
         DateGetter methodToGetDates;
         System.out.println("Please enter the Second Occurrence date of the Event");
-        LocalDateTime secondFirstEventDate = ioController.getDateTime("Enter the time of Occurrence",
-                "Enter the Date of the Occurrence");
-        while (secondFirstEventDate.isBefore(cycle.get(cycle.size() - 1).getEndTime())){
+        LocalDate secondFirstEventDate = ioController.getDate("Enter the Date of the Occurrence");
+        LocalTime secondFirstEventTime = eventManager.getStartTime(eventID.get(0));
+        LocalDateTime secondFirstEventDateTime = LocalDateTime.of(secondFirstEventDate, secondFirstEventTime);
+        while (secondFirstEventDateTime.isBefore(cycle.get(cycle.size() - 1).getEndTime())){
             System.out.println("Please enter a date after: " + cycle.get(cycle.size() - 1).getEndTime().toString());
-            secondFirstEventDate = ioController.getDateTime("Enter the Time", "Enter the Date");
+            secondFirstEventDate = ioController.getDate("Enter the Date of the Occurrence");
+            secondFirstEventTime = eventManager.getStartTime(eventID.get(0));
+            secondFirstEventDateTime = LocalDateTime.of(secondFirstEventDate, secondFirstEventTime);
         }
-
-        Event newEvent = eventManager.addEvent(cycle.get(0).getName() + "-2", secondFirstEventDate);
+        String eventName = eventManager.getName(cycle.get(0));
+        Event newEvent = eventManager.addEvent(eventName + "-2", secondFirstEventDateTime);
         cycle.add(newEvent);
 
         String repetitionMethod = ioController.getAnswer("Enter either: 'num' if there is a " +
