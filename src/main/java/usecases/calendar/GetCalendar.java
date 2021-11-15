@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Abstract class for getting different types of calendar
  * @author Seo Won Yi
+ * @see DailyCalendar
+ * @see WeeklyCalendar
+ * @see MonthlyCalendar
  */
 public abstract class GetCalendar {
     /**

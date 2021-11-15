@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Calender type selection menu content
  * @author Seo Won Yi
  */
 public class CalendarTypeMenuContent implements MenuContent {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Menu Contents to be used for CalendarController
  * @author Seo Won Yi
  */
 public class CalNextActionMenuContent implements MenuContent {

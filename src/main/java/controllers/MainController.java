@@ -108,10 +108,13 @@ public class MainController {
                     this.calendarController.dailyCalendarForModification(this.eventController);
                     break;
                 case "5":
+                    this.calendarController.monthlyCalendarForRepetition(this.eventController);
+                    break;
+                case "6":
                     this.loginController.logout();
                     this.displayInitScreen();
                     break;
-                case "6":
+                case "7":
                     this.saveAndExitProgram();
                     break;
             }

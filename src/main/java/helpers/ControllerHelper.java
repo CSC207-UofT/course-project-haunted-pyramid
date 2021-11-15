@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
+ * Helper class that checks if the numerical inputs are valid for the controller classes
  * @author Seo Won Yi
+ * @see controllers.CalendarController
+ * @see controllers.MainController
  */
 public class ControllerHelper {
     private final Scanner scanner = new Scanner(System.in);

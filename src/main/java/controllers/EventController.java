@@ -11,6 +11,7 @@ import usecases.WorkSessionScheduler;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -253,7 +254,7 @@ public class EventController {
      * @param ID the id of the event to be edited
      * @see WorkSessionController#edit
      */
-    private void prep(Integer ID){
+    private void prep(Integer ID) {
         this.workSessionController.edit(ID, this.eventManager);
     }
 
@@ -265,11 +266,17 @@ public class EventController {
      * @see RecursionController#createNewRecursion(Event, EventManager, EventController)
      */
     private void recurse(Integer ID) {
-        String nextStep = ioController.getAnswer("Enter 'Create' to create new recursion" +
-                "'edit' to modify an existing one and 'delete' to remove all repetitions of this event");
-        if (nextStep.equalsIgnoreCase("Create")) {
-            this.recursionController.createNewRecursion(this.eventManager.get(ID), this.eventManager, this);
+        String nextStep = ioController.getAnswer("Enter 'Create' to create new recursion");
+        while (!nextStep.equalsIgnoreCase("Create")) {
+            System.out.println("Please type the valid answer");
+            nextStep = ioController.getAnswer("Enter 'Create' to create new recursion");
         }
-        //TODO: add more options to delete or modify a recursion (now can only add).
+        // TODO malik
+/*        if (nextStep.equalsIgnoreCase("Create")) {
+            this.recursionController.createNewRecursion(new ArrayList<Integer>() {
+                {
+                    add(ID);
+                }
+            });*/
     }
 }

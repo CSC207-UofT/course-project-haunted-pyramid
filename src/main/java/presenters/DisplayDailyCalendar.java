@@ -12,7 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Build the image of daily calendar and display if asked
  * @author Seo Won Yi
+ * @see DisplayCalendar
+ * @see DailyCalendar
+ * @see DisplayCalendarHelper
  */
 public class DisplayDailyCalendar extends DisplayCalendar {
     private final int year;
@@ -24,6 +28,13 @@ public class DisplayDailyCalendar extends DisplayCalendar {
     private List<String> timeLine;
     private final String dayOfWeek;
 
+    /**
+     * Set up the DisplayDailyCalendar
+     * @param cm CalendarManager Object that will bring the information from
+     * @param year given year
+     * @param month given month
+     * @param date given date
+     */
     public DisplayDailyCalendar(CalendarManager cm, int year, int month, int date) {
         super(cm);
         this.year = year;
@@ -35,6 +46,11 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         this.eventManager = new EventManager();
         this.dayOfWeek = cf.findStartDayOfWeekString(this.year, this.month, this.date);
     }
+
+    /**
+     * Return the image of daily calendar
+     * @return return the image of the daily calendar
+     */
     @Override
     public String displayCalendar() {
         StringBuilder result = new StringBuilder();
@@ -49,7 +65,11 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         return result.toString();
     }
 
-
+    /**
+     * Create frame of the daily calendar
+     * @param result StringBuilder object that will be added on
+     * @param lengthDecider Extra length to be added to the frame of the calendar
+     */
     private void dailyFrame(StringBuilder result, int lengthDecider){
         String top = "-".repeat(Constants.DAILY_CAL_SIZE * 2 + lengthDecider);
         result.append(" ").append(top).append(" ").append("\n");
@@ -65,6 +85,11 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         result.append(" ").append(top).append(" ").append("\n");
     }
 
+    /**
+     * Add date to the image
+     * @param result StringBuild object that will be added on
+     * @param lengthDecider Extra length to be added for the blank spaces around the date
+     */
     private void addDate(StringBuilder result, int lengthDecider){
         result.append("|");
         String div = " ".repeat(Constants.DAILY_CAL_SIZE + lengthDecider/2 - 3);
@@ -84,17 +109,30 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         result.append(div).append("|").append("\n");
     }
 
+    /**
+     * Add blank spaces to result
+     * @param result StringBuilder object that will be added on
+     * @param length length to be subtracted from the default blank space (name of the events)
+     * @param lengthDecider extra space to be added if the name of the events are too large
+     */
     private void addSpace(StringBuilder result, int length, int lengthDecider){
-        String div = " ".repeat(Constants.DAILY_CAL_SIZE*2 + lengthDecider - 8 - length);
+        String div = " ".repeat(Constants.DAILY_CAL_SIZE*2 + lengthDecider + Constants.TIMELINE_SPACER - length);
         result.append(div).append("|").append("\n");
     }
 
+    /**
+     * set up the timeline
+     */
     private void setTimeLine(){
         List<String> intTimeLine = getDefaultTimeLine();
         List<String> additionalTimeLine = getAdditionalTimeLine();
         this.timeLine = cf.updateTimeList(intTimeLine, additionalTimeLine);
     }
 
+    /**
+     * Get a list of String of default timeline (from 00:00 to 24:00)
+     * @return A list of timeline strings
+     */
     private List<String> getDefaultTimeLine(){
         List<String> defaultTimeLine = new ArrayList<>();
         for (int i = 0; i <= 24; i++){
@@ -108,6 +146,10 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         return defaultTimeLine;
     }
 
+    /**
+     * Get a list of String of every timeline information in the calendar (start time and end time)
+     * @return A list of timeline strings
+     */
     private List<String> getAdditionalTimeLine() {
         List<String> additionalTimeLine = new ArrayList<>();
         for (Event event : calendarMap.get(this.date)) {
@@ -123,6 +165,11 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         return additionalTimeLine;
     }
 
+    /**
+     * Add timeline information and content of the event to the StringBuilder result
+     * @param result StringBuilder object to be added on
+     * @param lengthDecider Extra space to be added if the name of the event is too long
+     */
     private void addTimeLineWithContent(StringBuilder result, int lengthDecider){
         for (String timeLine : this.timeLine){
             result.append("|").append(" ").append(timeLine).append(" ").append("|");
@@ -131,37 +178,91 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         }
     }
 
+    /**
+     * Add content (event information) to the StringBuilder result if the event's start or end time is the same as
+     * time argument
+     * @param result StringBuilder object to be added on
+     * @param time time to be considered (for example, if the time is the same as the event's start time etc...)
+     * @return the total length of the event name added to the result for the same time
+     */
     private int addContent(StringBuilder result, String time){
         int totalLength = 0;
         for (Event event : this.calendarMap.get(this.date)){
             String endTime = eventManager.getEndTimeString(event);
             String startTime = getStartTime(event, endTime);
             String eventName = eventManager.getName(event);
-            int eventNameSize = eventName.length();
             int eventID = eventManager.getID(event);
             if (eventName.length() > Constants.DAILY_CAL_SIZE){
                 eventName = eventName.substring(0, Constants.DAILY_CAL_SIZE) + "...";
-                eventNameSize = eventName.length();
             }
             if (!startTime.equals(endTime) && startTime.equals(time)) {
-                result.append(" ");
-                result.append("ID:").append(eventID).append(" ").append(eventName).append(" Start;");
-                totalLength += eventNameSize + 13;
+                totalLength = getTotalLengthStart(result, totalLength, eventName, eventID);
             }
             else if (!startTime.equals(endTime) && endTime.equals(time)){
-                result.append(" ");
-                result.append("ID:").append(eventID).append(" ").append(eventName).append(" End;");
-                totalLength += eventNameSize + 11;
+                totalLength = getTotalLengthEnd(result, totalLength, eventName, eventID);
             }
             else if (startTime.equals(endTime) && startTime.equals(time)){
-                result.append(" ");
-                result.append("ID:").append(eventManager.getID(event)).append(" ").append(eventName).append(" Due;");
-                totalLength += eventNameSize + 11;
+                totalLength = getTotalLengthDue(result, totalLength, eventName, eventID);
             }
         }
         return totalLength;
     }
 
+    /**
+     * Add the StringBuilder result with the event information (ID, name + start)
+     * Return the updated total length of the event name added
+     * @param result StringBuilder object to be added on
+     * @param totalLength Total length of names
+     * @param eventName name of the event
+     * @param eventID ID of the event
+     * @return the updated total length after appending the event to the StringBuilder result
+     */
+    private int getTotalLengthStart(StringBuilder result, int totalLength, String eventName, int eventID) {
+        result.append(" ");
+        result.append("ID:").append(eventID).append(" ").append(eventName).append(" Start;");
+        totalLength += eventName.length() + Constants.DAILY_CAL_EXTRA_NAME;
+        return totalLength;
+    }
+
+    /**
+     * Add the StringBuilder result with the event information (ID, name + end)
+     * Return the updated total length of the event name added
+     * @param result StringBuilder object to be added on
+     * @param totalLength Total length of names
+     * @param eventName name of the event
+     * @param eventID ID of the event
+     * @return the updated total length after appending the event to the StringBuilder result
+     */
+    private int getTotalLengthEnd(StringBuilder result, int totalLength, String eventName, int eventID) {
+        result.append(" ");
+        result.append("ID:").append(eventID).append(" ").append(eventName).append(" End;");
+        totalLength += eventName.length() + Constants.DAILY_CAL_EXTRA_NAME - 11;
+        return totalLength;
+    }
+
+    /**
+     * Add the StringBuilder result with the event information (ID, name + due)
+     * Return the updated total length of the event name added
+     * @param result StringBuilder object to be added on
+     * @param totalLength Total length of names
+     * @param eventName name of the event
+     * @param eventID ID of the event
+     * @return the updated total length after appending the event to the StringBuilder result
+     */
+    private int getTotalLengthDue(StringBuilder result, int totalLength, String eventName, int eventID) {
+        result.append(" ");
+        result.append("ID:").append(eventID).append(" ").append(eventName).append(" Due;");
+        totalLength += eventName.length() + Constants.DAILY_CAL_EXTRA_NAME - 11;
+        return totalLength;
+    }
+
+    /**
+     * Get the start time of the event as a string
+     * Get end time if start time does not exist
+     * @param event Event object to get start time from
+     * @param endTime end time of the event obtained previously
+     * @return the string of start time
+     */
     private String getStartTime(Event event, String endTime) {
         String startTime = eventManager.getStartTimeString(event);
         if (startTime == null){
@@ -170,6 +271,10 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         return startTime;
     }
 
+    /**
+     * Get the longest possible outcome of the event name compiled at the same time
+     * @return the length of the longest possible name
+     */
     private int getLongestEventLength() {
         int longestLength = 0;
         for (String time : this.timeLine) {
@@ -178,7 +283,8 @@ public class DisplayDailyCalendar extends DisplayCalendar {
                 String eventEndTime = this.eventManager.getEndTimeString(event);
                 String eventName = eventManager.getName(event);
                 String eventStartTime = getStartTime(event, eventEndTime);
-                int nameMin = Math.min(eventName.length() + 13, Constants.DAILY_CAL_SIZE + 13);
+                int nameMin = Math.min(eventName.length() + Constants.DAILY_CAL_EXTRA_NAME,
+                        Constants.DAILY_CAL_SIZE + Constants.DAILY_CAL_EXTRA_NAME);
                 if (eventStartTime.equals(time)){
                     tempLength += nameMin;
                 }
@@ -194,6 +300,11 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         return longestLength;
     }
 
+    /**
+     * Trim the longest length by the default space provided
+     * @param longestLength possible longest length of the events' names compiled at the same time
+     * @return trimmed length
+     */
     private int trimLength(int longestLength) {
         if (longestLength > 90){
             longestLength -= 90;

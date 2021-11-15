@@ -10,7 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Get Weekly Calendar Map
  * @author Seo Won Yi
+ * @see GetCalendar
+ * @see CalendarManager
+ * @see OurCalendar
  */
 
 public class WeeklyCalendar extends GetCalendar {
