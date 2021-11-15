@@ -233,9 +233,31 @@ public class EventManager {
         return new ArrayList<>(List.of(new Event[]{event}));
     }
 
+
     /**
-     * returns ArrayList of all events in <code>this.eventMap</code>, including work sessions within events, split
-     * at day boundaries
+     * Getter and Setter methods.
+     */
+
+    public void setRepeatedEventManager(RepeatedEventManager repeatedEventManager) {
+        this.repeatedEventManager = repeatedEventManager;}
+    public RepeatedEventManager getRepeatedEventManager() {
+        return repeatedEventManager;
+    }
+
+    /**
+     * @param recursiveEvent The RecursiveEvent from which the repeated events should be extracted.
+     * @return Given a RecursiveEvent, this method returns all the events in the period of repetition specified in the
+     * RecursiveEvent object.
+     */
+
+    public ArrayList<Event> eventsInSomeRecursion(RecursiveEvent recursiveEvent) {
+        return repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId());
+    }
+
+
+    /**
+     * returns ArrayList of all events in <code>this.eventMap</code>, including work sessions within events and
+     * repeated events, split at day boundaries
      *
      * @return list of events, including work sessions within events (flattened)
      */
@@ -243,6 +265,12 @@ public class EventManager {
         List<Event> events = new ArrayList<>();
         for (Event event : this.flattenWorkSessions(new ArrayList<>(this.eventMap.values()))) {
             events.addAll(this.splitByDay(event));
+        }
+        for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()){
+            ArrayList<Event> repeatedEvents = this.eventsInSomeRecursion(recursiveEvent);
+            for (Event event : repeatedEvents){
+                events.addAll(this.splitByDay(event));
+            }
         }
         return events;
     }
@@ -539,6 +567,7 @@ public class EventManager {
         event.setDescription(descrip);
     }
 
+
     /**
      * TODO Malik
      *
@@ -567,15 +596,6 @@ public class EventManager {
             for (Event event : events) {
                 this.addEvent(event);
             }
-        }
-    }
-
-    /**
-     * TODO Malik
-     */
-    public void addEventsInRecursion() {
-        for (RecursiveEvent recursiveEvent : this.repeatedEventManager.getRecursiveEventMap().values()) {
-            this.addEventsInRecursion(recursiveEvent);
         }
     }
 

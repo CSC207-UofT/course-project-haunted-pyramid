@@ -81,7 +81,7 @@ public class RepeatedEventManager implements EventListObserver {
      * of repetition as values.
      */
 
-    public HashMap<Integer, ArrayList<Event>> getEventsFromRecursion(Integer id){
+    public HashMap<Integer, ArrayList<Event>> getEventMapFromRecursion(Integer id){
         HashMap<Integer, ArrayList<Event>> result = new HashMap<>();
         ArrayList<Event> eventsInOneCycle = this.recursiveEventMap.get(id).getEventsInOneCycle();
         int realSize = eventsInOneCycle.size() - 1;
@@ -90,6 +90,20 @@ public class RepeatedEventManager implements EventListObserver {
             result.put(event.getID(), this.getRecursiveEvent(id).createEventInCycles(event));
         }
         return result;
+    }
+
+
+    /**
+     *
+     * @param id The id of a Recursive event.
+     * @return Given the id of a recursive event object, this methods access the events in one cycle of this repetition
+     * and returns a map with the id of the original event in the cycle as keys, and the list of events in the period
+     * of repetition as values.
+     */
+
+    public ArrayList<Event> getEventsFromRecursion(Integer id){
+        ArrayList<Event> eventsInOneCycle = this.recursiveEventMap.get(id).getEventsInOneCycle();
+        return this.recursiveEventMap.get(id).listOfEventsInCycles(eventsInOneCycle);
     }
 
 

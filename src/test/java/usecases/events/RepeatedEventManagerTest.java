@@ -41,8 +41,8 @@ public class RepeatedEventManagerTest {
     }
 
     @Test
-    public void getEventsFromRecursionTest() {
-        HashMap<Integer, ArrayList<Event>> y = repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId());
+    public void getEventMapFromRecursionTest() {
+        HashMap<Integer, ArrayList<Event>> y = repeatedEventManager.getEventMapFromRecursion(recursiveEvent.getId());
         assertEquals(y.get(e1.getID()).get(0).getEndTime(), LocalDateTime.of(2021, 11, 20, 11,0));
         assertEquals(y.get(e1.getID()).get(1).getEndTime(), LocalDateTime.of(2021, 11, 25, 11,0));
         assertEquals(y.get(e2.getID()).get(0).getEndTime(), LocalDateTime.of(2021, 11, 23, 11,0));
