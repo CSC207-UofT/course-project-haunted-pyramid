@@ -43,7 +43,7 @@ public class RecursionController {
         DateGetter methodToGetDates;
         System.out.println("Please enter the Second Occurrence date of the Event");
         LocalDate secondFirstEventDate = ioController.getDate("Enter the Date of the Occurrence");
-        LocalTime secondFirstEventTime = eventManager.getStartTime(eventID.get(0));
+        LocalTime secondFirstEventTime = eventManager.getEndTime(eventID.get(0));
         LocalDateTime secondFirstEventDateTime = LocalDateTime.of(secondFirstEventDate, secondFirstEventTime);
         while (secondFirstEventDateTime.isBefore(cycle.get(cycle.size() - 1).getEndTime())){
             System.out.println("Please enter a date after: " + cycle.get(cycle.size() - 1).getEndTime().toString());
