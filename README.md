@@ -10,4 +10,4 @@
 Specification, CRC model, Progress report, and scenario walkthrough are all contained in `res/phase 0` folder
 
 ## Phase 1 Other Resources
-Specification, Progress Report, Flow Chart, Design Question included in 'res/Phase1' folder
+Specification, Progress Report, Flow Chart, Design Question included in `res/Phase1` folder
