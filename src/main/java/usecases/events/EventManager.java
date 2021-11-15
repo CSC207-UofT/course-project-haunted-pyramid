@@ -133,9 +133,7 @@ public class EventManager {
      * @return the event just removed, or null
      */
     public Event remove(Integer ID) {
-        ArrayList<Event> truc = new ArrayList<>();
-        truc.add(this.get(ID));
-        this.update("remove", truc);
+        this.update("remove", this.get(ID));
         return eventMap.remove(ID);
     }
 
@@ -153,26 +151,13 @@ public class EventManager {
     }
 
     /**
-     * creates an event with given title and endString using <code>this.stringToDate</code> to convert to LocalDateTime
-     * and adds to <code>this.eventMap</code>
-     *
-     * @param title     String name of event
-     * @param endString DateTime string in the form "YYYY-MM-DDTHH-MM"
-     * @return the event that was created
-     */
-    public Event addEvent(String title, String endString) {
-        Event event = new Event(ConstantID.get(), title, this.stringToDate(endString));
-        this.addEvent(event);
-        return event;
-    }
-
-    /**
      * adds an already existing event to <code>this.eventMap</code>. will overwrite event of same ID
      *
      * @param event event to be added
      */
     public void addEvent(Event event) {
         this.eventMap.put(event.getID(), event);
+        this.update("add", event);
     }
 
 
@@ -292,10 +277,12 @@ public class EventManager {
 
     public void setStart(Integer id, LocalDateTime start) {
         this.get(id).setStartTime(start);
+        this.update("change", this.get(id));
     }
 
     public void setEnd(Integer id, LocalDateTime end) {
         this.get(id).setEndTime(end);
+        this.update("change", this.get(id));
     }
 
     /**
@@ -332,7 +319,7 @@ public class EventManager {
      * @param addRemoveChange string "add" or "remove" or "change" to specify the nature of the update
      * @param changed         list of the events that are modified
      */
-    public void update(String addRemoveChange, ArrayList<Event> changed) {
+    public void update(String addRemoveChange, Event changed) {
         for (EventListObserver obs : this.toUpdate) {
             obs.update(addRemoveChange, changed, this);
         }
@@ -452,71 +439,24 @@ public class EventManager {
     public Map<LocalDateTime, Long> freeSlots(LocalDateTime start, List<Event> events, LocalDateTime end) {
         List<Event> schedule = this.timeOrder(this.flattenWorkSessions(events));
         Map<LocalDateTime, Long> freeSlots = new HashMap<>();
-        int taskNum = 0;
-        while (taskNum < schedule.size() && (schedule.get(taskNum).getEndTime().isBefore(end) ||
-                (schedule.get(taskNum).hasStart() && schedule.get(taskNum).getStartTime().isBefore(end)))) {
-            if (schedule.get(taskNum).hasStart() && schedule.get(taskNum).getStartTime().isAfter(start)) {
-                updateFreeSlot(start, schedule, freeSlots, taskNum);
-            } else if(schedule.get(taskNum).hasStart() && !schedule.get(taskNum).getEndTime().isBefore(end)){
-                return new HashMap<>();
+        int num = 0;
+        while (num < schedule.size()) {
+            if (schedule.get(num).hasStart()) {
+                if (schedule.get(num).getEndTime().isAfter(start)) {
+                    if (schedule.get(num).getStartTime().isBefore(end) && schedule.get(num).getStartTime().isAfter(start)) {
+                        freeSlots.put(start, Duration.between(start, schedule.get(num).getStartTime()).toHours());
+                        start = schedule.get(num).getEndTime();
+                        freeSlots.putAll(this.freeSlots(start, events, end));
+                    } else if (!schedule.get(num).getStartTime().isBefore(end)){
+                        freeSlots.put(start, Duration.between(start, end).toHours());
+                        return freeSlots;
+                    }
+                    start = schedule.get(num).getEndTime();
+                }
             }
-            taskNum += 1;
-        }
-        if (taskNum == 0){
-            freeSlots.put(start, Duration.between(start, end).toHours());
-        } else if (taskNum < schedule.size()) {
-            if (schedule.get(taskNum).hasStart() && schedule.get(taskNum).getEndTime().isBefore(end)){
-                updateMoreFreeSlot(end, schedule, freeSlots, taskNum);
-            } else if(!schedule.get(taskNum-1).hasStart() && schedule.get(taskNum).getStartTime().isAfter(end)){
-                freeSlots.put(start, Duration.between(start, end).toHours());
-            }
-        } else if (schedule.get(taskNum - 1).getEndTime().isBefore(start)){
-            freeSlots.put(start, Duration.between(start, end).toHours());
+            num += 1;
         }
         return freeSlots;
-    }
-
-    /**
-     * Helper method for freeSlots method. Update the free slot for the given condition
-     * (after all the events' end times are after the set end time)
-     * @param end set end time
-     * @param schedule list of events to be considered
-     * @param freeSlots map of freeSlots
-     * @param taskNum index to get the appropriate events from schedule
-     */
-    private void updateMoreFreeSlot(LocalDateTime end, List<Event> schedule, Map<LocalDateTime, Long> freeSlots,
-                                    int taskNum) {
-        if (schedule.get(taskNum - 1).hasStart() && schedule.get(taskNum - 1).getEndTime().isBefore(end)) {
-            freeSlots.put(schedule.get(taskNum - 1).getEndTime(), Duration.between(schedule.get(taskNum - 1).getEndTime(),
-                    end).toHours());
-        } else if(schedule.get(taskNum - 1).hasStart()){
-            freeSlots.put(schedule.get(taskNum - 1).getEndTime(), Duration.between(schedule.get(taskNum - 1).getEndTime(),
-                    end).toHours());
-        }
-    }
-
-    /**
-     * Helper method for freeSlots method. Update freeSlots according to the different conditions
-     * @param start the start time from which freeSlots are calculated - first start time of freeslot
-     * @param schedule list of events to be considered
-     * @param freeSlots map of freeSlots to be updated
-     * @param taskNum index to locate the event
-     */
-    private void updateFreeSlot(LocalDateTime start, List<Event> schedule, Map<LocalDateTime, Long> freeSlots,
-                                int taskNum) {
-        if (taskNum != 0) {
-            if (schedule.get(taskNum - 1).getEndTime().isBefore(start)) {
-                freeSlots.put(start, Duration.between(start, schedule.get(taskNum).getStartTime()).toHours());
-            }
-            else if (schedule.get(taskNum - 1).getEndTime().isBefore(schedule.get(taskNum).getStartTime())) {
-                freeSlots.put(schedule.get(taskNum - 1).getEndTime(),
-                        Duration.between(schedule.get((taskNum - 1)).getEndTime(),
-                                schedule.get(taskNum).getStartTime()).toHours());
-            }
-        }
-        else {
-            freeSlots.put(start, Duration.between(start, schedule.get(taskNum).getStartTime()).toHours());
-        }
     }
 
     /**

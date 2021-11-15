@@ -47,6 +47,10 @@ public class WorkSessionScheduler implements EventListObserver {
         this.autoSchedule(deadline, eventManager);
     }
 
+    public void setProcrastinate(boolean procrastinate){
+
+    }
+
     /**
      * @param deadline     the deadline event
      * @param hoursNeeded  whole long number of hours of this event to be scheduled
@@ -123,7 +127,6 @@ public class WorkSessionScheduler implements EventListObserver {
     private void autoScheduleNoProcrastinate(Event deadline, EventManager eventManager) {
         LocalDateTime deadlineTime = eventManager.getEnd(deadline);
         Integer ID = eventManager.getID(deadline);
-        eventManager.addEvent(deadline);
         deadline.setWorkSessions(deadline.pastWorkSessions());
         Long hoursToSchedule = (long) (eventManager.getTotalHoursNeeded(ID) -
                 eventManager.totalHours(eventManager.getPastWorkSession(ID)));
@@ -360,9 +363,10 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param eventManager    the eventManager that was updated
      */
     @Override
-    public void update(String addRemoveChange, ArrayList<Event> changed, EventManager eventManager) {
-        for (Event event : changed) {
+    public void update(String addRemoveChange, Event changed, EventManager eventManager) {
+        for (Event event: eventManager.getAllEvents()){
             this.autoSchedule(event, eventManager);
         }
+        System.out.println("updated");
     }
 }
