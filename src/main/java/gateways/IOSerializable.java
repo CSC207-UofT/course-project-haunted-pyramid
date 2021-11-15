@@ -180,7 +180,7 @@ public class IOSerializable {
      *
      * @param events an ArrayList of events to be serialized
      */
-    public static void eventsWriteToSerializable(ArrayList<Event> events) {
+    public void eventsWriteToSerializable(ArrayList<Event> events) {
         try {
             OutputStream file = new FileOutputStream(EVENTS_FILEPATH);
             OutputStream buffer = new BufferedOutputStream(file);
@@ -222,7 +222,7 @@ public class IOSerializable {
      *
      * @param users an ArrayList of users to be serialized
      */
-    public static void usersWriteToSerializable(ArrayList<User> users) {
+    public void usersWriteToSerializable(ArrayList<User> users) {
         try {
             OutputStream file = new FileOutputStream(USERS_FILEPATH);
             OutputStream buffer = new BufferedOutputStream(file);
