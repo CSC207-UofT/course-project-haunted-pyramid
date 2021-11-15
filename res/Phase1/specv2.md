@@ -24,7 +24,7 @@ In phase 0, the presentation was only available for monthly calendar. Now, you c
 
 #### Functionality
 
-In phase 0, only limited amount of work could be done (add event). Now, you can add / remove / modify information of the event as well as add additional functions such as make recursion (repetition) or set up work sessions to prepare the event. We have implemented basic algorithm that will set up the work sessions for the available times indicated by the user. 
+In phase 0, only limited amount of work could be done (add event). Now, you can add / remove / modify information of the event as well as add additional functions such as make recursion (repetition) or set up work sessions to prepare the event. We have implemented basic algorithm that will set up the work sessions for the available times indicated by the user automatically. 
 
 #### Data storage
 
