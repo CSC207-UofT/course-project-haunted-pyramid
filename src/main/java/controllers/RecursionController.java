@@ -21,6 +21,13 @@ public class RecursionController {
     private final IOController ioController = new IOController();
     private final ControllerHelper helper = new ControllerHelper();
 
+    /**
+     *
+     * @param eventIDList the ids of the events to repeat.
+     * @param eventManager the event manager containing all the events of this user
+     * This methods prompt the user to create repetitions of events with ids in eventIDList.
+     */
+
     public void createNewRecursion(List<Integer> eventIDList, EventManager eventManager){
         ArrayList<Event> cycle = new ArrayList<>();
         for (int id : eventIDList){
@@ -60,6 +67,11 @@ public class RecursionController {
         }
         eventManager.getRepeatedEventManager().addRecursiveEvent(cycle, methodToGetDates);
     }
+
+    /**
+     *
+     * @return A helper method that return a DateGetter given a user input.
+     */
 
     private DateGetter getDateGetter() {
         DateGetter methodToGetDates;
