@@ -101,6 +101,16 @@ public class EventManager {
         return dayMap;
     }
 
+    public List<Event> getDay(List<Event> schedule, LocalDate day) {
+        List<Event> dayMap = new ArrayList<>();
+        for (Event event : schedule) {
+            if (event.getDay().isEqual(day)) {
+                dayMap.add(event);
+            }
+        }
+        return dayMap;
+    }
+
     /**
      * returns an event in <code>this.eventMap</code> with the input ID if it is there, otherwise returns null
      *
@@ -503,9 +513,10 @@ public class EventManager {
      */
     public Map<LocalDate, List<Event>> getRange(LocalDate from, LocalDate to) {
         Map<LocalDate, List<Event>> range = new HashMap<>();
+        List<Event> schedule = this.getAllEventsFlatSplit();
         long current = 0L;
         while (!from.plusDays(current).isAfter(to)) {
-            range.put(from.plusDays(current), this.flatSplitEvents(List.of(this.getDay(from.plusDays(current)).values().toArray(new Event[0]))));
+            range.put(from.plusDays(current), (this.getDay(schedule, from.plusDays(current))));
             current += 1L;
         }
         return range;
@@ -523,7 +534,9 @@ public class EventManager {
         List<Event> schedule = this.timeOrder(this.flattenWorkSessions(events));
         Map<LocalDateTime, Long> freeSlots = new HashMap<>();
         int taskNum = 0;
-        while (taskNum < schedule.size() && schedule.get(taskNum).getEndTime().isBefore(end)) {
+        while (taskNum < schedule.size() && (schedule.get(taskNum).getEndTime().isBefore(end) ||
+                (schedule.get(taskNum).hasStart() && schedule.get(taskNum).getStartTime().isBefore(end)))){
+
             if (schedule.get(taskNum).hasStart() && schedule.get(taskNum).getStartTime().isAfter(start)) {
                 if (taskNum != 0) {
                     if (schedule.get(taskNum - 1).getEndTime().isBefore(start)) {
@@ -536,13 +549,26 @@ public class EventManager {
                 } else {
                     freeSlots.put(start, Duration.between(start, schedule.get(taskNum).getStartTime()).toHours());
                 }
+            } else if(schedule.get(taskNum).hasStart() && !schedule.get(taskNum).getEndTime().isBefore(end)){
+                return new HashMap<>();
             }
             taskNum += 1;
         }
-        if (taskNum > 0 && schedule.get(taskNum - 1).hasStart()) {
-            freeSlots.put(schedule.get(taskNum - 1).getEndTime(), Duration.between(schedule.get(taskNum - 1).getEndTime(),
-                    end).toHours());
-        } else {
+        if (taskNum == 0){
+            freeSlots.put(start, Duration.between(start, end).toHours());
+        } else if (taskNum < schedule.size()) {
+            if (schedule.get(taskNum).hasStart() && schedule.get(taskNum).getEndTime().isBefore(end)){
+                if (schedule.get(taskNum-1).hasStart() && schedule.get(taskNum-1).getEndTime().isBefore(end)) {
+                    freeSlots.put(schedule.get(taskNum - 1).getEndTime(), Duration.between(schedule.get(taskNum - 1).getEndTime(),
+                            end).toHours());
+                } else if(schedule.get(taskNum-1).hasStart()){
+                    freeSlots.put(schedule.get(taskNum - 1).getEndTime(), Duration.between(schedule.get(taskNum - 1).getEndTime(),
+                            end).toHours());
+                }
+            } else if(!schedule.get(taskNum-1).hasStart() && schedule.get(taskNum).getStartTime().isAfter(end)){
+                freeSlots.put(start, Duration.between(start, end).toHours());
+            }
+        } else if (schedule.get(taskNum - 1).getEndTime().isBefore(start)){
             freeSlots.put(start, Duration.between(start, end).toHours());
         }
         return freeSlots;
@@ -567,7 +593,6 @@ public class EventManager {
     public void setDescription(Event event, String descrip) {
         event.setDescription(descrip);
     }
-
 
 
     /**
@@ -699,5 +724,15 @@ public class EventManager {
         } else {
             return null;
         }
+    }
+
+    public LocalDateTime getEnd(Event event){
+        return event.getEndTime();
+    }
+    public LocalDateTime getStart(Event event){
+        if (event.hasStart()){
+            return event.getStartTime();
+        }
+        return null;
     }
 }

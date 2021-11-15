@@ -33,7 +33,8 @@ public class User implements Serializable {
         this.events = new ArrayList<>();
         this.procrastinate = false;
         this.freeTime = new HashMap<>();
-        this.freeTime.put(LocalTime.of(9, 0), LocalTime.of(21, 0));
+        this.freeTime.put(LocalTime.of(21, 0), LocalTime.of(23, 59));
+        this.freeTime.put(LocalTime.of(0, 0), LocalTime.of(9, 0));
     }
 
     public UUID getId() {
