@@ -41,13 +41,13 @@ implementations of methods in an interface it inherits from.
 
 
 #### Clean Architecture
+see `res/Phase1/classFlowChart.pdf`
 
 - Calendar Classes 
 
 OurCalendar (entity) is being used by CalendarManager, GetCalendar and its subclasses (use cases).
 CalendarManager and GetCalendar are being used by DisplayCalendar and its subclasses (Presenters).
 CalendarController (Controller) cooperates with DisplayCalendar.
- 
 
 - Event Classes
 EventManager accesses only the Event class. All other classes consistently use the EventManager class
