@@ -175,6 +175,9 @@ public class CalendarController {
         while (!(helper.isInteger(eventID) && eventController.getEventManager().containsID(Integer.parseInt(eventID)))) {
             System.out.println("Please type the valid ID");
             eventID = scanner.nextLine();
+            if (eventID.equalsIgnoreCase("Return")) {
+                return "Return";
+            }
         }
         return eventID;
     }
