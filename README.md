@@ -1,7 +1,7 @@
 # Where to Find Stuff
 ## Running Instructions
-1. clone repository, make sure `src/java/main` is marked as sources root 
-2. run file `src/main/java/main/ProgramRun.java`
+1. Clone repository, make sure `src/java/main` is marked as sources root 
+2. Run file `src/main/java/main/ProgramRun.java`
 3. Create username and password, then login. 
 
 ![image](https://user-images.githubusercontent.com/90633132/141837792-9cf13333-0cbd-451d-9f7f-42d57c1f5ff5.png)
