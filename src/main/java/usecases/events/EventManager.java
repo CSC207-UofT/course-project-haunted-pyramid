@@ -22,10 +22,13 @@ import interfaces.EventListObserver;
  * @author Malik Lahlou
  * @author Seo Won Yi
  */
+
 public class EventManager {
     private final Map<Integer, Event> eventMap;
     private final RepeatedEventManager repeatedEventManager;
     private EventListObserver[] toUpdate;
+    // Get rid of eventMap later when sean fixes Event ID
+    private Map<UUID, List<Event>> uuidEventsMap;
 
     /**
      * constructs event manager. stores list of events by key: ID, value: event in <code>this.eventMap</code>
@@ -46,14 +49,22 @@ public class EventManager {
         this.repeatedEventManager = new RepeatedEventManager();
     }
 
+    /**
+     * Get this Events map
+     *
+     * @return A map of UUID of users as keys and list of events of that user as values
+     */
+    public Map<UUID, List<Event>> getUuidEventsMap() {
+        return this.uuidEventsMap;
+    }
 
     /**
-     * constructs empty EventManager (no Events or Observers)
+     * Set this Events map to the parameter
+     *
+     * @param map A map of UUID of users as keys and list of events of that user as values
      */
-    public EventManager() {
-        this.eventMap = new HashMap<>();
-        this.toUpdate = new EventListObserver[]{};
-        this.repeatedEventManager = new RepeatedEventManager();
+    public void setUuidEventsMap(Map<UUID, List<Event>> map) {
+        this.uuidEventsMap = map;
     }
 
     /**
@@ -64,7 +75,6 @@ public class EventManager {
      */
     public Integer getID(Event event) {
         return event.getID();
-
     }
 
     /**

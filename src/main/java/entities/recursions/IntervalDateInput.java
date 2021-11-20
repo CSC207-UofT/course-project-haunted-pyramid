@@ -85,7 +85,7 @@ public class IntervalDateInput implements DateGetter {
             Event newEvent = getEventAfterStartDate(event, period);
             result.add(newEvent);
         }
-        EventManager e = new EventManager();
+        EventManager e = new EventManager(new ArrayList<>());
         return e.timeOrder(result);
     }
 

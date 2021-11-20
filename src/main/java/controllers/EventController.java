@@ -44,14 +44,17 @@ public class EventController {
      * @param ioSerializable        serialized
      * @param workSessionController workSessionController
      */
-    public EventController(boolean hasSavedData, IOSerializable ioSerializable, WorkSessionController workSessionController) {
+    public EventController(boolean hasSavedData, IOSerializable ioSerializable, UserController userController,
+                           WorkSessionController workSessionController) {
         this.workSessionController = workSessionController;
         if (hasSavedData) {
-            this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
+            this.eventManager =
+                    new EventManager(ioSerializable.eventsReadFromSerializable().get(userController.getCurrentUser()));
             ConstantID.set(this.eventManager.getMaxID());
         } else {
-            this.eventManager = new EventManager();
+            this.eventManager = new EventManager(new ArrayList<>());
         }
+        this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
         this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         this.recursionController = new RecursionController();
         this.ioController = new IOController();
@@ -65,16 +68,18 @@ public class EventController {
      * @param hasSavedData   boolean
      * @param ioSerializable serialized
      */
-    public EventController(boolean hasSavedData, IOSerializable ioSerializable) {
+    public EventController(boolean hasSavedData, IOSerializable ioSerializable, UserController userController) {
         this.workSessionController = new WorkSessionController(new WorkSessionScheduler(new HashMap<>(),
                 true));
         if (hasSavedData) {
-            this.eventManager = new EventManager(ioSerializable.eventsReadFromSerializable());
+            this.eventManager =
+                    new EventManager(ioSerializable.eventsReadFromSerializable().get(userController.getCurrentUser()));
             ConstantID.set(this.eventManager.getMaxID());
         } else {
-            this.eventManager = new EventManager();
+            this.eventManager = new EventManager(new ArrayList<>());
             this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         }
+        this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
         this.recursionController = new RecursionController();
         this.ioController = new IOController();
     }

@@ -3,10 +3,7 @@ package usecases;
 import entities.User;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * A class for editing User Entity classes and storing/accessing a list of Users in a map, with key= UUID user id
@@ -23,13 +20,12 @@ public class UserManager {
     /**
      * @param users a list of users to be entered into <code>this.userInfo</code>
      */
-    public UserManager(ArrayList<User> users) {
+    public UserManager(List<User> users) {
         this.userInfo = new HashMap<>();
         for (User user : users) {
             this.userInfo.put(user.getId(), user);
         }
     }
-
 
     /**
      * changes value of procrastinate for user
@@ -49,7 +45,6 @@ public class UserManager {
     public boolean getProcrastinate(UUID user) {
         return this.userInfo.get(user).getProcrastinate();
     }
-
 
     /**
      * gets the name of the user
