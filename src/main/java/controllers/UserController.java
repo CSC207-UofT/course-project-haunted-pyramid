@@ -48,6 +48,15 @@ public class UserController {
     }
 
     /**
+     * Get the UUID of the user that is currently logged in to the program
+     *
+     * @return UUID of the currently logged-in user
+     */
+    public UUID getCurrentUser() {
+        return this.currentUser;
+    }
+
+    /**
      * sets current user UUID - to access logged-in User during runtime
      *
      * @param currentUser UUID of the logged-in user that can be accessed and edited

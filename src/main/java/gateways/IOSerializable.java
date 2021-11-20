@@ -156,21 +156,21 @@ public class IOSerializable {
      *
      * @return an ArrayList of all Events stored in the file
      */
-    public ArrayList<Event> eventsReadFromSerializable() {
+    public Map<UUID, List<Event>> eventsReadFromSerializable() {
         try {
             InputStream file = new FileInputStream(EVENTS_FILEPATH);
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
             //Please refer to specifications for explanation
-            ArrayList<Event> recoveredEvents = (ArrayList<Event>) input.readObject();
+            HashMap<UUID, List<Event>> recoveredEvents = (HashMap<UUID, List<Event>>) input.readObject();
             input.close();
             return recoveredEvents;
         } catch (IOException eIO) {
             logger.log(Level.SEVERE, "Cannot perform deserialization. Returning new blank Arraylist.", eIO);
-            return new ArrayList<>();
+            return new HashMap<>();
         } catch (ClassNotFoundException eCNF) {
             logger.log(Level.SEVERE, "Cannot find class. Returning new blank Arraylist.", eCNF);
-            return new ArrayList<>();
+            return new HashMap<>();
         }
     }
 
@@ -180,7 +180,7 @@ public class IOSerializable {
      *
      * @param events an ArrayList of events to be serialized
      */
-    public void eventsWriteToSerializable(ArrayList<Event> events) {
+    public void eventsWriteToSerializable(Map<UUID, List<Event>> events) {
         try {
             OutputStream file = new FileOutputStream(EVENTS_FILEPATH);
             OutputStream buffer = new BufferedOutputStream(file);
@@ -198,13 +198,13 @@ public class IOSerializable {
      *
      * @return an ArrayList of all Users stored in the file
      */
-    public ArrayList<User> usersReadFromSerializable() {
+    public List<User> usersReadFromSerializable() {
         try {
             InputStream file = new FileInputStream(USERS_FILEPATH);
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
             //Please refer to specifications for explanation
-            ArrayList<User> recoveredUsers = (ArrayList<User>) input.readObject();
+            List<User> recoveredUsers = (List<User>) input.readObject();
             input.close();
             return recoveredUsers;
         } catch (IOException eIO) {

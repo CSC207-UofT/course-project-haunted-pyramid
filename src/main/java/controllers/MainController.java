@@ -13,10 +13,7 @@ import usecases.events.EventManager;
 import usecases.UserManager;
 import usecases.events.worksessions.WorkSessionScheduler;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The main controller for the program, which initializes other controllers and their respective managers.
@@ -52,7 +49,8 @@ public class MainController {
         this.loginController = new LoginController(this.userController);
         this.calendarController = new CalendarController();
         this.displayMenu = new DisplayMenu();
-        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable);
+        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
+                this.userController);
         this.displayInitScreen();
         System.out.println("WELCOME " + this.userController.getCurrentUsername() + "!");
         this.displayScreen();
@@ -84,9 +82,8 @@ public class MainController {
      * User will be directed to different controllers depending on what they want to achieve
      */
     public void displayScreen() {
-
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
-                new WorkSessionController(userController.getWorkSessionScheduler()));
+                this.userController, new WorkSessionController(userController.getWorkSessionScheduler()));
         while (this.loginController.isLoggedIn()) {
             System.out.println(this.calendarController.showDefaultCalendar(this.eventController));
             System.out.println("Please choose your action");
@@ -158,8 +155,9 @@ public class MainController {
         // Variables below are only for the final serialization process
         IOSerializable tempIoSerializable = new IOSerializable(false);
         UserController tempUserController = new UserController(true, tempIoSerializable);
-        tempIoSerializable.eventsWriteToSerializable(new ArrayList<>(this.eventController.getEventManager().
-                getAllEvents()));
+        Map<UUID, List<Event>> map = this.eventController.getEventManager().getUuidEventsMap();
+        map.put(this.userController.getCurrentUser(), this.eventController.getEventManager().getAllEvents());
+        tempIoSerializable.eventsWriteToSerializable(map);
         tempIoSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(),
                 tempUserController.getUserManager()));
         tempIoSerializable.saveToDropbox();
