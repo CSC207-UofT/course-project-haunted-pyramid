@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,9 +24,9 @@ import static org.junit.Assert.assertEquals;
 public class RepeatedEventManagerTest {
     LocalDateTime l =  LocalDateTime.of(2021, 11, 15, 11,0);
     LocalDateTime l2 =  LocalDateTime.of(2021, 12, 17, 11,0);
-    Event e1 = new Event(ConstantID.get(), "e1", l);
-    Event e2 = new Event(ConstantID.get(), "e2", 2021, 11, 18, 10, 11, 0, 0);
-    Event e3 = new Event(ConstantID.get(), "e3", 2021, 11, 20, 10, 11, 0, 0);
+    Event e1 = new Event(UUID.randomUUID(), "e1", l);
+    Event e2 = new Event(UUID.randomUUID(), "e2", 2021, 11, 18, 10, 11, 0, 0);
+    Event e3 = new Event(UUID.randomUUID(), "e3", 2021, 11, 20, 10, 11, 0, 0);
     List<Event> z = new ArrayList<>();
     RecursiveEvent recursiveEvent = new RecursiveEvent(ConstantID.get());
     RepeatedEventManager repeatedEventManager = new RepeatedEventManager();

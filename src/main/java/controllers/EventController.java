@@ -8,12 +8,14 @@ import presenters.MenuStrategies.EventEditMenuContent;
 import usecases.events.EventManager;
 import usecases.events.worksessions.WorkSessionScheduler;
 
+import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Controller for creating then editing, or editing selected individual events - change name, description
@@ -49,8 +51,7 @@ public class EventController {
         this.workSessionController = workSessionController;
         if (hasSavedData) {
             this.eventManager =
-                    new EventManager(ioSerializable.eventsReadFromSerializable().get(userController.getCurrentUser()));
-            ConstantID.set(this.eventManager.getMaxID());
+                    new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()));
         } else {
             this.eventManager = new EventManager(new ArrayList<>());
         }
@@ -73,8 +74,7 @@ public class EventController {
                 true));
         if (hasSavedData) {
             this.eventManager =
-                    new EventManager(ioSerializable.eventsReadFromSerializable().get(userController.getCurrentUser()));
-            ConstantID.set(this.eventManager.getMaxID());
+                    new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()));
         } else {
             this.eventManager = new EventManager(new ArrayList<>());
             this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
@@ -101,8 +101,7 @@ public class EventController {
         String title = ioController.getName();
         LocalDateTime dateTime = ioController.getDateTime("Enter the End Time of the Event",
                 "Enter the end date of the event");
-        Event event = this.eventManager.addEvent(title, dateTime);
-        this.edit(this.eventManager.getID(event));
+        this.edit(this.eventManager.getID(this.eventManager.addEvent(title, dateTime)));
     }
 
     /**
@@ -111,7 +110,7 @@ public class EventController {
      * @param ID the ID of the event to be edited by the user
      * @see EventController#getAction
      */
-    public void edit(Integer ID) {
+    public void edit(UUID ID) {
         boolean save = false;
         if (this.eventManager.containsID(ID)) {
             while (!save) {
@@ -131,7 +130,7 @@ public class EventController {
      * @param ID      the ID of the event being passed to the next method
      * @return true if event was saved (or deleted), false otherwise
      */
-    private boolean getAction(String command, Integer ID) {
+    private boolean getAction(String command, UUID ID) {
         switch (command) {
             case "1":
                 this.changeStartDate(ID);
@@ -174,7 +173,7 @@ public class EventController {
      * @param ID the ID of the event to be deleted
      * @return true if the event was deleted
      */
-    private boolean delete(Integer ID) {
+    private boolean delete(UUID ID) {
         System.out.println("Are you sure you want to delete this event?");
         String confirm = ioController.getAnswer("Please Enter y/n");
         if (confirm.equalsIgnoreCase("y")) {
@@ -192,7 +191,7 @@ public class EventController {
      *
      * @param ID the id of the event to be changed
      */
-    private void changeStartDate(Integer ID) {
+    private void changeStartDate(UUID ID) {
         LocalDate newStart = ioController.getDate("Please Enter a New Start Date");
         if (this.eventManager.getStartTime(ID) == null) {
             this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
@@ -206,7 +205,7 @@ public class EventController {
      *
      * @param ID the id of the event to be changed
      */
-    private void changeEndDate(Integer ID) {
+    private void changeEndDate(UUID ID) {
         LocalDate newEnd = ioController.getDate("Please Enter a New End Date");
         this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
     }
@@ -216,7 +215,7 @@ public class EventController {
      *
      * @param ID the id of the event to be changed
      */
-    private void changeEndTime(Integer ID) {
+    private void changeEndTime(UUID ID) {
         LocalTime newEnd = ioController.getTime("Please Enter a New End Time");
         this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
     }
@@ -226,7 +225,7 @@ public class EventController {
      *
      * @param ID the id of the event to be changed
      */
-    private void changeStartTime(Integer ID) {
+    private void changeStartTime(UUID ID) {
         LocalTime newStart = ioController.getTime("Please Enter a New Start Time");
         if (this.eventManager.get(ID).getStartTime() == null) {
             this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
@@ -240,7 +239,7 @@ public class EventController {
      *
      * @param ID the id of the event to modify
      */
-    private void changeDescription(Integer ID) {
+    private void changeDescription(UUID ID) {
         String description = ioController.getAnswer("Please Enter a Description for This Event");
         this.eventManager.setDescription(this.eventManager.get(ID), description);
     }
@@ -250,7 +249,7 @@ public class EventController {
      *
      * @param ID the id of the event to be changed
      */
-    private void changeName(Integer ID) {
+    private void changeName(UUID ID) {
         String name = ioController.getAnswer("please Enter a New Name");
         this.eventManager.setName(this.eventManager.get(ID), name);
     }
@@ -261,7 +260,7 @@ public class EventController {
      * @param ID the id of the event to be edited
      * @see WorkSessionController#edit
      */
-    private void prep(Integer ID) {
+    private void prep(UUID ID) {
         this.workSessionController.edit(ID, this.eventManager);
     }
 
@@ -271,14 +270,14 @@ public class EventController {
      *
      * @param ID the id of the event to be modified
      */
-    private void recurse(Integer ID) {
+    private void recurse(UUID ID) {
         String nextStep = ioController.getAnswer("Enter 'Create' to create new recursion");
         while (!nextStep.equalsIgnoreCase("Create")) {
             System.out.println("Please type the valid answer");
             nextStep = ioController.getAnswer("Enter 'Create' to create new recursion");
         }
         if (nextStep.equalsIgnoreCase("Create")) {
-            List<Integer> eventIDList = new ArrayList<>();
+            List<UUID> eventIDList = new ArrayList<>();
             eventIDList.add(ID);
             this.recursionController.createNewRecursion(eventIDList, eventManager);
         }

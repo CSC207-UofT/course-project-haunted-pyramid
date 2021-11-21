@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,12 +16,16 @@ import static org.junit.Assert.assertEquals;
  */
 
 public class IntervalDateInputTest {
+    private final UUID UUID1 = UUID.randomUUID();
+    private final UUID UUID2 = UUID.randomUUID();
+    private final UUID UUID3 = UUID.randomUUID();
+
     LocalDateTime l =  LocalDateTime.of(2021, 11, 15, 11,0);
     LocalDateTime l2 =  LocalDateTime.of(2021, 12, 17, 11,0);
     LocalDateTime l3 =  LocalDateTime.of(2021, 12, 31, 11,0);
-    Event e1 = new Event(1, "e1", l);
-    Event e2 = new Event(2, "e2", 2021, 11, 18, 10, 11, 0, 0);
-    Event e3 = new Event(3, "e3", 2021, 11, 20, 10, 11, 0, 0);
+    Event e1 = new Event(UUID1, "e1", l);
+    Event e2 = new Event(UUID2, "e2", 2021, 11, 18, 10, 11, 0, 0);
+    Event e3 = new Event(UUID3, "e3", 2021, 11, 20, 10, 11, 0, 0);
     List<Event> z = new ArrayList<>();
 
     @Before

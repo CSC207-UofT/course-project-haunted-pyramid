@@ -111,7 +111,7 @@ public class DisplayCalendarHelper {
      * @param calendarMap calendarMap object that has events inside
      */
     public void eventSorter(Map<Integer, List<Event>> calendarMap){
-        EventManager em = new EventManager();
+        EventManager em = new EventManager(new ArrayList<>());
         List<Integer> keyList = new ArrayList<>(calendarMap.keySet());
         for (Integer key:keyList){
             List<Event> eventList = em.timeOrder(calendarMap.get(key));

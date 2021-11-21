@@ -6,7 +6,6 @@ import java.time.LocalTime;
 import java.util.*;
 import java.time.LocalDate;
 
-import helpers.ConstantID;
 import entities.Event;
 import entities.recursions.RecursiveEvent;
 import interfaces.EventListObserver;
@@ -24,7 +23,7 @@ import interfaces.EventListObserver;
  */
 
 public class EventManager {
-    private final Map<Integer, Event> eventMap;
+    private final Map<UUID, Event> eventMap;
     private final RepeatedEventManager repeatedEventManager;
     private EventListObserver[] toUpdate;
     // Get rid of eventMap later when sean fixes Event ID
@@ -73,28 +72,10 @@ public class EventManager {
      * @param event any Event
      * @return the ID of the Event (Event.getID())
      */
-    public Integer getID(Event event) {
+    public UUID getID(Event event) {
         return event.getID();
     }
 
-    /**
-     * for Unique ID
-     *
-     * @return Integer the largest integer ID in <code>this.eventMap</code>
-     */
-    public Integer getMaxID() {
-        List<Integer> ids = new ArrayList<>(this.eventMap.keySet());
-        if (this.eventMap.isEmpty()) {
-            return 0;
-        }
-        Integer max = ids.get(0);
-        for (Integer i : ids) {
-            if (i > max) {
-                max = i;
-            }
-        }
-        return max;
-    }
 
     /**
      * getDay returns a map of the events in a day
@@ -102,8 +83,8 @@ public class EventManager {
      * @param day the day that is being searched for
      * @return <code>Map<Integer, Event></code> of all events in this day by ID
      */
-    public Map<Integer, Event> getDay(LocalDate day) {
-        Map<Integer, Event> dayMap = new HashMap<>();
+    public Map<UUID, Event> getDay(LocalDate day) {
+        Map<UUID, Event> dayMap = new HashMap<>();
         for (Event event : eventMap.values()) {
             if (event.getDay().isEqual(day)) {
                 dayMap.put(event.getID(), event);
@@ -128,7 +109,7 @@ public class EventManager {
      * @param ID the ID of an event
      * @return the event with this ID, or null
      */
-    public Event get(Integer ID) {
+    public Event get(UUID ID) {
         if (this.containsID(ID)) {
             return eventMap.get(ID);
         } else {
@@ -142,7 +123,7 @@ public class EventManager {
      * @param ID the name to be removed
      * @return the event just removed, or null
      */
-    public Event remove(Integer ID) {
+    public Event remove(UUID ID) {
         this.update("remove", this.get(ID));
         return eventMap.remove(ID);
     }
@@ -155,7 +136,7 @@ public class EventManager {
      * @return the event that was created with given title, endTime, and unique ID
      */
     public Event addEvent(String title, LocalDateTime endTime) {
-        Event event = new Event(ConstantID.get(), title, endTime);
+        Event event = new Event(UUID.randomUUID(), title, endTime);
         this.addEvent(event);
         return event;
     }
@@ -169,7 +150,7 @@ public class EventManager {
      * @return the event that was created with given title, endTime, and unique ID
      */
     public Event getEvent(String title, LocalDateTime endTime) {
-        return new Event(ConstantID.get(), title, endTime);
+        return new Event(UUID.randomUUID(), title, endTime);
     }
 
     /**
@@ -297,41 +278,14 @@ public class EventManager {
         return event.getName();
     }
 
-    public void setStart(Integer id, LocalDateTime start) {
+    public void setStart(UUID id, LocalDateTime start) {
         this.get(id).setStartTime(start);
         this.update("change", this.get(id));
     }
 
-    public void setEnd(Integer id, LocalDateTime end) {
+    public void setEnd(UUID id, LocalDateTime end) {
         this.get(id).setEndTime(end);
         this.update("change", this.get(id));
-    }
-
-    /**
-     * private helper method to convert a String to a LocalDateTime by splitting an input String of the format:
-     * <code>
-     * YYYY-MM-DD HH:MM
-     * </code>
-     *
-     * @param dateString String in the form YYYY-MM-DDTHH:MM
-     * @return LocalDateTime with year YYYY, month MM, day DD, hour HH, minute MM
-     */
-    public LocalDateTime stringToDate(String dateString) throws IllegalArgumentException {
-        String[] full = dateString.split("T");
-        if (full.length != 2) {
-            throw new IllegalArgumentException();
-        }
-        String[] time = full[1].split(":");
-        String[] date = full[0].split("-");
-        if (time.length != 2 || date.length != 3) {
-            throw new IllegalArgumentException();
-        }
-        try {
-            return LocalDateTime.of(Integer.parseInt(date[0]), Integer.parseInt(date[1]),
-                    Integer.parseInt(date[2]), Integer.parseInt(time[0]), Integer.parseInt(time[1]));
-        } catch (NumberFormatException numberFormatException) {
-            throw new IllegalArgumentException();
-        }
     }
 
     /**
@@ -403,7 +357,7 @@ public class EventManager {
      * orders a list of events chronologically earliest to latest
      *
      * @param events the list to be modified
-     * @return the input list, timeordered
+     * @return the input list, time ordered
      */
     public List<Event> timeOrder(List<Event> events) {
         List<Event> sorted = new ArrayList<>();
@@ -423,10 +377,10 @@ public class EventManager {
     /**
      * checks if an Event of this ID is contained in <code>this.eventMap</code>
      *
-     * @param ID any integer
+     * @param ID any UUID
      * @return true if an event with this integer ID is in <code>this.eventMap</code>, false otherwise
      */
-    public boolean containsID(Integer ID) {
+    public boolean containsID(UUID ID) {
         return this.eventMap.containsKey(ID);
     }
 
@@ -453,9 +407,9 @@ public class EventManager {
     /**
      * computes the times between events and the Long length of them in seconds
      *
-     * @param start  the start time from which freeslot are calculated - first start time of freeslot
+     * @param start  the start time from which free slot are calculated - first start time of free slot
      * @param events the events between which free slots are calculated
-     * @param end    the end time from which freeslots are calculated - last end time of freeslot
+     * @param end    the end time from which free slots are calculated - last end time of free slot
      * @return Map with key: LocalDateTime start time of free slot, value: Long duration of free slot in seconds
      */
     public Map<LocalDateTime, Long> freeSlots(LocalDateTime start, List<Event> events, LocalDateTime end) {
@@ -495,10 +449,10 @@ public class EventManager {
      * Sets the description of an event, does not have to be in <code>this.eventMap</code>
      *
      * @param event   the event with description to be set
-     * @param descrip String the new description
+     * @param describe String the new description
      */
-    public void setDescription(Event event, String descrip) {
-        event.setDescription(descrip);
+    public void setDescription(Event event, String describe) {
+        event.setDescription(describe);
     }
 
 
@@ -531,7 +485,7 @@ public class EventManager {
      * @param id ID of the event
      * @return session length of the event
      */
-    public Long getEventSessionLength(Integer id) {
+    public Long getEventSessionLength(UUID id) {
         if (this.containsID(id)) {
             return this.get(id).getSessionLength();
         }
@@ -545,7 +499,7 @@ public class EventManager {
      * @param id ID of the event
      * @return list of the total work session
      */
-    public List<Event> getTotalWorkSession(Integer id) {
+    public List<Event> getTotalWorkSession(UUID id) {
         if (this.containsID(id)) {
             return this.timeOrder(this.get(id).getWorkSessions());
         }
@@ -557,7 +511,7 @@ public class EventManager {
      * @param id ID of the event
      * @return list of the past work session
      */
-    public List<Event> getPastWorkSession(Integer id) {
+    public List<Event> getPastWorkSession(UUID id) {
         if (this.containsID(id)) {
             List<Event> totalWorkSession = this.get(id).getWorkSessions();
             List<Event> pastWorkSession = new ArrayList<>();
@@ -578,7 +532,7 @@ public class EventManager {
      * @param id ID of the event
      * @return the list of the future work sessions of the event
      */
-    public List<Event> getFutureWorkSession(Integer id) {
+    public List<Event> getFutureWorkSession(UUID id) {
         if (this.containsID(id)) {
             List<Event> totalWorkSession = this.get(id).getWorkSessions();
             List<Event> futureWorkSession = new ArrayList<>();
@@ -598,17 +552,15 @@ public class EventManager {
      *
      */
 
-    public String getPastSessionsString(Integer id){
+    public String getPastSessionsString(UUID id){
         StringBuilder options = new StringBuilder();
-        int i = 0;
         for (Event session: this.getPastWorkSession(id)){
             options.append("\n").append(this.getTotalWorkSession(id).indexOf(session)).append(" ----\n ").append(session);
-            i += 1;
         }
         return options.toString();
     }
 
-    public String getFutureSessionsString(Integer id){
+    public String getFutureSessionsString(UUID id){
         StringBuilder options = new StringBuilder();
         for (Event session: this.getFutureWorkSession(id)){
             options.append("\n").append(this.getTotalWorkSession(id).indexOf(session)).append(" ----\n ").append(session);
@@ -621,7 +573,7 @@ public class EventManager {
      * @param id ID of the event
      * @return the total session hours set by the event
      */
-    public Long getTotalHoursNeeded(Integer id) {
+    public Long getTotalHoursNeeded(UUID id) {
         if (this.containsID(id)) {
             return this.get(id).getHoursNeeded();
         }
@@ -635,7 +587,7 @@ public class EventManager {
      * @param id ID of the event
      * @return the end date of the event
      */
-    public LocalDate getEndDate(Integer id) {
+    public LocalDate getEndDate(UUID id) {
         return this.get(id).getEndTime().toLocalDate();
     }
 
@@ -644,7 +596,7 @@ public class EventManager {
      * @param id ID of the event
      * @return the start date of the event
      */
-    public LocalDate getStartDate(Integer id) {
+    public LocalDate getStartDate(UUID id) {
         if (this.get(id).hasStart()) {
             return this.get(id).getStartTime().toLocalDate();
         } else {
@@ -657,7 +609,7 @@ public class EventManager {
      * @param id ID of the event
      * @return the end time of the event
      */
-    public LocalTime getEndTime(Integer id) {
+    public LocalTime getEndTime(UUID id) {
         return this.get(id).getEndTime().toLocalTime();
     }
 
@@ -666,7 +618,7 @@ public class EventManager {
      * @param id ID of the event
      * @return the start time of the event
      */
-    public LocalTime getStartTime(Integer id) {
+    public LocalTime getStartTime(UUID id) {
         if (this.get(id).hasStart()) {
             return this.get(id).getStartTime().toLocalTime();
         } else {
@@ -681,5 +633,41 @@ public class EventManager {
      */
     public LocalDateTime getEnd(Event event){
         return event.getEndTime();
+    }
+
+    public LocalDateTime getEnd(UUID ID){
+        return this.get(ID).getEndTime();
+    }
+
+    public void setWorkSessions(UUID ID, List<Event> sessions){
+        this.get(ID).setWorkSessions(sessions);
+    }
+
+    public List<Event> getPastSessions(UUID ID){
+        return this.get(ID).pastWorkSessions();
+    }
+
+    public List<Event> getWorkSessions(UUID ID){
+        return this.get(ID).getWorkSessions();
+    }
+
+    public void addWorkSession(UUID ID, LocalDateTime start, LocalDateTime end){
+        this.get(ID).addWorkSession(start, end);
+    }
+
+    public void setSessionLength(UUID ID, Long sessionLength) {
+        this.get(ID).setSessionLength(sessionLength);
+    }
+
+    public void setHoursNeeded(UUID deadline, Long hoursNeeded) {
+        this.get(deadline).setHoursNeeded(hoursNeeded);
+    }
+
+    public double getLength(Event event) {
+        return event.getLength();
+    }
+
+    public double getHoursNeeded(UUID event) {
+        return this.get(event).getHoursNeeded();
     }
 }

@@ -6,10 +6,7 @@ import entities.recursions.RecursiveEvent;
 import interfaces.DateGetter;
 import interfaces.EventListObserver;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Malik Lahlou
@@ -68,8 +65,8 @@ public class RepeatedEventManager implements EventListObserver {
      * of repetition as values.
      */
 
-    public Map<Integer, List<Event>> getEventMapFromRecursion(Integer id){
-        Map<Integer, List<Event>> result = new HashMap<>();
+    public Map<UUID, List<Event>> getEventMapFromRecursion(Integer id){
+        Map<UUID, List<Event>> result = new HashMap<>();
         List<Event> eventsInOneCycle = this.recursiveEventMap.get(id).getEventsInOneCycle();
         int realSize = eventsInOneCycle.size() - 1;
         for(int eventIndex = 0; eventIndex < realSize; eventIndex++){

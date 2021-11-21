@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -12,13 +13,15 @@ import static org.junit.Assert.*;
  * @author Taite Cullen
  */
 public class EventTest {
-    Event event1 = new Event(1, "1", LocalDateTime.of(2021, 10, 15, 0, 0,
+
+    private final UUID UUID1 = UUID.randomUUID();
+    Event event1 = new Event(UUID1, "1", LocalDateTime.of(2021, 10, 15, 0, 0,
             0), LocalDateTime.of(2021, 10, 15, 3, 0, 0));
-    Event event2 = new Event(1, "1", LocalDateTime.of(2021, 10, 15, 0, 0,
+    Event event2 = new Event(UUID1, "1", LocalDateTime.of(2021, 10, 15, 0, 0,
             0), LocalDateTime.of(2021, 10, 15, 3, 0, 0));
-    Event event3 = new Event(1, "3", LocalDateTime.of(2021, 10, 15, 1, 0,
+    Event event3 = new Event(UUID1, "3", LocalDateTime.of(2021, 10, 15, 1, 0,
             0), LocalDateTime.of(2021, 10, 15, 4, 0, 0));
-    Event event4 = new Event(1, "1", LocalDateTime.of(2021, 10, 15, 7, 0,
+    Event event4 = new Event(UUID1, "1", LocalDateTime.of(2021, 10, 15, 7, 0,
             0), LocalDateTime.of(2021, 10, 15, 9, 0, 0));
     @Test
     public void testEquals() {

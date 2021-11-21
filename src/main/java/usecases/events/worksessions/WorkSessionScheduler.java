@@ -42,8 +42,8 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param sessionLength A Long which is the session length
      * @param eventManager  An EventManager
      */
-    public void setSessionLength(Event deadline, Long sessionLength, EventManager eventManager) {
-        deadline.setSessionLength(sessionLength);
+    public void setSessionLength(UUID deadline, Long sessionLength, EventManager eventManager) {
+        eventManager.setSessionLength(deadline, sessionLength);
         this.autoSchedule(deadline, eventManager);
     }
 
@@ -56,8 +56,8 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param hoursNeeded  whole long number of hours of this event to be scheduled
      * @param eventManager the eventManager to autoSchedule around
      */
-    public void setHoursNeeded(Event deadline, Long hoursNeeded, EventManager eventManager) {
-        deadline.setHoursNeeded(hoursNeeded);
+    public void setHoursNeeded(UUID deadline, Long hoursNeeded, EventManager eventManager) {
+        eventManager.setHoursNeeded(deadline, hoursNeeded);
         this.autoSchedule(deadline, eventManager);
     }
 
@@ -69,7 +69,7 @@ public class WorkSessionScheduler implements EventListObserver {
      * slots at now or deadline time
      */
     private Map<LocalDateTime, Long> getFreeSlots(LocalDateTime deadlineTime, Map<LocalDate, List<Event>> schedule, LocalDate day) {
-        EventManager eventManager = new EventManager();
+        EventManager eventManager = new EventManager(new ArrayList<>());
         Map<LocalDateTime, Long> freeSlots;
         if (day.isEqual(LocalDate.now())) {
             freeSlots = eventManager.freeSlots(LocalDateTime.now(), schedule.get(day),
@@ -95,7 +95,7 @@ public class WorkSessionScheduler implements EventListObserver {
         Map<LocalDate, List<Event>> schedule = eventManager.getRange(LocalDate.now(), deadlineTime.toLocalDate());
         for (LocalDate day : schedule.keySet()) {
             for (LocalTime start : this.freeTime.keySet()) {
-                schedule.get(day).add(new Event(0, "free time", LocalDateTime.of(day, start),
+                schedule.get(day).add(new Event(UUID.randomUUID(), "free time", LocalDateTime.of(day, start),
                         LocalDateTime.of(day, this.freeTime.get(start))));
             }
         }
@@ -109,7 +109,7 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param deadline     An Event
      * @param eventManager An EventManager
      */
-    private void autoSchedule(Event deadline, EventManager eventManager) {
+    private void autoSchedule(UUID deadline, EventManager eventManager) {
         this.autoScheduleNoProcrastinate(deadline, eventManager);
     }
 
@@ -117,24 +117,23 @@ public class WorkSessionScheduler implements EventListObserver {
      * autoScheduling if set to not procrastinate. creates work sessions on days with the fewest work session
      * starting as soon as possible and ending the day before the deadline
      *
-     * @param deadline     the deadline event
+     * @param deadline     the deadline event ID
      * @param eventManager the eventManager to be scheduled around
      */
-    private void autoScheduleNoProcrastinate(Event deadline, EventManager eventManager) {
+    private void autoScheduleNoProcrastinate(UUID deadline, EventManager eventManager) {
         LocalDateTime deadlineTime = eventManager.getEnd(deadline);
-        Integer ID = eventManager.getID(deadline);
-        deadline.setWorkSessions(deadline.pastWorkSessions());
-        Long hoursToSchedule = (long) (eventManager.getTotalHoursNeeded(ID) -
-                eventManager.totalHours(eventManager.getPastWorkSession(ID)));
+        eventManager.setWorkSessions(deadline, eventManager.getPastSessions(deadline));
+        Long hoursToSchedule = (long) (eventManager.getTotalHoursNeeded(deadline) -
+                eventManager.totalHours(eventManager.getPastWorkSession(deadline)));
         while (!(hoursToSchedule == 0)) {
-            Long length = eventManager.getEventSessionLength(ID);
-            if (hoursToSchedule < eventManager.getEventSessionLength(ID)) {
+            Long length = eventManager.getEventSessionLength(deadline);
+            if (hoursToSchedule < eventManager.getEventSessionLength(deadline)) {
                 length = hoursToSchedule;
             }
             hoursToSchedule -= length;
             Map<LocalDate, List<Event>> schedule = updateSchedule(eventManager, deadlineTime);
             List<LocalDate> days = (this.eligibleDays(schedule, length, deadlineTime));
-            days = this.leastWorkSessionsOrder(days, deadline.getWorkSessions());
+            days = this.leastWorkSessionsOrder(days, eventManager.getWorkSessions(deadline));
             Map<LocalDateTime, Long> freeSlots;
             if (days.isEmpty()) {
                 return;
@@ -143,10 +142,10 @@ public class WorkSessionScheduler implements EventListObserver {
             List<LocalDateTime> times = this.eligibleTimes(freeSlots, length);
             times = this.smallestSlotOrder(times, freeSlots);
             LocalDateTime time = times.get(0);
-            if (this.sessionAdjacent(time, length, eventManager.getTotalWorkSession(ID))){
+            if (this.sessionAdjacent(time, length, eventManager.getTotalWorkSession(deadline))){
                 time = time.plusHours((freeSlots.get(time) - length)/2);
             }
-            deadline.addWorkSession(time, time.plusHours(length));
+            eventManager.addWorkSession(deadline, time, time.plusHours(length));
         }
 
     }
@@ -222,7 +221,7 @@ public class WorkSessionScheduler implements EventListObserver {
      */
     private List<LocalDate> eligibleDays(Map<LocalDate, List<Event>> schedule, Long length, LocalDateTime
             deadline) {
-        EventManager em = new EventManager();
+        EventManager em = new EventManager(new ArrayList<>());
         List<LocalDate> eligible = new ArrayList<>();
         for (LocalDate day : schedule.keySet()) {
             LocalTime startTime = LocalTime.of(0, 0);
@@ -287,7 +286,7 @@ public class WorkSessionScheduler implements EventListObserver {
      * @return the day with the fewest workSessions (from days)
      */
     private LocalDate leastWorkSessions(List<LocalDate> days, List<Event> workSessions) {
-        EventManager eventManager = new EventManager();
+        EventManager eventManager = new EventManager(new ArrayList<> ());
         LocalDate leastWorkSessions = days.get(0);
         int record = workSessions.size();
         for (LocalDate day : days) {
@@ -335,11 +334,11 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param session      A String which is the session
      * @param eventManager An EventManager
      */
-    public void markComplete(Event event, String session, EventManager eventManager) {
-        eventManager.timeOrder(event.getWorkSessions());
-        event.setHoursNeeded((long) (event.getHoursNeeded() -
-                event.getWorkSessions().get(Integer.parseInt(session)).getLength()));
-        event.getWorkSessions().remove(event.getWorkSessions().get(Integer.parseInt(session)));
+    public void markComplete(UUID event, String session, EventManager eventManager) {
+        eventManager.timeOrder(eventManager.getWorkSessions(event));
+        eventManager.setHoursNeeded(event, (long) (eventManager.getHoursNeeded(event) -
+                eventManager.getLength(eventManager.getWorkSessions(event).get(Integer.parseInt(session)))));
+        eventManager.getWorkSessions(event).remove(eventManager.getWorkSessions(event).get(Integer.parseInt(session)));
         this.autoSchedule(event, eventManager);
     }
 
@@ -350,9 +349,9 @@ public class WorkSessionScheduler implements EventListObserver {
      * @param session      A String with details of session
      * @param eventManager An EventManager
      */
-    public void markInComplete(Event event, String session, EventManager eventManager) {
-        eventManager.timeOrder(event.getWorkSessions());
-        event.getWorkSessions().remove(event.getWorkSessions().get(Integer.parseInt(session)));
+    public void markInComplete(UUID event, String session, EventManager eventManager) {
+        eventManager.timeOrder(eventManager.getWorkSessions(event));
+        eventManager.getWorkSessions(event).remove(eventManager.getWorkSessions(event).get(Integer.parseInt(session)));
         this.autoSchedule(event, eventManager);
     }
 
@@ -366,7 +365,7 @@ public class WorkSessionScheduler implements EventListObserver {
     @Override
     public void update(String addRemoveChange, Event changed, EventManager eventManager) {
         for (Event event : eventManager.getAllEvents()) {
-            this.autoSchedule(event, eventManager);
+            this.autoSchedule(eventManager.getID(event), eventManager);
         }
         System.out.println("updated");
     }

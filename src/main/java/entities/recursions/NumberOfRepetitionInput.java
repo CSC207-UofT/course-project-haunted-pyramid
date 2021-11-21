@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Malik Lahlou
@@ -51,7 +52,7 @@ public class NumberOfRepetitionInput implements DateGetter {
                 Event thisEvent = events.get(eventIndex);
                 Period multiple = periodMultiplicationByScalar(period, repetitionIndex);
                 LocalDateTime newEndTime = thisEvent.getEndTime().plus(multiple);
-                Event newThisEvent = new Event(ConstantID.get(), thisEvent.getName() + "-" + i, newEndTime);
+                Event newThisEvent = new Event(UUID.randomUUID(), thisEvent.getName() + "-" + i, newEndTime);
                 if(thisEvent.getStartTime() != null){
                     LocalDateTime newStartTime = thisEvent.getStartTime().plus(multiple);
                     newThisEvent.setStartTime(newStartTime);

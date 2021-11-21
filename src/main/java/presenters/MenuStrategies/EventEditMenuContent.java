@@ -14,7 +14,7 @@ public class EventEditMenuContent implements MenuContent {
     @Override
     public List<String> getContent() {
         ArrayList<String> content = new ArrayList<>();
-        EventManager em = new EventManager();
+        EventManager em = new EventManager(new ArrayList<>());
         content.addAll(List.of(em.displayEvent(this.event).split("\n")));
         content.addAll(new ArrayList<>(){{
             add("");

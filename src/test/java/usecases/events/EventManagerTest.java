@@ -5,9 +5,7 @@ import entities.Event;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.Before;
-import usecases.events.EventManager;
 
-import java.sql.Array;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,14 +15,21 @@ public class EventManagerTest {
     private EventManager eventManager;
     private ArrayList<Event> events;
 
+    private final UUID UUID1 = UUID.randomUUID();
+    private final UUID UUID2 = UUID.randomUUID();
+    private final UUID UUID3 = UUID.randomUUID();
+    private final UUID UUID4 = UUID.randomUUID();
+    private final UUID UUID5 = UUID.randomUUID();
+    private final UUID UUID6 = UUID.randomUUID();
+
     @Before
     public void start(){
-        Event[] events = new Event[] {new Event(1, "1", 2021, 10, 1, 2, 3, 0,
-                0), new Event(2, "2", 2021, 10, 1, 4, 5, 0,
-                0), new Event(3, "3", 2021, 10, 1, 5, 7, 0,
-                0), new Event(4, "4", 2021, 10, 2, 9, 10, 30,
-                0), new Event(5, "5", 2021, 10, 2, 9, 11, 30,
-                30), new Event(6, "6", LocalDateTime.of(2021, 11, 10, 2,
+        Event[] events = new Event[] {new Event(UUID1, "1", 2021, 10, 1, 2, 3, 0,
+                0), new Event(UUID2, "2", 2021, 10, 1, 4, 5, 0,
+                0), new Event(UUID3, "3", 2021, 10, 1, 5, 7, 0,
+                0), new Event(UUID4, "4", 2021, 10, 2, 9, 10, 30,
+                0), new Event(UUID5, "5", 2021, 10, 2, 9, 11, 30,
+                30), new Event(UUID6, "6", LocalDateTime.of(2021, 11, 10, 2,
                 30), LocalDateTime.of(2021, 11, 13, 4, 30))};
         this.events = new ArrayList<>(Arrays.asList(events));
         this.eventManager = new EventManager(this.events);
@@ -32,7 +37,7 @@ public class EventManagerTest {
 
     @Test(timeout = 100)
     public void testGetDay() {
-        Map<Integer, Event> day = this.eventManager.getDay(LocalDate.of(2021, 10, 1));
+        Map<UUID, Event> day = this.eventManager.getDay(LocalDate.of(2021, 10, 1));
         for (Event event: this.events){
             if (event.getDay().isEqual(LocalDate.of(2021, 10, 1))){
                 assertTrue(day.containsKey(event.getID()));
@@ -44,28 +49,29 @@ public class EventManagerTest {
     }
     @Test (timeout = 100)
     public void testGetStartTime() {
-        assertEquals("02:00", this.eventManager.getStartTimeString(this.eventManager.get(1)));
+        assertEquals("02:00", this.eventManager.getStartTimeString(this.eventManager.get(UUID1)));
     }
 
     @Test (timeout = 100)
     public void testGetEndTime() {
-        assertEquals("03:00", this.eventManager.getEndTimeString(this.eventManager.get(1)));
+        assertEquals("03:00", this.eventManager.getEndTimeString(this.eventManager.get(UUID1)));
     }
 
     @Test(timeout = 50)
     public void testTotalHours() {
         assertEquals(80.5, this.eventManager.totalHours(this.events), 0);
     }
+
     @Test
     public void testTimeOrder() {
-        List<Event> ordered = List.of(new Event[] {this.eventManager.get(1),
-                this.eventManager.get(2),
-                this.eventManager.get(3), this.eventManager.get(4),
-                this.eventManager.get(5)});
-        List<Event> unordered = List.of(new Event[] {this.eventManager.get(4),
-                this.eventManager.get(2),
-                this.eventManager.get(1), this.eventManager.get(5),
-                this.eventManager.get(3)});
+        List<Event> ordered = List.of(new Event[] {this.eventManager.get(UUID1),
+                this.eventManager.get(UUID2),
+                this.eventManager.get(UUID3), this.eventManager.get(UUID4),
+                this.eventManager.get(UUID5)});
+        List<Event> unordered = List.of(new Event[] {this.eventManager.get(UUID4),
+                this.eventManager.get(UUID2),
+                this.eventManager.get(UUID1), this.eventManager.get(UUID5),
+                this.eventManager.get(UUID3)});
         assertEquals(ordered, this.eventManager.timeOrder(unordered));
     }
 
@@ -87,18 +93,18 @@ public class EventManagerTest {
         LocalDateTime start = LocalDateTime.of(2021, 10, 1, 1, 0);
         LocalDateTime end = LocalDateTime.of(2021, 10, 5, 0, 0);
 
-        this.eventManager.get(1).addWorkSession(LocalDateTime.of(2021, 10, 2, 2, 0),
+        this.eventManager.get(UUID1).addWorkSession(LocalDateTime.of(2021, 10, 2, 2, 0),
                 LocalDateTime.of(2021, 10, 2, 3, 0));
-        expected.put(this.eventManager.get(3).getEndTime(), Duration.between(this.eventManager.get(3).getEndTime(),
+        expected.put(this.eventManager.get(UUID3).getEndTime(), Duration.between(this.eventManager.get(UUID3).getEndTime(),
                 LocalDateTime.of(2021, 10, 2, 2, 0)).toHours());
         expected.put(LocalDateTime.of(2021, 10, 2, 3, 0),
                 Duration.between(LocalDateTime.of(2021, 10, 2, 3, 0),
-                        this.eventManager.get(4).getStartTime()).toHours());
-        expected.put(start, Duration.between(start, this.eventManager.get(1).getStartTime()).toHours());
-        expected.put(this.eventManager.get(1).getEndTime(),
-                Duration.between(this.eventManager.get(1).getEndTime(),
-                        this.eventManager.get(2).getStartTime()).toHours());
-        expected.put(this.eventManager.get(5).getEndTime(), Duration.between(this.eventManager.get(5).getEndTime(),
+                        this.eventManager.get(UUID4).getStartTime()).toHours());
+        expected.put(start, Duration.between(start, this.eventManager.get(UUID1).getStartTime()).toHours());
+        expected.put(this.eventManager.get(UUID1).getEndTime(),
+                Duration.between(this.eventManager.get(UUID1).getEndTime(),
+                        this.eventManager.get(UUID2).getStartTime()).toHours());
+        expected.put(this.eventManager.get(UUID5).getEndTime(), Duration.between(this.eventManager.get(UUID5).getEndTime(),
                 end).toHours());
 
         Map<LocalDateTime, Long> actual = this.eventManager.freeSlots(start, this.eventManager.getAllEvents(), end);
@@ -108,16 +114,16 @@ public class EventManagerTest {
 
     @Test
     public void testSplitByDay(){
-        assertEquals(new ArrayList<> (List.of(new Event[] {new Event(6, "6", LocalDateTime.of(2021, 11, 10, 2,
-                30), LocalDateTime.of(2021, 11, 10, 23, 59)), new Event(6,
+        assertEquals(new ArrayList<> (List.of(new Event[] {new Event(UUID6, "6", LocalDateTime.of(2021, 11, 10, 2,
+                30), LocalDateTime.of(2021, 11, 10, 23, 59)), new Event(UUID6,
                 "6", LocalDateTime.of(2021, 11, 11, 0,
-                0), LocalDateTime.of(2021, 11, 11, 23, 59)), new Event(6,
+                0), LocalDateTime.of(2021, 11, 11, 23, 59)), new Event(UUID6,
                 "6", LocalDateTime.of(2021, 11, 12, 0,
-                0), LocalDateTime.of(2021, 11, 12, 23, 59)), new Event(6,
+                0), LocalDateTime.of(2021, 11, 12, 23, 59)), new Event(UUID6,
                 "6", LocalDateTime.of(2021, 11, 13, 0,
                 0), LocalDateTime.of(2021, 11, 13, 4, 30))})),
-                this.eventManager.splitByDay(this.eventManager.get(6)));
-        assertEquals(new ArrayList<>(List.of(this.eventManager.get(1))), this.eventManager.splitByDay(this.eventManager.get(1)));
+                this.eventManager.splitByDay(this.eventManager.get(UUID6)));
+        assertEquals(new ArrayList<>(List.of(this.eventManager.get(UUID1))), this.eventManager.splitByDay(this.eventManager.get(UUID1)));
     }
 
     @Test
@@ -150,13 +156,13 @@ public class EventManagerTest {
     @Test
     public void testEarliest(){
         List<Event> unordered = List.of(new Event[] {
-                this.eventManager.get(4),
-                this.eventManager.get(2),
-                this.eventManager.get(1),
-                this.eventManager.get(3),
-                this.eventManager.get(5),
+                this.eventManager.get(UUID4),
+                this.eventManager.get(UUID2),
+                this.eventManager.get(UUID1),
+                this.eventManager.get(UUID3),
+                this.eventManager.get(UUID5),
                 });
         assertEquals(unordered.get(2), this.eventManager.earliest(unordered));
-        assertTrue(this.eventManager.get(1).getStartTime().isBefore(this.eventManager.get(3).getStartTime()));
+        assertTrue(this.eventManager.get(UUID1).getStartTime().isBefore(this.eventManager.get(UUID3).getStartTime()));
     }
 }

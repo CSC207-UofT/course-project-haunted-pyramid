@@ -10,6 +10,7 @@ import usecases.events.EventManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Build the image of daily calendar and display if asked
@@ -43,7 +44,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         this.cf = new DisplayCalendarHelper(year, month);
         DailyCalendar dc = new DailyCalendar();
         this.calendarMap = dc.getCalendar(cm, year, month, date);
-        this.eventManager = new EventManager();
+        this.eventManager = new EventManager(new ArrayList<>());
         this.dayOfWeek = cf.findStartDayOfWeekString(this.year, this.month, this.date);
     }
 
@@ -191,7 +192,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
             String endTime = eventManager.getEndTimeString(event);
             String startTime = getStartTime(event, endTime);
             String eventName = eventManager.getName(event);
-            int eventID = eventManager.getID(event);
+            UUID eventID = eventManager.getID(event);
             if (eventName.length() > Constants.DAILY_CAL_SIZE){
                 eventName = eventName.substring(0, Constants.DAILY_CAL_SIZE) + "...";
             }
@@ -217,7 +218,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
      * @param eventID ID of the event
      * @return the updated total length after appending the event to the StringBuilder result
      */
-    private int getTotalLengthStart(StringBuilder result, int totalLength, String eventName, int eventID) {
+    private int getTotalLengthStart(StringBuilder result, int totalLength, String eventName, UUID eventID) {
         result.append(" ");
         result.append("ID:").append(eventID).append(" ").append(eventName).append(" Start;");
         String extra = " " + "ID:" + eventID + " " + " Start;";
@@ -234,7 +235,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
      * @param eventID ID of the event
      * @return the updated total length after appending the event to the StringBuilder result
      */
-    private int getTotalLengthEnd(StringBuilder result, int totalLength, String eventName, int eventID) {
+    private int getTotalLengthEnd(StringBuilder result, int totalLength, String eventName, UUID eventID) {
         result.append(" ");
         result.append("ID:").append(eventID).append(" ").append(eventName).append(" End;");
         String extra = " " + "ID:" + eventID + " " + " End;";
@@ -251,7 +252,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
      * @param eventID ID of the event
      * @return the updated total length after appending the event to the StringBuilder result
      */
-    private int getTotalLengthDue(StringBuilder result, int totalLength, String eventName, int eventID) {
+    private int getTotalLengthDue(StringBuilder result, int totalLength, String eventName, UUID eventID) {
         result.append(" ");
         result.append("ID:").append(eventID).append(" ").append(eventName).append(" Due;");
         String extra = " " + "ID:" + eventID + " " + " Due;";
