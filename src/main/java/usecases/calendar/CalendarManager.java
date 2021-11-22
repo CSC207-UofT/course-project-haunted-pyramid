@@ -239,9 +239,9 @@ public class CalendarManager {
      * @param date date of the calendar that ID's will get extracted from
      * @return the list of ID's in the specific date
      */
-    public List<Integer> getEventID(int year, int month, int date) {
+    public List<UUID> getEventID(int year, int month, int date) {
         int adjustedMonth = adjustMonth(year, month);
-        List<Integer> listID = new ArrayList<>();
+        List<UUID> listID = new ArrayList<>();
         if (adjustedMonth == this.currentMonth) {
             for (Event item : this.currentCalendar.getCalendarMap().get(date)) {
                 listID.add(item.getID());

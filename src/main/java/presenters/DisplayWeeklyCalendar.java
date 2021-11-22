@@ -22,7 +22,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private final int date;
     private final Map<Integer, List<Event>> calendarMap;
     private final List<String> defaultTimeLine = new ArrayList<>();
-    private final EventManager eventManager = new EventManager();
+    private final EventManager eventManager = new EventManager(new ArrayList<>());
     private final DisplayCalendarHelper cf;
 
     /**

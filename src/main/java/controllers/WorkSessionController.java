@@ -7,6 +7,8 @@ import presenters.MenuStrategies.WorkSessionMenuContent;
 import usecases.events.EventManager;
 import usecases.events.worksessions.WorkSessionScheduler;
 
+import java.util.UUID;
+
 /**
  * Controller for setting up the work session
  * @author Seo Won Yi
@@ -38,7 +40,7 @@ public class WorkSessionController {
      * @param eventID ID of the event to set/modify work session
      * @param eventManager EventManager object to bring necessary methods
      */
-    public void edit(Integer eventID, EventManager eventManager) {
+    public void edit(UUID eventID, EventManager eventManager) {
         boolean done = false;
         while (!done) {
             DisplayMenu displayMenu = new DisplayMenu();
@@ -76,7 +78,7 @@ public class WorkSessionController {
      * @param displayMenu DisplayMenu class to show the appropriate menu
      * @return perform the task, unless chosen to, do not return to the main menu
      */
-    private boolean finalChoice(Integer eventID, EventManager eventManager, boolean done, DisplayMenu displayMenu) {
+    private boolean finalChoice(UUID eventID, EventManager eventManager, boolean done, DisplayMenu displayMenu) {
         WorkSessionMenuContent menu = new WorkSessionMenuContent();
         String choice = ioController.getAnswer(displayMenu.displayMenu(menu));
         choice = helper.invalidCheck(displayMenu, choice, menu.numberOfOptions(), menu);
@@ -102,12 +104,12 @@ public class WorkSessionController {
      * @param eventID ID of the event to change from
      * @param eventManager eventManager object with the necessary function
      */
-    private void changeTotalHour(Integer eventID, EventManager eventManager) {
+    private void changeTotalHour(UUID eventID, EventManager eventManager) {
         System.out.println("Original Total Work Session Hour: " + eventManager.getTotalHoursNeeded(eventID));
         String chosenHour = ioController.getAnswer("Please type the new Total Hour (Max: 50)");
         chosenHour = helper.invalidCheckNoMenu(chosenHour, Constants.MAXIMUM_WORK_SESSION_HOUR,
                 "Please type the valid Total Work Session Hour (Max: 50)");
-        this.workSessionScheduler.setHoursNeeded(eventManager.get(eventID), Long.valueOf(chosenHour), eventManager);
+        this.workSessionScheduler.setHoursNeeded(eventID, Long.valueOf(chosenHour), eventManager);
         System.out.println("The change has been applied");
     }
 
@@ -116,12 +118,12 @@ public class WorkSessionController {
      * @param eventID ID of the event to change from
      * @param eventManager eventManager object with the necessary function
      */
-    private void changeSessionLength(Integer eventID, EventManager eventManager) {
+    private void changeSessionLength(UUID eventID, EventManager eventManager) {
         System.out.println("Original Length: " + eventManager.getEventSessionLength(eventID));
         String chosenLength = ioController.getAnswer("Please type new Session Length (Max: 10)");
         chosenLength = helper.invalidCheckNoMenu(chosenLength, Constants.MAXIMUM_SESSION_LENGTH,
                 "Please type the valid Session Length (Max: 10");
-        this.workSessionScheduler.setSessionLength(eventManager.get(eventID), Long.valueOf(chosenLength), eventManager);
+        this.workSessionScheduler.setSessionLength(eventID, Long.valueOf(chosenLength), eventManager);
         System.out.println("The change has been applied");
     }
 
@@ -130,7 +132,7 @@ public class WorkSessionController {
      * @param eventID ID of the event to change from
      * @param eventManager eventManager object with the necessary function
      */
-    private void markCompletion(Integer eventID, EventManager eventManager) {
+    private void markCompletion(UUID eventID, EventManager eventManager) {
         if (eventManager.getTotalWorkSession(eventID).size() == 0) {
             return;
         }
@@ -143,11 +145,11 @@ public class WorkSessionController {
             marking = ioController.getAnswer("Please type Complete or Incomplete to indicate the progress");
         }
         if (marking.equalsIgnoreCase("complete")){
-            this.workSessionScheduler.markComplete(eventManager.get(eventID), sessionNumber, eventManager);
+            this.workSessionScheduler.markComplete(eventID, sessionNumber, eventManager);
             System.out.println("The session was marked Complete");
         }
         else if (marking.equalsIgnoreCase("incomplete")){
-            this.workSessionScheduler.markInComplete(eventManager.get(eventID), sessionNumber, eventManager);
+            this.workSessionScheduler.markInComplete(eventID, sessionNumber, eventManager);
             System.out.println("The session was marked Incomplete");
         }
     }

@@ -135,4 +135,8 @@ public class UserManager {
     public HashMap<UUID, User> getUserInfo() {
         return this.userInfo;
     }
+
+    public void setName(UUID currentUser, String name) {
+        this.getUserInfo().get(currentUser).setName(name);
+    }
 }

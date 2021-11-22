@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A time-containing object that also references a list of other Events, is identified by an id, and contains
@@ -18,7 +19,7 @@ import java.util.List;
 public class Event implements Serializable {
     private LocalDateTime startTime = null;
     private LocalDateTime endTime;
-    private final int ID;
+    private final UUID ID;
     private String name;
     private String type;
     private String description = null;
@@ -35,7 +36,7 @@ public class Event implements Serializable {
      * @param name    the name of the event
      * @param endTime end time of the event
      */
-    public Event(int ID, String name, LocalDateTime endTime) {
+    public Event(UUID ID, String name, LocalDateTime endTime) {
         this.ID = ID;
         this.name = name;
         this.endTime = endTime;
@@ -52,7 +53,7 @@ public class Event implements Serializable {
      * @param name    the name of the event
      * @param endTime end time of the event
      */
-    public Event(int ID, String name, LocalDateTime startTime, LocalDateTime endTime) {
+    public Event(UUID ID, String name, LocalDateTime startTime, LocalDateTime endTime) {
         this.ID = ID;
         this.name = name;
         this.endTime = endTime;
@@ -75,7 +76,7 @@ public class Event implements Serializable {
      * @param startMin  the start minute
      * @param endMin    the end minute
      */
-    public Event(int ID, String name, int year, int month, int day, int startHour, int endHour, int startMin, int endMin) {
+    public Event(UUID ID, String name, int year, int month, int day, int startHour, int endHour, int startMin, int endMin) {
         this.name = name;
         this.ID = ID;
         this.endTime = LocalDateTime.of(year, month, day, endHour, endMin);
@@ -212,7 +213,7 @@ public class Event implements Serializable {
      *
      * @return int ID
      */
-    public int getID() {
+    public UUID getID() {
         return this.ID;
     }
 

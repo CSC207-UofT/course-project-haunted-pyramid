@@ -17,6 +17,7 @@ import usecases.calendar.CalendarManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 /**
  * Controller used for displaying calendar
@@ -94,7 +95,7 @@ public class CalendarController {
         if (eventID.equalsIgnoreCase("Return")) {
             return;
         }
-        eventController.edit(Integer.parseInt(eventID));
+        eventController.edit(UUID.fromString(eventID));
     }
 
     /**
@@ -115,7 +116,7 @@ public class CalendarController {
         DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
         System.out.println(calendarFactory.displaySpecificCalendarByType("Monthly",
                 year, month, 1).displayCalendar());
-        List<Integer> eventIDList = getEventIDList(eventController);
+        List<UUID> eventIDList = getEventIDList(eventController);
         if (eventIDList.size() == 0) {
             return;
         }
@@ -127,15 +128,15 @@ public class CalendarController {
      * @param eventController EventController object that has event information
      * @return list of eventID
      */
-    private List<Integer> getEventIDList(EventController eventController){
-        List<Integer> eventIDList = new ArrayList<>();
+    private List<UUID> getEventIDList(EventController eventController){
+        List<UUID> eventIDList = new ArrayList<>();
         boolean check = false;
         while (!check) {
             String eventID = getEventID(eventController);
             if (eventID.equalsIgnoreCase("Return")) {
                 return new ArrayList<>();
             }
-            eventIDList.add(Integer.parseInt(eventID));
+            eventIDList.add(UUID.fromString(eventID));
             while (!check){
                 System.out.println("Would you like add another Events in this repetition?");
                 System.out.println("y/n");
@@ -151,8 +152,8 @@ public class CalendarController {
                 }
                 else {
                     String eventID2 = getEventID(eventController);
-                    if (!eventIDList.contains(Integer.parseInt(eventID2))) {
-                        eventIDList.add(Integer.parseInt(eventID2));
+                    if (!eventIDList.contains(UUID.fromString(eventID2))) {
+                        eventIDList.add(UUID.fromString(eventID2));
                     }
                 }
             }
@@ -172,7 +173,7 @@ public class CalendarController {
         if (eventID.equalsIgnoreCase("Return")) {
             return "Return";
         }
-        while (!(helper.isInteger(eventID) && eventController.getEventManager().containsID(Integer.parseInt(eventID)))) {
+        while (!(helper.isInteger(eventID) && eventController.getEventManager().containsID(UUID.fromString(eventID)))) {
             System.out.println("Please type the valid ID");
             eventID = scanner.nextLine();
             if (eventID.equalsIgnoreCase("Return")) {

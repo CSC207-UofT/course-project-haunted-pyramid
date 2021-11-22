@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Malik Lahlou
@@ -62,12 +63,12 @@ public class IntervalDateInput implements DateGetter {
             startTime = startTime.plus(period);
         }
         if (startEndTimeDifference == Period.ZERO & hoursDifference.getHour() == 0){
-            return new Event(ConstantID.get(), event.getName(), startTime);
+            return new Event(UUID.randomUUID(), event.getName(), startTime);
         }
         else{
             LocalDateTime endTime = startTime.plusHours(hoursDifference.getHour());
             endTime = endTime.plus(startEndTimeDifference);
-            return new Event(ConstantID.get(), event.getName(), startTime, endTime);
+            return new Event(UUID.randomUUID(), event.getName(), startTime, endTime);
         }
 
     }
@@ -121,7 +122,7 @@ public class IntervalDateInput implements DateGetter {
             String name = nameList.get(eventIndex);
             Event thisEvent = newEvents.get(eventIndex);
             LocalDateTime newEndTime = thisEvent.getEndTime().plus(period);
-            Event newThisEvent = new Event(ConstantID.get(), name + "-" + i, newEndTime);
+            Event newThisEvent = new Event(UUID.randomUUID(), name + "-" + i, newEndTime);
             if(thisEvent.getStartTime() != null){
                 LocalDateTime newStartTime = thisEvent.getStartTime().plus(period);
                 newThisEvent.setStartTime(newStartTime);

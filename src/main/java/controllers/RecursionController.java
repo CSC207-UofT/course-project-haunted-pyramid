@@ -13,6 +13,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Malik Lahlou
@@ -31,10 +32,10 @@ public class RecursionController {
 
     // TODO (phase 2): make this method shorter.
 
-    public void createNewRecursion(List<Integer> eventIDList, EventManager eventManager){
+    public void createNewRecursion(List<UUID> eventIDList, EventManager eventManager){
         List<Event> cycle = new ArrayList<>();
-        List<Integer> eventID = new ArrayList<>();
-        for (int id : eventIDList){
+        List<UUID> eventID = new ArrayList<>();
+        for (UUID id : eventIDList){
             cycle.add(eventManager.get(id));
             eventID.add(id);
         }

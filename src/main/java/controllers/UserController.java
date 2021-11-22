@@ -160,7 +160,7 @@ public class UserController {
         if (name.equalsIgnoreCase("Return")) {
             return;
         }
-        this.userManager.getUserInfo().get(this.currentUser).setName(name);
+        this.userManager.setName(this.currentUser, name);
     }
 
     /**

@@ -16,6 +16,9 @@ public class OurCalendarTest {
     int month;
     int date;
 
+    private final UUID UUID1 = UUID.randomUUID();
+    private final UUID UUID2 = UUID.randomUUID();
+
     @Before
     public void setUp(){
         calendar = new OurCalendar();
@@ -30,9 +33,9 @@ public class OurCalendarTest {
     @Test(timeout = 100)
     public void testUpdateConflict(){
         assertFalse(calendar.isConflict());
-        Event eventOne = new Event(1, "Test1",
+        Event eventOne = new Event(UUID1, "Test1",
                 2021, 10, 15, 7, 10, 0, 0);
-        Event eventTwo = new Event(2, "Test2",
+        Event eventTwo = new Event(UUID2, "Test2",
                 2021, 10, 15, 8, 9, 0, 0);
         calendar.addEvent(eventOne);
         calendar.addEvent(eventTwo);
@@ -43,7 +46,7 @@ public class OurCalendarTest {
 
     @Test(timeout = 100)
     public void testAddEvent(){
-        Event eventOne = new Event(1, "Test1",
+        Event eventOne = new Event(UUID1, "Test1",
                 2021, 10, 15, 7, 10, 0, 0);
         calendar.addEvent(eventOne);
         Map<Integer, List<Event>> tempMap = new HashMap<>();
@@ -73,9 +76,9 @@ public class OurCalendarTest {
 
     @Test(timeout = 100)
     public void testGetConflictEvent(){
-        Event eventOne = new Event(1, "Test1",
+        Event eventOne = new Event(UUID1, "Test1",
                 2021, 10, 15, 7, 10, 0, 0);
-        Event eventTwo = new Event(2, "Test2",
+        Event eventTwo = new Event(UUID2, "Test2",
                 2021, 10, 15, 8, 9, 0, 0);
         calendar.addEvent(eventOne);
         calendar.addEvent(eventTwo);
