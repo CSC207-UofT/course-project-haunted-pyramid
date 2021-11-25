@@ -66,7 +66,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         usedContentDates = initialSetup(result, usedDates, usedContentDates);
         int iteratorCounter = keyList.subList(usedDates.size(), keyList.size()).size();
         fillCalendar(cf, result, usedDates, usedContentDates, iteratorCounter);
-        result.append(this.conflictDisplay.displayConflict());
+        result.append("\n").append(this.conflictDisplay.displayConflict());
         return result.toString();
     }
 
@@ -253,10 +253,11 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         if (calendarMap.get(usedContentDates.get(contentCount)).size() - 1 >= eventIndex &&
                 calendarMap.get(usedContentDates.get(contentCount)).size() != 0) {
             UUID eventID = cm.getEventID(year, month, usedContentDates.get(contentCount)).get(eventIndex);
+            int eventIntID = this.converter.getIntFromUUID(eventID);
             String eventName = em.getName(em.get(eventID));
-            eventName = "ID: " + eventID + " " + eventName;
-            if (eventName.length() > 34) {
-                eventName = eventName.substring(0, 31) + "...";
+            eventName = "ID: " + eventIntID + " " + eventName;
+            if (eventName.length() > 17) {
+                eventName = eventName.substring(0, 14) + "...";
             }
             String eventStartTime = em.getStartTimeString(eventID);
             String eventEndTime = em.getEndTimeString(eventID);

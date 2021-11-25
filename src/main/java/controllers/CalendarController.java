@@ -3,6 +3,7 @@ package controllers;
 import helpers.CalendarSelection;
 import helpers.ControllerHelper;
 import helpers.DateInfo;
+import helpers.EventIDConverter;
 import presenters.CalendarFactory.DisplayCalendar;
 import presenters.CalendarFactory.DisplayCalendarFactory;
 import presenters.MenuStrategies.DisplayMenu;
@@ -16,10 +17,7 @@ import usecases.calendar.CalendarManager;
 import usecases.events.EventManager;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Controller used for displaying calendar
@@ -80,6 +78,7 @@ public class CalendarController {
      */
     public void dailyCalendarForModification(EventController eventController) {
         DisplayMenu displayMenu = new DisplayMenu();
+        EventIDConverter converter = new EventIDConverter(eventController.getEventManager());
         System.out.println("You may type Return to return to the main menu at any time (except Date selection)");
         String dateInput = getCalendarDateInput(displayMenu, "modify");
         if (dateInput.equalsIgnoreCase("Return")) {
@@ -97,7 +96,7 @@ public class CalendarController {
         if (eventID.equalsIgnoreCase("Return")) {
             return;
         }
-        eventController.edit(UUID.fromString(eventID));
+        eventController.edit(converter.getUUIDFromInt(Integer.parseInt(eventID)));
     }
 
     /**
@@ -131,32 +130,34 @@ public class CalendarController {
      * @return list of eventID
      */
     private List<UUID> getEventIDList(EventController eventController){
+        EventIDConverter converter = new EventIDConverter(eventController.getEventManager());
         List<UUID> eventIDList = new ArrayList<>();
         boolean check = false;
-        while (!check) {
-            String eventID = getEventID(eventController);
-            if (eventID.equalsIgnoreCase("Return")) {
-                return new ArrayList<>();
-            }
-            eventIDList.add(UUID.fromString(eventID));
-            while (!check){
-                System.out.println("Would you like add another Events in this repetition?");
+        String eventID = getEventID(eventController);
+        if (eventID.equalsIgnoreCase("Return")) {
+            return new ArrayList<>();
+        }
+        eventIDList.add(converter.getUUIDFromInt(Integer.parseInt(eventID)));
+        while (!check){
+            System.out.println("Would you like add another Events in this repetition?");
+            System.out.println("y/n");
+            String answer = scanner.nextLine();
+            while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
+                System.out.println("Please type the valid input");
+                System.out.println("Would you like to Recurse more Events?");
                 System.out.println("y/n");
-                String answer = scanner.nextLine();
-                while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")) {
-                    System.out.println("Please type the valid input");
-                    System.out.println("Would you like to Recurse more Events?");
-                    System.out.println("y/n");
-                    answer = scanner.nextLine();
+                answer = scanner.nextLine();
+            }
+            if (answer.equalsIgnoreCase("n")) {
+                check = true;
+            }
+            else {
+                String eventID2 = getEventID(eventController);
+                if (eventID2.equalsIgnoreCase("Return")) {
+                    return eventIDList;
                 }
-                if (answer.equalsIgnoreCase("n")) {
-                        check = true;
-                }
-                else {
-                    String eventID2 = getEventID(eventController);
-                    if (!eventIDList.contains(UUID.fromString(eventID2))) {
-                        eventIDList.add(UUID.fromString(eventID2));
-                    }
+                else if (!eventIDList.contains(converter.getUUIDFromInt(Integer.parseInt(eventID2)))) {
+                    eventIDList.add(converter.getUUIDFromInt(Integer.parseInt(eventID2)));
                 }
             }
         }
@@ -170,12 +171,15 @@ public class CalendarController {
      * @return the valid eventID that will be used for modification
      */
     private String getEventID(EventController eventController) {
-        System.out.println("Please type the Event ID that applies or type Return to return to the main menu");
+        EventManager eventManager = eventController.getEventManager();
+        EventIDConverter converter = new EventIDConverter(eventManager);
+        Map<Integer, UUID> eventIDMap = converter.getEventIDMap();
+        System.out.println("Please type the Event ID that applies or type Return to return to end the task");
         String eventID = scanner.nextLine();
         if (eventID.equalsIgnoreCase("Return")) {
             return "Return";
         }
-        while (!(helper.isInteger(eventID) && eventController.getEventManager().containsID(UUID.fromString(eventID)))) {
+        while (!(helper.isInteger(eventID) && eventIDMap.containsKey(Integer.valueOf(eventID)))) {
             System.out.println("Please type the valid ID");
             eventID = scanner.nextLine();
             if (eventID.equalsIgnoreCase("Return")) {
