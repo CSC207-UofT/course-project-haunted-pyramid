@@ -4,7 +4,7 @@ import entities.User;
 import gateways.IOSerializable;
 import helpers.Constants;
 import helpers.ControllerHelper;
-import presenters.DisplayMenu;
+import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.ProfileMenuContent;
 import usecases.UserManager;
 import usecases.events.worksessions.WorkSessionScheduler;

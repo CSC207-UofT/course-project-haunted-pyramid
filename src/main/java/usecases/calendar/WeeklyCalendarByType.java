@@ -1,21 +1,21 @@
 package usecases.calendar;
 
-import entities.Event;
 import entities.OurCalendar;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Get Weekly Calendar Map
  * @author Seo Won Yi
- * @see GetCalendar
+ * @see CalendarByType
  * @see CalendarManager
  * @see OurCalendar
  */
 
-public class WeeklyCalendar extends GetCalendar {
+public class WeeklyCalendarByType extends CalendarByType {
 
     /**
      * return a map of the weekly calendar from the chosen CalendarManager object that starts from the current date
@@ -23,9 +23,9 @@ public class WeeklyCalendar extends GetCalendar {
      * @return a map of the weekly calendar that starts from the current date
      */
     @Override
-    public Map<Integer, List<Event>> getCalendar(CalendarManager cm) {
-        Map<Integer, List<Event>> result;
-        Map<Integer, List<Event>> currentCal = cm.getCurrentCalendar().getCalendarMap();
+    public Map<Integer, List<UUID>> getCalendar(CalendarManager cm) {
+        Map<Integer, List<UUID>> result;
+        Map<Integer, List<UUID>> currentCal = cm.getCurrentCalendar().getCalendarMap();
         result = weeklyCalGenerator(cm.getCurrentDate(), currentCal, cm.getFutureCalendar(), 0);
         return result;
     }
@@ -38,12 +38,12 @@ public class WeeklyCalendar extends GetCalendar {
      * @param date chosen start day of the weekly calendar
      * @return a map of the weekly calendar (key : date, value : list of events)
      */
-    public Map<Integer, List<Event>> getCalendar(CalendarManager cm, int year, int month, int date){
+    public Map<Integer, List<UUID>> getCalendar(CalendarManager cm, int year, int month, int date){
         int adjustedMonth = adjustMonth(cm.getCurrentYear(), year, month);
         int currentMonth = cm.getCurrentMonth();
-        Map<Integer, List<Event>> result = new HashMap<>();
+        Map<Integer, List<UUID>> result = new HashMap<>();
         if (currentMonth == adjustedMonth){
-            Map<Integer, List<Event>> currentCal = cm.getCurrentCalendar().getCalendarMap();
+            Map<Integer, List<UUID>> currentCal = cm.getCurrentCalendar().getCalendarMap();
             result = weeklyCalGenerator(date, currentCal, cm.getFutureCalendar(), 0);
         }
         else if (currentMonth < adjustedMonth && adjustedMonth - currentMonth <= 3){
@@ -63,10 +63,10 @@ public class WeeklyCalendar extends GetCalendar {
      * @param currentMonth the current month
      * @return a map of the weekly calendar from the past
      */
-    private Map<Integer, List<Event>> getPastCalMap(CalendarManager cm, int date, int adjustedMonth, int currentMonth)
+    private Map<Integer, List<UUID>> getPastCalMap(CalendarManager cm, int date, int adjustedMonth, int currentMonth)
     {
-        Map<Integer, List<Event>> pastCal = cm.getPastCalendar().get(currentMonth - adjustedMonth - 1).getCalendarMap();
-        Map<Integer, List<Event>> result = new HashMap<>();
+        Map<Integer, List<UUID>> pastCal = cm.getPastCalendar().get(currentMonth - adjustedMonth - 1).getCalendarMap();
+        Map<Integer, List<UUID>> result = new HashMap<>();
         int numTotalDays = pastCal.size();
         if (currentMonth - adjustedMonth == 1 && date > numTotalDays - 6){
             int shortage = 7 - (numTotalDays - date + 1);
@@ -91,10 +91,10 @@ public class WeeklyCalendar extends GetCalendar {
      * @param currentMonth the current month
      * @return a map of the weekly calendar from the future
      */
-    private Map<Integer, List<Event>> getFutureCalMap(CalendarManager cm, int date, int adjustedMonth, int currentMonth)
+    private Map<Integer, List<UUID>> getFutureCalMap(CalendarManager cm, int date, int adjustedMonth, int currentMonth)
     {
-        Map<Integer, List<Event>> result = new HashMap<>();
-        Map<Integer, List<Event>> futureCal =
+        Map<Integer, List<UUID>> result = new HashMap<>();
+        Map<Integer, List<UUID>> futureCal =
                 cm.getFutureCalendar().get(adjustedMonth - currentMonth - 1).getCalendarMap();
         int numTotalDays = cm.getFutureCalendar().get(adjustedMonth - currentMonth - 1).getDateInfo().get(2);
         if (adjustedMonth - currentMonth == 3 && date > numTotalDays - 6){
@@ -117,9 +117,9 @@ public class WeeklyCalendar extends GetCalendar {
      * @param index index of the future or past calendars that needs to be considered (this is the another month)
      * @return a map of the weekly calendar
      */
-    private Map<Integer, List<Event>> weeklyCalGenerator(int date, Map<Integer, List<Event>> cal,
+    private Map<Integer, List<UUID>> weeklyCalGenerator(int date, Map<Integer, List<UUID>> cal,
                                                          List<OurCalendar> futurePast, int index) {
-        Map<Integer, List<Event>> result = new HashMap<>();
+        Map<Integer, List<UUID>> result = new HashMap<>();
         int numTotalDays = cal.size();
         if (date <= numTotalDays - 6){
             for (int i = date; i < date + 7; i++){
@@ -131,7 +131,7 @@ public class WeeklyCalendar extends GetCalendar {
             for (int j = date; j <= numTotalDays; j++){
                 result.put(j, cal.get(j));
                 for (int k = 1; k <= shortage; k++){
-                    Map<Integer, List<Event>> nextMonthCal = futurePast.get(index).getCalendarMap();
+                    Map<Integer, List<UUID>> nextMonthCal = futurePast.get(index).getCalendarMap();
                     result.put(k, nextMonthCal.get(k));
                 }
             }

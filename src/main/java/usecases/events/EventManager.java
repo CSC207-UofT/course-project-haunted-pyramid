@@ -370,6 +370,24 @@ public class EventManager {
         return events;
     }
 
+    /**
+     * Orders a list of event IDs chronologically earliest to latest
+     * @param eventIDList the list of event ID to be modified
+     * @return the input list, time ordered
+     */
+    public List<UUID> timeOrderID(List<UUID> eventIDList) {
+        List<Event> eventList = new ArrayList<>();
+        for (UUID eventID : eventIDList) {
+            eventList.add(this.get(eventID));
+        }
+        eventList = timeOrder(eventList);
+        List<UUID> sortedEventID = new ArrayList<>();
+        for (Event event : eventList) {
+            sortedEventID.add(this.getID(event));
+        }
+        return sortedEventID;
+    }
+
     public String displayEvent(Event event) {
         return event.toString();
     }
@@ -458,10 +476,11 @@ public class EventManager {
 
     /**
      * Return the start time information of the chosen event in string
-     * @param event event to investigate
+     * @param eventID ID of an event to investigate
      * @return the string of the start time
      */
-    public String getStartTimeString(Event event) {
+    public String getStartTimeString(UUID eventID) {
+        Event event = this.get(eventID);
         if (event.hasStart()) {
             String[] date = event.getStartTime().toString().split("-");
             return date[2].substring(3, 8);
@@ -472,10 +491,11 @@ public class EventManager {
 
     /**
      * Return the end time information of the chosen event in string
-     * @param event event to investigate
+     * @param eventID ID of an event to investigate
      * @return the string of the end time
      */
-    public String getEndTimeString(Event event) {
+    public String getEndTimeString(UUID eventID) {
+        Event event = this.get(eventID);
         String[] date = event.getEndTime().toString().split("-");
         return date[2].substring(3, 8);
     }
@@ -547,10 +567,6 @@ public class EventManager {
             return null;
         }
     }
-
-    /**
-     *
-     */
 
     public String getPastSessionsString(UUID id){
         StringBuilder options = new StringBuilder();

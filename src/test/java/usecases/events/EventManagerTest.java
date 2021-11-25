@@ -49,12 +49,12 @@ public class EventManagerTest {
     }
     @Test (timeout = 100)
     public void testGetStartTime() {
-        assertEquals("02:00", this.eventManager.getStartTimeString(this.eventManager.get(UUID1)));
+        assertEquals("02:00", this.eventManager.getStartTimeString(UUID1));
     }
 
     @Test (timeout = 100)
     public void testGetEndTime() {
-        assertEquals("03:00", this.eventManager.getEndTimeString(this.eventManager.get(UUID1)));
+        assertEquals("03:00", this.eventManager.getEndTimeString(UUID1));
     }
 
     @Test(timeout = 50)

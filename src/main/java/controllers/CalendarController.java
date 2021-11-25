@@ -1,17 +1,19 @@
 package controllers;
 
-import entities.Event;
 import helpers.CalendarSelection;
 import helpers.ControllerHelper;
 import helpers.DateInfo;
-import presenters.DisplayCalendar;
-import presenters.DisplayCalendarFactory;
-import presenters.DisplayMenu;
+import presenters.CalendarFactory.DisplayCalendar;
+import presenters.CalendarFactory.DisplayCalendarFactory;
+import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.CalNextActionMenuContent;
 import presenters.MenuStrategies.CalendarTypeMenuContent;
 import presenters.MenuStrategies.CalendarYearMonthMenuContent;
 import presenters.MenuStrategies.MenuContent;
+import usecases.EventCalendarCollaborator;
+import usecases.calendar.CalendarByType;
 import usecases.calendar.CalendarManager;
+import usecases.events.EventManager;
 
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import java.util.UUID;
  * @see DisplayCalendarFactory
  * @see DisplayCalendar
  * @see CalendarManager
- * @see usecases.calendar.GetCalendar
+ * @see CalendarByType
  * @see entities.OurCalendar
  */
 
@@ -191,10 +193,11 @@ public class CalendarController {
      */
     private DisplayCalendarFactory getDisplayCalendarFactory(EventController eventController) {
         CalendarManager calendarManager = new CalendarManager();
-        for (Event event : eventController.getEventManager().getAllEventsFlatSplit()) {
-            calendarManager.addToCalendar(event);
-        }
-        return new DisplayCalendarFactory(calendarManager);
+        EventManager eventManager = eventController.getEventManager();
+        EventCalendarCollaborator collaborator = new EventCalendarCollaborator(eventManager, calendarManager);
+        collaborator.addAllEvents();
+        calendarManager = collaborator.getCalendarManager();
+        return new DisplayCalendarFactory(calendarManager, eventManager);
     }
 
     /**

@@ -1,6 +1,7 @@
-package presenters;
+package presenters.CalendarFactory;
 
 import usecases.calendar.CalendarManager;
+import usecases.events.EventManager;
 
 /**
  * Abstract class that can display different types of calendar images
@@ -11,9 +12,11 @@ import usecases.calendar.CalendarManager;
  */
 public abstract class DisplayCalendar {
     public CalendarManager cm;
+    public EventManager em;
 
-    public DisplayCalendar(CalendarManager cm){
+    public DisplayCalendar(CalendarManager cm, EventManager em){
         this.cm = cm;
+        this.em = em;
     }
 
     /**
