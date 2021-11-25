@@ -81,17 +81,19 @@ public class ConflictChecker {
      * @param eventIDList List of event IDs to consider from
      */
     private void addConflictEventID(List<UUID> conflictEventList, List<UUID> eventIDList) {
-        for (int i = 0; i < eventIDList.size() - 1; i++) {
-            List<LocalDateTime> firstTimeList = getTimeList(eventIDList, i);
-            for (int j = i + 1; j < eventIDList.size(); j++) {
-                List<LocalDateTime> secondTimeList = getTimeList(eventIDList, j);
-                IsOverlapped isOverlapped = new IsOverlapped(firstTimeList, secondTimeList);
-                if (isOverlapped.getResult()) {
-                    if (!conflictEventList.contains(eventIDList.get(i))) {
-                        conflictEventList.add(eventIDList.get(i));
-                    }
-                    if (!conflictEventList.contains(eventIDList.get(j))) {
-                        conflictEventList.add(eventIDList.get(j));
+        if (eventIDList.size() >= 2) {
+            for (int i = 0; i < eventIDList.size() - 1; i++) {
+                List<LocalDateTime> firstTimeList = getTimeList(eventIDList, i);
+                for (int j = i + 1; j < eventIDList.size(); j++) {
+                    List<LocalDateTime> secondTimeList = getTimeList(eventIDList, j);
+                    IsOverlapped isOverlapped = new IsOverlapped(firstTimeList, secondTimeList);
+                    if (isOverlapped.getResult()) {
+                        if (!conflictEventList.contains(eventIDList.get(i))) {
+                            conflictEventList.add(eventIDList.get(i));
+                        }
+                        if (!conflictEventList.contains(eventIDList.get(j))) {
+                            conflictEventList.add(eventIDList.get(j));
+                        }
                     }
                 }
             }
