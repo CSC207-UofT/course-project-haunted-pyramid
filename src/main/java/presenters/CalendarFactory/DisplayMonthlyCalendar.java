@@ -255,7 +255,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
             UUID eventID = cm.getEventID(year, month, usedContentDates.get(contentCount)).get(eventIndex);
             int eventIntID = this.converter.getIntFromUUID(eventID);
             String eventName = em.getName(em.get(eventID));
-            eventName = "ID: " + eventIntID + " " + eventName;
+            eventName = "ID:" + eventIntID + " " + eventName;
             if (eventName.length() > 17) {
                 eventName = eventName.substring(0, 14) + "...";
             }
