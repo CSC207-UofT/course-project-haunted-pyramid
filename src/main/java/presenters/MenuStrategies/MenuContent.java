@@ -48,7 +48,7 @@ public interface MenuContent {
             }
         }
         if (longestContent > Constants.MENU_DIVIDER - 5){
-            longestContent -= 30;
+            longestContent -= Constants.MENU_DIVIDER - 5;
         }
         else {longestContent = 0;}
         return longestContent;
