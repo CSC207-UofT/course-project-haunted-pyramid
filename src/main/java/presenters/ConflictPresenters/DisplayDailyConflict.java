@@ -37,10 +37,7 @@ public class DisplayDailyConflict extends DisplayConflict {
             return "There is no conflict for the given date";
         }
         else {
-            StringBuilder notify = new StringBuilder("The following Events are having conflict:");
-            for (UUID eventID : conflictEvent) {
-                notify.append("\n").append(this.em.getName(this.em.get(eventID)));
-            }
+            StringBuilder notify = getConflictEventString(conflictEvent);
             return notify.toString();
         }
     }
