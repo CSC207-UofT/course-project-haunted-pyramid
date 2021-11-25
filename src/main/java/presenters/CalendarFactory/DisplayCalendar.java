@@ -1,5 +1,6 @@
 package presenters.CalendarFactory;
 
+import helpers.EventIDConverter;
 import usecases.calendar.CalendarManager;
 import usecases.events.EventManager;
 
@@ -13,10 +14,12 @@ import usecases.events.EventManager;
 public abstract class DisplayCalendar {
     public CalendarManager cm;
     public EventManager em;
+    public EventIDConverter converter;
 
     public DisplayCalendar(CalendarManager cm, EventManager em){
         this.cm = cm;
         this.em = em;
+        this.converter = new EventIDConverter(em);
     }
 
     /**

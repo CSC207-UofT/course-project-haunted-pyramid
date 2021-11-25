@@ -62,7 +62,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         addTimeLineWithContent(result, lengthDecider);
         String bottom = "-".repeat(Constants.DAILY_CAL_SIZE * 2 + lengthDecider);
         result.append(" ").append(bottom).append(" ");
-        result.append(this.conflictDisplay.displayConflict());
+        result.append("\n").append(this.conflictDisplay.displayConflict());
         return result.toString();
     }
 
@@ -195,14 +195,15 @@ public class DisplayDailyCalendar extends DisplayCalendar {
             if (eventName.length() > Constants.DAILY_CAL_SIZE){
                 eventName = eventName.substring(0, Constants.DAILY_CAL_SIZE) + "...";
             }
+            int eventIntID = this.converter.getIntFromUUID(eventID);
             if (!startTime.equals(endTime) && startTime.equals(time)) {
-                totalLength = getTotalLengthStart(result, totalLength, eventName, eventID);
+                totalLength = getTotalLengthStart(result, totalLength, eventName, eventIntID);
             }
             else if (!startTime.equals(endTime) && endTime.equals(time)){
-                totalLength = getTotalLengthEnd(result, totalLength, eventName, eventID);
+                totalLength = getTotalLengthEnd(result, totalLength, eventName, eventIntID);
             }
             else if (startTime.equals(endTime) && startTime.equals(time)){
-                totalLength = getTotalLengthDue(result, totalLength, eventName, eventID);
+                totalLength = getTotalLengthDue(result, totalLength, eventName, eventIntID);
             }
         }
         return totalLength;
@@ -217,7 +218,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
      * @param eventID ID of the event
      * @return the updated total length after appending the event to the StringBuilder result
      */
-    private int getTotalLengthStart(StringBuilder result, int totalLength, String eventName, UUID eventID) {
+    private int getTotalLengthStart(StringBuilder result, int totalLength, String eventName, int eventID) {
         result.append(" ");
         result.append("ID:").append(eventID).append(" ").append(eventName).append(" Start;");
         String extra = " " + "ID:" + eventID + " " + " Start;";
@@ -234,7 +235,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
      * @param eventID ID of the event
      * @return the updated total length after appending the event to the StringBuilder result
      */
-    private int getTotalLengthEnd(StringBuilder result, int totalLength, String eventName, UUID eventID) {
+    private int getTotalLengthEnd(StringBuilder result, int totalLength, String eventName, int eventID) {
         result.append(" ");
         result.append("ID:").append(eventID).append(" ").append(eventName).append(" End;");
         String extra = " " + "ID:" + eventID + " " + " End;";
@@ -251,7 +252,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
      * @param eventID ID of the event
      * @return the updated total length after appending the event to the StringBuilder result
      */
-    private int getTotalLengthDue(StringBuilder result, int totalLength, String eventName, UUID eventID) {
+    private int getTotalLengthDue(StringBuilder result, int totalLength, String eventName, int eventID) {
         result.append(" ");
         result.append("ID:").append(eventID).append(" ").append(eventName).append(" Due;");
         String extra = " " + "ID:" + eventID + " " + " Due;";
@@ -285,7 +286,8 @@ public class DisplayDailyCalendar extends DisplayCalendar {
             for (UUID eventID : this.calendarMap.get(this.date)) {
                 String eventEndTime = this.em.getEndTimeString(eventID);
                 String eventName = em.getName(this.em.get(eventID));
-                eventName += " " + "ID:" + eventID + " " + " Start;";
+                int eventIntID = this.converter.getIntFromUUID(eventID);
+                eventName += " " + "ID:" + eventIntID + " " + " Start;";
                 String eventStartTime = getStartTime(eventID, eventEndTime);
                 int nameMin = Math.min(eventName.length(),
                         Constants.DAILY_CAL_SIZE);

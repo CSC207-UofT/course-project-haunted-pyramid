@@ -38,23 +38,29 @@ public class ConflictChecker {
         int currentMonth = this.calendarManager.getCurrentMonth();
         if (adjustedMonth == currentMonth) {
             OurCalendar currentCalendar = this.calendarManager.getCurrentCalendar();
-            List<UUID> eventIDList = currentCalendar.getCalendarMap().get(date);
-            addConflictEventID(conflictEventList, eventIDList);
-            setConflict(conflictEventList, currentCalendar);
+            updatedConflict(date, conflictEventList, currentCalendar);
         }
         else if (adjustedMonth > currentMonth && currentMonth + 4 > adjustedMonth) {
             OurCalendar futureCalendar = this.calendarManager.getFutureCalendar().get(adjustedMonth - currentMonth - 1);
-            List<UUID> futureEventIDList = futureCalendar.getCalendarMap().get(date);
-            addConflictEventID(conflictEventList, futureEventIDList);
-            setConflict(conflictEventList, futureCalendar);
+            updatedConflict(date, conflictEventList, futureCalendar);
         }
         else if (adjustedMonth < currentMonth && currentMonth - 4 < adjustedMonth) {
             OurCalendar pastCalendar = this.calendarManager.getPastCalendar().get(currentMonth - adjustedMonth - 1);
-            List<UUID> pastEventIDList = pastCalendar.getCalendarMap().get(date);
-            addConflictEventID(conflictEventList, pastEventIDList);
-            setConflict(conflictEventList, pastCalendar);
+            updatedConflict(date, conflictEventList, pastCalendar);
         }
         return conflictEventList;
+    }
+
+    /**
+     * update conflictEventList by observing events in calendar for the specific date
+     * @param date given date to look for conflict
+     * @param conflictEventList List of conflicted events to be updated
+     * @param calendar OurCalendar object to be explored
+     */
+    private void updatedConflict(int date, List<UUID> conflictEventList, OurCalendar calendar) {
+        List<UUID> eventIDList = calendar.getCalendarMap().get(date);
+        addConflictEventID(conflictEventList, eventIDList);
+        setConflict(conflictEventList, calendar);
     }
 
     /**

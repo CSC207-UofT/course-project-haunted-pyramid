@@ -65,7 +65,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
             result.append("|").append("\n");
         }
         result.append(cf.endFrame(lengthDecider()));
-        result.append(this.conflictDisplay.displayConflict());
+        result.append("\n").append(this.conflictDisplay.displayConflict());
         return result.toString();
     }
 
@@ -295,7 +295,8 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
      */
     private int appendNameGetNameLength(StringBuilder result, int nameLength, UUID eventID, String eventStartTime) {
         String eventName = em.getName(em.get(eventID));
-        eventName = "ID:" + eventID + " " + eventName;
+        int eventIntID = this.converter.getIntFromUUID(eventID);
+        eventName = "ID:" + eventIntID + " " + eventName;
         int eventNameSize = eventName.length();
         if (eventStartTime.equals(em.getEndTimeString(eventID))){
             eventName = eventName + " Due";
@@ -310,7 +311,8 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
             nameLength += eventNameSize + 2;
         }
         else {
-            result.append(" ").append(eventName, 0, Constants.WEEKLY_CAL_NAME_LIMIT - 5).append("...").append(";");
+            result.append(" ").append(eventName, 0, Constants.WEEKLY_CAL_NAME_LIMIT - 5)
+                    .append("...").append(";");
             nameLength += Constants.WEEKLY_CAL_NAME_LIMIT;}
         return nameLength;
     }
