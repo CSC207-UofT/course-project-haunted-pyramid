@@ -65,7 +65,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
             result.append("|").append("\n");
         }
         result.append(cf.endFrame(lengthDecider()));
-        result.append("\n").append(this.conflictDisplay.displayConflict());
+        result.append(this.conflictDisplay.displayConflict());
         return result.toString();
     }
 

@@ -66,7 +66,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         usedContentDates = initialSetup(result, usedDates, usedContentDates);
         int iteratorCounter = keyList.subList(usedDates.size(), keyList.size()).size();
         fillCalendar(cf, result, usedDates, usedContentDates, iteratorCounter);
-        result.append("\n").append(this.conflictDisplay.displayConflict());
+        result.append(this.conflictDisplay.displayConflict());
         return result.toString();
     }
 
