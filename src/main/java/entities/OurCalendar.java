@@ -12,8 +12,8 @@ public class OurCalendar {
 
     private final List<Integer> dateInfo; //in the form of [year, month, # of days in the month]
     private boolean conflict;  // if the calendar has any conflicted information
-    private List<Event> conflictEvent; // All the objects that are conflicting
-    private final Map<Integer, List<Event>> calendarMap; // map of calendar
+    private List<UUID> conflictEvent; // All the UUID of the events that are conflicting
+    private final Map<Integer, List<UUID>> calendarMap; // map of calendar
 
     /**
      * Initialize the OurCalendar class for the given month.
@@ -40,7 +40,7 @@ public class OurCalendar {
         this.conflictEvent = new ArrayList<>();
         // create an empty calendar map with keys of days and values of list of events (empty to start with) for the
         // provided year and month
-        Map<Integer, List<Event>> tempMap = new HashMap<>();
+        Map<Integer, List<UUID>> tempMap = new HashMap<>();
         for (int i = 1; i <= daysInMonth; i++) {
             tempMap.put(i, new ArrayList<>());
         }
@@ -58,19 +58,16 @@ public class OurCalendar {
     }
 
     /**
-     * Check if there is any conflict for the current calendar
-     * @return true if there exists conflict
+     * Add the event ID to a calendar for the given date
+     * @param eventID the event ID that wants to be added
      */
-    public boolean isConflict(){
-        return this.conflict;
-    }
-
-    /**
-     * get conflictObject
-     * @return conflictObject
-     */
-    public List<Event> getConflictEvent(){
-        return this.conflictEvent;
+    public void addEventID(UUID eventID, int date){
+        for (int key: this.calendarMap.keySet()) {
+            if (key == date) {
+                this.calendarMap.get(key).add(eventID);
+                return;
+            }
+        }
     }
 
     /**
@@ -85,126 +82,17 @@ public class OurCalendar {
      * get calendarMap
      * @return calendarMap
      */
-    public Map<Integer, List<Event>> getCalendarMap(){
+    public Map<Integer, List<UUID>> getCalendarMap(){
         return this.calendarMap;
     }
 
-    /**
-     * Add the event to a calendar for the appropriate dates
-     *
-     * == Representation Invariant ==
-     *
-     * the event is set up for the same month as the schedule
-     *
-     * @param event the event that wants to be added
-     */
-
-    public void addEvent(Event event){
-        String endInfo = event.getEndTime().toString();
-        int endDate = Integer.parseInt(endInfo.substring(8, 10));
-        int startDate = endDate;
-        if (event.getStartTime() != null) {
-            String startInfo = event.getStartTime().toString();
-            startDate = Integer.parseInt(startInfo.substring(8, 10));
-        }
-        List<Integer> applicableDates = new ArrayList<>();
-        for (int i = startDate; i <= endDate; i++){
-            applicableDates.add(i);
-        }
-        for (int dates : applicableDates){
-            this.calendarMap.get(dates).add(event);
-        }
+    public void setConflict(boolean result) {
+        this.conflict = result;
     }
 
-    /**
-     * check if there is any conflict in the calendar (monthly)
-     * if there is any conflict, update conflictEvent with conflicted events
-     * also change conflict attribute to true
-     * otherwise, reset conflict related attributes to default
-     */
-    public void updateConflict(){
-        // iterate each day
-        for (int date = 1; date <= this.dateInfo.get(2); date++){
-            // create a temporary list to store [start time, end time] info
-            List<List<Double>> timeInfo = new ArrayList<>();
-            // iterate each event in the list
-            for (Event item :this.calendarMap.get(date)) {
-                // store start time and end time of the event as a list
-                List<Double> individualTimeInfo = new ArrayList<>();
-                updateTimeInfo(item, individualTimeInfo);
-                timeInfo.add(individualTimeInfo);
-            }
-            // run the helper method to compare the times and update the conflictEvent
-            checkOverLap(timeInfo, date);
-        }
-        // if there is any kind of conflict return true
-        if (this.conflictEvent.size() != 0){
-            this.conflict = true;
-        }
-        // if there is no conflict at all
-        // return false and set the conflict related attributes to default
-        else {
-            this.conflict = false;
-            this.conflictEvent = new ArrayList<>();
-        }
+    public void setConflictEvent(List<UUID> conflictEvent) {
+        this.conflictEvent = conflictEvent;
     }
 
-    /**
-     * Helper method of updateConflict method
-     * Add start time and end time of item on individualTimeInfo
-     * @param item Event object to be accessed from
-     * @param individualTimeInfo The list that will contain start time and end time of item
-     */
-    private void updateTimeInfo(Event item, List<Double> individualTimeInfo) {
-        if (item.getStartTime() != null) {
-            individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
-            individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)) + item.getLength() * 100);
-        }
-        else {
-            individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
-            individualTimeInfo.add(Double.parseDouble(getStartTimeString(item)));
-        }
-    }
-
-    /**
-     * Convert item's start time to appropriate string format
-     * @param item event object that will be accessed
-     * @return String format of start time of item
-     */
-    private String getStartTimeString(Event item) {
-        if (item.getStartTime() != null) {
-            return item.getStartTime().toLocalTime().toString().substring(0, 2) +
-                    item.getStartTime().toLocalTime().toString().substring(3, 5);
-        }
-        else {
-            return item.getEndTime().toLocalTime().toString().substring(0, 2) +
-                    item.getEndTime().toLocalTime().toString().substring(3, 5);
-        }
-    }
-
-    /**
-     * Helper method of updateConflict
-     * Compare the lists in time info using the class isOverLapped
-     * If any items are overlapping, add the items to the conflictEvent
-     * @param timeInfo the list that contains the list of start and end times
-     * @param date date of the calendar that we are checking for conflict
-     */
-    private void checkOverLap(List<List<Double>> timeInfo, int date) {
-        for (int j = 0; j < (timeInfo.size() - 1); j++){
-            List<List<Double>> timeSubList = timeInfo.subList(j + 1, timeInfo.size());
-            for (int k = 0; k < timeSubList.size(); k++){
-                IsOverlapped check = new IsOverlapped(timeInfo.get(j), timeSubList.get(k));
-                // if overlaps store the information needed
-                if (check.getResult()){
-                    if (!(this.conflictEvent.contains(this.calendarMap.get(date).get(j)))){
-                        this.conflictEvent.add(this.calendarMap.get(date).get(j));
-                    }
-                    if (!(this.conflictEvent.contains(this.calendarMap.get(date).get(j + k + 1)))){
-                        this.conflictEvent.add(this.calendarMap.get(date).get(j + k + 1));
-                    }
-                }
-            }
-        }
-    }
 }
 

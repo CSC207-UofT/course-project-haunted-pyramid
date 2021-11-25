@@ -30,7 +30,7 @@ public class OurCalendarTest {
         date = cal.get(Calendar.DATE);
     }
 
-    @Test(timeout = 100)
+/*    @Test(timeout = 100)
     public void testUpdateConflict(){
         assertFalse(calendar.isConflict());
         Event eventOne = new Event(UUID1, "Test1",
@@ -91,6 +91,6 @@ public class OurCalendarTest {
 
         };
         assertEquals(calendar.getConflictEvent(), myList);
-    }
+    }*/
 }
 

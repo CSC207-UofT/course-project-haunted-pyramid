@@ -7,11 +7,10 @@ import entities.User;
 import gateways.IOSerializable;
 
 import helpers.ControllerHelper;
-import presenters.DisplayMenu;
+import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.BasicMenuContent;
 import usecases.events.EventManager;
 import usecases.UserManager;
-import usecases.events.worksessions.WorkSessionScheduler;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package presenters;
+package presenters.MenuStrategies;
 
 import presenters.MenuStrategies.MenuContent;
 

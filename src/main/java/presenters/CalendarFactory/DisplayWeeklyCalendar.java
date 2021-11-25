@@ -1,16 +1,14 @@
-package presenters;
+package presenters.CalendarFactory;
 
-import entities.Event;
 import helpers.Constants;
 import helpers.DisplayCalendarHelper;
+import presenters.ConflictPresenters.DisplayConflict;
+import presenters.ConflictPresenters.DisplayWeeklyConflict;
 import usecases.calendar.CalendarManager;
 import usecases.events.EventManager;
-import usecases.calendar.WeeklyCalendar;
+import usecases.calendar.WeeklyCalendarByType;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Build the image of weekly calendar and display if asked to
@@ -20,10 +18,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private final int year;
     private final int month;
     private final int date;
-    private final Map<Integer, List<Event>> calendarMap;
+    private final Map<Integer, List<UUID>> calendarMap;
     private final List<String> defaultTimeLine = new ArrayList<>();
-    private final EventManager eventManager = new EventManager(new ArrayList<>());
     private final DisplayCalendarHelper cf;
+    private final DisplayConflict conflictDisplay;
 
     /**
      * Initialize the class by setting
@@ -32,12 +30,12 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
      * @param month given month
      * @param date given date
      */
-    public DisplayWeeklyCalendar(CalendarManager cm, int year, int month, int date) {
-        super(cm);
+    public DisplayWeeklyCalendar(CalendarManager cm, EventManager em, int year, int month, int date) {
+        super(cm, em);
         this.year = year;
         this.month = month;
         this.date = date;
-        WeeklyCalendar wc = new WeeklyCalendar();
+        WeeklyCalendarByType wc = new WeeklyCalendarByType();
         this.calendarMap = wc.getCalendar(cm, year, month, date);
         for (int i = 0; i < 10; i++){
             this.defaultTimeLine.add("0" + i + ":00");
@@ -46,7 +44,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
             this.defaultTimeLine.add(j+ ":00");
         }
         this.cf = new DisplayCalendarHelper(this.year, this.month);
-
+        this.conflictDisplay = new DisplayWeeklyConflict(cm, em, year, month, date);
     }
 
     /**
@@ -56,7 +54,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     @Override
     public String displayCalendar(){
         int startingDayOfWeek = cf.findStartDayOfWeekInteger(this.year, this.month, this.date);
-        cf.eventSorter(calendarMap);
+        cf.eventSorter(calendarMap, em);
         StringBuilder result = new StringBuilder();
         setUpCalendar(startingDayOfWeek, result, cf);
         addDate(result, startingDayOfWeek);
@@ -67,6 +65,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
             result.append("|").append("\n");
         }
         result.append(cf.endFrame(lengthDecider()));
+        result.append(this.conflictDisplay.displayConflict());
         return result.toString();
     }
 
@@ -113,11 +112,11 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private List<String> gatherTimeLine(int index){
         List<String> temp = new ArrayList<>();
         List<Integer> keyList = getKeys();
-        for (Event event: calendarMap.get(keyList.get(index))){
-            if (eventManager.getStartTimeString(event) != null) {
-                temp.add(eventManager.getStartTimeString(event));
+        for (UUID eventID: calendarMap.get(keyList.get(index))){
+            if (em.getStartTimeString(eventID) != null) {
+                temp.add(em.getStartTimeString(eventID));
             }
-            temp.add(eventManager.getEndTimeString(event));
+            temp.add(em.getEndTimeString(eventID));
         }
         return temp;
     }
@@ -273,14 +272,14 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private Integer addContent(StringBuilder result, List<String> timeLine, int time, int index){
         List<Integer> keyList = getKeys();
         int nameLength = 0;
-        for (Event event: calendarMap.get(keyList.get(index))){
-            String eventStartTime = eventManager.getStartTimeString(event);
+        for (UUID eventID: calendarMap.get(keyList.get(index))){
+            String eventStartTime = em.getStartTimeString(eventID);
             if (eventStartTime == null){
-                eventStartTime = eventManager.getEndTimeString(event);
+                eventStartTime = em.getEndTimeString(eventID);
             }
             if (cf.convertTimeToInt(timeLine.get(time)) >= cf.convertTimeToInt(eventStartTime)
-                && cf.convertTimeToInt(timeLine.get(time)) <= cf.convertTimeToInt(eventManager.getEndTimeString(event))){
-                nameLength = appendNameGetNameLength(result, nameLength, event, eventStartTime);
+                && cf.convertTimeToInt(timeLine.get(time)) <= cf.convertTimeToInt(em.getEndTimeString(eventID))){
+                nameLength = appendNameGetNameLength(result, nameLength, eventID, eventStartTime);
             }
         }
         return nameLength;
@@ -290,15 +289,15 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
      * Helper method of addContent. Add event's information to the StringBuilder result and get its length
      * @param result StringBuilder object to be added on
      * @param nameLength length of the name
-     * @param event event that will be access
+     * @param eventID ID of an event that will be access
      * @param eventStartTime start time of the event
      * @return length of the event's information
      */
-    private int appendNameGetNameLength(StringBuilder result, int nameLength, Event event, String eventStartTime) {
-        String eventName = eventManager.getName(event);
-        eventName = "ID:" + eventManager.getID(event) + " " + eventName;
+    private int appendNameGetNameLength(StringBuilder result, int nameLength, UUID eventID, String eventStartTime) {
+        String eventName = em.getName(em.get(eventID));
+        eventName = "ID:" + eventID + " " + eventName;
         int eventNameSize = eventName.length();
-        if (eventStartTime.equals(eventManager.getEndTimeString(event))){
+        if (eventStartTime.equals(em.getEndTimeString(eventID))){
             eventName = eventName + " Due";
             eventNameSize = eventName.length();
             if (eventNameSize >= Constants.WEEKLY_CAL_NAME_LIMIT){
@@ -360,10 +359,10 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         List<Integer> keyList = getKeys();
         int temp = 0;
         for (Integer number: keyList){
-            List<Event> eventList = calendarMap.get(number);
-            for (int i = 0; i < eventList.size(); i++) {
+            List<UUID> eventIDList = calendarMap.get(number);
+            for (int i = 0; i < eventIDList.size(); i++) {
                 int totalLength = Constants.WEEKLY_CAL_NAME_LIMIT;
-                totalLength = getTotalLength(eventList, totalLength, i);
+                totalLength = getTotalLength(eventIDList, totalLength, i);
                 if (temp < totalLength) {
                     temp = totalLength;
                 }
@@ -384,27 +383,27 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
 
     /**
      * Update totalLength of events' contents based on the events' information that are happening at the same timeline.
-     * @param eventList List of events to access
+     * @param eventIDList List of event IDs to access
      * @param totalLength Previous total length
      * @param index index of eventList that were chosen previously at the method lengthDecider
      * @return the updated totalLength of event's contents
      */
-    private int getTotalLength(List<Event> eventList, int totalLength, int index) {
-        for (int j = index + 1; j < eventList.size(); j++){
-            String startTimeStringOne = eventManager.getStartTimeString(eventList.get(index));
-            String startTimeStringTwo = eventManager.getStartTimeString(eventList.get(j));
-            String eventName = eventManager.getName(eventList.get(j));
-            eventName = "ID:" + eventManager.getID(eventList.get(j)) + " " + eventName;
-            if (eventManager.getStartTimeString(eventList.get(index)) == null){
-                startTimeStringOne = eventManager.getEndTimeString(eventList.get(index));
+    private int getTotalLength(List<UUID> eventIDList, int totalLength, int index) {
+        for (int j = index + 1; j < eventIDList.size(); j++){
+            String startTimeStringOne = em.getStartTimeString(eventIDList.get(index));
+            String startTimeStringTwo = em.getStartTimeString(eventIDList.get(j));
+            String eventName = em.getName(em.get(eventIDList.get(j)));
+            eventName = "ID:" + eventIDList.get(j) + " " + eventName;
+            if (em.getStartTimeString(eventIDList.get(index)) == null){
+                startTimeStringOne = em.getEndTimeString(eventIDList.get(index));
             }
-            if (eventManager.getStartTimeString(eventList.get(j)) == null){
-                startTimeStringTwo = eventManager.getEndTimeString(eventList.get(j));
+            if (em.getStartTimeString(eventIDList.get(j)) == null){
+                startTimeStringTwo = em.getEndTimeString(eventIDList.get(j));
                 eventName += " Due";
             }
             if (cf.convertTimeToInt(startTimeStringOne)
                     <= cf.convertTimeToInt(startTimeStringTwo)
-                    && cf.convertTimeToInt(eventManager.getEndTimeString(eventList.get(index)))
+                    && cf.convertTimeToInt(em.getEndTimeString(eventIDList.get(index)))
                     >= cf.convertTimeToInt(startTimeStringTwo)){
                 totalLength += Math.min(eventName.length() + 2,
                         Constants.WEEKLY_CAL_NAME_LIMIT);

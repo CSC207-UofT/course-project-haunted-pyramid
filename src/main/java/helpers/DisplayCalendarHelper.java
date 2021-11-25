@@ -1,22 +1,22 @@
 package helpers;
 
-import entities.Event;
+import presenters.CalendarFactory.DisplayCalendar;
+import presenters.CalendarFactory.DisplayDailyCalendar;
+import presenters.CalendarFactory.DisplayMonthlyCalendar;
+import presenters.CalendarFactory.DisplayWeeklyCalendar;
 import usecases.events.EventManager;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Helper class that contains lots of common methods being used by different types of DisplayCalendar Classes
  * @author Seo Won Yi
- * @see presenters.DisplayCalendar
- * @see presenters.DisplayDailyCalendar
- * @see presenters.DisplayWeeklyCalendar
- * @see presenters.DisplayMonthlyCalendar
+ * @see DisplayCalendar
+ * @see DisplayDailyCalendar
+ * @see DisplayWeeklyCalendar
+ * @see DisplayMonthlyCalendar
  */
 public class DisplayCalendarHelper {
     private final int year;
@@ -101,7 +101,7 @@ public class DisplayCalendarHelper {
      */
     public String endFrame(int additionalSpacer){
         StringBuilder result = new StringBuilder();
-        String div = "-".repeat(Constants.CALENDAR_SIZE + additionalSpacer*7);
+        String div = "-".repeat(Constants.CALENDAR_SIZE + additionalSpacer * 7);
         result.append(" ").append(div).append("\n");
         return result.toString();
     }
@@ -110,12 +110,11 @@ public class DisplayCalendarHelper {
      * Sort the events associated in the calendarMap
      * @param calendarMap calendarMap object that has events inside
      */
-    public void eventSorter(Map<Integer, List<Event>> calendarMap){
-        EventManager em = new EventManager(new ArrayList<>());
+    public void eventSorter(Map<Integer, List<UUID>> calendarMap, EventManager em){
         List<Integer> keyList = new ArrayList<>(calendarMap.keySet());
         for (Integer key:keyList){
-            List<Event> eventList = em.timeOrder(calendarMap.get(key));
-            calendarMap.put(key, eventList);
+            List<UUID> sortedEventList = em.timeOrderID(calendarMap.get(key));
+            calendarMap.put(key, sortedEventList);
         }
     }
 
