@@ -3,6 +3,7 @@ package entities.recursions;
 import entities.Event;
 import interfaces.DateGetter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,6 +41,7 @@ public class RecursiveEvent {
 
     public RecursiveEvent(Integer id){
         this.id = id;
+        this.eventsInOneCycle = new ArrayList<>();
     }
     /**
      * Getter methods.
@@ -55,7 +57,14 @@ public class RecursiveEvent {
      * Setter methods.
      */
     public void setEventsInOneCycle(List<Event> eventsInOneCycle) {this.eventsInOneCycle = eventsInOneCycle;}
+    public void addEventToCycle(Event event){this.eventsInOneCycle.add(event);}
     public void setMethodToGetDate(DateGetter methodToGetDate) {this.methodToGetDate = methodToGetDate;}
+    public void setNumberOfRepetitionDateGetter(int numberOfRepetition){
+        this.methodToGetDate = new NumberOfRepetitionInput(numberOfRepetition);
+    }
+    public void setIntervalDateDateGetter(LocalDateTime[] periodOfRepetition){
+        this.methodToGetDate = new IntervalDateInput(periodOfRepetition[0], periodOfRepetition[1]);
+    }
 
 
     /**
@@ -67,7 +76,11 @@ public class RecursiveEvent {
      */
 
     public List<Event> listOfEventsInCycles(List<Event> events){
-        return methodToGetDate.listOfDatesInCycles(events);
+        List<Event> toReturn = methodToGetDate.listOfDatesInCycles(events);
+        for(Event event : toReturn){
+            event.setRecursiveId(this.id);
+        }
+        return toReturn;
     }
 
 

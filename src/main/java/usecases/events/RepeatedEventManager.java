@@ -3,9 +3,9 @@ package usecases.events;
 import helpers.ConstantID;
 import entities.Event;
 import entities.recursions.RecursiveEvent;
-import interfaces.DateGetter;
 import interfaces.EventListObserver;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -13,8 +13,15 @@ import java.util.*;
  */
 
 public class RepeatedEventManager implements EventListObserver {
+    /**
+     *
+     * Integer: id of RecursiveEvent object
+     * LocalDateTime: the date of the beginning of the list of events List<Event>.
+     */
 
-    private Map<Integer, RecursiveEvent> recursiveEventMap;
+
+    private  Map<Integer, RecursiveEvent> recursiveEventMap;
+    private Map<Integer, Map<LocalDateTime, List<Event>>> RecursiveIdToDateToEventsMap;
 
 
     /**
@@ -23,7 +30,7 @@ public class RepeatedEventManager implements EventListObserver {
      */
 
     public RepeatedEventManager(){
-        this.recursiveEventMap = new HashMap<>();
+        this.RecursiveIdToDateToEventsMap = new HashMap<>();
     }
 
     /**
@@ -31,23 +38,21 @@ public class RepeatedEventManager implements EventListObserver {
      * Getter and Setter methods.
      */
 
+    public Map<Integer, Map<LocalDateTime, List<Event>>> getRecursiveIdToDateToEventsMap() {return RecursiveIdToDateToEventsMap;}
     public Map<Integer, RecursiveEvent> getRecursiveEventMap() {return recursiveEventMap;}
 
 
-    /**
-     *
-     * Given a recursive event id, a list of events in one cycle and a method of repetition, add a recursive event
-     * object to the RepeatedEventManager map.
-     */
 
-    public void addRecursiveEvent(List<Event> eventsInCycle, DateGetter methodToGetDate){
-        RecursiveEvent recursiveEvent = new RecursiveEvent(ConstantID.get(), eventsInCycle, methodToGetDate);
-        this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
-    }
 
-    public void addRecursiveEvent(RecursiveEvent recursiveEvent){
-        this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
-    }
+    //    /**
+//     *
+//     * Given a recursive event id, a list of events in one cycle and a method of repetition, add a recursive event
+//     * object to the RepeatedEventManager map.
+//     */
+//
+//    public void addRecursiveEvent(RecursiveEvent recursiveEvent){
+//        this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
+//    }
 
 
     /**
@@ -91,10 +96,70 @@ public class RepeatedEventManager implements EventListObserver {
     }
 
 
+
+    private LocalDateTime startTimeGetter(Event event){
+        if(event.getStartTime() == null){
+            return event.getEndTime();
+        }
+        else{
+            return event.getStartTime();
+        }
+    }
+
+    public void addEventsFromRecursiveEvent(RecursiveEvent recursiveEvent){
+        Map<LocalDateTime, List<Event>> datesAndEvents = new HashMap<>();
+        int myID = recursiveEvent.getId();
+        this.RecursiveIdToDateToEventsMap.put(myID, datesAndEvents);
+        int cycleLength = recursiveEvent.getCycleLength();
+        List<Event> allEventsInCycles = recursiveEvent.listOfEventsInCycles(recursiveEvent.getEventsInOneCycle());
+        int endLoop = allEventsInCycles.size();
+        int i = 1;
+        while(cycleLength*i < endLoop){
+            this.RecursiveIdToDateToEventsMap.get(myID).put(startTimeGetter(allEventsInCycles.get(cycleLength*(i-1))),
+                    allEventsInCycles.subList(cycleLength*(i-1), cycleLength*i));
+            i++;
+        }
+        this.RecursiveIdToDateToEventsMap.get(myID).put(startTimeGetter(allEventsInCycles.get(cycleLength*(i-1))),
+                allEventsInCycles.subList(cycleLength*(i-1), endLoop));
+    }
+
+    private RecursiveEvent recursiveEventConstructor(List<Event> eventsInCycle, int numberOfRepetition){
+        RecursiveEvent recursiveEvent = new RecursiveEvent(ConstantID.get());
+        recursiveEvent.setEventsInOneCycle(eventsInCycle);
+        recursiveEvent.setNumberOfRepetitionDateGetter(numberOfRepetition);
+        return recursiveEvent;
+    }
+
+    private RecursiveEvent recursiveEventConstructor(List<Event> eventsInCycle, LocalDateTime[] periodOfRepetition){
+        RecursiveEvent recursiveEvent = new RecursiveEvent(ConstantID.get());
+        recursiveEvent.setIntervalDateDateGetter(periodOfRepetition);
+        recursiveEvent.setEventsInOneCycle(eventsInCycle);
+        return recursiveEvent;
+    }
+
+
+    public void addEventsFromRecursiveEvent(List<Event> eventsInCycle, int numberOfRepetition){
+        RecursiveEvent recursiveEvent = recursiveEventConstructor(eventsInCycle, numberOfRepetition);
+        this.addEventsFromRecursiveEvent(recursiveEvent);
+    }
+
+    public void addEventsFromRecursiveEvent(List<Event> eventsInCycle, LocalDateTime[] periodOfRepetition){
+        RecursiveEvent recursiveEvent = recursiveEventConstructor(eventsInCycle, periodOfRepetition);
+        this.addEventsFromRecursiveEvent(recursiveEvent);
+    }
+
+
+
+
+
     @Override
     public void update(String addRemoveChange, Event changed, EventManager eventManager) {
-        // TODO (for phase 2): implement this method which will update a recursion if one of its events is modified
-        //  in the EventManager.
+        if(changed.getRecursiveId() != null){
+            int id = changed.getRecursiveId();
+            if (addRemoveChange.equals("add")){
+                this.RecursiveIdToDateToEventsMap.get(id);
+            }
+        }
     }
 }
 

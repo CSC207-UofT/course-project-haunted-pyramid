@@ -427,4 +427,6 @@ public class Event implements Serializable {
 
     }
 
+    public Integer getRecursiveId() {return recursiveId;}
+    public void setRecursiveId(Integer recursiveId) {this.recursiveId = recursiveId;}
 }
