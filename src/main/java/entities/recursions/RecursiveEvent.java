@@ -4,6 +4,7 @@ import entities.Event;
 import interfaces.DateGetter;
 import usecases.events.EventManager;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -143,6 +144,17 @@ public class RecursiveEvent {
         return eventManager.timeOrder(events);
     }
 
+    private List<Event> listOfEventsInNewCycles(List<Event> allEvents, List<Event> newCycle) {
+        Event lastEvent = allEvents.get(allEvents.size()-1);
+        LocalDateTime lastEventEndTime = startTimeGetter(lastEvent);
+        LocalDateTime[] intervalDates = new LocalDateTime[2];
+        intervalDates[0] = startTimeGetter(newCycle.get(0));
+        intervalDates[1] = lastEventEndTime;
+        setIntervalDateDateGetter(intervalDates);
+        setEventsInOneCycle(newCycle);
+        return listOfEventsInCycles(newCycle);
+    }
+
 
     public List<Event> cycleAfterRemoval(Event eventToRemove){
         List<Event> allEvents = this.listOfEventsInCycles(this.eventsInOneCycle);
@@ -151,17 +163,20 @@ public class RecursiveEvent {
             newCycle.remove(eventToRemove);
             newCycle.remove(newCycle.size() - 1);
             newCycle.add(allEvents.get(allEvents.indexOf(eventToRemove) + 1));
-            return newCycle;
         }
-        newCycle.remove(eventToRemove);
-        return newCycle;
+        else{
+            newCycle.remove(eventToRemove);
+        }
+        return listOfEventsInNewCycles(allEvents, newCycle);
     }
-    
+
+
     public List<Event> cycleAfterAdditionChange(Event eventToAdd, String addChange){
-        List<Event> newCycle = getSpecificCycle(this.listOfEventsInCycles(this.eventsInOneCycle), eventToAdd);
+        List<Event> allEvents = this.listOfEventsInCycles(this.eventsInOneCycle);
+        List<Event> newCycle = getSpecificCycle(allEvents, eventToAdd);
         int indexOfNewEvent = getNewEventIndex(newCycle, eventToAdd, addChange);
         newCycle = addChangeCycle(addChange, newCycle, indexOfNewEvent, eventToAdd);
-        return newCycle;
+        return listOfEventsInNewCycles(allEvents, newCycle);
     }
 
 
