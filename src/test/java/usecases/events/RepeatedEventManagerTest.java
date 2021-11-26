@@ -39,7 +39,7 @@ public class RepeatedEventManagerTest {
         IntervalDateInput x = new IntervalDateInput(l, l2);
         recursiveEvent.setEventsInOneCycle(z);
         recursiveEvent.setMethodToGetDate(x);
-        repeatedEventManager.addRecursiveEvent(recursiveEvent);
+        // repeatedEventManager.addRecursiveEvent(recursiveEvent);
     }
 
     //TODO: update test based on new implementation of method (I modified the method after writing
