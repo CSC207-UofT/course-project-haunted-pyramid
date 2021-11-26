@@ -21,7 +21,7 @@ public class RepeatedEventManager implements EventListObserver {
 
 
     private  Map<Integer, RecursiveEvent> recursiveEventMap;
-    private Map<Integer, Map<LocalDateTime, List<Event>>> RecursiveIdToDateToEventsMap;
+    private Map<Integer, Map<LocalDateTime, List<Event>>> recursiveIdToDateToEventsMap;
 
 
     /**
@@ -30,7 +30,8 @@ public class RepeatedEventManager implements EventListObserver {
      */
 
     public RepeatedEventManager(){
-        this.RecursiveIdToDateToEventsMap = new HashMap<>();
+        this.recursiveIdToDateToEventsMap = new HashMap<>();
+        this.recursiveEventMap = new HashMap<>();
     }
 
     /**
@@ -38,7 +39,9 @@ public class RepeatedEventManager implements EventListObserver {
      * Getter and Setter methods.
      */
 
-    public Map<Integer, Map<LocalDateTime, List<Event>>> getRecursiveIdToDateToEventsMap() {return RecursiveIdToDateToEventsMap;}
+    public Map<Integer, Map<LocalDateTime, List<Event>>> getRecursiveIdToDateToEventsMap() {
+        return recursiveIdToDateToEventsMap;
+    }
     public Map<Integer, RecursiveEvent> getRecursiveEventMap() {return recursiveEventMap;}
 
 
@@ -96,7 +99,7 @@ public class RepeatedEventManager implements EventListObserver {
     }
 
 
-
+    //TODO: this in helper class
     private LocalDateTime startTimeGetter(Event event){
         if(event.getStartTime() == null){
             return event.getEndTime();
@@ -106,22 +109,29 @@ public class RepeatedEventManager implements EventListObserver {
         }
     }
 
-    public void addEventsFromRecursiveEvent(RecursiveEvent recursiveEvent){
+    private Map<LocalDateTime, List<Event>> EventListToMap(List<Event> events, int cycleLength){
         Map<LocalDateTime, List<Event>> datesAndEvents = new HashMap<>();
-        int myID = recursiveEvent.getId();
-        this.RecursiveIdToDateToEventsMap.put(myID, datesAndEvents);
-        int cycleLength = recursiveEvent.getCycleLength();
-        List<Event> allEventsInCycles = recursiveEvent.listOfEventsInCycles(recursiveEvent.getEventsInOneCycle());
-        int endLoop = allEventsInCycles.size();
+        int endLoop = events.size();
         int i = 1;
         while(cycleLength*i < endLoop){
-            this.RecursiveIdToDateToEventsMap.get(myID).put(startTimeGetter(allEventsInCycles.get(cycleLength*(i-1))),
-                    allEventsInCycles.subList(cycleLength*(i-1), cycleLength*i));
+            datesAndEvents.put(startTimeGetter(events.get(cycleLength*(i-1))),
+                    events.subList(cycleLength*(i-1), cycleLength*i));
             i++;
         }
-        this.RecursiveIdToDateToEventsMap.get(myID).put(startTimeGetter(allEventsInCycles.get(cycleLength*(i-1))),
-                allEventsInCycles.subList(cycleLength*(i-1), endLoop));
+        datesAndEvents.put(startTimeGetter(events.get(cycleLength*(i-1))), events.subList(cycleLength*(i-1), endLoop));
+        return datesAndEvents;
     }
+
+
+    public void addEventsFromRecursiveEvent(RecursiveEvent recursiveEvent){
+        int cycleLength = recursiveEvent.getCycleLength();
+        List<Event> allEventsInCycles = recursiveEvent.listOfEventsInCycles(recursiveEvent.getEventsInOneCycle());
+        Map<LocalDateTime, List<Event>> datesAndEvents = EventListToMap(allEventsInCycles, cycleLength);
+        int myID = recursiveEvent.getId();
+        this.recursiveIdToDateToEventsMap.put(myID, datesAndEvents);
+    }
+
+    //TODO: maybe there is a pattern that does this and avoid the repetitions in code.
 
     private RecursiveEvent recursiveEventConstructor(List<Event> eventsInCycle, int numberOfRepetition){
         RecursiveEvent recursiveEvent = new RecursiveEvent(ConstantID.get());
@@ -149,15 +159,13 @@ public class RepeatedEventManager implements EventListObserver {
     }
 
 
-
-
-
     @Override
     public void update(String addRemoveChange, Event changed, EventManager eventManager) {
         if(changed.getRecursiveId() != null){
             int id = changed.getRecursiveId();
-            if (addRemoveChange.equals("add")){
-                this.RecursiveIdToDateToEventsMap.get(id);
+            if (addRemoveChange.equals("Remove")){
+                List<Event> newCycle = this.recursiveEventMap.get(id).cycleAfterRemoval(changed);
+                this.recursiveIdToDateToEventsMap.get(id);
             }
         }
     }
