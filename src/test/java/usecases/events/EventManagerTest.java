@@ -35,18 +35,18 @@ public class EventManagerTest {
         this.eventManager = new EventManager(this.events);
     }
 
-    @Test(timeout = 100)
-    public void testGetDay() {
-        Map<UUID, Event> day = this.eventManager.getDay(LocalDate.of(2021, 10, 1));
-        for (Event event: this.events){
-            if (event.getDay().isEqual(LocalDate.of(2021, 10, 1))){
-                assertTrue(day.containsKey(event.getID()));
-            }
-            else{
-                assertFalse(day.containsKey(event.getID()));
-            }
-        }
-    }
+//    @Test(timeout = 100)
+//    public void testGetDay() {
+//        Map<UUID, Event> day = this.eventManager.getDay(LocalDate.of(2021, 10, 1));
+//        for (Event event: this.events){
+//            if (event.getDay().isEqual(LocalDate.of(2021, 10, 1))){
+//                assertTrue(day.containsKey(event.getID()));
+//            }
+//            else{
+//                assertFalse(day.containsKey(event.getID()));
+//            }
+//        }
+//    }
     @Test (timeout = 100)
     public void testGetStartTime() {
         assertEquals("02:00", this.eventManager.getStartTimeString(UUID1));
@@ -75,17 +75,17 @@ public class EventManagerTest {
         assertEquals(ordered, this.eventManager.timeOrder(unordered));
     }
 
-    @Test
-    public void testGetRange(){
-        Map<LocalDate, List<Event>> range = this.eventManager.getRange(LocalDate.of(2021, 10, 1),
-                LocalDate.of(2021, 10, 2));
-
-        List<Event> expected = this.eventManager.flatSplitEvents(List.of(this.eventManager.getDay(LocalDate.of(2021,
-                10, 1)).values().toArray(new Event[0])));
-        List<Event> actual = range.get(LocalDate.of(2021, 10, 1));
-        assertTrue(expected.size() == actual.size() && expected.containsAll(actual) && actual.containsAll(expected));
-
-    }
+//    @Test
+//    public void testGetRange(){
+//        Map<LocalDate, List<Event>> range = this.eventManager.getRange(LocalDate.of(2021, 10, 1),
+//                LocalDate.of(2021, 10, 2));
+//
+//        List<Event> expected = this.eventManager.flatSplitEvents(List.of(this.eventManager.getDay(LocalDate.of(2021,
+//                10, 1)).values().toArray(new Event[0])));
+//        List<Event> actual = range.get(LocalDate.of(2021, 10, 1));
+//        assertTrue(expected.size() == actual.size() && expected.containsAll(actual) && actual.containsAll(expected));
+//
+//    }
 
     @Test
     public void testFreeSlots(){

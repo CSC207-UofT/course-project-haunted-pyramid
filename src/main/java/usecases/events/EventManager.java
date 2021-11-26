@@ -78,29 +78,20 @@ public class EventManager {
 
 
     /**
-     * getDay returns a map of the events in a day
+     * getDay returns a list of the events in a day
      *
      * @param day the day that is being searched for
-     * @return <code>Map<Integer, Event></code> of all events in this day by ID
+     * @param schedule list of events
+     * @return list of all events in this day by ID
      */
-    public Map<UUID, Event> getDay(LocalDate day) {
-        Map<UUID, Event> dayMap = new HashMap<>();
-        for (Event event : eventMap.values()) {
-            if (event.getDay().isEqual(day)) {
-                dayMap.put(event.getID(), event);
-            }
-        }
-        return dayMap;
-    }
-
     public List<Event> getDay(List<Event> schedule, LocalDate day) {
-        List<Event> dayMap = new ArrayList<>();
+        List<Event> dayList = new ArrayList<>();
         for (Event event : schedule) {
             if (event.getDay().isEqual(day)) {
-                dayMap.add(event);
+                dayList.add(event);
             }
         }
-        return dayMap;
+        return dayList;
     }
 
     /**
@@ -137,7 +128,9 @@ public class EventManager {
      */
     public Event addEvent(String title, LocalDateTime endTime) {
         Event event = new Event(UUID.randomUUID(), title, endTime);
-        this.addEvent(event);
+//        this.addEvent(event);
+        this.eventMap.put(event.getID(), event);
+        this.update("add", event);
         return event;
     }
 
@@ -150,19 +143,9 @@ public class EventManager {
      * @return the event that was created with given title, endTime, and unique ID
      */
     public Event getEvent(String title, LocalDateTime endTime) {
+
         return new Event(UUID.randomUUID(), title, endTime);
     }
-
-    /**
-     * adds an already existing event to <code>this.eventMap</code>. will overwrite event of same ID
-     *
-     * @param event event to be added
-     */
-    public void addEvent(Event event) {
-        this.eventMap.put(event.getID(), event);
-        this.update("add", event);
-    }
-
 
     /**
      * takes a list of events that may contain work sessions and returns the same list of events in addition to
@@ -213,11 +196,6 @@ public class EventManager {
             }
         }
         return new ArrayList<>(List.of(new Event[]{event}));
-    }
-
-
-    public RepeatedEventManager getRepeatedEventManager() {
-        return repeatedEventManager;
     }
 
     /**
@@ -644,13 +622,9 @@ public class EventManager {
 
     /**
      * Return the end date time of the event
-     * @param event selected event
+     * @param ID ID of the selected event
      * @return Return the end date time of the event
      */
-    public LocalDateTime getEnd(Event event){
-        return event.getEndTime();
-    }
-
     public LocalDateTime getEnd(UUID ID){
         return this.get(ID).getEndTime();
     }
