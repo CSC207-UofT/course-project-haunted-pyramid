@@ -2,7 +2,7 @@ package controllers;
 
 import helpers.Constants;
 import helpers.ControllerHelper;
-import presenters.DisplayMenu;
+import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.WorkSessionMenuContent;
 import usecases.events.EventManager;
 import usecases.events.worksessions.WorkSessionScheduler;

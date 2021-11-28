@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Interface used for strategy pattern. Update menu image on the input StringBuilder
  * @author Seo Won Yi
- * @see presenters.DisplayMenu
+ * @see DisplayMenu
  */
 public interface MenuContent {
 
@@ -48,7 +48,7 @@ public interface MenuContent {
             }
         }
         if (longestContent > Constants.MENU_DIVIDER - 5){
-            longestContent -= 30;
+            longestContent -= Constants.MENU_DIVIDER - 5;
         }
         else {longestContent = 0;}
         return longestContent;

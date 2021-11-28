@@ -1,5 +1,6 @@
-package presenters;
+package presenters.CalendarFactory;
 import usecases.calendar.CalendarManager;
+import usecases.events.EventManager;
 
 /**
  * A Factory class that determines which type of DisplayCalendar class to show
@@ -11,9 +12,11 @@ import usecases.calendar.CalendarManager;
  */
 public class DisplayCalendarFactory {
     private final CalendarManager calendarManager;
+    private final EventManager eventManager;
 
-    public DisplayCalendarFactory(CalendarManager cm) {
+    public DisplayCalendarFactory(CalendarManager cm, EventManager em) {
         this.calendarManager = cm;
+        this.eventManager = em;
     }
 
     /**
@@ -27,13 +30,13 @@ public class DisplayCalendarFactory {
      */
     public DisplayCalendar displaySpecificCalendarByType(String calendarType, int year, int month, int date){
         if (calendarType.equalsIgnoreCase("MONTHLY")) {
-            return new DisplayMonthlyCalendar(this.calendarManager, year, month);
+            return new DisplayMonthlyCalendar(this.calendarManager, this.eventManager, year, month);
         }
         else if (calendarType.equalsIgnoreCase("WEEKLY")){
-            return new DisplayWeeklyCalendar(this.calendarManager, year, month, date);
+            return new DisplayWeeklyCalendar(this.calendarManager, this.eventManager, year, month, date);
         }
         else if (calendarType.equalsIgnoreCase("DAILY")){
-            return new DisplayDailyCalendar(this.calendarManager, year, month, date);
+            return new DisplayDailyCalendar(this.calendarManager, this.eventManager, year, month, date);
         }
         return null;
     }

@@ -1,20 +1,20 @@
 package usecases.calendar;
 
-import entities.Event;
 import entities.OurCalendar;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Get Monthly Calendar Map
  * @author Seo Won Yi
- * @see GetCalendar
+ * @see CalendarByType
  * @see CalendarManager
  * @see OurCalendar
  */
 
-public class MonthlyCalendar extends GetCalendar {
+public class MonthlyCalendarByType extends CalendarByType {
 
     /**
      * return the map of the monthly calendar for the current year and month
@@ -22,7 +22,7 @@ public class MonthlyCalendar extends GetCalendar {
      * @return a map of the monthly calendar
      */
     @Override
-    public Map<Integer, List<Event>> getCalendar(CalendarManager cm) {
+    public Map<Integer, List<UUID>> getCalendar(CalendarManager cm) {
         return cm.getCurrentCalendar().getCalendarMap();
     }
 
@@ -33,16 +33,18 @@ public class MonthlyCalendar extends GetCalendar {
      * @param month chosen month
      * @return a map of a monthly calendar
      */
-    public Map<Integer, List<Event>> getCalendar(CalendarManager cm, int year, int month){
+    public Map<Integer, List<UUID>> getCalendar(CalendarManager cm, int year, int month){
         int adjustedMonth = adjustMonth(cm.getCurrentYear(), year, month);
         if (adjustedMonth == cm.getCurrentMonth()){
             return cm.getCurrentCalendar().getCalendarMap();
         }
         else if (adjustedMonth > cm.getCurrentMonth() && adjustedMonth - cm.getCurrentMonth() <= 3){
-            return cm.getFutureCalendar().get(adjustedMonth - cm.getCurrentMonth() - 1).getCalendarMap();
+            OurCalendar futureCalendar = cm.getFutureCalendar().get(adjustedMonth - cm.getCurrentMonth() - 1);
+            return futureCalendar.getCalendarMap();
         }
         else {
-            return cm.getPastCalendar().get((cm.getCurrentMonth() - adjustedMonth) - 1).getCalendarMap();
+            OurCalendar pastCalendar = cm.getPastCalendar().get((cm.getCurrentMonth() - adjustedMonth) - 1);
+            return pastCalendar.getCalendarMap();
         }
     }
 }

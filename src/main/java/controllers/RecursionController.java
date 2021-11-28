@@ -75,7 +75,7 @@ public class RecursionController {
         else {
             methodToGetDates = getDateGetter();
         }
-        eventManager.getRepeatedEventManager().addRecursiveEvent(cycle, methodToGetDates);
+        // eventManager.getRepeatedEventManager().addRecursiveEvent(cycle, methodToGetDates);
     }
 
     /**

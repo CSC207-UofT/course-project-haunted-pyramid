@@ -1,24 +1,23 @@
 package usecases.calendar;
 
-import entities.Event;
-
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Abstract class for getting different types of calendar
  * @author Seo Won Yi
- * @see DailyCalendar
- * @see WeeklyCalendar
- * @see MonthlyCalendar
+ * @see DailyCalendarByType
+ * @see WeeklyCalendarByType
+ * @see MonthlyCalendarByType
  */
-public abstract class GetCalendar {
+public abstract class CalendarByType {
     /**
      * return the map of the calendar (key: date, value: list of event)
      * @param cm calendarManager object to consider from
      * @return map of the calendar (key: date, value: list of event)
      */
-    protected abstract Map<Integer, List<Event>> getCalendar(CalendarManager cm);
+    protected abstract Map<Integer, List<UUID>> getCalendar(CalendarManager cm);
 
     /**
      * adjust the month according to the year

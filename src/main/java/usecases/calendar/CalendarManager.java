@@ -1,7 +1,6 @@
 package usecases.calendar;
 
 import entities.OurCalendar;
-import entities.Event;
 
 import java.util.*;
 
@@ -19,7 +18,6 @@ public class CalendarManager {
     private final List<OurCalendar> futureCalendar; // List of calendar object for the next three months
     private final List<OurCalendar> pastCalendar; //  List of calendar object for the past three months
 
-
     /**
      *  Initialize the usecases.calendar.CalendarManager
      */
@@ -33,16 +31,11 @@ public class CalendarManager {
         this.currentMonth = month + 1;
         this.currentDate = date;
         this.currentYear = year;
-
         // Create a calendar of the current month
         this.currentCalendar = new OurCalendar(this.currentYear, this.currentMonth);
-
         this.futureCalendar = createCalendarLists(cal, 1);
-
         cal.setTime(today);
-
-        pastCalendar = createCalendarLists(cal, -1);
-
+        this.pastCalendar = createCalendarLists(cal, -1);
     }
 
     /**
@@ -81,41 +74,6 @@ public class CalendarManager {
             }};
         }
 
-
-
-    /**
-     * Observe the chosen calendar to see if there is any conflict
-     * @return a list of Events to show the events that are conflicted
-     */
-    public List<String> notifyConflict(int year, int month) {
-        int adjustedMonth = adjustMonth(year, month);
-        List<String> eventName = new ArrayList<>();
-        // check the chosen calendar
-        if (adjustedMonth == this.currentMonth){
-            if (this.currentCalendar.isConflict()){
-                for (Event event : this.currentCalendar.getConflictEvent()){
-                    eventName.add(event.getName());
-                }
-            }
-        }
-        else if (adjustedMonth > this.currentMonth && this.currentMonth + 4 > adjustedMonth){
-            if (this.futureCalendar.get(adjustedMonth - this.currentMonth - 1).isConflict()){
-                for (Event event : this.futureCalendar.get(adjustedMonth - this.currentMonth - 1).getConflictEvent()){
-                    eventName.add(event.getName());
-                }
-            }
-        }
-
-        else if (adjustedMonth < this.currentMonth && adjustedMonth + 4 > this.currentMonth) {
-            if (this.pastCalendar.get(this.currentMonth - adjustedMonth - 1).isConflict()){
-                for (Event event : this.pastCalendar.get(this.currentMonth - adjustedMonth - 1).getConflictEvent()){
-                    eventName.add(event.getName());
-                }
-            }
-        }
-        return eventName;
-    }
-
     /**
      * adjust the month according to the year
      * if the year is greater than the current year, add more month to match
@@ -124,7 +82,7 @@ public class CalendarManager {
      * @param month month of the given input
      * @return adjusted month
      */
-    private int adjustMonth(int year, int month) {
+    public int adjustMonth(int year, int month) {
         if (year > this.currentYear){
             month = month + 12 * (year - this.currentYear);
         }
@@ -135,101 +93,29 @@ public class CalendarManager {
     }
 
     /**
-     * Add event to calendar
-     * @param event The Event object which is to be added to the calendar
+     * add eventID to the calendar with given year, month and date
+     * @param eventID event ID to add in the calendar
+     * @param year year of the event
+     * @param month month of the event
+     * @param date date of the event
      */
-    public void addToCalendar(Event event){
+    public void addToCalendar(UUID eventID, int year, int month, int date){
         // Gets the month as an int from event start time (month)
-        String eventMonthInfo = event.getEndTime().toString().split("-")[1];
-        String eventYearInfo = event.getEndTime().toString().split("-")[0];
-        int month = Integer.parseInt(eventMonthInfo);
-        int year = Integer.parseInt(eventYearInfo);
         int adjustedMonth = adjustMonth(year, month);
         if (adjustedMonth == this.currentMonth){
-            this.currentCalendar.addEvent(event);
-            this.currentCalendar.updateConflict();
+            this.currentCalendar.addEventID(eventID, date);
         }
         for (int i = 0; i < 3; i++){
             if (adjustedMonth == this.currentMonth + i + 1){
-                this.futureCalendar.get(i).addEvent(event);
-                this.futureCalendar.get(i).updateConflict();
+                this.futureCalendar.get(i).addEventID(eventID, date);
             }
         }
 
         for (int j = 0; j < 3; j++){
             if (adjustedMonth == this.currentMonth - j - 1){
-                this.pastCalendar.get(j).addEvent(event);
-                this.pastCalendar.get(j).updateConflict();
+                this.pastCalendar.get(j).addEventID(eventID, date);
             }
         }
-    }
-
-
-    /**
-     * Get all the Events' names from the specific date of the calendar
-     * @param year year of the calendar
-     * @param month month of the calendar
-     * @param date date of the calendar that you want to extract events' names from
-     * @return return the list of the events' names
-     */
-    public List<String> getEventNames(int year, int month, int date) {
-        int adjustedMonth = adjustMonth(year, month);
-        List<String> nameList = new ArrayList<>();
-        if (adjustedMonth == this.currentMonth) {
-            for (Event item : this.currentCalendar.getCalendarMap().get(date)) {
-                nameList.add(item.getName());
-            }
-        }
-        for (int i = 0; i < 3; i++){
-            if (adjustedMonth == this.currentMonth + i + 1){
-                for (Event item : this.futureCalendar.get(i).getCalendarMap().get(date)) {
-                    nameList.add(item.getName());
-                }
-            }
-        }
-        for (int j = 0; j < 3; j++) {
-            if (adjustedMonth == this.currentMonth - j - 1) {
-                for (Event item : this.pastCalendar.get(j).getCalendarMap().get(date)) {
-                    nameList.add(item.getName());
-                }
-            }
-        }
-        return nameList;
-    }
-
-    /**
-     * Get all the Events' time information from the specific date of the calendar
-     * @param year year of the calendar
-     * @param month month of the calendar
-     * @param date date of the calendar that you want to extract events' names from
-     * @return return the string of the events' time information
-     */
-    public List<String> getEventTimes(int year, int month, int date) {
-        int adjustedMonth = adjustMonth(year, month);
-        List<String> timeList = new ArrayList<>();
-        if (adjustedMonth == this.currentMonth) {
-            for (Event item : this.currentCalendar.getCalendarMap().get(date)) {
-                StringBuilder tempString = generateTimeString(item);
-                timeList.add(tempString.toString());
-            }
-        }
-        for (int i = 0; i < 3; i++){
-            if (adjustedMonth == this.currentMonth + i + 1){
-                for (Event item : this.futureCalendar.get(i).getCalendarMap().get(date)) {
-                    StringBuilder tempString = generateTimeString(item);
-                    timeList.add(tempString.toString());
-                }
-            }
-        }
-        for (int j = 0; j < 3; j++){
-            if (adjustedMonth == this.currentMonth - j - 1){
-                for (Event item : this.pastCalendar.get(j).getCalendarMap().get(date)) {
-                    StringBuilder tempString = generateTimeString(item);
-                    timeList.add(tempString.toString());
-                }
-            }
-        }
-        return timeList;
     }
 
     /**
@@ -243,44 +129,19 @@ public class CalendarManager {
         int adjustedMonth = adjustMonth(year, month);
         List<UUID> listID = new ArrayList<>();
         if (adjustedMonth == this.currentMonth) {
-            for (Event item : this.currentCalendar.getCalendarMap().get(date)) {
-                listID.add(item.getID());
-            }
+            listID.addAll(this.currentCalendar.getCalendarMap().get(date));
         }
         for (int i = 0; i < 3; i++){
             if (adjustedMonth == this.currentMonth + i + 1){
-                for (Event item : this.futureCalendar.get(i).getCalendarMap().get(date)) {
-                    listID.add(item.getID());
-                }
+                listID.addAll(this.futureCalendar.get(i).getCalendarMap().get(date));
             }
         }
         for (int j = 0; j < 3; j++){
             if (adjustedMonth == this.currentMonth - j - 1){
-                for (Event item : this.pastCalendar.get(j).getCalendarMap().get(date)) {
-                    listID.add(item.getID());
-                }
+                listID.addAll(this.pastCalendar.get(j).getCalendarMap().get(date));
             }
         }
         return listID;
-    }
-
-    /**
-     * helper method for getEventTimes
-     * @param item Event item
-     * @return String of event's time information (start time - end time)
-     */
-    private StringBuilder generateTimeString(Event item) {
-        StringBuilder tempString = new StringBuilder();
-        if (item.getStartTime() != null) {
-            tempString.append(item.getStartTime().toString(), 11, 16);
-            tempString.append(" - ");
-            tempString.append(item.getEndTime().toString(), 11, 16);
-        }
-        else {
-            tempString.append("Due ");
-            tempString.append(item.getEndTime().toString(), 11, 16);
-        }
-        return tempString;
     }
 
     /**
@@ -310,6 +171,7 @@ public class CalendarManager {
     public OurCalendar getCurrentCalendar() {
         return this.currentCalendar;
     }
+
     public List<OurCalendar> getFutureCalendar(){
         return this.futureCalendar;
     }

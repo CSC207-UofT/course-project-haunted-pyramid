@@ -1,21 +1,21 @@
 package usecases.calendar;
 
-import entities.Event;
 import entities.OurCalendar;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Get Daily Calendar Map
  * @author Seo Won Yi
- * @see GetCalendar
+ * @see CalendarByType
  * @see CalendarManager
  * @see OurCalendar
  */
 
-public class DailyCalendar extends GetCalendar {
+public class DailyCalendarByType extends CalendarByType {
 
     /**
      * get daily calendar map for the current date
@@ -23,9 +23,10 @@ public class DailyCalendar extends GetCalendar {
      * @return map of the daily calendar
      */
     @Override
-    public Map<Integer, List<Event>> getCalendar(CalendarManager cm) {
-        Map<Integer, List<Event>> result = new HashMap<>();
-        result.put(cm.getCurrentDate(), cm.getCurrentCalendar().getCalendarMap().get(cm.getCurrentDate()));
+    public Map<Integer, List<UUID>> getCalendar(CalendarManager cm) {
+        Map<Integer, List<UUID>> result = new HashMap<>();
+        Map<Integer, List<UUID>> calendarMap = cm.getCurrentCalendar().getCalendarMap();
+        result.put(cm.getCurrentDate(), calendarMap.get(cm.getCurrentDate()));
         return result;
     }
 
@@ -37,11 +38,12 @@ public class DailyCalendar extends GetCalendar {
      * @param date chosen date
      * @return map of the daily calendar
      */
-    public Map<Integer, List<Event>> getCalendar(CalendarManager cm, int year, int month, int date) {
+    public Map<Integer, List<UUID>> getCalendar(CalendarManager cm, int year, int month, int date) {
         int adjustedMonth =  adjustMonth(cm.getCurrentYear(), year, month);
-        Map<Integer, List<Event>> result = new HashMap<>();
+        Map<Integer, List<UUID>> result = new HashMap<>();
         if (adjustedMonth == cm.getCurrentMonth()){
-            result.put(date, cm.getCurrentCalendar().getCalendarMap().get(date));
+            OurCalendar currentCal = cm.getCurrentCalendar();
+            result.put(date, currentCal.getCalendarMap().get(date));
         }
         else if (adjustedMonth > cm.getCurrentMonth() && adjustedMonth - cm.getCurrentMonth() <= 3){
             OurCalendar futureCal = cm.getFutureCalendar().get(adjustedMonth - cm.getCurrentMonth() -1);

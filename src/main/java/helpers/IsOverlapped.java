@@ -1,5 +1,6 @@
 package helpers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -14,27 +15,27 @@ public class IsOverlapped {
      * returns true if any of the elements in one list belong in between the elements of the other list
      *
      * == Representation Invariant ==
-     * ex1.get(0) <= ex1.get(1)
-     * ex2.get(0) <= ex2.get(1)
-     * @param ex1 a list that consists of doubles
-     * @param ex2 a list that consists of doubles
+     * ex1.get(0) <= ex1.get(1) (in time order)
+     * ex2.get(0) <= ex2.get(1) (in time order)
+     * @param ex1 a list that consists of LocalDateTime object
+     * @param ex2 a list that consists of LocalDateTime object
      */
 
-    public IsOverlapped(List<Double> ex1, List<Double> ex2){
+    public IsOverlapped(List<LocalDateTime> ex1, List<LocalDateTime> ex2){
         this.check = false;
-        if ((ex1.get(0) < ex2.get(0)) && (ex2.get(0) < ex1.get(1))) {
+        if ((ex1.get(0).isBefore(ex2.get(0))) && (ex2.get(0).isBefore(ex1.get(1)))) {
             this.check = true;
         }
-        else if (ex1.get(0) < ex2.get(1) && ex2.get(1) < ex1.get(1)) {
+        else if (ex1.get(0).isBefore(ex2.get(1)) && ex2.get(1).isBefore(ex1.get(1))) {
             this.check = true;
         }
-        else if (ex2.get(0) < ex1.get(0) && ex1.get(0) < ex2.get(1)) {
+        else if (ex2.get(0).isBefore(ex1.get(0)) && ex1.get(0).isBefore(ex2.get(1))) {
             this.check = true;
         }
-        else if (ex2.get(0) < ex1.get(1) && ex1.get(1) < ex2.get(1)) {
+        else if (ex2.get(0).isBefore(ex1.get(1)) && ex1.get(1).isBefore(ex2.get(1))) {
             this.check = true;
         }
-        else if (ex2.get(0).equals(ex1.get(0)) && ex2.get(1).equals(ex1.get(1))) {
+        else if (ex2.get(0).isEqual(ex1.get(0)) && ex2.get(1).isEqual(ex1.get(1))) {
             this.check = true;
         }
     }

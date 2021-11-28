@@ -1,11 +1,14 @@
-package presenters;
+package presenters.CalendarFactory;
 
-import entities.Event;
 import helpers.Constants;
 import helpers.DisplayCalendarHelper;
+import presenters.ConflictPresenters.DisplayConflict;
+import presenters.ConflictPresenters.DisplayMonthlyConflict;
 import usecases.calendar.CalendarManager;
-import usecases.calendar.MonthlyCalendar;
+import usecases.calendar.MonthlyCalendarByType;
+import usecases.events.EventManager;
 
+import java.time.YearMonth;
 import java.util.*;
 
 /**
@@ -18,8 +21,9 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
     private final int year;
     private final int month;
     private final List<Integer> keyList;
-    private final Map<Integer, List<Event>> calendarMap;
+    private final Map<Integer, List<UUID>> calendarMap;
     private final DisplayCalendarHelper cf;
+    private final DisplayConflict conflictDisplay;
     List<String> dayOfWeekCollection = new ArrayList<>() {{
         add("SUNDAY");
         add("MONDAY");
@@ -36,15 +40,17 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
      * @param year given year
      * @param month given month
      */
-    public DisplayMonthlyCalendar(CalendarManager cm, int year, int month) {
-        super(cm);
+    public DisplayMonthlyCalendar(CalendarManager cm, EventManager em, int year, int month) {
+        super(cm, em);
         this.year = year;
         this.month = month;
-        MonthlyCalendar mc = new MonthlyCalendar();
+        MonthlyCalendarByType mc = new MonthlyCalendarByType();
         this.keyList = new ArrayList<>(mc.getCalendar(cm, year, month).keySet());
         calendarMap = mc.getCalendar(cm, year, month);
         Collections.sort(this.keyList);
         this.cf = new DisplayCalendarHelper(year, month);
+        YearMonth tempYearMonth = YearMonth.of(year, month);
+        this.conflictDisplay = new DisplayMonthlyConflict(cm, em, year, month, tempYearMonth.lengthOfMonth());
     }
 
     /**
@@ -53,33 +59,15 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
      */
     @Override
     public String displayCalendar() {
-        cf.eventSorter(calendarMap);
+        cf.eventSorter(calendarMap, em);
         StringBuilder result = new StringBuilder();
         List<Integer> usedDates = new ArrayList<>();
         List<Integer> usedContentDates = new ArrayList<>();
         usedContentDates = initialSetup(result, usedDates, usedContentDates);
         int iteratorCounter = keyList.subList(usedDates.size(), keyList.size()).size();
         fillCalendar(cf, result, usedDates, usedContentDates, iteratorCounter);
-        List<String> conflicts = cm.notifyConflict(this.year, this.month);
-        showConflict(result, conflicts);
+        result.append(this.conflictDisplay.displayConflict());
         return result.toString();
-    }
-
-    /**
-     * Add conflict information to the StringBuilder object
-     * @param result StringBuilder object to be added on
-     * @param conflicts List of conflicted events' names
-     */
-    private void showConflict(StringBuilder result, List<String> conflicts) {
-        if (conflicts.size() == 0){
-            result.append("There is no conflict for this month");
-        }
-        else {
-            result.append("The following Events are having conflict: ");
-            for (String name : conflicts) {
-                result.append(name).append("; ");
-            }
-        }
     }
 
     /**
@@ -265,15 +253,27 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         if (calendarMap.get(usedContentDates.get(contentCount)).size() - 1 >= eventIndex &&
                 calendarMap.get(usedContentDates.get(contentCount)).size() != 0) {
             UUID eventID = cm.getEventID(year, month, usedContentDates.get(contentCount)).get(eventIndex);
-            String eventName = cm.getEventNames(year, month, usedContentDates.get(contentCount)).get(eventIndex);
-            eventName = "ID:" + eventID + " " + eventName;
+            int eventIntID = this.converter.getIntFromUUID(eventID);
+            String eventName = em.getName(em.get(eventID));
+            eventName = "ID:" + eventIntID + " " + eventName;
             if (eventName.length() > 17) {
                 eventName = eventName.substring(0, 14) + "...";
             }
-            String eventTime = cm.getEventTimes(year, month, usedContentDates.get(contentCount)).get(eventIndex);
-            String tempDiv = " ".repeat(this.dayOfWeekCollection.get(startingIndex + contentCount).length() +
-                    Constants.CAL_ROW_SPACER - eventName.length() - 3 - eventTime.length());
-            result.append(" ").append(eventName).append(": ").append(eventTime).append(tempDiv).append("|");
+            String eventStartTime = em.getStartTimeString(eventID);
+            String eventEndTime = em.getEndTimeString(eventID);
+            if (eventStartTime == null) {
+                String extra = " " + ": " + "Due ";
+                String tempDiv = " ".repeat(this.dayOfWeekCollection.get(startingIndex + contentCount).length() +
+                        Constants.CAL_ROW_SPACER - eventName.length() - extra.length() - eventEndTime.length());
+                result.append(" ").append(eventName).append(": ")
+                        .append("Due ").append(eventEndTime).append(tempDiv).append("|");
+            }
+            else {
+                String eventTime = eventStartTime + "-" + eventEndTime;
+                String tempDiv = " ".repeat(this.dayOfWeekCollection.get(startingIndex + contentCount).length() +
+                        Constants.CAL_ROW_SPACER - eventName.length() - 3 - eventTime.length());
+                result.append(" ").append(eventName).append(": ").append(eventTime).append(tempDiv).append("|");
+            }
         } else if (calendarMap.get(usedContentDates.get(contentCount)).size() - 1 < eventIndex) {
             String tempDiv = " ".repeat(this.dayOfWeekCollection.get(startingIndex + contentCount).length() +
                     Constants.CAL_ROW_SPACER);
