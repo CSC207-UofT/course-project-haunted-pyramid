@@ -19,8 +19,8 @@ public class ProfileMenuContent implements MenuContent {
     public List<String> getContent() {
         ArrayList<String> currentSettings = new ArrayList<>();
         currentSettings.add(this.userManager.getUserInfo().get(user).getName());
-        currentSettings.add("Free Time: " + this.userManager.getUserInfo().get(user).getFreeTime().toString());
-        currentSettings.add("Procrastinate: " + this.userManager.getUserInfo().get(user).getProcrastinate());
+        currentSettings.add("Free Time: " + this.userManager.getPreferences(user).getFreeTime().toString());
+        currentSettings.add("Procrastinate: " + this.userManager.getPreferences(user).getProcrastinate());
         currentSettings.addAll(actualOptions());
         return currentSettings;
     }

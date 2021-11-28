@@ -63,7 +63,6 @@ public class UserController {
      */
     public void setCurrentUser(UUID currentUser) {
         this.currentUser = currentUser;
-        this.workSessionScheduler = new WorkSessionScheduler(this.getCurrentFreeTime(), this.getCurrentProcrastinate());
     }
 
     /**
@@ -87,8 +86,7 @@ public class UserController {
     /**
      * gets the map of the start=end times of the users usual free time
      *
-     * @return <code>currentUser.freeTime</code>
-     * @see User#getFreeTime()
+     * @return <code>currentUser.userPreferences.freeTime</code>
      */
     public Map<LocalTime, LocalTime> getCurrentFreeTime() {
         return this.userManager.getFreeTime(this.currentUser);
@@ -190,7 +188,6 @@ public class UserController {
             return;
         }
         this.userManager.removeFreeTime(this.currentUser, start);
-        this.workSessionScheduler.setFreeTime(this.getCurrentFreeTime());
     }
 
     /**
@@ -198,7 +195,6 @@ public class UserController {
      */
     private void toggleProcrastinate() {
         this.userManager.toggleProcrastinate(this.currentUser);
-        this.workSessionScheduler.setProcrastinate(this.getCurrentProcrastinate());
     }
 
     public WorkSessionScheduler getWorkSessionScheduler() {

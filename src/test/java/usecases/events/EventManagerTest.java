@@ -86,31 +86,30 @@ public class EventManagerTest {
         assertTrue(expected.size() == actual.size() && expected.containsAll(actual) && actual.containsAll(expected));
 
     }
-
-    @Test
-    public void testFreeSlots(){
-        Map<LocalDateTime, Long> expected = new HashMap<>();
-        LocalDateTime start = LocalDateTime.of(2021, 10, 1, 1, 0);
-        LocalDateTime end = LocalDateTime.of(2021, 10, 5, 0, 0);
-
-        this.eventManager.get(UUID1).addWorkSession(LocalDateTime.of(2021, 10, 2, 2, 0),
-                LocalDateTime.of(2021, 10, 2, 3, 0));
-        expected.put(this.eventManager.get(UUID3).getEndTime(), Duration.between(this.eventManager.get(UUID3).getEndTime(),
-                LocalDateTime.of(2021, 10, 2, 2, 0)).toHours());
-        expected.put(LocalDateTime.of(2021, 10, 2, 3, 0),
-                Duration.between(LocalDateTime.of(2021, 10, 2, 3, 0),
-                        this.eventManager.get(UUID4).getStartTime()).toHours());
-        expected.put(start, Duration.between(start, this.eventManager.get(UUID1).getStartTime()).toHours());
-        expected.put(this.eventManager.get(UUID1).getEndTime(),
-                Duration.between(this.eventManager.get(UUID1).getEndTime(),
-                        this.eventManager.get(UUID2).getStartTime()).toHours());
-        expected.put(this.eventManager.get(UUID5).getEndTime(), Duration.between(this.eventManager.get(UUID5).getEndTime(),
-                end).toHours());
-
-        Map<LocalDateTime, Long> actual = this.eventManager.freeSlots(start, this.eventManager.getAllEvents(), end);
-
-        assertEquals(expected, actual);
-    }
+//    @Test
+//    public void testFreeSlots(){
+//        Map<LocalDateTime, Long> expected = new HashMap<>();
+//        LocalDateTime start = LocalDateTime.of(2021, 10, 1, 1, 0);
+//        LocalDateTime end = LocalDateTime.of(2021, 10, 5, 0, 0);
+//
+//        this.eventManager.get(UUID1).addWorkSession(LocalDateTime.of(2021, 10, 2, 2, 0),
+//                LocalDateTime.of(2021, 10, 2, 3, 0));
+//        expected.put(this.eventManager.get(UUID3).getEndTime(), Duration.between(this.eventManager.get(UUID3).getEndTime(),
+//                LocalDateTime.of(2021, 10, 2, 2, 0)).toHours());
+//        expected.put(LocalDateTime.of(2021, 10, 2, 3, 0),
+//                Duration.between(LocalDateTime.of(2021, 10, 2, 3, 0),
+//                        this.eventManager.get(UUID4).getStartTime()).toHours());
+//        expected.put(start, Duration.between(start, this.eventManager.get(UUID1).getStartTime()).toHours());
+//        expected.put(this.eventManager.get(UUID1).getEndTime(),
+//                Duration.between(this.eventManager.get(UUID1).getEndTime(),
+//                        this.eventManager.get(UUID2).getStartTime()).toHours());
+//        expected.put(this.eventManager.get(UUID5).getEndTime(), Duration.between(this.eventManager.get(UUID5).getEndTime(),
+//                end).toHours());
+//
+//        Map<LocalDateTime, Long> actual = this.eventManager.freeSlots(start, this.eventManager.getAllEvents(), end);
+//
+//        assertEquals(expected, actual);
+//    }
 
     @Test
     public void testSplitByDay(){

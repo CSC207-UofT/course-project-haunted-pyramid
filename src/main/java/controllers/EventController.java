@@ -33,33 +33,8 @@ import java.util.UUID;
 public class EventController {
 
     private final EventManager eventManager;
-    private final WorkSessionController workSessionController;
     private final RecursionController recursionController;
     private final IOController ioController;
-
-    /**
-     * constructor for EventController from serialized Events
-     * creates <code>this.eventManager</code> of current User's events, sets ID counter to maximum ID in eventManager,
-     * with pre-made WorkSessionController
-     *
-     * @param hasSavedData          boolean
-     * @param ioSerializable        serialized
-     * @param workSessionController workSessionController
-     */
-    public EventController(boolean hasSavedData, IOSerializable ioSerializable, UserController userController,
-                           WorkSessionController workSessionController) {
-        this.workSessionController = workSessionController;
-        if (hasSavedData) {
-            this.eventManager =
-                    new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()));
-        } else {
-            this.eventManager = new EventManager(new ArrayList<>());
-        }
-        this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
-        this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
-        this.recursionController = new RecursionController();
-        this.ioController = new IOController();
-    }
 
     /**
      * constructor for EventController from serialized Events
@@ -70,14 +45,11 @@ public class EventController {
      * @param ioSerializable serialized
      */
     public EventController(boolean hasSavedData, IOSerializable ioSerializable, UserController userController) {
-        this.workSessionController = new WorkSessionController(new WorkSessionScheduler(new HashMap<>(),
-                true));
         if (hasSavedData) {
             this.eventManager =
                     new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()));
         } else {
             this.eventManager = new EventManager(new ArrayList<>());
-            this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         }
         this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
         this.recursionController = new RecursionController();
@@ -261,7 +233,7 @@ public class EventController {
      * @see WorkSessionController#edit
      */
     private void prep(UUID ID) {
-        this.workSessionController.edit(ID, this.eventManager);
+
     }
 
     /**

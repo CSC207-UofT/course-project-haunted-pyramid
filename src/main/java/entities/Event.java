@@ -26,6 +26,7 @@ public class Event implements Serializable {
     private List<Event> workSessions;
     private Long hoursNeeded;
     private Long sessionLength;
+    private LocalDate startWorking;
     private Integer recursiveId;
 
     /**
@@ -397,6 +398,22 @@ public class Event implements Serializable {
      */
     public void addWorkSession(LocalDateTime start, LocalDateTime end) {
         this.workSessions.add(new Event(this.getID(), this.getName() + " session", start, end));
+    }
+
+    /**
+     *
+     * @param startWorking the date to start working towards this event
+     */
+    public void setStartWorking(LocalDate startWorking){
+        this.startWorking = startWorking;
+    }
+
+    /**
+     *
+     * @return startWorkig - the date to start working towards this event
+     */
+    public LocalDate getStartWorking(){
+        return this.startWorking;
     }
 
     /**

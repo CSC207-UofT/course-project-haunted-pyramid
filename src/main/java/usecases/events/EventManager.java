@@ -405,37 +405,6 @@ public class EventManager {
     }
 
     /**
-     * computes the times between events and the Long length of them in seconds
-     *
-     * @param start  the start time from which free slot are calculated - first start time of free slot
-     * @param events the events between which free slots are calculated
-     * @param end    the end time from which free slots are calculated - last end time of free slot
-     * @return Map with key: LocalDateTime start time of free slot, value: Long duration of free slot in seconds
-     */
-    public Map<LocalDateTime, Long> freeSlots(LocalDateTime start, List<Event> events, LocalDateTime end) {
-        List<Event> schedule = this.timeOrder(this.flattenWorkSessions(events));
-        Map<LocalDateTime, Long> freeSlots = new HashMap<>();
-        int num = 0;
-        while (num < schedule.size()) {
-            if (schedule.get(num).hasStart()) {
-                if (schedule.get(num).getEndTime().isAfter(start)) {
-                    if (schedule.get(num).getStartTime().isBefore(end) && schedule.get(num).getStartTime().isAfter(start)) {
-                        freeSlots.put(start, Duration.between(start, schedule.get(num).getStartTime()).toHours());
-                        start = schedule.get(num).getEndTime();
-                        freeSlots.putAll(this.freeSlots(start, events, end));
-                    } else if (!schedule.get(num).getStartTime().isBefore(end)){
-                        freeSlots.put(start, Duration.between(start, end).toHours());
-                        return freeSlots;
-                    }
-                    start = schedule.get(num).getEndTime();
-                }
-            }
-            num += 1;
-        }
-        return freeSlots;
-    }
-
-    /**
      * Sets the name of any event (does not have to be in <code>this.eventMap</code>
      *
      * @param event the event to set name
@@ -626,6 +595,8 @@ public class EventManager {
         }
     }
 
+
+
     /**
      * Return the end date time of the event
      * @param event selected event
@@ -637,6 +608,14 @@ public class EventManager {
 
     public LocalDateTime getEnd(UUID ID){
         return this.get(ID).getEndTime();
+    }
+
+    public LocalDateTime getStart(Event event){
+        return event.getStartTime();
+    }
+
+    public LocalDateTime getStart(UUID event){
+        return this.get(event).getStartTime();
     }
 
     public void setWorkSessions(UUID ID, List<Event> sessions){
