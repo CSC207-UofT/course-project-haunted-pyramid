@@ -34,6 +34,7 @@ public class EventManagerTest {
         this.events = new ArrayList<>(Arrays.asList(events));
         this.eventManager = new EventManager(this.events);
     }
+// TODO: Fix test
 
 //    @Test(timeout = 100)
 //    public void testGetDay() {
@@ -74,6 +75,7 @@ public class EventManagerTest {
                 this.eventManager.get(UUID3)});
         assertEquals(ordered, this.eventManager.timeOrder(unordered));
     }
+// TODO: Fix test
 
 //    @Test
 //    public void testGetRange(){

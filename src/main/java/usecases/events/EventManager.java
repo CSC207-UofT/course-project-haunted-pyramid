@@ -49,66 +49,6 @@ public class EventManager {
     }
 
     /**
-     * Get this Events map
-     *
-     * @return A map of UUID of users as keys and list of events of that user as values
-     */
-    public Map<UUID, List<Event>> getUuidEventsMap() {
-        return this.uuidEventsMap;
-    }
-
-    /**
-     * Set this Events map to the parameter
-     *
-     * @param map A map of UUID of users as keys and list of events of that user as values
-     */
-    public void setUuidEventsMap(Map<UUID, List<Event>> map) {
-        this.uuidEventsMap = map;
-    }
-
-    /**
-     * returns the ID of an Event (does not have to be in <code>this.eventMap</code>
-     *
-     * @param event any Event
-     * @return the ID of the Event (Event.getID())
-     */
-    public UUID getID(Event event) {
-        return event.getID();
-    }
-
-
-    /**
-     * getDay returns a list of the events in a day
-     *
-     * @param day the day that is being searched for
-     * @param schedule list of events
-     * @return list of all events in this day by ID
-     */
-    public List<Event> getDay(List<Event> schedule, LocalDate day) {
-        List<Event> dayList = new ArrayList<>();
-        for (Event event : schedule) {
-            if (event.getDay().isEqual(day)) {
-                dayList.add(event);
-            }
-        }
-        return dayList;
-    }
-
-    /**
-     * returns an event in <code>this.eventMap</code> with the input ID if it is there, otherwise returns null
-     *
-     * @param ID the ID of an event
-     * @return the event with this ID, or null
-     */
-    public Event get(UUID ID) {
-        if (this.containsID(ID)) {
-            return eventMap.get(ID);
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * removes the event of this ID from <code>this.eventMap</code> if it is there, returns the removed event or null
      *
      * @param ID the name to be removed
@@ -132,19 +72,6 @@ public class EventManager {
         this.eventMap.put(event.getID(), event);
         this.update("add", event);
         return event;
-    }
-
-
-    /**
-     * creates an event with given name and end time.
-     *
-     * @param title   String title of the Event
-     * @param endTime LocalDateTime end time of the event
-     * @return the event that was created with given title, endTime, and unique ID
-     */
-    public Event getEvent(String title, LocalDateTime endTime) {
-
-        return new Event(UUID.randomUUID(), title, endTime);
     }
 
     /**
@@ -208,62 +135,12 @@ public class EventManager {
         return repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId());
     }
 
-
-    /**
-     * returns ArrayList of all events in <code>this.eventMap</code>, including work sessions within events and
-     * repeated events, split at day boundaries
-     *
-     * @return list of events, including work sessions within events (flattened)
-     */
-    public List<Event> getAllEventsFlatSplit() {
-        List<Event> events = new ArrayList<>();
-        for (Event event : this.flattenWorkSessions(new ArrayList<>(this.eventMap.values()))) {
-            events.addAll(this.splitByDay(event));
-        }
-        for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()){
-            List<Event> repeatedEvents = this.eventsInSomeRecursion(recursiveEvent);
-            for (Event event : repeatedEvents){
-                events.addAll(this.splitByDay(event));
-            }
-        }
-        return events;
-    }
-
     public List<Event> flatSplitEvents(List<Event> events) {
         List<Event> splitFlat = new ArrayList<>();
         for (Event event : this.flattenWorkSessions(events)) {
             splitFlat.addAll(this.splitByDay(event));
         }
         return splitFlat;
-    }
-
-    /**
-     * returns all the values in <code>this.eventMap</code>
-     *
-     * @return list of events (without work sessions, not split)
-     */
-    public List<Event> getAllEvents() {
-        return new ArrayList<>(this.eventMap.values());
-    }
-
-    /**
-     * returns the name of any event [event.getName()]
-     *
-     * @param event any event (does not have to be in <code>this.eventMap</code>
-     * @return the name of the event
-     */
-    public String getName(Event event) {
-        return event.getName();
-    }
-
-    public void setStart(UUID id, LocalDateTime start) {
-        this.get(id).setStartTime(start);
-        this.update("change", this.get(id));
-    }
-
-    public void setEnd(UUID id, LocalDateTime end) {
-        this.get(id).setEndTime(end);
-        this.update("change", this.get(id));
     }
 
     /**
@@ -381,26 +258,6 @@ public class EventManager {
     }
 
     /**
-     * returns all events in <code>this.eventMap</code> whose start times are after input 'from', and whose end times are
-     * before input 'to'
-     *
-     * @param from LocalDate the start day of the range
-     * @param to   LocalDate the end day of the range
-     * @return Map with key LocalDate for each day between or equal to 'from' and 'to' in range, value all the events
-     * in <code>this.eventMap</code> that occur in this day
-     */
-    public Map<LocalDate, List<Event>> getRange(LocalDate from, LocalDate to) {
-        Map<LocalDate, List<Event>> range = new HashMap<>();
-        List<Event> schedule = this.getAllEventsFlatSplit();
-        long current = 0L;
-        while (!from.plusDays(current).isAfter(to)) {
-            range.put(from.plusDays(current), (this.getDay(schedule, from.plusDays(current))));
-            current += 1L;
-        }
-        return range;
-    }
-
-    /**
      * computes the times between events and the Long length of them in seconds
      *
      * @param start  the start time from which free slot are calculated - first start time of free slot
@@ -429,6 +286,147 @@ public class EventManager {
             num += 1;
         }
         return freeSlots;
+    }
+
+    /**
+     * creates an event with given name and end time.
+     *
+     * @param title   String title of the Event
+     * @param endTime LocalDateTime end time of the event
+     * @return the event that was created with given title, endTime, and unique ID
+     */
+    public Event getEvent(String title, LocalDateTime endTime) {
+
+        return new Event(UUID.randomUUID(), title, endTime);
+    }
+
+    /**
+     * returns an event in <code>this.eventMap</code> with the input ID if it is there, otherwise returns null
+     *
+     * @param ID the ID of an event
+     * @return the event with this ID, or null
+     */
+    public Event get(UUID ID) {
+        if (this.containsID(ID)) {
+            return eventMap.get(ID);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get this Events map
+     *
+     * @return A map of UUID of users as keys and list of events of that user as values
+     */
+    public Map<UUID, List<Event>> getUuidEventsMap() {
+        return this.uuidEventsMap;
+    }
+
+    /**
+     * Set this Events map to the parameter
+     *
+     * @param map A map of UUID of users as keys and list of events of that user as values
+     */
+    public void setUuidEventsMap(Map<UUID, List<Event>> map) {
+        this.uuidEventsMap = map;
+    }
+
+    /**
+     * returns the ID of an Event (does not have to be in <code>this.eventMap</code>
+     *
+     * @param event any Event
+     * @return the ID of the Event (Event.getID())
+     */
+    public UUID getID(Event event) {
+        return event.getID();
+    }
+
+
+    /**
+     * getDay returns a list of the events in a day
+     *
+     * @param day the day that is being searched for
+     * @param schedule list of events
+     * @return list of all events in this day by ID
+     */
+    public List<Event> getDay(List<Event> schedule, LocalDate day) {
+        List<Event> dayList = new ArrayList<>();
+        for (Event event : schedule) {
+            if (event.getDay().isEqual(day)) {
+                dayList.add(event);
+            }
+        }
+        return dayList;
+    }
+
+    /**
+     * returns ArrayList of all events in <code>this.eventMap</code>, including work sessions within events and
+     * repeated events, split at day boundaries
+     *
+     * @return list of events, including work sessions within events (flattened)
+     */
+    public List<Event> getAllEventsFlatSplit() {
+        List<Event> events = new ArrayList<>();
+        for (Event event : this.flattenWorkSessions(new ArrayList<>(this.eventMap.values()))) {
+            events.addAll(this.splitByDay(event));
+        }
+        for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()){
+            List<Event> repeatedEvents = this.eventsInSomeRecursion(recursiveEvent);
+            for (Event event : repeatedEvents){
+                events.addAll(this.splitByDay(event));
+            }
+        }
+        return events;
+    }
+
+    /**
+     * returns all the values in <code>this.eventMap</code>
+     *
+     * @return list of events (without work sessions, not split)
+     */
+    public List<Event> getAllEvents() {
+        return new ArrayList<>(this.eventMap.values());
+    }
+
+    /**
+     * returns the name of any event [event.getName()]
+     *
+     * @param event any event (does not have to be in <code>this.eventMap</code>
+     * @return the name of the event
+     */
+    public String getName(Event event) {
+        return event.getName();
+    }
+
+    public void setStart(UUID id, LocalDateTime start) {
+        this.get(id).setStartTime(start);
+        this.update("change", this.get(id));
+    }
+
+    public void setEnd(UUID id, LocalDateTime end) {
+        this.get(id).setEndTime(end);
+        this.update("change", this.get(id));
+    }
+
+    /**
+     * returns all events in <code>this.eventMap</code> whose start times are after input 'from', and whose end times are
+     * before input 'to'
+     *
+     * @param from LocalDate the start day of the range
+     * @param to   LocalDate the end day of the range
+     * @return Map with key LocalDate for each day between or equal to 'from' and 'to' in range, value all the events
+     * in <code>this.eventMap</code> that occur in this day
+     */
+    public Map<LocalDate, List<Event>> getRange(LocalDate from, LocalDate to) {
+        Map<LocalDate, List<Event>> range = new HashMap<>();
+        List<Event> schedule = this.getAllEventsFlatSplit();
+        long current = 0L;
+        while (!from.plusDays(current).isAfter(to)) {
+            range.put(from.plusDays(current), (this.getDay(schedule, from.plusDays(current))));
+            current += 1L;
+        }
+        return range;
     }
 
     /**
