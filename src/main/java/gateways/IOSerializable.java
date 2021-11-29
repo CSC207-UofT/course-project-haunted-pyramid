@@ -33,12 +33,17 @@ public class IOSerializable {
     private static final String EVENTS_FILEPATH = "events.ser";
     private static final String USERS_FILEPATH = "users.ser";
 
+    private static final String RECURSIVE_EVENTS_FILEPATH = "recursive_events.ser";
+
+
     // A security token needed to access the Dropbox application
     private static final String ACCESS_TOKEN = "EfBUX9G7zxkAAAAAAAAAAaXr-kGtiOL1cwBhwIe7BcI0hvt-uH5LBsEh4FXJ31Ry";
 
     // A public Dropbox link where the serialized files are stored
     private static final String eventsURL = "https://www.dropbox.com/s/vkant0coohn5fil/events.ser?dl=1";
     private static final String usersURL = "https://www.dropbox.com/s/f6yan8l9e951b7x/users.ser?dl=1";
+
+    private static final String recursiveEventsURL = ""; //TODO: sebin please add link.
 
     /**
      * Initialize an instance of IOSerializable.
@@ -58,17 +63,34 @@ public class IOSerializable {
         try {
             URL eventsDownload = new URL(eventsURL);
             URL usersDownload = new URL(usersURL);
+
+            URL recursiveEventsDownload = new URL(recursiveEventsURL);
             ReadableByteChannel eventsReadableByteChannel = Channels.newChannel(eventsDownload.openStream());
             ReadableByteChannel usersReadableByteChannel = Channels.newChannel(usersDownload.openStream());
+
+            ReadableByteChannel recursiveEventsReadableByteChannel = Channels.newChannel(recursiveEventsDownload.openStream());
+
             ArrayList<FileOutputStream> arrayList = introOrEnd(intro);
             FileOutputStream eventsFileOutputStream = arrayList.get(0);
             FileOutputStream usersFileOutputStream = arrayList.get(1);
+
+            FileOutputStream recursiveEventsFileOutputStream = arrayList.get(2);
+
             eventsFileOutputStream.getChannel().transferFrom(eventsReadableByteChannel, 0, 1 << 24);
             usersFileOutputStream.getChannel().transferFrom(usersReadableByteChannel, 0, 1 << 24);
+
+            recursiveEventsFileOutputStream.getChannel().transferFrom(recursiveEventsReadableByteChannel, 0, 1 << 24);
+
             eventsFileOutputStream.close();
             usersFileOutputStream.close();
+
+            recursiveEventsFileOutputStream.close();
+
             eventsReadableByteChannel.close();
             usersReadableByteChannel.close();
+
+            recursiveEventsReadableByteChannel.close();
+
         } catch (IOException eIO) {
             eIO.printStackTrace();
         }
@@ -84,10 +106,10 @@ public class IOSerializable {
         try {
             if (intro) {
                 return new ArrayList<>(Arrays.asList(new FileOutputStream(EVENTS_FILEPATH),
-                        new FileOutputStream(USERS_FILEPATH)));
+                        new FileOutputStream(USERS_FILEPATH), new FileOutputStream(RECURSIVE_EVENTS_FILEPATH)));
             } else {
                 return new ArrayList<>(Arrays.asList(new FileOutputStream("events1.ser"),
-                        new FileOutputStream("users1.ser")));
+                        new FileOutputStream("users1.ser"), new FileOutputStream("recursive_events1.ser")));
             }
         } catch (IOException eIO) {
             eIO.printStackTrace();
@@ -121,12 +143,22 @@ public class IOSerializable {
 //            DeleteResult delUsers1 = client.files().deleteV2("/" + USERS_FILEPATH);
             InputStream eventsInputStream = new FileInputStream(EVENTS_FILEPATH);
             InputStream usersInputStream = new FileInputStream(USERS_FILEPATH);
+
+            InputStream recursiveEventsInputStream = new FileInputStream(RECURSIVE_EVENTS_FILEPATH);
+
             FileMetadata eventsMetadata = client.files().uploadBuilder("/" + EVENTS_FILEPATH).
                     withMode(WriteMode.OVERWRITE).uploadAndFinish(eventsInputStream);
             FileMetadata usersMetadata = client.files().uploadBuilder("/" + USERS_FILEPATH).
                     withMode(WriteMode.OVERWRITE).uploadAndFinish(usersInputStream);
+
+            FileMetadata recursiveEventsMetadata = client.files().uploadBuilder("/" + RECURSIVE_EVENTS_FILEPATH).
+                    withMode(WriteMode.OVERWRITE).uploadAndFinish(recursiveEventsInputStream);
+
             eventsInputStream.close();
             usersInputStream.close();
+
+            recursiveEventsInputStream.close();
+
         } catch (FileNotFoundException eFNF) {
             logger.log(Level.SEVERE, "Cannot find file.", eFNF);
         } catch (IOException eIO) {
@@ -143,7 +175,7 @@ public class IOSerializable {
      * @return A boolean whether the user has save files
      */
     public boolean hasSavedData() {
-        List<String> paths = List.of(EVENTS_FILEPATH, USERS_FILEPATH);
+        List<String> paths = List.of(EVENTS_FILEPATH, USERS_FILEPATH, RECURSIVE_EVENTS_FILEPATH);
         for (String path : paths) {
             if (!new File(path).exists()) return false;
         }
@@ -156,9 +188,15 @@ public class IOSerializable {
      *
      * @return an ArrayList of all Events stored in the file
      */
-    public Map<UUID, List<Event>> eventsReadFromSerializable() {
+    public Map<UUID, List<Event>> eventsReadFromSerializable(boolean recursive) {
         try {
-            InputStream file = new FileInputStream(EVENTS_FILEPATH);
+            InputStream file;
+            if(!recursive){
+                file = new FileInputStream(EVENTS_FILEPATH);
+            }
+            else{
+                file = new FileInputStream(RECURSIVE_EVENTS_FILEPATH);
+            }
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
             //Please refer to specifications for explanation
@@ -180,9 +218,15 @@ public class IOSerializable {
      *
      * @param events an ArrayList of events to be serialized
      */
-    public static void eventsWriteToSerializable(Map<UUID, List<Event>> events) {
+    public static void eventsWriteToSerializable(Map<UUID, List<Event>> events, boolean recursive) {
         try {
-            OutputStream file = new FileOutputStream(EVENTS_FILEPATH);
+            OutputStream file;
+            if(!recursive){
+                file = new FileOutputStream(EVENTS_FILEPATH);
+            }
+            else{
+                file = new FileOutputStream(RECURSIVE_EVENTS_FILEPATH);
+            }
             OutputStream buffer = new BufferedOutputStream(file);
             ObjectOutput output = new ObjectOutputStream(buffer);
             output.writeObject(events);
@@ -234,14 +278,22 @@ public class IOSerializable {
         }
     }
 
+
+
+
     /**
      * Delete files that are newly created to avoid data breach.
      */
     public void deleteNewFiles() {
         File events1Ser = new File("events1.ser");
         File users1Ser = new File("users1.ser");
+
+        File recursiveEvents1Ser = new File("recursive_events1.ser");
+
         Boolean a = events1Ser.delete();
         Boolean b = users1Ser.delete();
+
+        Boolean c = recursiveEvents1Ser.delete();
     }
 
     /**
@@ -250,7 +302,12 @@ public class IOSerializable {
     public void deleteOldFiles() {
         File eventsSer = new File("events.ser");
         File usersSer = new File("users.ser");
+
+        File recursiveEventsSer = new File("recursive_events.ser");
+
         Boolean a = eventsSer.delete();
         Boolean b = usersSer.delete();
+
+        Boolean c = recursiveEventsSer.delete();
     }
 }

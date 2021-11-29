@@ -28,7 +28,7 @@ public class RepeatedEventManagerTest {
     Event e2 = new Event(UUID.randomUUID(), "e2", 2021, 11, 18, 10, 11, 0, 0);
     Event e3 = new Event(UUID.randomUUID(), "e3", 2021, 11, 20, 10, 11, 0, 0);
     List<Event> z = new ArrayList<>();
-    RecursiveEvent recursiveEvent = new RecursiveEvent(ConstantID.get());
+    RecursiveEvent recursiveEvent = new RecursiveEvent(UUID.randomUUID());
     RepeatedEventManager repeatedEventManager = new RepeatedEventManager();
 
     @Before
