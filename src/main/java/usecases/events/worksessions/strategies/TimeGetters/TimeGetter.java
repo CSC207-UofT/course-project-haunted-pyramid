@@ -74,13 +74,20 @@ public interface TimeGetter {
     }
 
     default List<LocalDateTime> getStartTimes(UUID deadline, EventManager eventManager, Long length){
-        List<LocalDateTime> times = new ArrayList<>();
         Map<LocalDateTime, Long> timesMap = this.getTimes(deadline, eventManager, length);
-        for (LocalDateTime time: timesMap.keySet()){
-            times.add(time);
-        }
+        return new ArrayList<>(timesMap.keySet());
+    }
 
-        return times;
+    //helper method for mergeSessions
+    default Event sessionAdjacent(LocalDateTime time, Long length, UUID deadline, EventManager eventManager) {
+        for (Event session: eventManager.getWorkSessions(deadline)){
+            if (eventManager.getEnd(session).isEqual(time) || (eventManager.getStartTime(deadline) != null &&
+                    LocalDateTime.of(eventManager.getStartDate(deadline),
+                            eventManager.getStartTime(deadline)).isEqual(time.plusHours(length)))){
+                return session;
+            }
+        }
+        return null;
     }
 
 

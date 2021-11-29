@@ -128,6 +128,10 @@ public class EventManager {
         return eventMap.remove(ID);
     }
 
+    public void removeAll(List<UUID> IDs){
+        IDs.forEach(eventMap::remove);
+    }
+
     /**
      * creates an event with given name and end time and adds to <code>this.eventMap</code>
      *
@@ -164,26 +168,26 @@ public class EventManager {
     }
 
 
-    /**
-     * takes a list of events that may contain work sessions and returns the same list of events in addition to
-     * the work sessions they contain
-     *
-     * @param events List<Event> a list of events that may contain work sessions
-     * @return a list of events plus their work sessions
-     */
-    public List<Event> flattenWorkSessions(List<Event> events) {
-        List<Event> flat = new ArrayList<>();
-        if (events.isEmpty()) {
-            return flat;
-        }
-        for (Event event : events) {
-            flat.add(event);
-            if (!event.getWorkSessions().isEmpty()) {
-                flat.addAll(event.getWorkSessions());
-            }
-        }
-        return flat;
-    }
+//    /**
+//     * takes a list of events that may contain work sessions and returns the same list of events in addition to
+//     * the work sessions they contain
+//     *
+//     * @param events List<Event> a list of events that may contain work sessions
+//     * @return a list of events plus their work sessions
+//     */
+//    public List<Event> flattenWorkSessions(List<Event> events) {
+//        List<Event> flat = new ArrayList<>();
+//        if (events.isEmpty()) {
+//            return flat;
+//        }
+//        for (Event event : events) {
+//            flat.add(event);
+//            if (!event.getWorkSessions().isEmpty()) {
+//                flat.addAll(event.getWorkSessions());
+//            }
+//        }
+//        return flat;
+//    }
 
     /**
      * returns an Event as a list of events, splitting them at 24:00 each day it spans. For an event that spans
@@ -239,7 +243,10 @@ public class EventManager {
      */
     public List<Event> getAllEventsFlatSplit() {
         List<Event> events = new ArrayList<>();
-        for (Event event : this.flattenWorkSessions(new ArrayList<>(this.eventMap.values()))) {
+//        for (Event event : this.flattenWorkSessions(new ArrayList<>(this.eventMap.values()))) {
+//            events.addAll(this.splitByDay(event));
+//        }
+        for (Event event : this.eventMap.values()){
             events.addAll(this.splitByDay(event));
         }
         for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()){
@@ -253,8 +260,11 @@ public class EventManager {
 
     public List<Event> flatSplitEvents(List<Event> events) {
         List<Event> splitFlat = new ArrayList<>();
-        for (Event event : this.flattenWorkSessions(events)) {
-            splitFlat.addAll(this.splitByDay(event));
+//        for (Event event : this.flattenWorkSessions(events)) {
+//            splitFlat.addAll(this.splitByDay(event));
+//        }
+        for (Event event: events){
+            splitFlat.addAll((this.splitByDay(event)));
         }
         return splitFlat;
     }
@@ -634,8 +644,13 @@ public class EventManager {
         return this.get(event).getStartTime();
     }
 
+
     public void setWorkSessions(UUID ID, List<Event> sessions){
+        for (Event session: this.getWorkSessions(ID)){
+            this.remove(this.getID(session));
+        }
         this.get(ID).setWorkSessions(sessions);
+        this.addAll(sessions);
     }
 
     public List<Event> getPastSessions(UUID ID){
@@ -646,8 +661,14 @@ public class EventManager {
         return this.get(ID).getWorkSessions();
     }
 
+    public void removeWorkSession(UUID id, Event session){
+        this.getWorkSessions(id).remove(session);
+        this.remove(this.getID(session));
+    }
+
     public void addWorkSession(UUID ID, LocalDateTime start, LocalDateTime end){
         this.get(ID).addWorkSession(start, end);
+        this.addEvent(this.getWorkSessions(ID).get(this.getWorkSessions(ID).size()-1));
     }
 
     public void setSessionLength(UUID ID, Long sessionLength) {
@@ -664,5 +685,11 @@ public class EventManager {
 
     public double getHoursNeeded(UUID event) {
         return this.get(event).getHoursNeeded();
+    }
+
+    public void addAll(List<Event> events) {
+        for (Event event: events){
+            this.addEvent(event);
+        }
     }
 }

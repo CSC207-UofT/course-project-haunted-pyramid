@@ -1,11 +1,14 @@
 package controllers;
 
+import entities.Event;
+import entities.UserPreferences;
 import helpers.Constants;
 import helpers.ControllerHelper;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.WorkSessionMenuContent;
 import usecases.events.EventManager;
 import usecases.events.worksessions.WorkSessionScheduler;
+import usecases.events.worksessions.WorkSessionSchedulerBuilder;
 
 import java.util.UUID;
 
@@ -17,18 +20,28 @@ import java.util.UUID;
  * @see WorkSessionScheduler
  */
 public class WorkSessionController {
-    private final WorkSessionScheduler workSessionScheduler;
+    private WorkSessionScheduler workSessionScheduler;
     private final IOController ioController;
     private final ControllerHelper helper;
 
+
     /**
      * Instantiate the workSessionController
-     * @param workSessionScheduler workSessionScheduler class to be used as a base
+     * @param userPreferences the user preferences on which to base auto scheduling
      */
-    public WorkSessionController(WorkSessionScheduler workSessionScheduler){
-        this.workSessionScheduler = workSessionScheduler;
+    public WorkSessionController(UserPreferences userPreferences){
+        WorkSessionSchedulerBuilder workSessionSchedulerBuilder = new WorkSessionSchedulerBuilder();
+        this.workSessionScheduler = workSessionSchedulerBuilder.getWorkSessionScheduler(userPreferences);
         this.ioController = new IOController();
         this.helper = new ControllerHelper();
+    }
+
+    public void refresh(UserPreferences userPreferences, EventManager eventManager){
+        WorkSessionSchedulerBuilder workSessionSchedulerBuilder = new WorkSessionSchedulerBuilder();
+        this.workSessionScheduler = workSessionSchedulerBuilder.getWorkSessionScheduler(userPreferences);
+        for (Event event: eventManager.getAllEvents()){
+            this.workSessionScheduler.autoSchedule(eventManager.getID(event), eventManager);
+        }
     }
 
     public WorkSessionScheduler getWorkSessionScheduler(){
@@ -153,5 +166,6 @@ public class WorkSessionController {
             System.out.println("The session was marked Incomplete");
         }
     }
+
 
 }

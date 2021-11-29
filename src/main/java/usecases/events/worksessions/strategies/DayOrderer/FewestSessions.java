@@ -25,17 +25,17 @@ public class FewestSessions implements DayOrderer{
 
     private LocalDate leastSessions(List<LocalDate> eligibleDates, List<Event> workSessions, EventManager eventManager){
         LocalDate leastWorkSessions = eligibleDates.get(0);
-        int record = workSessions.size();
+        float record = workSessions.size();
         for (LocalDate day : eligibleDates) {
-            int num = 0;
+            List<Event> sessions = new ArrayList<>();
             for (Event session : workSessions) {
                 if (eventManager.getEnd(session).toLocalDate().isEqual(day)) {
-                    num = num + 1;
+                    sessions.add(session);
                 }
             }
-            if (num <= record) {
+            if (eventManager.totalHours(sessions) <= record) {
                 leastWorkSessions = day;
-                record = num;
+                record = eventManager.totalHours(sessions);
             }
         }
 

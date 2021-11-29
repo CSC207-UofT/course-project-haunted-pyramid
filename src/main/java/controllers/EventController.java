@@ -1,17 +1,16 @@
 package controllers;
 
 import entities.Event;
+import entities.UserPreferences;
 import gateways.IOSerializable;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
 import usecases.events.EventManager;
-import usecases.events.worksessions.WorkSessionScheduler;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +31,7 @@ public class EventController {
 
     private final EventManager eventManager;
     private final RecursionController recursionController;
+    private final WorkSessionController workSessionController;
     private final IOController ioController;
 
     /**
@@ -52,6 +52,8 @@ public class EventController {
         this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
         this.recursionController = new RecursionController();
         this.ioController = new IOController();
+        this.workSessionController = new WorkSessionController(userController.getUserManager().getPreferences(
+                userController.getCurrentUser()));
     }
 
     /**
@@ -231,7 +233,11 @@ public class EventController {
      * @see WorkSessionController#edit
      */
     private void prep(UUID ID) {
+        this.workSessionController.edit(ID, eventManager);
+    }
 
+    public void update(UserPreferences userPreferences){
+        this.workSessionController.refresh(userPreferences, eventManager);
     }
 
     /**

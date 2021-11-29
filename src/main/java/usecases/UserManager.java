@@ -144,4 +144,23 @@ public class UserManager {
     public UserPreferences getPreferences (UUID user){
         return this.userInfo.get(user).getUserPreferences();
     }
+
+    public void toggleWorkSessionSpacing(UUID user){
+        User current = this.userInfo.get(user);
+        if (current.getUserPreferences().getSpacingSameDay().equals("short")){
+            current.getUserPreferences().setSpacingSameDay("medium");
+        }else if (current.getUserPreferences().getSpacingSameDay().equals("medium")){
+            current.getUserPreferences().setSpacingSameDay("large");
+        }else{
+            current.getUserPreferences().setSpacingSameDay("small");
+        }
+    }
+
+    public void toggleEvenSpacing(UUID user) {
+        this.getPreferences(user).setSpaceEvenlyDays(!this.getPreferences(user).getSpaceEvenlyDays());
+    }
+
+    public void toggleMorningPerson(UUID user) {
+        this.getPreferences(user).setMorningPerson(!this.getPreferences(user).getMorningPerson());
+    }
 }

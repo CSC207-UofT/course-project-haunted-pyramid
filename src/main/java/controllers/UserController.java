@@ -1,6 +1,5 @@
 package controllers;
 
-import entities.User;
 import gateways.IOSerializable;
 import helpers.Constants;
 import helpers.ControllerHelper;
@@ -22,12 +21,10 @@ import java.util.UUID;
  * @author Sebin Im
  */
 public class UserController {
-
     private final UserManager userManager;
     private UUID currentUser;
     private final ControllerHelper helper;
     private final IOController ioController;
-    private WorkSessionScheduler workSessionScheduler;
 
     /**
      * Instantiates a UserController from serialized data
@@ -143,6 +140,12 @@ public class UserController {
                 this.toggleProcrastinate();
                 break;
             case "5":
+                this.toggleSessionSpacing();
+            case "6":
+                this.toggleCram();
+            case "7":
+                this.toggleMorningPerson();
+            case "8":
                 indicator = true;
                 break;
         }
@@ -196,8 +199,7 @@ public class UserController {
     private void toggleProcrastinate() {
         this.userManager.toggleProcrastinate(this.currentUser);
     }
-
-    public WorkSessionScheduler getWorkSessionScheduler() {
-        return this.workSessionScheduler;
-    }
+    private void toggleMorningPerson(){this.userManager.toggleMorningPerson(this.currentUser);}
+    private void toggleCram(){this.userManager.toggleEvenSpacing(this.currentUser);}
+    private void toggleSessionSpacing(){this.userManager.toggleWorkSessionSpacing(this.currentUser);}
 }

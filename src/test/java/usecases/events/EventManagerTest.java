@@ -125,18 +125,18 @@ public class EventManagerTest {
         assertEquals(new ArrayList<>(List.of(this.eventManager.get(UUID1))), this.eventManager.splitByDay(this.eventManager.get(UUID1)));
     }
 
-    @Test
-    public void testFlattenWorkSessions(){
-        List<Event> expected = this.eventManager.getAllEvents();
-        for(Event event: this.eventManager.getAllEvents()){
-            event.addWorkSession(LocalDateTime.of(2021, 12, 5, 2, 0),
-                    LocalDateTime.of(2021, 12, 5, 3, 0));
-            expected.addAll(event.getWorkSessions());
-        }
-        List<Event> actual = this.eventManager.flattenWorkSessions(this.eventManager.getAllEvents());
-        assertTrue(expected.size() == this.eventManager.flattenWorkSessions(this.eventManager.getAllEvents()).size()
-        && expected.containsAll(actual) && actual.containsAll(expected));
-    }
+//    @Test
+//    public void testFlattenWorkSessions(){
+//        List<Event> expected = this.eventManager.getAllEvents();
+//        for(Event event: this.eventManager.getAllEvents()){
+//            event.addWorkSession(LocalDateTime.of(2021, 12, 5, 2, 0),
+//                    LocalDateTime.of(2021, 12, 5, 3, 0));
+//            expected.addAll(event.getWorkSessions());
+//        }
+//        List<Event> actual = this.eventManager.flattenWorkSessions(this.eventManager.getAllEvents());
+//        assertTrue(expected.size() == this.eventManager.flattenWorkSessions(this.eventManager.getAllEvents()).size()
+//        && expected.containsAll(actual) && actual.containsAll(expected));
+//    }
 
     @Test
     public void testFlatSplitEvents(){

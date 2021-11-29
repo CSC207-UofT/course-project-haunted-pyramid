@@ -7,6 +7,7 @@ import usecases.events.worksessions.strategies.TimeGetters.TimeGetter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,12 +21,12 @@ public class DefaultTimeGetter implements TimeGetter {
 
     @Override
     public Map<LocalDateTime, Long> getTimes(UUID deadline, EventManager eventManager, Long length) {
-        Map<LocalDateTime, Long> eligible = this.freeSlots(LocalDateTime.now(), eventManager.getEnd(deadline),
+        Map<LocalDateTime, Long> times = this.freeSlots(LocalDateTime.now(), eventManager.getEnd(deadline),
                 eventManager, deadline);
-
-        for (LocalDateTime time : eligible.keySet()) {
-            if (eligible.get(time) < length) {
-                eligible.remove(time);
+        Map<LocalDateTime, Long> eligible = new HashMap<>();
+        for (LocalDateTime time : times.keySet()) {
+            if (times.get(time) >= length) {
+                eligible.put(time, times.get(time));
             }
         }
         return eligible;
