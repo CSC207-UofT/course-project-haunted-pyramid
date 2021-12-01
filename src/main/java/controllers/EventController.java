@@ -1,6 +1,5 @@
 package controllers;
 
-import entities.Event;
 import entities.UserPreferences;
 import gateways.IOSerializable;
 import presenters.MenuStrategies.DisplayMenu;
@@ -22,7 +21,7 @@ import java.util.UUID;
  * @author Sebin Im
  * @author Taite Cullen
  * @author Malik Lahlou
- * @see Event
+ * @see entities.Event
  * @see EventManager
  * @see RecursionController
  * @see WorkSessionController
