@@ -52,7 +52,6 @@ public class EventController {
             this.eventManager = new EventManager(new ArrayList<>());
         }
         this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable(false));
-        this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         this.recursionController = new RecursionController();
         this.ioController = new IOController();
     }
