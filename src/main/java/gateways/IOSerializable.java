@@ -191,10 +191,9 @@ public class IOSerializable {
     public Map<UUID, List<Event>> eventsReadFromSerializable(boolean recursive) {
         try {
             InputStream file;
-            if(!recursive){
+            if (!recursive) {
                 file = new FileInputStream(EVENTS_FILEPATH);
-            }
-            else{
+            } else {
                 file = new FileInputStream(RECURSIVE_EVENTS_FILEPATH);
             }
             InputStream buffer = new BufferedInputStream(file);
