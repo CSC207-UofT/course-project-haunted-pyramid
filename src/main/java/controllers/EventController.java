@@ -37,8 +37,6 @@ public class EventController {
     /**
      * constructor for EventController from serialized Events
      * creates <code>this.eventManager</code> of current User's events, sets ID counter to maximum ID in eventManager,
-<<<<<<< HEAD
-=======
      * with pre-made WorkSessionController
      *
      * @param hasSavedData          boolean
@@ -63,7 +61,6 @@ public class EventController {
     /**
      * constructor for EventController from serialized Events
      * creates <code>this.eventManager</code> of current User's events, sets ID counter to maximum ID in eventManager,
->>>>>>> cdb1cea72dd81b6f19694a2d513f1a8512de8dd4
      * creates new workSessionController
      *
      * @param hasSavedData   boolean

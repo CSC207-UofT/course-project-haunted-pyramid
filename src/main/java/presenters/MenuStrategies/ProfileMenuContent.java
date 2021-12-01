@@ -22,7 +22,7 @@ public class ProfileMenuContent implements MenuContent {
         currentSettings.add("Free Time: " + this.userManager.getPreferences(user).getFreeTime().toString());
         currentSettings.add("Procrastinate: " + this.userManager.getPreferences(user).getProcrastinate());
         currentSettings.add("Spacing between work sessions: " + this.userManager.getPreferences(user).getSpacingSameDay());
-        currentSettings.add("cram: " +
+        currentSettings.add("Cram: " +
                 this.userManager.getPreferences(user).getCram());
         currentSettings.addAll(actualOptions());
         return currentSettings;
@@ -35,7 +35,7 @@ public class ProfileMenuContent implements MenuContent {
             add("3. Remove Free Time");
             add("4. Toggle 'Procrastinate'");
             add("5. Toggle Work session spacing");
-            add("6. toggle 'cram'");
+            add("6. toggle 'Cram'");
             add("7. Return to the Main Menu");
         }};
     }
