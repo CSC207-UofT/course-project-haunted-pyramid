@@ -1,36 +1,18 @@
 package usecases.events.worksessions;
 
-import com.dropbox.core.v2.team.CustomQuotaError;
 import entities.UserPreferences;
-import usecases.events.worksessions.strategies.DayOrderer.FewestSessions;
-import usecases.events.worksessions.strategies.DayOrderer.Procrastinate;
-import usecases.events.worksessions.strategies.DayOrderer.notProcrastinate;
-import usecases.events.worksessions.strategies.TimeOrderer.BreaksBetween;
-import usecases.events.worksessions.strategies.TimeOrderer.EveningPerson;
-import usecases.events.worksessions.strategies.TimeOrderer.MorningPerson;
-
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Map;
+import usecases.events.worksessions.strategies.DayOrderer.*;
+import usecases.events.worksessions.strategies.TimeOrderer.*;
 
 public class WorkSessionSchedulerBuilder {
-//
-//    private boolean procrastinate;
-//
-//    private boolean morningPerson;
-//
-//    private final List<String> validSpacing = List.of("short", "medium", "long");
-//    private String spacingSameDay; // short, medium, large, or null
-//    private boolean spaceEvenlyDays;
-//
-//    private final Map<LocalTime, LocalTime> freeTime;
 
     public WorkSessionScheduler getWorkSessionScheduler (UserPreferences userPreferences){
         WorkSessionScheduler workSessionScheduler = new WorkSessionScheduler(userPreferences.getFreeTime());
         this.procrastinate(userPreferences, workSessionScheduler);
-        this.spaceEvenlyDays(userPreferences, workSessionScheduler);
+        this.cram(userPreferences, workSessionScheduler);
         this.morningPerson(userPreferences, workSessionScheduler);
         this.spacingSameDay(userPreferences, workSessionScheduler);
+
         return workSessionScheduler;
     }
 
@@ -38,7 +20,7 @@ public class WorkSessionSchedulerBuilder {
         if (userPreferences.getProcrastinate()){
             workSessionScheduler.addDayOrderer(new Procrastinate());
         } else{
-//            workSessionScheduler.addDayOrderer(new notProcrastinate());
+             workSessionScheduler.addDayOrderer(new notProcrastinate());
         }
     }
 
@@ -51,15 +33,14 @@ public class WorkSessionSchedulerBuilder {
     }
 
     private void spacingSameDay(UserPreferences userPreferences, WorkSessionScheduler workSessionScheduler){
-        if (!(userPreferences.getSpacingSameDay() == null)){
+        if (!(userPreferences.getSpacingSameDay().equals("none"))){
             String spacing = userPreferences.getSpacingSameDay();
             workSessionScheduler.addTimeOrderer(new BreaksBetween(spacing));
         }
-
     }
 
-    private void spaceEvenlyDays(UserPreferences userPreferences, WorkSessionScheduler workSessionScheduler){
-        if (userPreferences.getSpaceEvenlyDays()) {
+    private void cram(UserPreferences userPreferences, WorkSessionScheduler workSessionScheduler){
+        if (!userPreferences.getCram()) {
             workSessionScheduler.addDayOrderer(new FewestSessions());
         }
     }

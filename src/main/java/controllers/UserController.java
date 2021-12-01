@@ -109,6 +109,11 @@ public class UserController {
             System.out.println("Note:");
             System.out.println("Work Sessions will only set up during Free Time");
             System.out.println("If Procrastinate is on, Work Sessions will be scheduled more towards the Deadline");
+            System.out.println("if cram is on, longer work sessions will be scheduled on days they fit as opposed to even " +
+                    "day spacing");
+            System.out.println("if morning person is on, your events will be scheduled as early in the day as possible");
+            System.out.println("if multiple work sessions of the same event occur on the same day, they will be scheduled" +
+                    "with spacing between according to 'work session spacing' (if it is null, they will be merged)");
             String firstAction = ioController.getAnswer(dm.displayMenu(profileMenuContent));
             firstAction = helper.invalidCheck(dm, firstAction, profileMenuContent.numberOfOptions(), profileMenuContent);
             if (firstAction.equalsIgnoreCase("Return")) {
@@ -141,11 +146,11 @@ public class UserController {
                 break;
             case "5":
                 this.toggleSessionSpacing();
+                break;
             case "6":
                 this.toggleCram();
+                break;
             case "7":
-                this.toggleMorningPerson();
-            case "8":
                 indicator = true;
                 break;
         }

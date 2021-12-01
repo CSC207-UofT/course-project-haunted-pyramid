@@ -21,10 +21,9 @@ public class ProfileMenuContent implements MenuContent {
         currentSettings.add(this.userManager.getUserInfo().get(user).getName());
         currentSettings.add("Free Time: " + this.userManager.getPreferences(user).getFreeTime().toString());
         currentSettings.add("Procrastinate: " + this.userManager.getPreferences(user).getProcrastinate());
-        currentSettings.add("Spacing between work sessions [if multiple work sessions for the same event are" +
-                "scheduled on the same day]: " + this.userManager.getPreferences(user).getSpacingSameDay());
-        currentSettings.add("cram [longer work sessions on days it fits as opposed to even day spacing]" +
-                this.userManager.getPreferences(user).getSpaceEvenlyDays());
+        currentSettings.add("Spacing between work sessions: " + this.userManager.getPreferences(user).getSpacingSameDay());
+        currentSettings.add("cram: " +
+                this.userManager.getPreferences(user).getCram());
         currentSettings.addAll(actualOptions());
         return currentSettings;
     }
@@ -37,8 +36,7 @@ public class ProfileMenuContent implements MenuContent {
             add("4. Toggle 'Procrastinate'");
             add("5. Toggle Work session spacing");
             add("6. toggle 'cram'");
-            add("7. toggle 'morning person'");
-            add("8. Return to the Main Menu");
+            add("7. Return to the Main Menu");
         }};
     }
 

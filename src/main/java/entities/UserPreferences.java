@@ -10,9 +10,9 @@ public class UserPreferences {
 
     private boolean morningPerson;
 
-    private final List<String> validSpacing = List.of("short", "medium", "long");
+    private final List<String> validSpacing = List.of("none", "short", "medium", "long");
     private String spacingSameDay; // short, medium, large, or null
-    private boolean spaceEvenlyDays;
+    private boolean cram;
 
     private final Map<LocalTime, LocalTime> freeTime;
 
@@ -22,7 +22,8 @@ public class UserPreferences {
         this.freeTime.put(LocalTime.of(0, 0), LocalTime.of(9, 0));
         this.procrastinate = false;
         this.morningPerson = true;
-        this.spaceEvenlyDays = true;
+        this.cram = false;
+        this.spacingSameDay = "none";
     }
 
     public boolean getProcrastinate() {
@@ -53,8 +54,8 @@ public class UserPreferences {
     }
     public String getSpacingSameDay(){return this.spacingSameDay;}
 
-    public void setSpaceEvenlyDays(boolean evenSpacing){
-        this.spaceEvenlyDays = evenSpacing;
+    public void setCram(boolean evenSpacing){
+        this.cram = evenSpacing;
     }
-    public boolean getSpaceEvenlyDays(){return this.spaceEvenlyDays;}
+    public boolean getCram(){return this.cram;}
 }

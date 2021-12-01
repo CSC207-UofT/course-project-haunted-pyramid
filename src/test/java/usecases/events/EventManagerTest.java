@@ -164,4 +164,13 @@ public class EventManagerTest {
         assertEquals(unordered.get(2), this.eventManager.earliest(unordered));
         assertTrue(this.eventManager.get(UUID1).getStartTime().isBefore(this.eventManager.get(UUID3).getStartTime()));
     }
+
+    public static void main(String[] args){
+        UUID id = UUID.randomUUID();
+        EventManager eventManager = new EventManager(new ArrayList<>(List.of(new Event(id, "taite", LocalDateTime.of(2021,
+                12, 5, 9, 0)))));
+        eventManager.setStart(id, LocalDateTime.of(2021, 12, 2, 9, 0));
+        System.out.println(eventManager.splitByDay(eventManager.get(id)));
+        System.out.println(eventManager.getAllEventsFlatSplit());
+    }
 }

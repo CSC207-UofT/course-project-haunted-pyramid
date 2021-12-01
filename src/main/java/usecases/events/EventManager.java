@@ -205,14 +205,14 @@ public class EventManager {
             if (event.getStartTime().toLocalDate().isBefore(event.getEndTime().toLocalDate())) {
                 splitByDay.add(new Event(event.getID(), event.getName(), event.getStartTime(),
                         LocalDateTime.of(event.getStartTime().toLocalDate(), LocalTime.of(23, 59))));
-                LocalDate nextDay = event.getStartTime().plusDays(1L).toLocalDate();
-                while (event.getEndTime().toLocalDate().isAfter(nextDay)) {
+                for (LocalDate nextDay = event.getStartTime().plusDays(1L).toLocalDate(); !event.getEndTime().
+                        toLocalDate().isBefore(nextDay); nextDay = nextDay.plusDays(1)) {
                     splitByDay.add(new Event(event.getID(), event.getName(), LocalDateTime.of(nextDay, LocalTime.of(0, 0)),
                             LocalDateTime.of(nextDay, LocalTime.of(23, 59))));
                     nextDay = nextDay.plusDays(1L);
                 }
-                splitByDay.add(new Event(event.getID(), event.getName(),
-                        LocalDateTime.of(nextDay, LocalTime.of(0, 0)), event.getEndTime()));
+                splitByDay.add(new Event(event.getID(), event.getName(), LocalDateTime.of(event.getEndTime().toLocalDate(),
+                        LocalTime.of(0, 0)), event.getEndTime()));
                 return splitByDay;
             }
         }
@@ -275,7 +275,7 @@ public class EventManager {
      * @return list of events (without work sessions, not split)
      */
     public List<Event> getAllEvents() {
-        return new ArrayList<>(this.eventMap.values());
+        return this.timeOrder(new ArrayList<>(this.eventMap.values()));
     }
 
     /**

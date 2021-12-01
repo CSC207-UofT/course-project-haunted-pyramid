@@ -4,10 +4,7 @@ import entities.Event;
 import usecases.events.EventManager;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class FewestSessions implements DayOrderer{
     @Override
@@ -33,12 +30,11 @@ public class FewestSessions implements DayOrderer{
                     sessions.add(session);
                 }
             }
-            if (eventManager.totalHours(sessions) <= record) {
+            if (eventManager.totalHours(sessions) < record) {
                 leastWorkSessions = day;
                 record = eventManager.totalHours(sessions);
             }
         }
-
         return leastWorkSessions;
     }
 }

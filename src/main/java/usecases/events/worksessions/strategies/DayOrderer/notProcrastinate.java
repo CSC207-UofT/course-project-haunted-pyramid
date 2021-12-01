@@ -29,4 +29,13 @@ public class notProcrastinate implements DayOrderer{
         dates.remove(earliest);
         return earliest;
     }
+
+    public static void main(String[] args){
+        ArrayList<LocalDate> test = new ArrayList<>(){
+            {
+                add(LocalDate.now());
+                add(LocalDate.now().plusDays(1));
+                add(LocalDate.now().plusDays(2));
+            }};
+    }
 }

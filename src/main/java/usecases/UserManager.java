@@ -147,17 +147,24 @@ public class UserManager {
 
     public void toggleWorkSessionSpacing(UUID user){
         User current = this.userInfo.get(user);
-        if (current.getUserPreferences().getSpacingSameDay().equals("short")){
-            current.getUserPreferences().setSpacingSameDay("medium");
-        }else if (current.getUserPreferences().getSpacingSameDay().equals("medium")){
-            current.getUserPreferences().setSpacingSameDay("large");
-        }else{
-            current.getUserPreferences().setSpacingSameDay("small");
+        switch (current.getUserPreferences().getSpacingSameDay()) {
+            case "short":
+                current.getUserPreferences().setSpacingSameDay("medium");
+                break;
+            case "medium":
+                current.getUserPreferences().setSpacingSameDay("large");
+                break;
+            case "large":
+                current.getUserPreferences().setSpacingSameDay("none");
+                break;
+            default:
+                current.getUserPreferences().setSpacingSameDay("short");
+                break;
         }
     }
 
     public void toggleEvenSpacing(UUID user) {
-        this.getPreferences(user).setSpaceEvenlyDays(!this.getPreferences(user).getSpaceEvenlyDays());
+        this.getPreferences(user).setCram(!this.getPreferences(user).getCram());
     }
 
     public void toggleMorningPerson(UUID user) {

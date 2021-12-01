@@ -20,7 +20,7 @@ public class Procrastinate implements DayOrderer{
         eligibleDates.addAll(ordered);
     }
 
-    private LocalDate latest(List<LocalDate> dates){
+    public static LocalDate latest(List<LocalDate> dates){
         LocalDate latest = dates.get(0);
         for (LocalDate date: dates){
             if (date.isAfter(latest)){
@@ -29,5 +29,14 @@ public class Procrastinate implements DayOrderer{
         }
         dates.remove(latest);
         return latest;
+    }
+
+    public static void main(String[] args){
+        ArrayList<LocalDate> test = new ArrayList<>(){
+            {
+                add(LocalDate.now());
+                add(LocalDate.now().plusDays(1));
+                add(LocalDate.now().plusDays(2));
+            }};
     }
 }
