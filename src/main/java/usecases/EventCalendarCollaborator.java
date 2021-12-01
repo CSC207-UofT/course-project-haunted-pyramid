@@ -27,7 +27,7 @@ public class EventCalendarCollaborator {
     public void addAllEvents() {
         for (Event event : this.eventManager.getAllEventsFlatSplit()) {
             UUID eventID = this.eventManager.getID(event);
-            LocalDate eventDate = this.eventManager.getEnd(event).toLocalDate();
+            LocalDate eventDate = event.getEndTime().toLocalDate();
             this.calendarManager.addToCalendar(eventID, eventDate.getYear(), eventDate.getMonthValue(),
                     eventDate.getDayOfMonth());
         }
