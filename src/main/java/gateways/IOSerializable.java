@@ -220,10 +220,9 @@ public class IOSerializable {
     public static void eventsWriteToSerializable(Map<UUID, List<Event>> events, boolean recursive) {
         try {
             OutputStream file;
-            if(!recursive){
+            if (!recursive) {
                 file = new FileOutputStream(EVENTS_FILEPATH);
-            }
-            else{
+            } else {
                 file = new FileOutputStream(RECURSIVE_EVENTS_FILEPATH);
             }
             OutputStream buffer = new BufferedOutputStream(file);
