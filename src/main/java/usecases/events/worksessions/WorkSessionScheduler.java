@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
-public class WorkSessionScheduler implements EventListObserver {
+public class WorkSessionScheduler {
     private TimeGetter timeGetter;
     private List<DayOrderer> dayOrderers;
     private List<TimeOrderer> timeOrderers;
@@ -76,19 +76,6 @@ public class WorkSessionScheduler implements EventListObserver {
     public void setSessionLength(UUID deadline, Long sessionLength, EventManager eventManager) {
         eventManager.setSessionLength(deadline, sessionLength);
         this.autoSchedule(deadline, eventManager);
-    }
-
-    /**
-     * @param addRemoveChange what to do with the events in the map, 'add', 'remove' or 'change'
-     *                        * where 'change' indicates a change of date
-     * @param changed         map of days to events, where days are the
-     * @param eventManager    the eventManager that was updated
-     */
-    @Override
-    public void update(String addRemoveChange, Event changed, EventManager eventManager) {
-        for (Event event : eventManager.getAllEvents()) {
-            this.autoSchedule(eventManager.getID(event), eventManager);
-        }
     }
 
     public void addDayOrderer(DayOrderer dayOrderer) {
