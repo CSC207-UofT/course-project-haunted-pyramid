@@ -14,6 +14,9 @@ public class ProgramRun {
      * Main run function that launches the calendar program.
      */
     public static void main(String[] args) {
+
+        WindowLaunch windowLaunch = new WindowLaunch();
+
         MainController controller = new MainController();
 
         controller.displayScreen();
