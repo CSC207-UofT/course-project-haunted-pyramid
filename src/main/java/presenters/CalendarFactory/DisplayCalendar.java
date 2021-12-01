@@ -15,11 +15,13 @@ public abstract class DisplayCalendar {
     public CalendarManager cm;
     public EventManager em;
     public EventIDConverter converter;
+    public CalendarTimePresenter timePresenter;
 
     public DisplayCalendar(CalendarManager cm, EventManager em){
         this.cm = cm;
         this.em = em;
         this.converter = new EventIDConverter(em);
+        this.timePresenter = new CalendarTimePresenter(em);
     }
 
     /**
