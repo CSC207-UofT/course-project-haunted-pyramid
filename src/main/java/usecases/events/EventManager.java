@@ -110,11 +110,20 @@ public class EventManager {
      * @return the event with this ID, or null
      */
     public Event get(UUID ID) {
-        if (this.containsID(ID)) {
+        if (this.eventMap.containsKey(ID)) {
             return eventMap.get(ID);
         } else {
-            return null;
+            for (Event event: getAllEvents()){
+                if (!event.getWorkSessions().isEmpty()){
+                    for (Event session: event.getWorkSessions()){
+                        if (session.getID().equals(ID)){
+                            return session;
+                        }
+                    }
+                }
+            }
         }
+        return null;
     }
 
     /**
@@ -126,6 +135,10 @@ public class EventManager {
     public Event remove(UUID ID) {
         this.update("remove", this.get(ID));
         return eventMap.remove(ID);
+    }
+
+    public void removeAll(List<UUID> IDs){
+        IDs.forEach(eventMap::remove);
     }
 
     /**
@@ -201,14 +214,14 @@ public class EventManager {
             if (event.getStartTime().toLocalDate().isBefore(event.getEndTime().toLocalDate())) {
                 splitByDay.add(new Event(event.getID(), event.getName(), event.getStartTime(),
                         LocalDateTime.of(event.getStartTime().toLocalDate(), LocalTime.of(23, 59))));
-                LocalDate nextDay = event.getStartTime().plusDays(1L).toLocalDate();
-                while (event.getEndTime().toLocalDate().isAfter(nextDay)) {
+                for (LocalDate nextDay = event.getStartTime().plusDays(1L).toLocalDate(); !event.getEndTime().
+                        toLocalDate().isBefore(nextDay); nextDay = nextDay.plusDays(1)) {
                     splitByDay.add(new Event(event.getID(), event.getName(), LocalDateTime.of(nextDay, LocalTime.of(0, 0)),
                             LocalDateTime.of(nextDay, LocalTime.of(23, 59))));
                     nextDay = nextDay.plusDays(1L);
                 }
-                splitByDay.add(new Event(event.getID(), event.getName(),
-                        LocalDateTime.of(nextDay, LocalTime.of(0, 0)), event.getEndTime()));
+                splitByDay.add(new Event(event.getID(), event.getName(), LocalDateTime.of(event.getEndTime().toLocalDate(),
+                        LocalTime.of(0, 0)), event.getEndTime()));
                 return splitByDay;
             }
         }
@@ -245,6 +258,9 @@ public class EventManager {
         for (Event event : this.flattenWorkSessions(new ArrayList<>(this.eventMap.values()))) {
             events.addAll(this.splitByDay(event));
         }
+        for (Event event : this.eventMap.values()){
+            events.addAll(this.splitByDay(event));
+        }
         for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()){
             List<Event> repeatedEvents = recursiveEventList(recursiveEvent);
             for (Event event : repeatedEvents){
@@ -259,6 +275,9 @@ public class EventManager {
         for (Event event : this.flattenWorkSessions(events)) {
             splitFlat.addAll(this.splitByDay(event));
         }
+        for (Event event: events){
+            splitFlat.addAll((this.splitByDay(event)));
+        }
         return splitFlat;
     }
 
@@ -268,7 +287,7 @@ public class EventManager {
      * @return list of events (without work sessions, not split)
      */
     public List<Event> getAllEvents() {
-        return new ArrayList<>(this.eventMap.values());
+        return this.timeOrder(new ArrayList<>(this.eventMap.values()));
     }
 
     /**
@@ -402,7 +421,8 @@ public class EventManager {
      * @return true if an event with this integer ID is in <code>this.eventMap</code>, false otherwise
      */
     public boolean containsID(UUID ID) {
-        return this.eventMap.containsKey(ID);
+
+        return !(this.get(ID) == null);
     }
 
     /**
@@ -423,37 +443,6 @@ public class EventManager {
             current += 1L;
         }
         return range;
-    }
-
-    /**
-     * computes the times between events and the Long length of them in seconds
-     *
-     * @param start  the start time from which free slot are calculated - first start time of free slot
-     * @param events the events between which free slots are calculated
-     * @param end    the end time from which free slots are calculated - last end time of free slot
-     * @return Map with key: LocalDateTime start time of free slot, value: Long duration of free slot in seconds
-     */
-    public Map<LocalDateTime, Long> freeSlots(LocalDateTime start, List<Event> events, LocalDateTime end) {
-        List<Event> schedule = this.timeOrder(this.flattenWorkSessions(events));
-        Map<LocalDateTime, Long> freeSlots = new HashMap<>();
-        int num = 0;
-        while (num < schedule.size()) {
-            if (schedule.get(num).hasStart()) {
-                if (schedule.get(num).getEndTime().isAfter(start)) {
-                    if (schedule.get(num).getStartTime().isBefore(end) && schedule.get(num).getStartTime().isAfter(start)) {
-                        freeSlots.put(start, Duration.between(start, schedule.get(num).getStartTime()).toHours());
-                        start = schedule.get(num).getEndTime();
-                        freeSlots.putAll(this.freeSlots(start, events, end));
-                    } else if (!schedule.get(num).getStartTime().isBefore(end)){
-                        freeSlots.put(start, Duration.between(start, end).toHours());
-                        return freeSlots;
-                    }
-                    start = schedule.get(num).getEndTime();
-                }
-            }
-            num += 1;
-        }
-        return freeSlots;
     }
 
     /**
@@ -664,6 +653,8 @@ public class EventManager {
         }
     }
 
+
+
     /**
      * Return the end date time of the event
      * @param event selected event
@@ -677,6 +668,15 @@ public class EventManager {
         return this.get(ID).getEndTime();
     }
 
+    public LocalDateTime getStart(Event event){
+        return event.getStartTime();
+    }
+
+    public LocalDateTime getStart(UUID event){
+        return this.get(event).getStartTime();
+    }
+
+
     public void setWorkSessions(UUID ID, List<Event> sessions){
         this.get(ID).setWorkSessions(sessions);
     }
@@ -687,6 +687,10 @@ public class EventManager {
 
     public List<Event> getWorkSessions(UUID ID){
         return this.get(ID).getWorkSessions();
+    }
+
+    public void removeWorkSession(UUID id, Event session){
+        this.getWorkSessions(id).remove(session);
     }
 
     public void addWorkSession(UUID ID, LocalDateTime start, LocalDateTime end){
@@ -709,5 +713,10 @@ public class EventManager {
         return this.get(event).getHoursNeeded();
     }
 
+    public void addAll(List<Event> events) {
+        for (Event event: events){
+            this.addEvent(event);
+        }
+    }
     public Map<UUID, Event> getEventMap() { return this.eventMap; }
 }

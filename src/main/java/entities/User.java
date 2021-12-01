@@ -1,5 +1,7 @@
 package entities;
 
+import interfaces.EventListObserver;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,8 +24,8 @@ public class User implements Serializable {
     private String phoneNumber;
     private String homeAddress;
     private ArrayList<Event> events;
-    private boolean procrastinate;
-    private final Map<LocalTime, LocalTime> freeTime;
+    private UserPreferences userPreferences;
+
 
     public User(UUID id, String name, String username, String password) {
         this.id = id;
@@ -31,10 +33,7 @@ public class User implements Serializable {
         this.username = username;
         this.password = password;
         this.events = new ArrayList<>();
-        this.procrastinate = false;
-        this.freeTime = new HashMap<>();
-        this.freeTime.put(LocalTime.of(21, 0), LocalTime.of(23, 59));
-        this.freeTime.put(LocalTime.of(0, 0), LocalTime.of(9, 0));
+        this.userPreferences = new UserPreferences();
     }
 
     public UUID getId() {
@@ -73,13 +72,7 @@ public class User implements Serializable {
         return this.events;
     }
 
-    public boolean getProcrastinate() {
-        return this.procrastinate;
-    }
 
-    public Map<LocalTime, LocalTime> getFreeTime() {
-        return this.freeTime;
-    }
 
     public void setId(UUID id) {
         this.id = id;
@@ -118,17 +111,7 @@ public class User implements Serializable {
         this.events = events;
     }
 
-    public void setProcrastinate(boolean procrastinate) {
-        this.procrastinate = procrastinate;
+    public UserPreferences getUserPreferences(){
+        return this.userPreferences;
     }
-
-    public void setFreeTime(LocalTime start, LocalTime end) {
-        this.freeTime.put(start, end);
-    }
-
-    public void removeFreeTime(LocalTime start) {
-        this.freeTime.remove(start);
-    }
-
-
 }

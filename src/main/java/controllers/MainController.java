@@ -48,9 +48,8 @@ public class MainController {
         this.loginController = new LoginController(this.userController);
         this.calendarController = new CalendarController();
         this.displayMenu = new DisplayMenu();
-        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
-                this.userController);
         this.displayInitScreen();
+        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable, this.userController);
         System.out.println("WELCOME " + this.userController.getCurrentUsername() + "!");
         this.displayScreen();
     }
@@ -82,7 +81,7 @@ public class MainController {
      */
     public void displayScreen() {
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
-                this.userController, new WorkSessionController(userController.getWorkSessionScheduler()));
+                this.userController);
         while (this.loginController.isLoggedIn()) {
             System.out.println(this.calendarController.showDefaultCalendar(this.eventController));
             System.out.println("Please choose your action");
@@ -93,6 +92,7 @@ public class MainController {
             switch (firstChoice) {
                 case "1":
                     this.userController.editProfile();
+                    this.eventController.update(this.userController.getUserManager().getPreferences(this.userController.getCurrentUser()));
                     break;
                 case "2":
                     this.calendarController.showCalendar(this.eventController);

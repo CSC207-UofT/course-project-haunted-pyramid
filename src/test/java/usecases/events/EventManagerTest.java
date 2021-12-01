@@ -89,32 +89,6 @@ public class EventManagerTest {
     }
 
     @Test
-    public void testFreeSlots(){
-        Map<LocalDateTime, Long> expected = new HashMap<>();
-        LocalDateTime start = LocalDateTime.of(2021, 10, 1, 1, 0);
-        LocalDateTime end = LocalDateTime.of(2021, 10, 5, 0, 0);
-
-        this.eventManager.get(UUID1).addWorkSession(LocalDateTime.of(2021, 10, 2, 2, 0),
-                LocalDateTime.of(2021, 10, 2, 3, 0));
-        expected.put(this.eventManager.get(UUID3).getEndTime(), Duration.between(this.eventManager.get(UUID3).getEndTime(),
-                LocalDateTime.of(2021, 10, 2, 2, 0)).toHours());
-        expected.put(LocalDateTime.of(2021, 10, 2, 3, 0),
-                Duration.between(LocalDateTime.of(2021, 10, 2, 3, 0),
-                        this.eventManager.get(UUID4).getStartTime()).toHours());
-        expected.put(start, Duration.between(start, this.eventManager.get(UUID1).getStartTime()).toHours());
-        expected.put(this.eventManager.get(UUID1).getEndTime(),
-                Duration.between(this.eventManager.get(UUID1).getEndTime(),
-                        this.eventManager.get(UUID2).getStartTime()).toHours());
-        expected.put(this.eventManager.get(UUID5).getEndTime(), Duration.between(this.eventManager.get(UUID5).getEndTime(),
-                end).toHours());
-
-        Map<LocalDateTime, Long> actual = this.eventManager.freeSlots(start, this.eventManager.getAllEvents(), end);
-
-        assertEquals(expected, actual);
-    }
-    
-
-    @Test
     public void testSplitByDay(){
         assertEquals(new ArrayList<> (List.of(new Event[] {new Event(UUID6, "6", LocalDateTime.of(2021, 11, 10, 2,
                 30), LocalDateTime.of(2021, 11, 10, 23, 59)), new Event(UUID6,
@@ -166,5 +140,14 @@ public class EventManagerTest {
                 });
         assertEquals(unordered.get(2), this.eventManager.earliest(unordered));
         assertTrue(this.eventManager.get(UUID1).getStartTime().isBefore(this.eventManager.get(UUID3).getStartTime()));
+    }
+
+    public static void main(String[] args){
+        UUID id = UUID.randomUUID();
+        EventManager eventManager = new EventManager(new ArrayList<>(List.of(new Event(id, "taite", LocalDateTime.of(2021,
+                12, 5, 9, 0)))));
+        eventManager.setStart(id, LocalDateTime.of(2021, 12, 2, 9, 0));
+        System.out.println(eventManager.splitByDay(eventManager.get(id)));
+        System.out.println(eventManager.getAllEventsFlatSplit());
     }
 }

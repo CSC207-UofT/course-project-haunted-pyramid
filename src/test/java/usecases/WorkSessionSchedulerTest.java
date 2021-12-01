@@ -33,7 +33,6 @@ public class WorkSessionSchedulerTest {
                 30), LocalDateTime.of(2021, 11, 13, 4, 30))};
         this.events = new ArrayList<>(Arrays.asList(events));
         this.eventManager = new EventManager(this.events);
-        this.workSessionScheduler = new WorkSessionScheduler(Map.ofEntries(Map.entry(LocalTime.of(4, 0), LocalTime.of(14, 0))), false);
     }
     @Test
     public void removeIneligibleDays(){
