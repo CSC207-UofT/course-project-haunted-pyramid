@@ -47,7 +47,7 @@ public class ICalendar {
             }
             bw.write(endCal);
             bw.close();
-            System.out.println("Creation Completed");
+            System.out.println("Task Completed");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,12 +64,12 @@ public class ICalendar {
         String description = eventManager.getDescription(eventID);
         try {
             bw.write(beginEvent);
-            bw.write("UID:" + eventID + "\r\n");
-            bw.write("DTSTAMP:" + startDateTime + "\r\n");
-            bw.write("DTSTART:" + startDateTime + "\r\n");
-            bw.write("DTEND:" + endDateTime + "\r\n");
-            bw.write("SUMMARY:" + name +"\r\n");
-            bw.write("DESCRIPTION:" + description + "\r\n");
+            bw.write("UID:" + eventID + iCalSpacer);
+            bw.write("DTSTAMP:" + startDateTime + iCalSpacer);
+            bw.write("DTSTART:" + startDateTime + iCalSpacer);
+            bw.write("DTEND:" + endDateTime + iCalSpacer);
+            bw.write("SUMMARY:" + name + iCalSpacer);
+            bw.write("DESCRIPTION:" + description + iCalSpacer);
             bw.write(endEvent);
         } catch (IOException e) {
             e.printStackTrace();
