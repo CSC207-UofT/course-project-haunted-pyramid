@@ -156,7 +156,7 @@ public class MainController {
         UserController tempUserController = new UserController(true, tempIoSerializable);
         Map<UUID, List<Event>> map = this.eventController.getEventManager().getUuidEventsMap();
         map.put(this.userController.getCurrentUser(), this.eventController.getEventManager().getAllEvents());
-        tempIoSerializable.eventsWriteToSerializable(map);
+        tempIoSerializable.eventsWriteToSerializable(map, false);
         tempIoSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(),
                 tempUserController.getUserManager()));
         tempIoSerializable.saveToDropbox();

@@ -4,10 +4,10 @@ import entities.Event;
 import interfaces.DateGetter;
 import usecases.events.EventManager;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Malik Lahlou
@@ -26,11 +26,11 @@ public class RecursiveEvent {
      */
 
 
-    private final Integer id;
+    private final UUID id;
     private List<Event> eventsInOneCycle;
     private DateGetter methodToGetDate;
 
-    public RecursiveEvent(Integer id, List<Event> events, DateGetter methodToGetDate){
+    public RecursiveEvent(UUID id, List<Event> events, DateGetter methodToGetDate){
         this.id = id;
         this.eventsInOneCycle = new ArrayList<>();
         for (Event event : events){
@@ -40,7 +40,7 @@ public class RecursiveEvent {
         this.methodToGetDate = methodToGetDate;
     }
 
-    public RecursiveEvent(Integer id){
+    public RecursiveEvent(UUID id){
         this.id = id;
         this.eventsInOneCycle = new ArrayList<>();
     }
@@ -48,7 +48,7 @@ public class RecursiveEvent {
      * Getter methods.
      */
 
-    public Integer getId() {return id;}
+    public UUID getId() {return id;}
     public List<Event> getEventsInOneCycle() {return eventsInOneCycle;}
     public int getCycleLength(){
         return eventsInOneCycle.size() -1;

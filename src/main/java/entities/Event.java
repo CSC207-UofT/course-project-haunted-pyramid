@@ -27,7 +27,7 @@ public class Event implements Serializable {
     private Long hoursNeeded;
     private Long sessionLength;
     private Long startWorking;
-    private Integer recursiveId;
+    private UUID recursiveId;
 
     /**
      * constructor sets the ID, name and end time of the entities.Event, default sessionLength to 1L
@@ -107,7 +107,7 @@ public class Event implements Serializable {
     /**
      * @param recursiveId the new integer recursiveID of the event
      */
-    public void setRecursiveId(int recursiveId) {
+    public void setRecursiveId(UUID recursiveId) {
         this.recursiveId = recursiveId;
     }
 
@@ -428,8 +428,7 @@ public class Event implements Serializable {
 
     }
 
-    public Integer getRecursiveId() {return recursiveId;}
-    public void setRecursiveId(Integer recursiveId) {this.recursiveId = recursiveId;}
+    public UUID getRecursiveId() {return recursiveId;}
     public void setStartWorking(Long startWorking){
         this.startWorking = startWorking;
     }

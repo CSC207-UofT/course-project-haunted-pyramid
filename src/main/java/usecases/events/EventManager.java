@@ -230,10 +230,13 @@ public class EventManager {
      * RecursiveEvent object.
      */
 
-    public List<Event> eventsInSomeRecursion(RecursiveEvent recursiveEvent) {
-        return repeatedEventManager.getEventsFromRecursion(recursiveEvent.getId());
+    public List<Event> recursiveEventList(RecursiveEvent recursiveEvent){
+        List<Event> result = new ArrayList<>();
+        for(List<Event> events : repeatedEventManager.getRecursiveIdToDateToEventsMap().get(recursiveEvent.getId()).values()){
+            result.addAll(events);
+        }
+        return result;
     }
-
 
     /**
      * returns ArrayList of all events in <code>this.eventMap</code>, including work sessions within events and
@@ -250,7 +253,7 @@ public class EventManager {
             events.addAll(this.splitByDay(event));
         }
         for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()){
-            List<Event> repeatedEvents = this.eventsInSomeRecursion(recursiveEvent);
+            List<Event> repeatedEvents = recursiveEventList(recursiveEvent);
             for (Event event : repeatedEvents){
                 events.addAll(this.splitByDay(event));
             }
@@ -452,6 +455,24 @@ public class EventManager {
         event.setDescription(describe);
     }
 
+    /**
+     * Get description of a specific event
+     * @param eventID ID of the event
+     * @return get description of the event from eventID
+     */
+    public String getDescription(UUID eventID) {
+        if (eventMap.containsKey(eventID)) {
+            if (this.eventMap.get(eventID).getDescription() != null) {
+                return this.eventMap.get(eventID).getDescription();
+            }
+            else {
+                return "No description provided";
+            }
+        }
+        else {
+            return null;
+        }
+    }
 
     /**
      * Return the start time information of the chosen event in string
@@ -692,4 +713,5 @@ public class EventManager {
             this.addEvent(event);
         }
     }
+    public Map<UUID, Event> getEventMap() { return this.eventMap; }
 }
