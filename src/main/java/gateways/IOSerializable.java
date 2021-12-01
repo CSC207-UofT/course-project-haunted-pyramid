@@ -188,15 +188,9 @@ public class IOSerializable {
      *
      * @return an ArrayList of all Events stored in the file
      */
-    public Map<UUID, List<Event>> eventsReadFromSerializable(boolean recursive) {
+    public Map<UUID, List<Event>> eventsReadFromSerializable() {
         try {
-            InputStream file;
-            if(!recursive){
-                file = new FileInputStream(EVENTS_FILEPATH);
-            }
-            else{
-                file = new FileInputStream(RECURSIVE_EVENTS_FILEPATH);
-            }
+            InputStream  file = new FileInputStream(EVENTS_FILEPATH);
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
             //Please refer to specifications for explanation
@@ -218,18 +212,55 @@ public class IOSerializable {
      *
      * @param events an ArrayList of events to be serialized
      */
-    public static void eventsWriteToSerializable(Map<UUID, List<Event>> events, boolean recursive) {
+    public static void eventsWriteToSerializable(Map<UUID, List<Event>> events) {
         try {
-            OutputStream file;
-            if(!recursive){
-                file = new FileOutputStream(EVENTS_FILEPATH);
-            }
-            else{
-                file = new FileOutputStream(RECURSIVE_EVENTS_FILEPATH);
-            }
+            OutputStream file = new FileOutputStream(EVENTS_FILEPATH);
             OutputStream buffer = new BufferedOutputStream(file);
             ObjectOutput output = new ObjectOutputStream(buffer);
             output.writeObject(events);
+            output.close();
+        } catch (IOException eIO) {
+            logger.log(Level.SEVERE, "Cannot perform serialization", eIO);
+        }
+    }
+
+
+    /**
+     * Read the file contents from the serialized files obtained from the dropbox repository.
+     * Then type cast them into an ArrayList of Events.
+     *
+     * @return an ArrayList of all Events stored in the file
+     */
+    public Map<UUID, Map<UUID, List<Event>>> recursiveEventsReadFromSerializable() {
+        try {
+            InputStream  file = new FileInputStream(RECURSIVE_EVENTS_FILEPATH);
+            InputStream buffer = new BufferedInputStream(file);
+            ObjectInput input = new ObjectInputStream(buffer);
+            //Please refer to specifications for explanation
+            Map<UUID, Map<UUID, List<Event>>> recoveredEvents = (Map<UUID, Map<UUID, List<Event>>>) input.readObject();
+            input.close();
+            return recoveredEvents;
+        } catch (IOException eIO) {
+            logger.log(Level.SEVERE, "Cannot perform deserialization. Returning new blank Arraylist.", eIO);
+            return new HashMap<>();
+        } catch (ClassNotFoundException eCNF) {
+            logger.log(Level.SEVERE, "Cannot find class. Returning new blank Arraylist.", eCNF);
+            return new HashMap<>();
+        }
+    }
+
+    /**
+     * Write the serialized file to the filepath as specified.
+     * The written object should be an ArrayList of Events.
+     *
+     * @param userIdToEvents an ArrayList of events to be serialized
+     */
+    public static void recursiveEventsWriteToSerializable(Map<UUID, Map<UUID, List<Event>>> userIdToEvents) {
+        try {
+            OutputStream file = new FileOutputStream(RECURSIVE_EVENTS_FILEPATH);
+            OutputStream buffer = new BufferedOutputStream(file);
+            ObjectOutput output = new ObjectOutputStream(buffer);
+            output.writeObject(userIdToEvents);
             output.close();
         } catch (IOException eIO) {
             logger.log(Level.SEVERE, "Cannot perform serialization", eIO);

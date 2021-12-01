@@ -1,13 +1,13 @@
 package entities.recursions;
 
 import entities.Event;
+import entities.User;
 import interfaces.DateGetter;
 import usecases.events.EventManager;
 
+import java.io.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Malik Lahlou
@@ -204,4 +204,70 @@ public class RecursiveEvent {
     }
 
 
+    private Map<LocalDateTime, List<Event>> eventListToMap(List<Event> events, int cycleLength){
+        Map<LocalDateTime, List<Event>> datesAndEvents = new HashMap<>();
+        int endLoop = events.size();
+        int i = 1;
+        while(cycleLength*i < endLoop){
+            datesAndEvents.put(startTimeGetter(events.get(cycleLength*(i-1))),
+                    events.subList(cycleLength*(i-1), cycleLength*i));
+            i++;
+        }
+        datesAndEvents.put(startTimeGetter(events.get(cycleLength*(i-1))), events.subList(cycleLength*(i-1), endLoop));
+        return datesAndEvents;
+    }
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        UUID id3 = UUID.randomUUID();
+        LocalDateTime l =  LocalDateTime.of(2021, 11, 26, 11, 0);
+        Event e1 = new Event(id1, "e1", l);
+        Event e2 = new Event(id2, "e2", 2021, 11, 20, 10, 11, 0, 0);
+        Event e3 = new Event(id3, "e3", 2021, 11, 22, 10, 11, 0, 0);
+        Event e4 = new Event(id3, "e4", 2021, 11, 25, 10, 11, 0, 0);
+        ArrayList<Event> events = new ArrayList<>();
+        events.add(e2);
+        events.add(e3);
+        events.add(e4);
+        events.add(e1);
+        NumberOfRepetitionInput x = new NumberOfRepetitionInput(4);
+        RecursiveEvent recursiveEvent = new RecursiveEvent(UUID.randomUUID(), events, x);
+        List<Event> z = recursiveEvent.listOfEventsInCycles(events);
+        UUID uuid = UUID.randomUUID();
+        User user = new User(uuid, "malik", "lahlou", "pass");
+
+        Map<UUID, Map<UUID, List<Event>>> mine = new HashMap<>();
+        Map<UUID, List<Event>> mine2 = new HashMap<>();
+        mine2.put(recursiveEvent.getId(), z);
+        mine.put(user.getId(), mine2);
+
+        OutputStream file = new FileOutputStream("ser_save_test");
+        OutputStream buffer = new BufferedOutputStream(file);
+        ObjectOutput output = new ObjectOutputStream(buffer);
+        output.writeObject(mine);
+        output.close();
+
+        InputStream file1 = new FileInputStream("ser_save_test");
+        InputStream buffer1 = new BufferedInputStream(file1);
+        ObjectInput input1 = new ObjectInputStream(buffer1);
+        Map<UUID, Map<UUID, List<Event>>> recoveredUsers = (Map<UUID, Map<UUID, List<Event>>>) input1.readObject();
+        input1.close();
+
+        System.out.println(recoveredUsers.size());
+        System.out.println(recoveredUsers.keySet());
+        UUID je = null;
+        for (UUID uuid1 : recoveredUsers.keySet()){
+            je = uuid1;
+        }
+        Map<UUID, List<Event>> fr = recoveredUsers.get(je);
+        UUID tu = null;
+        for (UUID uuid1 : fr.keySet()){
+            tu = uuid1;
+        }
+        System.out.println(tu);
+        System.out.println(recoveredUsers.get(je).get(tu));
+        System.out.println(recoveredUsers.get(je).get(tu).size());
+        System.out.println(z.size());
+    }
 }
