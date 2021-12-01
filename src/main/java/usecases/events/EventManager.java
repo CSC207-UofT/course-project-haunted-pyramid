@@ -258,9 +258,6 @@ public class EventManager {
         for (Event event : this.flattenWorkSessions(new ArrayList<>(this.eventMap.values()))) {
             events.addAll(this.splitByDay(event));
         }
-        for (Event event : this.eventMap.values()){
-            events.addAll(this.splitByDay(event));
-        }
         for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()){
             List<Event> repeatedEvents = recursiveEventList(recursiveEvent);
             for (Event event : repeatedEvents){
@@ -274,9 +271,6 @@ public class EventManager {
         List<Event> splitFlat = new ArrayList<>();
         for (Event event : this.flattenWorkSessions(events)) {
             splitFlat.addAll(this.splitByDay(event));
-        }
-        for (Event event: events){
-            splitFlat.addAll((this.splitByDay(event)));
         }
         return splitFlat;
     }
