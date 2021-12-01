@@ -22,7 +22,6 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private final List<String> defaultTimeLine = new ArrayList<>();
     private final DisplayCalendarHelper cf;
     private final DisplayConflict conflictDisplay;
-    private final CalendarTimePresenter timePresenter;
 
     /**
      * Initialize the class by setting
@@ -46,7 +45,6 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
         this.cf = new DisplayCalendarHelper(this.year, this.month);
         this.conflictDisplay = new DisplayWeeklyConflict(cm, em, year, month, date);
-        this.timePresenter = new CalendarTimePresenter(em);
     }
 
     /**
@@ -112,15 +110,43 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
      * @return list of timelines
      */
     private List<String> gatherTimeLine(int index){
+
         List<String> temp = new ArrayList<>();
         List<Integer> keyList = getKeys();
+        List<Integer> yearMonth = updateYearMonth(keyList.get(index));
         for (UUID eventID: calendarMap.get(keyList.get(index))){
-            if (em.getStartTimeString(eventID) != null) {
-                temp.add(em.getStartTimeString(eventID));
+            String startTime = timePresenter.getStartTime(eventID, yearMonth.get(0), yearMonth.get(1), keyList.get(index));
+            String endTime = timePresenter.getEndTime(eventID, yearMonth.get(0), yearMonth.get(1), keyList.get(index));
+            if (startTime != null) {
+                temp.add(startTime);
             }
-            temp.add(em.getEndTimeString(eventID));
+            temp.add(endTime);
         }
         return temp;
+    }
+
+    /**
+     * helper method that return the year and month for the given date in a weekly calendar
+     * @param date chosen date
+     * @return list of year and month information
+     */
+    private List<Integer> updateYearMonth(int date) {
+        List<Integer> result = new ArrayList<>();
+        int year = this.year;
+        int month = this.month;
+        if (this.date > 20 && date < 10) {
+            if (month + 1 <= 12) {
+                month = month + 1;
+            }
+            else {
+                year = this.year + 1;
+                month = 1;
+            }
+        }
+        result.add(year);
+        result.add(month);
+        result.add(date);
+        return result;
     }
 
     /**
@@ -274,13 +300,15 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private Integer addContent(StringBuilder result, List<String> timeLine, int time, int index){
         List<Integer> keyList = getKeys();
         int nameLength = 0;
+        List<Integer> yearMonth = updateYearMonth(keyList.get(index));
         for (UUID eventID: calendarMap.get(keyList.get(index))){
-            String eventStartTime = timePresenter.getStartTime(eventID, year, month, keyList.get(index));
-            if (eventStartTime == null){
-                eventStartTime = em.getEndTimeString(eventID);
+            String eventStartTime = timePresenter.getStartTime(eventID, yearMonth.get(0), yearMonth.get(1), keyList.get(index));
+            String eventEndTime = timePresenter.getEndTime(eventID, yearMonth.get(0), yearMonth.get(1), keyList.get(index));
+            if (eventStartTime == null) {
+                eventStartTime = eventEndTime;
             }
             if (cf.convertTimeToInt(timeLine.get(time)) >= cf.convertTimeToInt(eventStartTime)
-                && cf.convertTimeToInt(timeLine.get(time)) <= cf.convertTimeToInt(em.getEndTimeString(eventID))){
+                && cf.convertTimeToInt(timeLine.get(time)) <= cf.convertTimeToInt(eventEndTime)) {
                 nameLength = appendNameGetNameLength(result, nameLength, eventID, eventStartTime);
             }
         }

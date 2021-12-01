@@ -43,7 +43,7 @@ public class ICalendar {
             bw.write(version);
             bw.write(prodID);
             for (UUID key : eventManager.getEventMap().keySet()) {
-                addEvent(bw,  key);
+                addEventToFile(bw,  key);
             }
             bw.write(endCal);
             bw.close();
@@ -53,7 +53,7 @@ public class ICalendar {
         }
     }
 
-    private void addEvent(BufferedWriter bw, UUID eventID) {
+    private void addEventToFile(BufferedWriter bw, UUID eventID) {
         LocalDate startDate = eventManager.getStartDate(eventID);
         LocalTime startTime = eventManager.getStartTime(eventID);
         LocalDate endDate = eventManager.getEndDate(eventID);

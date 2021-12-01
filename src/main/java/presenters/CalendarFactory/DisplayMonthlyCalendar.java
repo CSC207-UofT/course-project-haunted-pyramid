@@ -24,7 +24,6 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
     private final Map<Integer, List<UUID>> calendarMap;
     private final DisplayCalendarHelper cf;
     private final DisplayConflict conflictDisplay;
-    private final CalendarTimePresenter timePresenter;
     List<String> dayOfWeekCollection = new ArrayList<>() {{
         add("SUNDAY");
         add("MONDAY");
@@ -52,7 +51,6 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         this.cf = new DisplayCalendarHelper(year, month);
         YearMonth tempYearMonth = YearMonth.of(year, month);
         this.conflictDisplay = new DisplayMonthlyConflict(cm, em, year, month, tempYearMonth.lengthOfMonth());
-        this.timePresenter = new CalendarTimePresenter(em);
     }
 
     /**
