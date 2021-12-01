@@ -641,6 +641,7 @@ public class EventManager {
         }
     }
 
+
     /**
      * Return the end time of the event
      * @param id ID of the event
