@@ -14,7 +14,10 @@ public class CalendarTimePresenter {
 
     public String getStartTime(UUID eventID, int year, int month, int date) {
         LocalDate givenStartDate = LocalDate.of(year, month, date);
-        if (eventManager.getStartDate(eventID).isEqual(givenStartDate)) {
+        if (eventManager.getStartTime(eventID) == null) {
+            return null;
+        }
+        else if (eventManager.getStartDate(eventID).isEqual(givenStartDate)) {
             return eventManager.getStartTimeString(eventID);
         }
         else if (eventManager.getStartDate(eventID).isBefore(givenStartDate)) {
