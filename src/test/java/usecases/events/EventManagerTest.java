@@ -112,6 +112,7 @@ public class EventManagerTest {
 
         assertEquals(expected, actual);
     }
+    
 
     @Test
     public void testSplitByDay(){

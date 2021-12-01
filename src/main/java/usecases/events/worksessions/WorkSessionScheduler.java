@@ -260,6 +260,7 @@ public class WorkSessionScheduler implements EventListObserver {
         return eligible;
     }
 
+
     /**
      * orders a list of days by how many work sessions occur on them, smallest to largest
      *
