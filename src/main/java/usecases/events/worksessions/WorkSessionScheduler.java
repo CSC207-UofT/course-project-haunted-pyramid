@@ -260,6 +260,7 @@ public class WorkSessionScheduler implements EventListObserver {
         return eligible;
     }
 
+
     /**
      * orders a list of days by how many work sessions occur on them, smallest to largest
      *
@@ -292,7 +293,7 @@ public class WorkSessionScheduler implements EventListObserver {
         for (LocalDate day : days) {
             int num = 0;
             for (Event session : workSessions) {
-                if (eventManager.getEnd(session.getID()).toLocalDate().isEqual(day)) {
+                if (eventManager.getEnd(session).toLocalDate().isEqual(day)) {
                     num = num + 1;
                 }
             }
