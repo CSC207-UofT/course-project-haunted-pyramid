@@ -47,11 +47,11 @@ public interface TimeGetter {
 
     default Map<LocalDate, List<Event>> getDaySchedule(EventManager eventManager, UUID deadline){
         Map<LocalDate, List<Event>> daySchedule = new HashMap<>();
-        for(LocalDate start = LocalDate.now(); !start.isBefore(eventManager.getEndDate(deadline)); start = start.plusDays(1)){
+        for(LocalDate start = LocalDate.now(); !start.isAfter(eventManager.getEndDate(deadline)); start = start.plusDays(1)){
             daySchedule.put(start, new ArrayList<>());
             for(Event event: this.getListSchedule(eventManager, deadline)){
                 for (Event eventSplit: eventManager.splitByDay(event)){
-                    if (eventManager.getStart(eventSplit).toLocalDate().isEqual(start)){
+                    if (eventManager.getEnd(eventSplit).toLocalDate().isEqual(start)){
                         daySchedule.get(start).add(eventSplit);
                     }
                 }

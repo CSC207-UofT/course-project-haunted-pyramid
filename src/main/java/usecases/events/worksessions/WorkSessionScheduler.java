@@ -120,11 +120,10 @@ public class WorkSessionScheduler implements EventListObserver {
                 eventManager.addWorkSession(deadline, idealStartTime, idealStartTime.plusHours(length));
                 this.mergeSessions(deadline, eventManager, idealStartTime, length, eventManager.getWorkSessions(deadline)
                         .get(eventManager.getWorkSessions(deadline).size() - 1));
-                totalHours -= length;
             }
+            totalHours -= length;
         }
     }
-
 
     //private methods and helpers
 

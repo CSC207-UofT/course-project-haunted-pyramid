@@ -118,6 +118,7 @@ public class EventController {
                 System.out.println(dm.displayMenu(content));
                 String next = ioController.getAnswer("Enter the Number of the Action You would like to Perform");
                 save = this.getAction(next, ID);
+                this.workSessionController.refresh(eventManager);
             }
         }
     }

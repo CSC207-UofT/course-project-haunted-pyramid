@@ -43,6 +43,11 @@ public class WorkSessionController {
             this.workSessionScheduler.autoSchedule(eventManager.getID(event), eventManager);
         }
     }
+    public void refresh(EventManager eventManager){
+        for (Event event: eventManager.getAllEvents()){
+            this.workSessionScheduler.autoSchedule(eventManager.getID(event), eventManager);
+        }
+    }
 
     public WorkSessionScheduler getWorkSessionScheduler(){
         return this.workSessionScheduler;
