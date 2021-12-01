@@ -157,7 +157,7 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         List<String> additionalTimeLine = new ArrayList<>();
         for (UUID eventID : calendarMap.get(this.date)) {
             String endTime = this.timePresenter.getEndTime(eventID, this.year, this.month, this.date);
-            String startTime = this.timePresenter.getStartTime(eventID, this.year, this.month, this.date);
+            String startTime = getStartTime(eventID, endTime);
             if (!additionalTimeLine.contains(startTime)){
                 additionalTimeLine.add(startTime);
             }
