@@ -22,6 +22,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
     private final List<String> defaultTimeLine = new ArrayList<>();
     private final DisplayCalendarHelper cf;
     private final DisplayConflict conflictDisplay;
+    private final CalendarTimePresenter timePresenter;
 
     /**
      * Initialize the class by setting
@@ -45,6 +46,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         }
         this.cf = new DisplayCalendarHelper(this.year, this.month);
         this.conflictDisplay = new DisplayWeeklyConflict(cm, em, year, month, date);
+        this.timePresenter = new CalendarTimePresenter(em);
     }
 
     /**
@@ -273,7 +275,7 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         List<Integer> keyList = getKeys();
         int nameLength = 0;
         for (UUID eventID: calendarMap.get(keyList.get(index))){
-            String eventStartTime = em.getStartTimeString(eventID);
+            String eventStartTime = timePresenter.getStartTime(eventID, year, month, keyList.get(index));
             if (eventStartTime == null){
                 eventStartTime = em.getEndTimeString(eventID);
             }

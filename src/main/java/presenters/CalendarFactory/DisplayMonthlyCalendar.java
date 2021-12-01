@@ -24,6 +24,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
     private final Map<Integer, List<UUID>> calendarMap;
     private final DisplayCalendarHelper cf;
     private final DisplayConflict conflictDisplay;
+    private final CalendarTimePresenter timePresenter;
     List<String> dayOfWeekCollection = new ArrayList<>() {{
         add("SUNDAY");
         add("MONDAY");
@@ -51,6 +52,7 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         this.cf = new DisplayCalendarHelper(year, month);
         YearMonth tempYearMonth = YearMonth.of(year, month);
         this.conflictDisplay = new DisplayMonthlyConflict(cm, em, year, month, tempYearMonth.lengthOfMonth());
+        this.timePresenter = new CalendarTimePresenter(em);
     }
 
     /**
@@ -259,8 +261,8 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
             if (eventName.length() > 17) {
                 eventName = eventName.substring(0, 14) + "...";
             }
-            String eventStartTime = em.getStartTimeString(eventID);
-            String eventEndTime = em.getEndTimeString(eventID);
+            String eventStartTime = timePresenter.getStartTime(eventID, year, month, usedContentDates.get(contentCount));
+            String eventEndTime = timePresenter.getEndTime(eventID, year, month, usedContentDates.get(contentCount));
             if (eventStartTime == null) {
                 String extra = " " + ": " + "Due ";
                 String tempDiv = " ".repeat(this.dayOfWeekCollection.get(startingIndex + contentCount).length() +
