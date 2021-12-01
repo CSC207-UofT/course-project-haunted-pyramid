@@ -476,6 +476,24 @@ public class EventManager {
         event.setDescription(describe);
     }
 
+    /**
+     * Get description of a specific event
+     * @param eventID ID of the event
+     * @return get description of the event from eventID
+     */
+    public String getDescription(UUID eventID) {
+        if (eventMap.containsKey(eventID)) {
+            if (this.eventMap.get(eventID).getDescription() != null) {
+                return this.eventMap.get(eventID).getDescription();
+            }
+            else {
+                return "No description provided";
+            }
+        }
+        else {
+            return null;
+        }
+    }
 
     /**
      * Return the start time information of the chosen event in string
@@ -689,4 +707,6 @@ public class EventManager {
     public double getHoursNeeded(UUID event) {
         return this.get(event).getHoursNeeded();
     }
+
+    public Map<UUID, Event> getEventMap() { return this.eventMap; }
 }
