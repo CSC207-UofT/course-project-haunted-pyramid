@@ -49,11 +49,11 @@ public class EventController {
         this.workSessionController = workSessionController;
         if (hasSavedData) {
             this.eventManager =
-                    new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()));
+                    new EventManager(ioSerializable.eventsReadFromSerializable(false).getOrDefault(userController.getCurrentUser(), new ArrayList<>()));
         } else {
             this.eventManager = new EventManager(new ArrayList<>());
         }
-        this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
+        this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable(false));
         this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         this.recursionController = new RecursionController();
         this.ioController = new IOController();
@@ -72,12 +72,12 @@ public class EventController {
                 true));
         if (hasSavedData) {
             this.eventManager =
-                    new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()));
+                    new EventManager(ioSerializable.eventsReadFromSerializable(false).getOrDefault(userController.getCurrentUser(), new ArrayList<>()));
         } else {
             this.eventManager = new EventManager(new ArrayList<>());
             this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         }
-        this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
+        this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable(false));
         this.recursionController = new RecursionController();
         this.ioController = new IOController();
     }

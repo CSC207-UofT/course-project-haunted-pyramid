@@ -3,6 +3,9 @@ package controllers;
 import entities.Event;
 import entities.recursions.IntervalDateInput;
 import entities.recursions.NumberOfRepetitionInput;
+import entities.recursions.RecursiveEvent;
+import helpers.ConstantID;
+import helpers.Constants;
 import helpers.ControllerHelper;
 import interfaces.DateGetter;
 import usecases.events.EventManager;
@@ -75,7 +78,8 @@ public class RecursionController {
         else {
             methodToGetDates = getDateGetter();
         }
-        // eventManager.getRepeatedEventManager().addRecursiveEvent(cycle, methodToGetDates);
+        RecursiveEvent recursiveEvent = new RecursiveEvent(UUID.randomUUID(), cycle, methodToGetDates);
+        eventManager.getRepeatedEventManager().addRecursiveEvent(recursiveEvent);
     }
 
     /**
