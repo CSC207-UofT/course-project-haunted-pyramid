@@ -28,6 +28,7 @@ public class EventManager {
     private EventListObserver[] toUpdate;
     // Get rid of eventMap later when sean fixes Event ID
     private Map<UUID, List<Event>> uuidEventsMap;
+    private Map<UUID, Map<UUID, RecursiveEvent>> uuidRecursiveEventsMap;
 
     /**
      * constructs event manager. stores list of events by key: ID, value: event in <code>this.eventMap</code>
@@ -48,6 +49,22 @@ public class EventManager {
         this.repeatedEventManager = new RepeatedEventManager();
     }
 
+
+    public EventManager(List<Event> events, Map<UUID, RecursiveEvent> recursiveEventMap) {
+        if (events.isEmpty()) {
+            this.eventMap = new HashMap<>();
+        } else {
+            this.eventMap = new HashMap<>();
+            for (Event event : events) {
+                this.eventMap.put(event.getID(), event);
+            }
+        }
+        this.toUpdate = new EventListObserver[]{};
+        this.repeatedEventManager = new RepeatedEventManager(recursiveEventMap);
+    }
+
+
+
     /**
      * Get this Events map
      *
@@ -57,6 +74,10 @@ public class EventManager {
         return this.uuidEventsMap;
     }
 
+    public Map<UUID, Map<UUID, RecursiveEvent>> getUuidRecursiveEventsMap() {
+        return uuidRecursiveEventsMap;
+    }
+
     /**
      * Set this Events map to the parameter
      *
@@ -64,6 +85,10 @@ public class EventManager {
      */
     public void setUuidEventsMap(Map<UUID, List<Event>> map) {
         this.uuidEventsMap = map;
+    }
+
+    public void setUuidRecursiveEventsMap(Map<UUID, Map<UUID, RecursiveEvent>> uuidRecursiveEventsMap) {
+        this.uuidRecursiveEventsMap = uuidRecursiveEventsMap;
     }
 
     /**
@@ -126,6 +151,15 @@ public class EventManager {
         return null;
     }
 
+
+    public List<Event> getEvents(List<UUID> Ids){
+        List<Event> result = new ArrayList<>();
+        for (UUID uuid : Ids){
+            result.add(eventMap.get(uuid));
+        }
+        return result;
+    }
+
     /**
      * removes the event of this ID from <code>this.eventMap</code> if it is there, returns the removed event or null
      *
@@ -153,6 +187,8 @@ public class EventManager {
         this.addEvent(event);
         return event;
     }
+
+
 
 
     /**
@@ -233,6 +269,8 @@ public class EventManager {
         return repeatedEventManager;
     }
 
+
+
     /**
      * @param recursiveEvent The RecursiveEvent from which the repeated events should be extracted.
      * @return Given a RecursiveEvent, this method returns all the events in the period of repetition specified in the
@@ -281,7 +319,11 @@ public class EventManager {
      * @return list of events (without work sessions, not split)
      */
     public List<Event> getAllEvents() {
-        return this.timeOrder(new ArrayList<>(this.eventMap.values()));
+        List<Event> allEvents = new ArrayList<>(this.eventMap.values());
+        for(RecursiveEvent recursiveEvent : this.repeatedEventManager.getRecursiveEventMap().values()){
+            allEvents.addAll(recursiveEventList(recursiveEvent));
+        }
+        return this.timeOrder(allEvents);
     }
 
     /**
@@ -325,6 +367,12 @@ public class EventManager {
     public void addObserver(EventListObserver obs) {
         List<EventListObserver> inter = new ArrayList<>(List.of(this.toUpdate));
         inter.add(obs);
+        this.toUpdate = inter.toArray(new EventListObserver[0]);
+    }
+
+    public void removeObserver(EventListObserver obs) {
+        List<EventListObserver> inter = new ArrayList<>(List.of(this.toUpdate));
+        inter.remove(obs);
         this.toUpdate = inter.toArray(new EventListObserver[0]);
     }
 

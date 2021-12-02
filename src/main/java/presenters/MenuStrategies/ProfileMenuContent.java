@@ -1,5 +1,6 @@
 package presenters.MenuStrategies;
 
+import interfaces.MenuContent;
 import usecases.UserManager;
 
 import java.util.ArrayList;

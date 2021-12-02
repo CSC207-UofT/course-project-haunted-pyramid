@@ -109,7 +109,7 @@ public class UserController {
             System.out.println("Note:");
             System.out.println("Work Sessions will only set up during Free Time");
             System.out.println("If Procrastinate is on, Work Sessions will be scheduled more towards the Deadline");
-            System.out.println("if cram is on, longer work sessions will be scheduled on days they fit as opposed to even " +
+            System.out.println("if Cram is on, longer work sessions will be scheduled on days they fit as opposed to even " +
                     "day spacing");
             System.out.println("if morning person is on, your events will be scheduled as early in the day as possible");
             System.out.println("if multiple work sessions of the same event occur on the same day, they will be scheduled" +
@@ -124,9 +124,9 @@ public class UserController {
     }
 
     /**
-     * passes to next method depending on input String (a number between 1 and 5)"
+     * passes to next method depending on input String (a number between 1 and 7)"
      *
-     * @param action String, "1" - "5"
+     * @param action String, "1" - "7"
      * @return done if the user is done editing
      */
     private boolean getAction(String action) {

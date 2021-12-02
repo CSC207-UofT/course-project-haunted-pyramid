@@ -14,12 +14,10 @@ import java.util.*;
 /**
  * Build the image of monthly calendar and display if asked
  * @author Seo Won Yi
- * @see DisplayCalendar
- * @see DisplayCalendarFactory
+ * @see CalendarDisplay
+ * @see CalendarDisplayFactory
  */
-public class DisplayMonthlyCalendar extends DisplayCalendar {
-    private final int year;
-    private final int month;
+public class MonthlyCalendarDisplay extends CalendarDisplay {
     private final List<Integer> keyList;
     private final Map<Integer, List<UUID>> calendarMap;
     private final DisplayCalendarHelper cf;
@@ -40,10 +38,8 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
      * @param year given year
      * @param month given month
      */
-    public DisplayMonthlyCalendar(CalendarManager cm, EventManager em, int year, int month) {
-        super(cm, em);
-        this.year = year;
-        this.month = month;
+    public MonthlyCalendarDisplay(CalendarManager cm, EventManager em, int year, int month) {
+        super(cm, em, year, month, 1);
         MonthlyCalendarByType mc = new MonthlyCalendarByType();
         this.keyList = new ArrayList<>(mc.getCalendar(cm, year, month).keySet());
         calendarMap = mc.getCalendar(cm, year, month);
@@ -68,6 +64,15 @@ public class DisplayMonthlyCalendar extends DisplayCalendar {
         fillCalendar(cf, result, usedDates, usedContentDates, iteratorCounter);
         result.append(this.conflictDisplay.displayConflict());
         return result.toString();
+    }
+
+    /**
+     * Size of the calendar (number of dates)
+     * @return size of the calendar (number of dates)
+     */
+    @Override
+    public int size() {
+        return this.calendarMap.size();
     }
 
     /**

@@ -1,9 +1,9 @@
 package helpers;
 
-import presenters.CalendarFactory.DisplayCalendar;
-import presenters.CalendarFactory.DisplayDailyCalendar;
-import presenters.CalendarFactory.DisplayMonthlyCalendar;
-import presenters.CalendarFactory.DisplayWeeklyCalendar;
+import presenters.CalendarFactory.CalendarDisplay;
+import presenters.CalendarFactory.DailyCalendarDisplay;
+import presenters.CalendarFactory.MonthlyCalendarDisplay;
+import presenters.CalendarFactory.WeeklyCalendarDisplay;
 import usecases.events.EventManager;
 
 import java.time.DayOfWeek;
@@ -13,10 +13,10 @@ import java.util.*;
 /**
  * Helper class that contains lots of common methods being used by different types of DisplayCalendar Classes
  * @author Seo Won Yi
- * @see DisplayCalendar
- * @see DisplayDailyCalendar
- * @see DisplayWeeklyCalendar
- * @see DisplayMonthlyCalendar
+ * @see CalendarDisplay
+ * @see DailyCalendarDisplay
+ * @see WeeklyCalendarDisplay
+ * @see MonthlyCalendarDisplay
  */
 public class DisplayCalendarHelper {
     private final int year;

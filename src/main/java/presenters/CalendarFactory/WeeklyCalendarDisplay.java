@@ -14,10 +14,7 @@ import java.util.*;
  * Build the image of weekly calendar and display if asked to
  * @author Seo Won Yi
  */
-public class DisplayWeeklyCalendar extends DisplayCalendar {
-    private final int year;
-    private final int month;
-    private final int date;
+public class WeeklyCalendarDisplay extends CalendarDisplay {
     private final Map<Integer, List<UUID>> calendarMap;
     private final List<String> defaultTimeLine = new ArrayList<>();
     private final DisplayCalendarHelper cf;
@@ -30,11 +27,8 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
      * @param month given month
      * @param date given date
      */
-    public DisplayWeeklyCalendar(CalendarManager cm, EventManager em, int year, int month, int date) {
-        super(cm, em);
-        this.year = year;
-        this.month = month;
-        this.date = date;
+    public WeeklyCalendarDisplay(CalendarManager cm, EventManager em, int year, int month, int date) {
+        super(cm, em, year, month, date);
         WeeklyCalendarByType wc = new WeeklyCalendarByType();
         this.calendarMap = wc.getCalendar(cm, year, month, date);
         for (int i = 0; i < 10; i++){
@@ -67,6 +61,15 @@ public class DisplayWeeklyCalendar extends DisplayCalendar {
         result.append(cf.endFrame(lengthDecider()));
         result.append(this.conflictDisplay.displayConflict());
         return result.toString();
+    }
+
+    /**
+     * Size of the calendar (number of dates)
+     * @return size of the calendar (number of dates)
+     */
+    @Override
+    public int size() {
+        return this.calendarMap.size();
     }
 
     /**

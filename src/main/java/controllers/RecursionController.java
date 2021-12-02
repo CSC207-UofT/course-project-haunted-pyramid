@@ -1,13 +1,11 @@
 package controllers;
 
-import entities.Event;
-import entities.recursions.IntervalDateInput;
-import entities.recursions.NumberOfRepetitionInput;
-import entities.recursions.RecursiveEvent;
 import helpers.ConstantID;
 import helpers.Constants;
 import helpers.ControllerHelper;
 import interfaces.DateGetter;
+import presenters.MenuStrategies.DisplayMenu;
+import presenters.MenuStrategies.RecursionEditMenuContent;
 import usecases.events.EventManager;
 
 import java.time.LocalDate;
@@ -26,46 +24,39 @@ public class RecursionController {
     private final IOController ioController = new IOController();
     private final ControllerHelper helper = new ControllerHelper();
 
-    /**
-     *
-     * @param eventIDList the ids of the events to repeat.
-     * @param eventManager the event manager containing all the events of this user
-     * This methods prompt the user to create repetitions of events with ids in eventIDList.
-     */
 
-    // TODO (phase 2): make this method shorter.
 
-    public void createNewRecursion(List<UUID> eventIDList, EventManager eventManager){
-        List<Event> cycle = new ArrayList<>();
-        List<UUID> eventID = new ArrayList<>();
-        for (UUID id : eventIDList){
-            cycle.add(eventManager.get(id));
-            eventID.add(id);
-        }
-        Collections.sort(eventID);
-        eventManager.timeOrder(cycle);
-        DateGetter methodToGetDates;
-        System.out.println("Please enter the Second Occurrence date of the Event");
+
+    private LocalDateTime secondFirstEventDateTime(LocalTime firstEventTime, LocalDateTime lastEventInCycleDate){
+        System.out.println("Please enter the Second Occurrence date of the first event");
         LocalDate secondFirstEventDate = ioController.getDate("Enter the Date of the Occurrence");
-        LocalTime secondFirstEventTime = eventManager.getEndTime(eventID.get(0));
-        LocalDateTime secondFirstEventDateTime = LocalDateTime.of(secondFirstEventDate, secondFirstEventTime);
-        while (secondFirstEventDateTime.isBefore(cycle.get(cycle.size() - 1).getEndTime())){
-            System.out.println("Please enter a date after: " + cycle.get(cycle.size() - 1).getEndTime().toString());
+        LocalDateTime secondFirstEventDateTime = LocalDateTime.of(secondFirstEventDate, firstEventTime);
+        while (secondFirstEventDateTime.isBefore(lastEventInCycleDate)){
+            System.out.println("Please enter a date after: " + lastEventInCycleDate.toString());
             secondFirstEventDate = ioController.getDate("Enter the Date of the Occurrence");
-            secondFirstEventTime = eventManager.getStartTime(eventID.get(0));
-            secondFirstEventDateTime = LocalDateTime.of(secondFirstEventDate, secondFirstEventTime);
+            secondFirstEventDateTime = LocalDateTime.of(secondFirstEventDate, firstEventTime);
         }
-        String eventName = eventManager.getName(cycle.get(0));
-        Event newEvent = eventManager.getEvent(eventName + "-2", secondFirstEventDateTime);
-        cycle.add(newEvent);
+        return secondFirstEventDateTime;
+    }
 
+    private LocalDateTime[] intervalDateGetterDates() {
+        LocalDateTime[] result = new LocalDateTime[2];
+        LocalDate firstDate = ioController.getDate("Enter the date when this cycle should begin");
+        LocalDate lastDate = ioController.getDate("Enter the date when this cycle should end");
+        LocalTime time = LocalTime.of(0,0);
+        result[0] = LocalDateTime.of(firstDate, time);
+        result[1] = LocalDateTime.of(lastDate, time);
+        return result;
+    }
+
+    private void setDateGetter(EventManager eventManager, UUID uuid){
         String repetitionMethod = ioController.getAnswer("Enter either: 'num' if there is a " +
                 "number of times you want to repeat the events you selected, or 'dates' if there are two dates " +
                 "in between which the the events you selected should repeats");
         while (!repetitionMethod.equalsIgnoreCase("num") &&
                 !repetitionMethod.equalsIgnoreCase("dates")){
-            repetitionMethod = ioController.getAnswer("Please check your input!! Enter either: the number " +
-                    "of times you want to repeat the events you selected, or 'dates' if there are two dates in " +
+            repetitionMethod = ioController.getAnswer("Please check your input!! Enter either: 'num' for the " +
+                    "number of times you want to repeat the events you selected, or 'dates' if there are two dates in " +
                     "between which the the events you selected should repeats");
         }
         if (repetitionMethod.equalsIgnoreCase("num")){
@@ -73,28 +64,53 @@ public class RecursionController {
             while (!helper.isInteger(numOfRepetitions)){
                 numOfRepetitions = ioController.getAnswer("The input must be a whole number.");
             }
-            methodToGetDates = new NumberOfRepetitionInput(Integer.parseInt(numOfRepetitions));
+            eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).
+                    setNumberOfRepetitionDateGetter(Integer.parseInt(numOfRepetitions));
         }
         else {
-            methodToGetDates = getDateGetter();
+            eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).
+                    setIntervalDateDateGetter(intervalDateGetterDates());
         }
-        RecursiveEvent recursiveEvent = new RecursiveEvent(UUID.randomUUID(), cycle, methodToGetDates);
-        eventManager.getRepeatedEventManager().addRecursiveEvent(recursiveEvent);
     }
+
+    private UUID addEventsToRecursiveObject(List<UUID> eventIDList, EventManager eventManager){
+        UUID uuid = eventManager.getRepeatedEventManager().recursiveEventConstructor1(
+                eventManager.timeOrder(eventManager.getEvents(eventIDList)));
+        LocalTime firstEventEndTime = eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).
+                getEventsInOneCycle().get(0).getEndTime().toLocalTime();
+        LocalDateTime lastEventEndDate = eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).
+                getEventsInOneCycle().get(eventIDList.size() - 1).getEndTime();
+        LocalDateTime secondFirstEventDateTime = secondFirstEventDateTime(firstEventEndTime, lastEventEndDate);
+        String eventName = eventManager.getName(eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).
+                getEventsInOneCycle().get(0));
+        eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).addEventToCycle(
+                eventManager.getEvent(eventName + "-2", secondFirstEventDateTime));
+        return uuid;
+    }
+
+    /**
+     *
+     * @param eventIDList the ids of the events to repeat.
+     * @param eventManager the event manager containing all the events of this user
+     * This methods prompt the user to create repetitions of events with ids in eventIDList.
+     */
+
+
+    public void createNewRecursion(List<UUID> eventIDList, EventManager eventManager){
+        UUID uuid = addEventsToRecursiveObject(eventIDList, eventManager);
+        setDateGetter(eventManager, uuid);
+        eventManager.getRepeatedEventManager().getRecursiveIdToDateToEventsMap().put(uuid,
+                eventManager.getRepeatedEventManager().eventListToMap(eventManager.
+                        getRepeatedEventManager().getEventsFromRecursion(uuid), eventIDList.size()));
+    }
+
+
+
 
     /**
      *
      * @return A helper method that return a DateGetter given a user input.
      */
 
-    private DateGetter getDateGetter() {
-        DateGetter methodToGetDates;
-        LocalDate firstDate = ioController.getDate("Enter the date when this cycle should begin");
-        LocalDate lastDate = ioController.getDate("Enter the date when this cycle should end");
-        LocalTime time = LocalTime.of(0,0);
-        LocalDateTime realFirstDate = LocalDateTime.of(firstDate, time);
-        LocalDateTime realLastDate = LocalDateTime.of(lastDate, time);
-        methodToGetDates = new IntervalDateInput(realFirstDate, realLastDate);
-        return methodToGetDates;
-    }
+
 }

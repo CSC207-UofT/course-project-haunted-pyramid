@@ -7,6 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Display conflicted events in the month
+ * @author Seo Won Yi
+ * @see usecases.ConflictChecker
+ * @see DisplayConflict
+ */
+
 public class DisplayMonthlyConflict extends DisplayConflict {
     private final int year;
     private final int month;
