@@ -1,6 +1,8 @@
 package presenters.MenuStrategies;
 
 
+import interfaces.MenuContent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,8 @@ public class CalNextActionMenuContent implements MenuContent {
             add("2. View/Modify Event through Calendar");
             add("3. Add a new Event");
             add("4. Create Repetition of the Existing Events");
-            add("5. Return to the Main Menu");
+            add("5. Export the current calendar to iCal file");
+            add("6. Return to the Main Menu");
         }};
     }
 }

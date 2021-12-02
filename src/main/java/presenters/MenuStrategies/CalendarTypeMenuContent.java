@@ -1,5 +1,7 @@
 package presenters.MenuStrategies;
 
+import interfaces.MenuContent;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -7,6 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Display conflicted events within the week
+ * @author Seo Won Yi
+ * @see usecases.ConflictChecker
+ * @see DisplayConflict
+ */
+
 public class DisplayWeeklyConflict extends DisplayConflict {
     private final int year;
     private final int month;

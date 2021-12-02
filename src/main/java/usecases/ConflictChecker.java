@@ -10,6 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Check conflict for given timeline using the information from CalendarManager and EventManager
+ * @author Seo Won Yi
+ * @see CalendarManager
+ * @see EventManager
+ */
+
 public class ConflictChecker {
     private final EventManager eventManager;
     private final CalendarManager calendarManager;

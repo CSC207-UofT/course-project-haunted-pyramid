@@ -7,21 +7,27 @@ import usecases.events.EventManager;
 /**
  * Abstract class that can display different types of calendar images
  * @author Seo Won Yi
- * @see DisplayMonthlyCalendar
- * @see DisplayWeeklyCalendar
- * @see DisplayDailyCalendar
+ * @see MonthlyCalendarDisplay
+ * @see WeeklyCalendarDisplay
+ * @see DailyCalendarDisplay
  */
-public abstract class DisplayCalendar {
+public abstract class CalendarDisplay {
     public CalendarManager cm;
     public EventManager em;
     public EventIDConverter converter;
     public CalendarTimePresenter timePresenter;
+    public int year;
+    public int month;
+    public int date;
 
-    public DisplayCalendar(CalendarManager cm, EventManager em){
+    public CalendarDisplay(CalendarManager cm, EventManager em, int year, int month, int date){
         this.cm = cm;
         this.em = em;
         this.converter = new EventIDConverter(em);
         this.timePresenter = new CalendarTimePresenter(em);
+        this.year = year;
+        this.month = month;
+        this.date = date;
     }
 
     /**
@@ -29,4 +35,22 @@ public abstract class DisplayCalendar {
      * @return image of the calendar
      */
     public abstract String displayCalendar();
+
+    /**
+     * Size of the calendar (number of dates)
+     * @return size of the calendar (number of dates)
+     */
+    public abstract int size();
+
+    public int getYear() {
+        return year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDate() {
+        return date;
+    }
 }

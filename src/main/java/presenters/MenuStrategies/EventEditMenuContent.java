@@ -1,6 +1,7 @@
 package presenters.MenuStrategies;
 
 import entities.Event;
+import interfaces.MenuContent;
 import usecases.events.EventManager;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package helpers;
 
 import presenters.MenuStrategies.DisplayMenu;
-import presenters.MenuStrategies.MenuContent;
+import interfaces.MenuContent;
 
 import java.util.ArrayList;
 import java.util.List;

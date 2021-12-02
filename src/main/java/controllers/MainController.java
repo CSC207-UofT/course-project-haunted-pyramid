@@ -4,6 +4,7 @@ package controllers;
 import entities.Event;
 import entities.User;
 
+import gateways.ICalendar;
 import gateways.IOSerializable;
 
 import helpers.ControllerHelper;
@@ -107,14 +108,28 @@ public class MainController {
                     this.calendarController.monthlyCalendarForRepetition(this.eventController);
                     break;
                 case "6":
+                    runICalendar();
+                    break;
+                case "7":
                     this.loginController.logout();
                     this.displayInitScreen();
                     break;
-                case "7":
+                case "8":
                     this.saveAndExitProgram();
                     break;
             }
         }
+    }
+
+    /**
+     * run ICalendar object and create ics file for the entire event
+     */
+    private void runICalendar() {
+        System.out.println("The file will be created in the same folder as the project");
+        System.out.println("Please type your file name (a-Z, 0-9, -, _, . are allowed");
+        String fileName = this.calendarController.getFileName();
+        ICalendar iCalendar = new ICalendar(this.eventController.getEventManager());
+        iCalendar.create(fileName);
     }
 
     /**
