@@ -5,6 +5,7 @@ import entities.recursions.RecursiveEvent;
 import gateways.IOSerializable;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
+import presenters.MenuStrategies.RecursionEditMenuContent;
 import usecases.events.EventManager;
 
 import java.time.LocalDate;
@@ -153,17 +154,14 @@ public class EventController {
                 this.changeName(ID);
                 break;
             case "7":
-                this.recurse(ID);
-                break;
-            case "8":
                 this.prep(ID);
                 break;
-            case "9":
+            case "8":
                 if (this.delete(ID)) {
                     return true;
                 }
                 break;
-            case "10":
+            case "9":
                 return true;
         }
         return false;
@@ -268,25 +266,5 @@ public class EventController {
 
     public void update(UserPreferences userPreferences){
         this.workSessionController.refresh(userPreferences, eventManager);
-    }
-
-    /**
-     * prompts the user to choose an action for modifying the recursion of the event, then runs
-     * <code>recursiveController.edit()</code>
-     *
-     * @param ID the id of the event to be modified
-     */
-    private void recurse(UUID ID) {
-        String nextStep = ioController.getAnswer("Enter 'Create' to create new recursion");
-        while (!nextStep.equalsIgnoreCase("Create")) {
-            System.out.println("Please type the valid answer");
-            nextStep = ioController.getAnswer("Enter 'Create' to create new recursion");
-        }
-        if (nextStep.equalsIgnoreCase("Create")) {
-            List<UUID> eventIDList = new ArrayList<>();
-            eventIDList.add(ID);
-            this.recursionController.createNewRecursion(eventIDList, eventManager);
-        }
-        //TODO (for phase 2): add the options to edit and delete a recursion.
     }
 }

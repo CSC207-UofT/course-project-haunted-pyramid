@@ -151,6 +151,15 @@ public class EventManager {
         return null;
     }
 
+
+    public List<Event> getEvents(List<UUID> Ids){
+        List<Event> result = new ArrayList<>();
+        for (UUID uuid : Ids){
+            result.add(eventMap.get(uuid));
+        }
+        return result;
+    }
+
     /**
      * removes the event of this ID from <code>this.eventMap</code> if it is there, returns the removed event or null
      *
@@ -178,6 +187,8 @@ public class EventManager {
         this.addEvent(event);
         return event;
     }
+
+
 
 
     /**
@@ -308,7 +319,11 @@ public class EventManager {
      * @return list of events (without work sessions, not split)
      */
     public List<Event> getAllEvents() {
-        return this.timeOrder(new ArrayList<>(this.eventMap.values()));
+        List<Event> allEvents = new ArrayList<>(this.eventMap.values());
+        for(RecursiveEvent recursiveEvent : this.repeatedEventManager.getRecursiveEventMap().values()){
+            allEvents.addAll(recursiveEventList(recursiveEvent));
+        }
+        return this.timeOrder(allEvents);
     }
 
     /**

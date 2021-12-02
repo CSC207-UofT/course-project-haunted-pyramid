@@ -25,10 +25,9 @@ public class EventEditMenuContent implements MenuContent {
             add("4. Change End Time");
             add("5. Add/Change Description");
             add("6. Change Name of the Event");
-            add("7. Recurse the Event (Create Repetition)");
-            add("8. Prepare by Creating Work Sessions");
-            add("9. Remove the Event");
-            add("10. Save the Changes");
+            add("7. Prepare by Creating Work Sessions");
+            add("8. Remove the Event");
+            add("9. Save the Changes");
         }});
         return content;
     }

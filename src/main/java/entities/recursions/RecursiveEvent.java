@@ -45,6 +45,12 @@ public class RecursiveEvent {
         this.id = id;
         this.eventsInOneCycle = new ArrayList<>();
     }
+
+    public RecursiveEvent(UUID uuid, List<Event> events){
+        this.id = uuid;
+        this.eventsInOneCycle = events;
+    }
+
     /**
      * Getter methods.
      */
@@ -67,6 +73,7 @@ public class RecursiveEvent {
     public void setIntervalDateDateGetter(LocalDateTime[] periodOfRepetition){
         this.methodToGetDate = new IntervalDateInput(periodOfRepetition[0], periodOfRepetition[1]);
     }
+
 
 
     /**

@@ -133,7 +133,7 @@ public class RepeatedEventManager implements EventListObserver {
         }
     }
 
-    private Map<LocalDateTime, List<Event>> eventListToMap(List<Event> events, int cycleLength){
+    public Map<LocalDateTime, List<Event>> eventListToMap(List<Event> events, int cycleLength){
         Map<LocalDateTime, List<Event>> datesAndEvents = new HashMap<>();
         int endLoop = events.size();
         int i = 1;
@@ -172,13 +172,22 @@ public class RepeatedEventManager implements EventListObserver {
     }
 
 
+    public UUID recursiveEventConstructor1(List<Event> events){
+        UUID uuid = UUID.randomUUID();
+        RecursiveEvent recursiveEvent = new RecursiveEvent(uuid, events);
+        this.recursiveEventMap.put(uuid, recursiveEvent);
+        return uuid;
+    }
+
     public void addEventsFromRecursiveEvent(List<Event> eventsInCycle, int numberOfRepetition){
         RecursiveEvent recursiveEvent = recursiveEventConstructor(eventsInCycle, numberOfRepetition);
+        this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
         this.addEventsFromRecursiveEvent(recursiveEvent);
     }
 
     public void addEventsFromRecursiveEvent(List<Event> eventsInCycle, LocalDateTime[] periodOfRepetition){
         RecursiveEvent recursiveEvent = recursiveEventConstructor(eventsInCycle, periodOfRepetition);
+        this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
         this.addEventsFromRecursiveEvent(recursiveEvent);
     }
 
