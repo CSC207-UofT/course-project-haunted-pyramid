@@ -25,6 +25,7 @@ public class User implements Serializable {
     private String homeAddress;
     private ArrayList<Event> events;
     private UserPreferences userPreferences;
+    private Map<UUID, Category> categories;
 
 
     public User(UUID id, String name, String username, String password) {
@@ -34,6 +35,7 @@ public class User implements Serializable {
         this.password = password;
         this.events = new ArrayList<>();
         this.userPreferences = new UserPreferences();
+        categories = new HashMap<>();
     }
 
     public UUID getId() {
@@ -50,6 +52,16 @@ public class User implements Serializable {
 
     public String getPassword() {
         return this.password;
+    }
+
+    public void createCategory(String name){
+        Category category = new Category(UUID.randomUUID(), name, this);
+        this.categories.put(category.getId(), category);
+    }
+
+    public void deleteCategory(UUID uuid){
+        this.categories.get(uuid).removeUser(this);
+        this.categories.remove(uuid);
     }
 
 //    public LocalDate getBirthDate() {

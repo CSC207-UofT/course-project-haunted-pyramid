@@ -1,67 +1,53 @@
 package entities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Malik Lahlou
  */
 
-// TODO (for phase 2): include Category in controllers. Users should be able to add events to Category and access
-//  them based on a category (like accessing all events related to a course).
 
 public class Category {
 
-    private int id;
+    private UUID id;
     private String name;
-    private List<String> typesInCategory;
-    private Map<String, List<Event>> eventMap;
+    private List<Event> events;
+    private List<User> adminUsers;
+    private List<User> regularUsers;
 
-    public Category(int id, String name, Event event){
+    public Category(UUID id, String name, User adminUser){
         this.id = id;
         this.name = name;
-        this.typesInCategory = new ArrayList<>(){{add(event.getType());}};
-        this.eventMap = new HashMap<>();
-        List<Event> eventList = new ArrayList<>();
-        eventList.add(event);
-        this.eventMap.put(event.getType(), eventList);
+        this.adminUsers = new ArrayList<>();
+        this.adminUsers.add(adminUser);
+        regularUsers = new ArrayList<>();
     }
 
-    public int getId() {return id;}
+    public UUID getId() {return id;}
     public String getName() {return name;}
-    public List<String> getTypesInCategory() {return typesInCategory;}
-    public Map<String, List<Event>> getEventMap() {return eventMap;}
+    public List<Event> getEvents() {return events;}
+    public List<User> getAdminUsers() {return adminUsers;}
 
-    public void addTypeToCategory(String type){this.typesInCategory.add(type);}
-    public void addEvent(Event event){
-        if(this.typesInCategory.contains(event.getType())){
-            this.eventMap.get(event.getType()).add(event);
-        }
-        else{
-            List<Event> eventList = new ArrayList<>();
-            eventList.add(event);
-            this.eventMap.put(event.getType(), eventList);
-        }
-    }
+    public void setName(String name) {this.name = name;}
+    public void setEvents(List<Event> events) {this.events = events;}
+    public void setId(UUID id) {this.id = id;}
+    public void setRegularUsers(List<User> users) {this.regularUsers = users;}
 
     public void removeEvent(Event event){
-        this.eventMap.get(event.getType()).remove(event);
+        this.events.remove(event);
+        event.removeCategory(this.name);
     }
+    public void addEvent(Event event){this.events.add(event);
+    event.addToCategory(name);}
 
-    public Event getEvent(String name){
-        // TODO: return the event in the eventMap with this unique name.
-        //  Search for keys in eventMap then for events in the value for that key.
-        return null;
-    }
-
-    public Event getEvent(String type, String name){
-        for(Event event : this.eventMap.get(type)){
-            if(name.equals(event.getName())){
-                return event;
-            }
+    public void removeUser(User user){
+        if(this.adminUsers.contains(user)){
+            this.adminUsers.remove(user);
         }
-        return null;
+        else{
+            this.regularUsers.remove(user);
+        }
     }
+
+
 }

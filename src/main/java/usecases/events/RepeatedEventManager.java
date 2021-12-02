@@ -61,6 +61,18 @@ public class RepeatedEventManager implements EventListObserver {
         this.recursiveIdToDateToEventsMap.put(recursiveEvent.getId(), eventListToMap(events, recursiveEvent.getCycleLength()));
     }
 
+    public Event getThisEventFromRecursion(UUID uuid){
+        for(UUID uuid1 : this.recursiveEventMap.keySet()){
+            List<Event> events = getEventsFromRecursion(uuid1);
+            for(Event event : events){
+                if(event.getID() == uuid){
+                    return event;
+                }
+            }
+        }
+        return null;
+    }
+
     public void addAllRecursions(List<RecursiveEvent> recursiveEvents){
         for(RecursiveEvent recursiveEvent : recursiveEvents){
             addRecursiveEvent(recursiveEvent);

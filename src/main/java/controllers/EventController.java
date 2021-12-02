@@ -167,6 +167,15 @@ public class EventController {
         return false;
     }
 
+
+    private boolean carryToRecursion(UUID ID){
+        if(eventManager.get(ID).getRecursiveId() != null){
+            String recurse = ioController.getAnswer("Do you want to carry this change to the recursion");
+            return recurse.equalsIgnoreCase("y");
+        }
+        return false;
+    }
+
     /**
      * prompts a user to confirm that they wish to delete an event, then removes event from eventManager
      *
@@ -177,6 +186,11 @@ public class EventController {
         System.out.println("Are you sure you want to delete this event?");
         String confirm = ioController.getAnswer("Please Enter y/n");
         if (confirm.equalsIgnoreCase("y")) {
+            if(carryToRecursion(ID)){
+                this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
+                this.eventManager.remove(ID);
+                this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
+            }
             this.eventManager.remove(ID);
             return true;
         } else if (!confirm.equalsIgnoreCase("n")) {
@@ -194,8 +208,18 @@ public class EventController {
     private void changeStartDate(UUID ID) {
         LocalDate newStart = ioController.getDate("Please Enter a New Start Date");
         if (this.eventManager.getStartTime(ID) == null) {
+            if(carryToRecursion(ID)){
+                this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
+                this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
+                this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
+            }
             this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
         } else {
+            if(carryToRecursion(ID)){
+                this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
+                this.eventManager.setStart(ID, LocalDateTime.of(newStart, this.eventManager.getStartTime(ID)));
+                this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
+            }
             this.eventManager.setStart(ID, LocalDateTime.of(newStart, this.eventManager.getStartTime(ID)));
         }
     }
@@ -207,6 +231,11 @@ public class EventController {
      */
     private void changeEndDate(UUID ID) {
         LocalDate newEnd = ioController.getDate("Please Enter a New End Date");
+        if(carryToRecursion(ID)){
+            this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
+            this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
+            this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
+        }
         this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
     }
 
@@ -217,6 +246,11 @@ public class EventController {
      */
     private void changeEndTime(UUID ID) {
         LocalTime newEnd = ioController.getTime("Please Enter a New End Time");
+        if(carryToRecursion(ID)){
+            this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
+            this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
+            this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
+        }
         this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
     }
 
@@ -228,8 +262,18 @@ public class EventController {
     private void changeStartTime(UUID ID) {
         LocalTime newStart = ioController.getTime("Please Enter a New Start Time");
         if (this.eventManager.get(ID).getStartTime() == null) {
+            if(carryToRecursion(ID)){
+                this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
+                this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
+                this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
+            }
             this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
         } else {
+            if(carryToRecursion(ID)){
+                this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
+                this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
+                this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
+            }
             this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
         }
     }

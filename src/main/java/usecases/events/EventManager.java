@@ -370,6 +370,12 @@ public class EventManager {
         this.toUpdate = inter.toArray(new EventListObserver[0]);
     }
 
+    public void removeObserver(EventListObserver obs) {
+        List<EventListObserver> inter = new ArrayList<>(List.of(this.toUpdate));
+        inter.remove(obs);
+        this.toUpdate = inter.toArray(new EventListObserver[0]);
+    }
+
     /**
      * calculates the total hours in a list of events using event.getLength and summing
      *

@@ -8,7 +8,6 @@ import usecases.events.EventManager;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * @author Malik Lahlou
