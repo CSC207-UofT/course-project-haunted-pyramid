@@ -1,6 +1,7 @@
 package controllers;
 
 import entities.UserPreferences;
+import entities.recursions.RecursiveEvent;
 import gateways.IOSerializable;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,11 +49,13 @@ public class EventController {
         this.workSessionController = workSessionController;
         if (hasSavedData) {
             this.eventManager =
-                    new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()));
+                    new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()),
+                            ioSerializable.recursiveEventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new HashMap <>()));
         } else {
             this.eventManager = new EventManager(new ArrayList<>());
         }
         this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
+        this.eventManager.setUuidRecursiveEventsMap(ioSerializable.recursiveEventsReadFromSerializable());
         this.recursionController = new RecursionController();
         this.ioController = new IOController();
     }
@@ -67,11 +71,13 @@ public class EventController {
     public EventController(boolean hasSavedData, IOSerializable ioSerializable, UserController userController) {
         if (hasSavedData) {
             this.eventManager =
-                    new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()));
+                    new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()),
+                            ioSerializable.recursiveEventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new HashMap <>()));
         } else {
             this.eventManager = new EventManager(new ArrayList<>());
         }
         this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
+        this.eventManager.setUuidRecursiveEventsMap(ioSerializable.recursiveEventsReadFromSerializable());
         this.recursionController = new RecursionController();
         this.ioController = new IOController();
         this.workSessionController = new WorkSessionController(userController.getUserManager().getPreferences(

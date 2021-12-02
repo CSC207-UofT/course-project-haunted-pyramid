@@ -16,6 +16,7 @@ import java.util.*;
 
 import entities.Event;
 import entities.User;
+import entities.recursions.RecursiveEvent;
 
 /**
  * This class will allow (de)serialization of files.
@@ -191,7 +192,6 @@ public class IOSerializable {
     public Map<UUID, List<Event>> eventsReadFromSerializable() {
         try {
             InputStream file = new FileInputStream(EVENTS_FILEPATH);
-
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
             //Please refer to specifications for explanation
@@ -233,13 +233,13 @@ public class IOSerializable {
      *
      * @return an ArrayList of all Events stored in the file
      */
-    public Map<UUID, Map<UUID, List<Event>>> recursiveEventsReadFromSerializable() {
+    public Map<UUID, Map<UUID, RecursiveEvent>> recursiveEventsReadFromSerializable() {
         try {
             InputStream  file = new FileInputStream(RECURSIVE_EVENTS_FILEPATH);
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
             //Please refer to specifications for explanation
-            Map<UUID, Map<UUID, List<Event>>> recoveredEvents = (Map<UUID, Map<UUID, List<Event>>>) input.readObject();
+            Map<UUID, Map<UUID, RecursiveEvent>> recoveredEvents = (Map<UUID, Map<UUID, RecursiveEvent>>) input.readObject();
             input.close();
             return recoveredEvents;
         } catch (IOException eIO) {
@@ -257,7 +257,7 @@ public class IOSerializable {
      *
      * @param userIdToEvents an ArrayList of events to be serialized
      */
-    public static void recursiveEventsWriteToSerializable(Map<UUID, Map<UUID, List<Event>>> userIdToEvents) {
+    public static void recursiveEventsWriteToSerializable(Map<UUID, Map<UUID, RecursiveEvent>> userIdToEvents) {
         try {
             OutputStream file = new FileOutputStream(RECURSIVE_EVENTS_FILEPATH);
             OutputStream buffer = new BufferedOutputStream(file);

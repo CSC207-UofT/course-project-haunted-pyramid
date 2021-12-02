@@ -4,6 +4,7 @@ package controllers;
 import entities.Event;
 import entities.User;
 
+import entities.recursions.RecursiveEvent;
 import gateways.ICalendar;
 import gateways.IOSerializable;
 
@@ -170,8 +171,10 @@ public class MainController {
         IOSerializable tempIoSerializable = new IOSerializable(false);
         UserController tempUserController = new UserController(true, tempIoSerializable);
         Map<UUID, List<Event>> map = this.eventController.getEventManager().getUuidEventsMap();
+        Map<UUID, Map<UUID, RecursiveEvent>> map1 = this.eventController.getEventManager().getUuidRecursiveEventsMap();
         map.put(this.userController.getCurrentUser(), this.eventController.getEventManager().getAllEvents());
         tempIoSerializable.eventsWriteToSerializable(map);
+        tempIoSerializable.recursiveEventsWriteToSerializable(map1);
         tempIoSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(),
                 tempUserController.getUserManager()));
         tempIoSerializable.saveToDropbox();

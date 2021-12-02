@@ -28,6 +28,7 @@ public class EventManager {
     private EventListObserver[] toUpdate;
     // Get rid of eventMap later when sean fixes Event ID
     private Map<UUID, List<Event>> uuidEventsMap;
+    private Map<UUID, Map<UUID, RecursiveEvent>> uuidRecursiveEventsMap;
 
     /**
      * constructs event manager. stores list of events by key: ID, value: event in <code>this.eventMap</code>
@@ -48,6 +49,22 @@ public class EventManager {
         this.repeatedEventManager = new RepeatedEventManager();
     }
 
+
+    public EventManager(List<Event> events, Map<UUID, RecursiveEvent> recursiveEventMap) {
+        if (events.isEmpty()) {
+            this.eventMap = new HashMap<>();
+        } else {
+            this.eventMap = new HashMap<>();
+            for (Event event : events) {
+                this.eventMap.put(event.getID(), event);
+            }
+        }
+        this.toUpdate = new EventListObserver[]{};
+        this.repeatedEventManager = new RepeatedEventManager(recursiveEventMap);
+    }
+
+
+
     /**
      * Get this Events map
      *
@@ -57,6 +74,10 @@ public class EventManager {
         return this.uuidEventsMap;
     }
 
+    public Map<UUID, Map<UUID, RecursiveEvent>> getUuidRecursiveEventsMap() {
+        return uuidRecursiveEventsMap;
+    }
+
     /**
      * Set this Events map to the parameter
      *
@@ -64,6 +85,10 @@ public class EventManager {
      */
     public void setUuidEventsMap(Map<UUID, List<Event>> map) {
         this.uuidEventsMap = map;
+    }
+
+    public void setUuidRecursiveEventsMap(Map<UUID, Map<UUID, RecursiveEvent>> uuidRecursiveEventsMap) {
+        this.uuidRecursiveEventsMap = uuidRecursiveEventsMap;
     }
 
     /**
@@ -232,6 +257,8 @@ public class EventManager {
     public RepeatedEventManager getRepeatedEventManager() {
         return repeatedEventManager;
     }
+
+
 
     /**
      * @param recursiveEvent The RecursiveEvent from which the repeated events should be extracted.
