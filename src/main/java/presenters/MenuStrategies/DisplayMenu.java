@@ -1,6 +1,6 @@
 package presenters.MenuStrategies;
 
-import presenters.MenuStrategies.MenuContent;
+import interfaces.MenuContent;
 
 /**
  * Display menu with the contents added by Strategy design pattern

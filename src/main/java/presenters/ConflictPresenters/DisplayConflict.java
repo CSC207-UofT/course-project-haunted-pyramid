@@ -8,6 +8,15 @@ import usecases.events.EventManager;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * abstract class that is used for displaying conflicted events
+ * @author Seo Won Yi
+ * @see ConflictChecker
+ * @see DisplayDailyConflict
+ * @see DisplayWeeklyConflict
+ * @see DisplayMonthlyConflict
+ */
+
 public abstract class DisplayConflict {
     public CalendarManager cm;
     public EventManager em;

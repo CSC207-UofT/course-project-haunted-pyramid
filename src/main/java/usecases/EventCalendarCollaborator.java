@@ -7,6 +7,13 @@ import usecases.events.EventManager;
 import java.time.LocalDate;
 import java.util.UUID;
 
+/**
+ * Link EventManager and CalendarManager by adding events to the CalendarManager
+ * @author Seo Won Yi
+ * @see CalendarManager
+ * @see EventManager
+ */
+
 public class EventCalendarCollaborator {
     private final EventManager eventManager;
     private final CalendarManager calendarManager;

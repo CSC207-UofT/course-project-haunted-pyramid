@@ -16,14 +16,11 @@ import java.util.UUID;
 /**
  * Build the image of daily calendar and display if asked
  * @author Seo Won Yi
- * @see DisplayCalendar
+ * @see CalendarDisplay
  * @see DailyCalendarByType
  * @see DisplayCalendarHelper
  */
-public class DisplayDailyCalendar extends DisplayCalendar {
-    private final int year;
-    private final int month;
-    private final int date;
+public class DailyCalendarDisplay extends CalendarDisplay {
     private final DisplayCalendarHelper cf;
     private final Map<Integer, List<UUID>> calendarMap;
     private List<String> timeLine;
@@ -37,11 +34,8 @@ public class DisplayDailyCalendar extends DisplayCalendar {
      * @param month given month
      * @param date given date
      */
-    public DisplayDailyCalendar(CalendarManager cm, EventManager em, int year, int month, int date) {
-        super(cm, em);
-        this.year = year;
-        this.month = month;
-        this.date = date;
+    public DailyCalendarDisplay(CalendarManager cm, EventManager em, int year, int month, int date) {
+        super(cm, em, year, month, date);
         this.cf = new DisplayCalendarHelper(year, month);
         DailyCalendarByType dc = new DailyCalendarByType();
         this.calendarMap = dc.getCalendar(cm, year, month, date);
@@ -66,6 +60,15 @@ public class DisplayDailyCalendar extends DisplayCalendar {
         result.append(" ").append(bottom).append(" ");
         result.append("\n").append(this.conflictDisplay.displayConflict());
         return result.toString();
+    }
+
+    /**
+     * Size of the calendar (number of dates)
+     * @return size of the calendar (number of dates)
+     */
+    @Override
+    public int size() {
+        return this.calendarMap.size();
     }
 
     /**

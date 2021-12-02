@@ -6,6 +6,13 @@ import usecases.events.EventManager;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Display conflicted events in the day
+ * @author Seo Won Yi
+ * @see usecases.ConflictChecker
+ * @see DisplayConflict
+ */
+
 public class DisplayDailyConflict extends DisplayConflict {
     private final int year;
     private final int month;

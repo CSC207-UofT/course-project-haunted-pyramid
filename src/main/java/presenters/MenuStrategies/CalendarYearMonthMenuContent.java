@@ -1,6 +1,7 @@
 package presenters.MenuStrategies;
 
 import helpers.DateInfo;
+import interfaces.MenuContent;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Converts UUID into integer ID for better viewing experience
+ * @author Seo Won Yi
+ */
+
 public class EventIDConverter {
     private final Map<Integer, UUID> eventID;
 
