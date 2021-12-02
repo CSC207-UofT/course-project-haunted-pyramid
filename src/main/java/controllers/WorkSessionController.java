@@ -111,10 +111,18 @@ public class WorkSessionController {
                 changeTotalHour(eventID, eventManager);
                 break;
             case "4":
+                changeStartWorking(eventID, eventManager);
+                break;
+            case "5":
                 done = true;
                 break;
         }
         return done;
+    }
+
+    private void changeStartWorking(UUID eventID, EventManager eventManager) {
+        workSessionScheduler.changeStartWorking(eventID, ioController.getDate("please enter a date to start working on " +
+                "this project"), eventManager);
     }
 
     /**

@@ -123,7 +123,6 @@ public class EventController {
                 this.workSessionController.refresh(eventManager);
             }
         }
-        System.out.println(this.eventManager.getAllEvents());
     }
 
     /**

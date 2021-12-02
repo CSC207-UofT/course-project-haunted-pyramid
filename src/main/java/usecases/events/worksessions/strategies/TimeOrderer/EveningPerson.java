@@ -5,6 +5,7 @@ import usecases.events.worksessions.strategies.TimeGetters.TimeGetter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +21,18 @@ public class EveningPerson implements TimeOrderer {
             ordered.add(time.plusHours(freeSlots.get(time)).minusHours(length));
         }
         times.addAll(ordered);
+        ordered.clear();
+        while(!times.isEmpty()){
+            ordered.add(latest(times));
+        }
+        times.addAll(ordered);
         this.dateOrder(idealDates, times);
     }
 
     private LocalDateTime latest(List<LocalDateTime> times){
         LocalDateTime latest = times.get(0);
         for (LocalDateTime time: times){
-            if (time.isAfter(latest)){
+            if (time.toLocalTime().isAfter(latest.toLocalTime())){
                 latest = time;
             }
         }

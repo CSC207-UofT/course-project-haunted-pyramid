@@ -21,7 +21,8 @@ public class DefaultTimeGetter implements TimeGetter {
 
     @Override
     public Map<LocalDateTime, Long> getTimes(UUID deadline, EventManager eventManager, Long length) {
-        Map<LocalDateTime, Long> times = this.freeSlots(LocalDateTime.now(), eventManager.getEnd(deadline),
+        Map<LocalDateTime, Long> times = this.freeSlots(LocalDateTime.of(eventManager.getStartWorking(deadline),
+                        LocalTime.of(0, 0)), eventManager.getEnd(deadline),
                 eventManager, deadline);
         Map<LocalDateTime, Long> eligible = new HashMap<>();
         for (LocalDateTime time : times.keySet()) {
@@ -33,15 +34,13 @@ public class DefaultTimeGetter implements TimeGetter {
     }
 
     @Override
-    public List<Event> getListSchedule(EventManager eventManager, UUID deadline) {
+    public List<Event> getListSchedule(EventManager eventManager, LocalDate start, UUID deadline) {
         List<Event> schedule = eventManager.getAllEventsFlatSplit();
-        LocalDate current = LocalDate.now();
-        while(!current.isAfter(eventManager.getEndDate(deadline))){
-            for (LocalTime start: this.freeTime.keySet()){
-                schedule.add(new Event(UUID.randomUUID(), "free time", LocalDateTime.of(current, start),
-                        LocalDateTime.of(current, this.freeTime.get(start))));
+        for(LocalDate current = start; !current.isAfter(eventManager.getEndDate(deadline)); current = current.plusDays(1)){
+            for (LocalTime startTime: this.freeTime.keySet()){
+                schedule.add(new Event(UUID.randomUUID(), "free time", LocalDateTime.of(current, startTime),
+                        LocalDateTime.of(current, this.freeTime.get(startTime))));
             }
-            current = current.plusDays(1);
         }
         return eventManager.timeOrder(schedule);
     }

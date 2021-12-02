@@ -151,6 +151,8 @@ public class UserController {
                 this.toggleCram();
                 break;
             case "7":
+                this.toggleMorningPerson();
+            case "8":
                 indicator = true;
                 break;
         }

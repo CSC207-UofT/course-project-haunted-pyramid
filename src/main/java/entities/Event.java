@@ -44,6 +44,7 @@ public class Event implements Serializable {
         this.hoursNeeded = 0L;
         this.sessionLength = 1L;
         this.workSessions = new ArrayList<>();
+        this.startWorking = 6L;
         Categories = new ArrayList<>();
     }
 
@@ -63,6 +64,7 @@ public class Event implements Serializable {
         this.hoursNeeded = 0L;
         this.sessionLength = 1L;
         this.workSessions = new ArrayList<>();
+        this.startWorking = 6L;
         Categories = new ArrayList<>();
     }
 
@@ -87,6 +89,7 @@ public class Event implements Serializable {
         this.hoursNeeded = 0L;
         this.sessionLength = 1L;
         this.workSessions = new ArrayList<>();
+        this.startWorking = 6L;
         Categories = new ArrayList<>();
     }
 
