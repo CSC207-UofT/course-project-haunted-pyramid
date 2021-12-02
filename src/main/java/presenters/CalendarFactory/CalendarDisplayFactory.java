@@ -5,16 +5,16 @@ import usecases.events.EventManager;
 /**
  * A Factory class that determines which type of DisplayCalendar class to show
  * @author Seo Won Yi
- * @see DisplayCalendar
- * @see DisplayDailyCalendar
- * @see DisplayWeeklyCalendar
- * @see DisplayMonthlyCalendar
+ * @see CalendarDisplay
+ * @see DailyCalendarDisplay
+ * @see WeeklyCalendarDisplay
+ * @see MonthlyCalendarDisplay
  */
-public class DisplayCalendarFactory {
+public class CalendarDisplayFactory {
     private final CalendarManager calendarManager;
     private final EventManager eventManager;
 
-    public DisplayCalendarFactory(CalendarManager cm, EventManager em) {
+    public CalendarDisplayFactory(CalendarManager cm, EventManager em) {
         this.calendarManager = cm;
         this.eventManager = em;
     }
@@ -28,15 +28,15 @@ public class DisplayCalendarFactory {
      * @param date date of the calendar
      * @return DisplayCalendar object with the given information
      */
-    public DisplayCalendar displaySpecificCalendarByType(String calendarType, int year, int month, int date){
+    public CalendarDisplay displaySpecificCalendarByType(String calendarType, int year, int month, int date){
         if (calendarType.equalsIgnoreCase("MONTHLY")) {
-            return new DisplayMonthlyCalendar(this.calendarManager, this.eventManager, year, month);
+            return new MonthlyCalendarDisplay(this.calendarManager, this.eventManager, year, month);
         }
         else if (calendarType.equalsIgnoreCase("WEEKLY")){
-            return new DisplayWeeklyCalendar(this.calendarManager, this.eventManager, year, month, date);
+            return new WeeklyCalendarDisplay(this.calendarManager, this.eventManager, year, month, date);
         }
         else if (calendarType.equalsIgnoreCase("DAILY")){
-            return new DisplayDailyCalendar(this.calendarManager, this.eventManager, year, month, date);
+            return new DailyCalendarDisplay(this.calendarManager, this.eventManager, year, month, date);
         }
         return null;
     }
@@ -47,7 +47,7 @@ public class DisplayCalendarFactory {
      * @param calendarType Type of the calendar
      * @return DisplayCalendar object for the current date
      */
-    public DisplayCalendar displayCurrentCalendarByType(String calendarType){
+    public CalendarDisplay displayCurrentCalendarByType(String calendarType){
         int year = calendarManager.getCurrentYear();
         int month = calendarManager.getCurrentMonth();
         int date = calendarManager.getCurrentDate();

@@ -4,6 +4,7 @@ package controllers;
 import entities.Event;
 import entities.User;
 
+import gateways.ICalendar;
 import gateways.IOSerializable;
 
 import helpers.ControllerHelper;
@@ -48,9 +49,8 @@ public class MainController {
         this.loginController = new LoginController(this.userController);
         this.calendarController = new CalendarController();
         this.displayMenu = new DisplayMenu();
-        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
-                this.userController);
         this.displayInitScreen();
+        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable, this.userController);
         System.out.println("WELCOME " + this.userController.getCurrentUsername() + "!");
         this.displayScreen();
     }
@@ -82,7 +82,7 @@ public class MainController {
      */
     public void displayScreen() {
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
-                this.userController, new WorkSessionController(userController.getWorkSessionScheduler()));
+                this.userController);
         while (this.loginController.isLoggedIn()) {
             System.out.println(this.calendarController.showDefaultCalendar(this.eventController));
             System.out.println("Please choose your action");
@@ -93,6 +93,7 @@ public class MainController {
             switch (firstChoice) {
                 case "1":
                     this.userController.editProfile();
+                    this.eventController.update(this.userController.getUserManager().getPreferences(this.userController.getCurrentUser()));
                     break;
                 case "2":
                     this.calendarController.showCalendar(this.eventController);
@@ -107,14 +108,28 @@ public class MainController {
                     this.calendarController.monthlyCalendarForRepetition(this.eventController);
                     break;
                 case "6":
+                    runICalendar();
+                    break;
+                case "7":
                     this.loginController.logout();
                     this.displayInitScreen();
                     break;
-                case "7":
+                case "8":
                     this.saveAndExitProgram();
                     break;
             }
         }
+    }
+
+    /**
+     * run ICalendar object and create ics file for the entire event
+     */
+    private void runICalendar() {
+        System.out.println("The file will be created in the same folder as the project");
+        System.out.println("Please type your file name (a-Z, 0-9, -, _, . are allowed");
+        String fileName = this.calendarController.getFileName();
+        ICalendar iCalendar = new ICalendar(this.eventController.getEventManager());
+        iCalendar.create(fileName);
     }
 
     /**

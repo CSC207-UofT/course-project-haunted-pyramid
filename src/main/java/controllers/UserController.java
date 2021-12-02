@@ -1,6 +1,5 @@
 package controllers;
 
-import entities.User;
 import gateways.IOSerializable;
 import helpers.Constants;
 import helpers.ControllerHelper;
@@ -22,12 +21,10 @@ import java.util.UUID;
  * @author Sebin Im
  */
 public class UserController {
-
     private final UserManager userManager;
     private UUID currentUser;
     private final ControllerHelper helper;
     private final IOController ioController;
-    private WorkSessionScheduler workSessionScheduler;
 
     /**
      * Instantiates a UserController from serialized data
@@ -63,7 +60,6 @@ public class UserController {
      */
     public void setCurrentUser(UUID currentUser) {
         this.currentUser = currentUser;
-        this.workSessionScheduler = new WorkSessionScheduler(this.getCurrentFreeTime(), this.getCurrentProcrastinate());
     }
 
     /**
@@ -87,8 +83,7 @@ public class UserController {
     /**
      * gets the map of the start=end times of the users usual free time
      *
-     * @return <code>currentUser.freeTime</code>
-     * @see User#getFreeTime()
+     * @return <code>currentUser.userPreferences.freeTime</code>
      */
     public Map<LocalTime, LocalTime> getCurrentFreeTime() {
         return this.userManager.getFreeTime(this.currentUser);
@@ -114,6 +109,11 @@ public class UserController {
             System.out.println("Note:");
             System.out.println("Work Sessions will only set up during Free Time");
             System.out.println("If Procrastinate is on, Work Sessions will be scheduled more towards the Deadline");
+            System.out.println("if Cram is on, longer work sessions will be scheduled on days they fit as opposed to even " +
+                    "day spacing");
+            System.out.println("if morning person is on, your events will be scheduled as early in the day as possible");
+            System.out.println("if multiple work sessions of the same event occur on the same day, they will be scheduled" +
+                    "with spacing between according to 'work session spacing' (if it is null, they will be merged)");
             String firstAction = ioController.getAnswer(dm.displayMenu(profileMenuContent));
             firstAction = helper.invalidCheck(dm, firstAction, profileMenuContent.numberOfOptions(), profileMenuContent);
             if (firstAction.equalsIgnoreCase("Return")) {
@@ -124,9 +124,9 @@ public class UserController {
     }
 
     /**
-     * passes to next method depending on input String (a number between 1 and 5)"
+     * passes to next method depending on input String (a number between 1 and 7)"
      *
-     * @param action String, "1" - "5"
+     * @param action String, "1" - "7"
      * @return done if the user is done editing
      */
     private boolean getAction(String action) {
@@ -145,6 +145,12 @@ public class UserController {
                 this.toggleProcrastinate();
                 break;
             case "5":
+                this.toggleSessionSpacing();
+                break;
+            case "6":
+                this.toggleCram();
+                break;
+            case "7":
                 indicator = true;
                 break;
         }
@@ -190,7 +196,6 @@ public class UserController {
             return;
         }
         this.userManager.removeFreeTime(this.currentUser, start);
-        this.workSessionScheduler.setFreeTime(this.getCurrentFreeTime());
     }
 
     /**
@@ -198,10 +203,8 @@ public class UserController {
      */
     private void toggleProcrastinate() {
         this.userManager.toggleProcrastinate(this.currentUser);
-        this.workSessionScheduler.setProcrastinate(this.getCurrentProcrastinate());
     }
-
-    public WorkSessionScheduler getWorkSessionScheduler() {
-        return this.workSessionScheduler;
-    }
+    private void toggleMorningPerson(){this.userManager.toggleMorningPerson(this.currentUser);}
+    private void toggleCram(){this.userManager.toggleEvenSpacing(this.currentUser);}
+    private void toggleSessionSpacing(){this.userManager.toggleWorkSessionSpacing(this.currentUser);}
 }

@@ -1,6 +1,7 @@
 package usecases;
 
 import entities.User;
+import entities.UserPreferences;
 
 import java.time.LocalTime;
 import java.util.*;
@@ -33,7 +34,7 @@ public class UserManager {
      * @param user the id of the user to be edited
      */
     public void toggleProcrastinate(UUID user) {
-        this.userInfo.get(user).setProcrastinate(!userInfo.get(user).getProcrastinate());
+        this.getPreferences(user).setProcrastinate(!this.getPreferences(user).getProcrastinate());
     }
 
     /**
@@ -43,7 +44,7 @@ public class UserManager {
      * @return boolean procrastinate (for user)
      */
     public boolean getProcrastinate(UUID user) {
-        return this.userInfo.get(user).getProcrastinate();
+        return this.getPreferences(user).getProcrastinate();
     }
 
     /**
@@ -63,7 +64,7 @@ public class UserManager {
      * @return the free time of the user Map<LocalTime, LocalTime>
      */
     public Map<LocalTime, LocalTime> getFreeTime(UUID user) {
-        return this.userInfo.get(user).getFreeTime();
+        return this.getPreferences(user).getFreeTime();
     }
 
     /**
@@ -75,9 +76,9 @@ public class UserManager {
      */
     public void addFreeTime(UUID user, LocalTime start, LocalTime end) {
         if (start.isAfter(end)) {
-            this.userInfo.get(user).setFreeTime(end, start);
+            this.getPreferences(user).setFreeTime(end, start);
         } else {
-            this.userInfo.get(user).setFreeTime(start, end);
+            this.getPreferences(user).setFreeTime(start, end);
         }
     }
 
@@ -89,7 +90,7 @@ public class UserManager {
      */
     public void removeFreeTime(UUID user, LocalTime start) {
         if (this.getFreeTime(user).containsKey(start)) {
-            this.userInfo.get(user).removeFreeTime(start);
+            this.userInfo.get(user).getUserPreferences().removeFreeTime(start);
         }
     }
 
@@ -138,5 +139,35 @@ public class UserManager {
 
     public void setName(UUID currentUser, String name) {
         this.getUserInfo().get(currentUser).setName(name);
+    }
+
+    public UserPreferences getPreferences (UUID user){
+        return this.userInfo.get(user).getUserPreferences();
+    }
+
+    public void toggleWorkSessionSpacing(UUID user){
+        User current = this.userInfo.get(user);
+        switch (current.getUserPreferences().getSpacingSameDay()) {
+            case "short":
+                current.getUserPreferences().setSpacingSameDay("medium");
+                break;
+            case "medium":
+                current.getUserPreferences().setSpacingSameDay("large");
+                break;
+            case "large":
+                current.getUserPreferences().setSpacingSameDay("none");
+                break;
+            default:
+                current.getUserPreferences().setSpacingSameDay("short");
+                break;
+        }
+    }
+
+    public void toggleEvenSpacing(UUID user) {
+        this.getPreferences(user).setCram(!this.getPreferences(user).getCram());
+    }
+
+    public void toggleMorningPerson(UUID user) {
+        this.getPreferences(user).setMorningPerson(!this.getPreferences(user).getMorningPerson());
     }
 }

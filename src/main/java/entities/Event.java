@@ -26,6 +26,7 @@ public class Event implements Serializable {
     private List<Event> workSessions;
     private Long hoursNeeded;
     private Long sessionLength;
+    private Long startWorking;
     private UUID recursiveId;
 
     /**
@@ -396,7 +397,7 @@ public class Event implements Serializable {
      * @param end   LocalDateTime end time
      */
     public void addWorkSession(LocalDateTime start, LocalDateTime end) {
-        this.workSessions.add(new Event(this.getID(), this.getName() + " session", start, end));
+        this.workSessions.add(new Event(UUID.randomUUID(), this.getName() + " session", start, end));
     }
 
     /**
@@ -428,4 +429,10 @@ public class Event implements Serializable {
     }
 
     public UUID getRecursiveId() {return recursiveId;}
+    public void setStartWorking(Long startWorking){
+        this.startWorking = startWorking;
+    }
+    public Long getStartWorking(){
+        return this.startWorking;
+    }
 }

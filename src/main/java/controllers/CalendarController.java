@@ -1,16 +1,17 @@
 package controllers;
 
+import gateways.ICalendar;
 import helpers.CalendarSelection;
 import helpers.ControllerHelper;
 import helpers.DateInfo;
 import helpers.EventIDConverter;
-import presenters.CalendarFactory.DisplayCalendar;
-import presenters.CalendarFactory.DisplayCalendarFactory;
+import presenters.CalendarFactory.CalendarDisplay;
+import presenters.CalendarFactory.CalendarDisplayFactory;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.CalNextActionMenuContent;
 import presenters.MenuStrategies.CalendarTypeMenuContent;
 import presenters.MenuStrategies.CalendarYearMonthMenuContent;
-import presenters.MenuStrategies.MenuContent;
+import interfaces.MenuContent;
 import usecases.EventCalendarCollaborator;
 import usecases.calendar.CalendarByType;
 import usecases.calendar.CalendarManager;
@@ -18,12 +19,14 @@ import usecases.events.EventManager;
 
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Controller used for displaying calendar
  * @author Seo Won Yi
- * @see DisplayCalendarFactory
- * @see DisplayCalendar
+ * @see CalendarDisplayFactory
+ * @see CalendarDisplay
  * @see CalendarManager
  * @see CalendarByType
  * @see entities.OurCalendar
@@ -41,7 +44,7 @@ public class CalendarController {
      * @return the current monthly calendar image
      */
     public String showDefaultCalendar(EventController eventController) {
-        DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
+        CalendarDisplayFactory calendarFactory = getDisplayCalendarFactory(eventController);
         return calendarFactory.displayCurrentCalendarByType("Monthly").displayCalendar();
     }
 
@@ -55,7 +58,7 @@ public class CalendarController {
         System.out.println("You may type Return to return to the main menu at any time (except Date selection)");
         DisplayMenu displayMenu = new DisplayMenu();
         MenuContent calendarTypeMenu = new CalendarTypeMenuContent();
-        DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
+        CalendarDisplayFactory calendarFactory = getDisplayCalendarFactory(eventController);
         String typeCalendar = getTypeInput(displayMenu, calendarTypeMenu);
         if (typeCalendar.equalsIgnoreCase("Return")) {
             return;
@@ -65,9 +68,9 @@ public class CalendarController {
             return;
         }
         DateInfo dateInfo = new DateInfo();
-        DisplayCalendar calendar = selectCalendar(calendarFactory, typeCalendar, dateInput, dateInfo);
+        CalendarDisplay calendar = selectCalendar(calendarFactory, typeCalendar, dateInput, dateInfo);
         System.out.println(calendar.displayCalendar());
-        finalAction(eventController, displayMenu);
+        finalAction(eventController, displayMenu, calendar);
     }
 
     /**
@@ -89,7 +92,7 @@ public class CalendarController {
         int month = calendarSelection.getMonth();
         int numberOfDays = calendarSelection.getNumberOfDays();
         int date = getDateInput(numberOfDays, "event");
-        DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
+        CalendarDisplayFactory calendarFactory = getDisplayCalendarFactory(eventController);
         System.out.println(calendarFactory.displaySpecificCalendarByType("Daily",
                 year, month, date).displayCalendar());
         String eventID = getEventID(eventController);
@@ -114,7 +117,7 @@ public class CalendarController {
         CalendarSelection calendarSelection = new CalendarSelection(new DateInfo(), dateInput);
         int year = calendarSelection.getYear();
         int month = calendarSelection.getMonth();
-        DisplayCalendarFactory calendarFactory = getDisplayCalendarFactory(eventController);
+        CalendarDisplayFactory calendarFactory = getDisplayCalendarFactory(eventController);
         System.out.println(calendarFactory.displaySpecificCalendarByType("Monthly",
                 year, month, 1).displayCalendar());
         List<UUID> eventIDList = getEventIDList(eventController);
@@ -195,13 +198,13 @@ public class CalendarController {
      * @param eventController the event information provided
      * @return displayCalendarFactory with the calendarManager that contains event information from eventController
      */
-    private DisplayCalendarFactory getDisplayCalendarFactory(EventController eventController) {
+    private CalendarDisplayFactory getDisplayCalendarFactory(EventController eventController) {
         CalendarManager calendarManager = new CalendarManager();
         EventManager eventManager = eventController.getEventManager();
         EventCalendarCollaborator collaborator = new EventCalendarCollaborator(eventManager, calendarManager);
         collaborator.addAllEvents();
         calendarManager = collaborator.getCalendarManager();
-        return new DisplayCalendarFactory(calendarManager, eventManager);
+        return new CalendarDisplayFactory(calendarManager, eventManager);
     }
 
     /**
@@ -210,7 +213,7 @@ public class CalendarController {
      * @param eventController eventController that can be used as a next phase
      * @param displayMenu     display menu object to show the menu when needed
      */
-    private void finalAction(EventController eventController, DisplayMenu displayMenu) {
+    private void finalAction(EventController eventController, DisplayMenu displayMenu, CalendarDisplay calendar) {
         System.out.println("Please choose the next action");
         MenuContent calNextActionMenu = new CalNextActionMenuContent();
         System.out.println(displayMenu.displayMenu(calNextActionMenu));
@@ -218,7 +221,7 @@ public class CalendarController {
         if (finalAction.equalsIgnoreCase("return")) {
             return;
         }
-        helper.invalidCheck(displayMenu, finalAction, calNextActionMenu.numberOfOptions(), calNextActionMenu);
+        finalAction = helper.invalidCheck(displayMenu, finalAction, calNextActionMenu.numberOfOptions(), calNextActionMenu);
         switch (finalAction) {
             case "1":
                 showCalendar(eventController);
@@ -232,8 +235,54 @@ public class CalendarController {
             case "4":
                 monthlyCalendarForRepetition(eventController);
             case "5":
+                exportIniCalFormat(eventController, calendar);
+                break;
+            case "6":
                 break;
         }
+    }
+
+    /**
+     * Using the information provided from calendar and eventController, create appropriate iCal file
+     * @param eventController eventController that contains event information
+     * @param calendar calendar that contains calendar information
+     */
+    private void exportIniCalFormat(EventController eventController, CalendarDisplay calendar) {
+        ICalendar iCalendar = new ICalendar(eventController.getEventManager());
+        List<Integer> yearMonthDate = new ArrayList<>();
+        yearMonthDate.add(calendar.getYear());
+        yearMonthDate.add(calendar.getMonth());
+        yearMonthDate.add(calendar.getDate());
+        String option;
+        if (calendar.size() == 1) {
+            option = "DAILY";
+        }
+        else if (calendar.size() == 7) {
+            option = "WEEKLY";
+        }
+        else {
+            option = "MONTHLY";
+        }
+        System.out.println("The file will be created in the same folder as the project");
+        System.out.println("Please type your file name (a-Z, 0-9, -, _, . are allowed");
+        String fileName = getFileName();
+        iCalendar.create(fileName, option, yearMonthDate);
+    }
+
+    /**
+     * Get valid file name (a file name is valid if it contains a-Z, 0-9, -, _, or .)
+     * @return valid file name
+     */
+    public String getFileName() {
+        Pattern invalidFileName = Pattern.compile("^[-_.A-Za-z0-9]+$");
+        String response = scanner.nextLine();
+        Matcher matcher = invalidFileName.matcher(response);
+        while (!matcher.matches()) {
+            System.out.println("Please type valid file name (characters of a-Z, 0-9, -, _, . are allowed)");
+            response = scanner.nextLine();
+            matcher = invalidFileName.matcher(response);
+        }
+        return response;
     }
 
     /**
@@ -247,14 +296,14 @@ public class CalendarController {
      *                        information
      * @return the DisplayCalendar object which has a method to show the image of the calendar.
      */
-    private DisplayCalendar selectCalendar(DisplayCalendarFactory calendarFactory, String typeCalendar,
+    private CalendarDisplay selectCalendar(CalendarDisplayFactory calendarFactory, String typeCalendar,
                                            String dateInput, DateInfo dateInfo) {
         CalendarSelection calendarSelection = new CalendarSelection(dateInfo, dateInput);
         int year = calendarSelection.getYear();
         int month = calendarSelection.getMonth();
         int numberOfDays = calendarSelection.getNumberOfDays();
         int date = 1;
-        DisplayCalendar calendar;
+        CalendarDisplay calendar;
         switch (typeCalendar) {
             case "1":
                 calendar = calendarFactory.displaySpecificCalendarByType("monthly", year, month, date);
