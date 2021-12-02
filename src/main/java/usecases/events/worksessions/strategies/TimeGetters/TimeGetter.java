@@ -11,7 +11,7 @@ import java.util.*;
 
 public interface TimeGetter {
     Map<LocalDateTime, Long> getTimes(UUID deadline, EventManager eventManager, Long length);
-    List<Event> getListSchedule(EventManager eventManager, UUID deadline);
+    List<Event> getListSchedule(EventManager eventManager, LocalDate start, UUID deadline);
 
     /**
      * computes the times between events and the Long length of them in seconds
@@ -22,25 +22,29 @@ public interface TimeGetter {
      */
     default Map<LocalDateTime, Long> freeSlots(LocalDateTime start, LocalDateTime end, EventManager eventManager,
                                                UUID deadline){
-        List<Event> schedule = this.getListSchedule(eventManager, deadline);
+        List<Event> schedule = this.getListSchedule(eventManager, start.toLocalDate(), deadline);
         eventManager.timeOrder(schedule);
         Map<LocalDateTime, Long> freeSlots = new HashMap<>();
-        int num = 0;
-        while (num < schedule.size()) {
-            if (schedule.get(num).hasStart()) {
-                if (schedule.get(num).getEndTime().isAfter(start)) {
-                    if (schedule.get(num).getStartTime().isBefore(end) && schedule.get(num).getStartTime().isAfter(start)) {
-                        freeSlots.put(start, Duration.between(start, schedule.get(num).getStartTime()).toHours());
-                        start = schedule.get(num).getEndTime();
+        for (Event event : schedule) {
+            if (event.hasStart()) {
+                if (event.getEndTime().isAfter(start)) {
+                    if (event.getStartTime().isBefore(end) && event.getStartTime().isAfter(start)) {
+                        freeSlots.put(start, Duration.between(start, event.getStartTime()).toHours());
+                        start = event.getEndTime();
+                        if (start.isAfter(end)){
+                            return freeSlots;
+                        }
                         freeSlots.putAll(this.freeSlots(start, end, eventManager, deadline));
-                    } else if (!schedule.get(num).getStartTime().isBefore(end)){
+                    } else if (!event.getStartTime().isBefore(end)) {
                         freeSlots.put(start, Duration.between(start, end).toHours());
                         return freeSlots;
                     }
-                    start = schedule.get(num).getEndTime();
+                    start = event.getEndTime();
+                    if (start.isAfter(end)){
+                        return freeSlots;
+                    }
                 }
             }
-            num += 1;
         }
         return freeSlots;
     }
@@ -49,7 +53,7 @@ public interface TimeGetter {
         Map<LocalDate, List<Event>> daySchedule = new HashMap<>();
         for(LocalDate start = LocalDate.now(); !start.isAfter(eventManager.getEndDate(deadline)); start = start.plusDays(1)){
             daySchedule.put(start, new ArrayList<>());
-            for(Event event: this.getListSchedule(eventManager, deadline)){
+            for(Event event: this.getListSchedule(eventManager, start, deadline)){
                 for (Event eventSplit: eventManager.splitByDay(event)){
                     if (eventManager.getEnd(eventSplit).toLocalDate().isEqual(start)){
                         daySchedule.get(start).add(eventSplit);
@@ -79,43 +83,14 @@ public interface TimeGetter {
     }
 
     //helper method for mergeSessions
-    default Event sessionAdjacent(LocalDateTime time, Long length, UUID deadline, EventManager eventManager) {
+    default Event sessionAdjacent(UUID deadline, EventManager eventManager, Event newSession) {
         for (Event session: eventManager.getWorkSessions(deadline)){
-            if (eventManager.getEnd(session).isEqual(time) || (eventManager.getStartTime(deadline) != null &&
-                    LocalDateTime.of(eventManager.getStartDate(deadline),
-                            eventManager.getStartTime(deadline)).isEqual(time.plusHours(length)))){
+            if (eventManager.getEnd(session).isEqual(eventManager.getStart(newSession)) || eventManager.getStart(
+                    session).isEqual(eventManager.getEnd(newSession))){
                 return session;
             }
         }
         return null;
     }
 
-
-
-
-
-
-
-//    /**
-//     * @param deadlineTime the deadline event - end of last freeSlot
-//     * @param schedule     the schedule to get free slots between events
-//     * @param day          the day to get the freeSlots from
-//     * @return freeSlots over the whole day if it is not today or deadline day, otherwise start or end free
-//     * slots at now or deadline time
-//     */
-//    default Map<LocalDateTime, Long> getFreeSlotsDay(LocalDateTime deadlineTime, Map<LocalDate, List<Event>> schedule, LocalDate day) {
-//        EventManager eventManager = new EventManager(new ArrayList<>());
-//        Map<LocalDateTime, Long> freeSlots;
-//        if (day.isEqual(LocalDate.now())) {
-//            freeSlots = this.freeSlots(LocalDateTime.now(), schedule.get(day),
-//                    LocalDateTime.of(day, LocalTime.of(23, 59)));
-//        } else if (day.isEqual(deadlineTime.toLocalDate())) {
-//            LocalDateTime start = LocalDateTime.of(day, LocalTime.of(0, 0));
-//            freeSlots = this.freeSlots(start, schedule.get(day), deadlineTime);
-//        } else {
-//            freeSlots = this.freeSlots(LocalDateTime.of(day, LocalTime.of(0, 0)),
-//                    schedule.get(day), LocalDateTime.of(day, LocalTime.of(23, 59)));
-//        }
-//        return freeSlots;
-//    }
 }

@@ -7,6 +7,7 @@ import usecases.events.worksessions.strategies.TimeGetters.DefaultTimeGetter;
 import usecases.events.worksessions.strategies.TimeGetters.TimeGetter;
 import usecases.events.worksessions.strategies.DayOrderer.DayOrderer;
 import usecases.events.worksessions.strategies.TimeOrderer.BreaksBetween;
+import usecases.events.worksessions.strategies.TimeOrderer.EveningPerson;
 import usecases.events.worksessions.strategies.TimeOrderer.MorningPerson;
 import usecases.events.worksessions.strategies.TimeOrderer.TimeOrderer;
 
@@ -89,7 +90,9 @@ public class WorkSessionScheduler {
     public void autoSchedule(UUID deadline, EventManager eventManager) {
         long totalHours = eventManager.getTotalHoursNeeded(deadline)- (long)
                 (eventManager.totalHours(eventManager.getPastSessions(deadline)));
-
+        if (eventManager.getStartWorking(deadline).isBefore(LocalDate.now())){
+            eventManager.changeStartWorking(deadline, LocalDate.now().plusDays(1));
+        }
         eventManager.setWorkSessions(deadline, eventManager.getPastSessions(deadline));
 
         while (totalHours > 0) {
@@ -105,8 +108,7 @@ public class WorkSessionScheduler {
             if(!(idealStartTime == null)){
                 //step four: adds the work sessions and merges adjacent work sessions
                 eventManager.addWorkSession(deadline, idealStartTime, idealStartTime.plusHours(length));
-                this.mergeSessions(deadline, eventManager, idealStartTime, length, eventManager.getWorkSessions(deadline)
-                        .get(eventManager.getWorkSessions(deadline).size() - 1));
+                this.mergeSessions(deadline, eventManager, eventManager.getWorkSessions(deadline).get(eventManager.getWorkSessions(deadline).size()-1));
             }
             totalHours -= length;
         }
@@ -117,8 +119,8 @@ public class WorkSessionScheduler {
 
     //checks if session intersects with or flows into other work session for this event - if it does, merge them into
     //one event
-    private void mergeSessions(UUID deadline, EventManager eventManager, LocalDateTime idealStartTime, Long length, Event newSession) {
-        Event toMerge = timeGetter.sessionAdjacent(idealStartTime, length, deadline, eventManager);
+    private void mergeSessions(UUID deadline, EventManager eventManager, Event newSession) {
+        Event toMerge = timeGetter.sessionAdjacent(deadline, eventManager, newSession);
         if (toMerge != null) {
             eventManager.removeWorkSession(deadline, newSession);
             eventManager.removeWorkSession(deadline, toMerge);
@@ -127,6 +129,7 @@ public class WorkSessionScheduler {
             } else {
                 eventManager.addWorkSession(deadline, eventManager.getStart(toMerge), eventManager.getEnd(newSession));
             }
+            mergeSessions(deadline, eventManager, eventManager.getWorkSessions(deadline).get(eventManager.getWorkSessions(deadline).size()-1));
         }
     }
 
@@ -174,23 +177,27 @@ public class WorkSessionScheduler {
 
     public static void main(String[] args) {
         HashMap<LocalTime, LocalTime> freeTime = new HashMap<>();
-        freeTime.put(LocalTime.of(21, 0), LocalTime.of(11, 59));
+        freeTime.put(LocalTime.of(21, 0), LocalTime.of(23, 59));
         freeTime.put(LocalTime.of(0, 0), LocalTime.of(9, 0));
         WorkSessionScheduler workSessionScheduler = new WorkSessionScheduler(freeTime);
         EventManager eventManager = new EventManager(new ArrayList<>());
         UUID deadline = eventManager.getID(eventManager.addEvent("deadline", LocalDateTime.of(2021, 12,
-                5, 2, 30)));
+                10, 22, 30)));
         workSessionScheduler.addDayOrderer(new FewestSessions());
-        workSessionScheduler.addTimeOrderer(new MorningPerson());
-        workSessionScheduler.addTimeOrderer(new BreaksBetween("short"));
+        workSessionScheduler.addTimeOrderer(new EveningPerson());
+//        workSessionScheduler.addTimeOrderer(new BreaksBetween("short"));
+
+        System.out.println(eventManager.getStartWorking(deadline));
+        System.out.println(workSessionScheduler.timeGetter.freeSlots(LocalDateTime.now(),eventManager.getEnd(deadline), eventManager, deadline));
+        eventManager.changeStartWorking(deadline, LocalDate.of(2021, 12, 5));
         workSessionScheduler.setHoursNeeded(deadline, 10L, eventManager);
 
-        System.out.println(eventManager.getAllEvents().size());
-        for (Event event: eventManager.getAllEvents()){
-            System.out.println("what the hell");
-            System.out.println(eventManager.getID(event));
-            workSessionScheduler.autoSchedule(eventManager.getID(event), eventManager);
-        }
-        System.out.println(eventManager.getAllEvents());
+
+        System.out.println(eventManager.getWorkSessions(deadline));
+    }
+
+    public void changeStartWorking(UUID eventID, LocalDate date, EventManager eventManager) {
+        eventManager.changeStartWorking(eventID, date);
+        autoSchedule(eventID, eventManager);
     }
 }

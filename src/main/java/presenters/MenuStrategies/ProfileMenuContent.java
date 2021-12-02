@@ -36,7 +36,8 @@ public class ProfileMenuContent implements MenuContent {
             add("4. Toggle 'Procrastinate'");
             add("5. Toggle Work session spacing");
             add("6. toggle 'Cram'");
-            add("7. Return to the Main Menu");
+            add("7. toggle morning person");
+            add("8. Return to the Main Menu");
         }};
     }
 

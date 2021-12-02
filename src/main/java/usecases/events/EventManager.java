@@ -713,4 +713,13 @@ public class EventManager {
         }
     }
     public Map<UUID, Event> getEventMap() { return this.eventMap; }
+
+    public void changeStartWorking(UUID event, LocalDate start){
+        this.get(event).setStartWorking(Duration.between(LocalDateTime.of(start, LocalTime.of(0, 0)),
+                LocalDateTime.of(this.getEndDate(event), LocalTime.of(0, 0))).toDays());
+    }
+
+    public LocalDate getStartWorking(UUID event) {
+        return getEndDate(event).minusDays(get(event).getStartWorking());
+    }
 }
