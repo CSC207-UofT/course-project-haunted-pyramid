@@ -8,6 +8,7 @@ import usecases.events.EventManager;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * @author Malik Lahlou
@@ -269,5 +270,10 @@ public class RecursiveEvent {
         System.out.println(recoveredUsers.get(je).get(tu));
         System.out.println(recoveredUsers.get(je).get(tu).size());
         System.out.println(z.size());
+
+        HashMap<Integer, String> ne = new HashMap<>();
+        ne.put(1, "me");
+        ne.put(1,"you");
+        System.out.println(ne.get(1));
     }
 }

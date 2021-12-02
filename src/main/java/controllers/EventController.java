@@ -1,17 +1,15 @@
 package controllers;
 
-import entities.Event;
+import entities.UserPreferences;
 import gateways.IOSerializable;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
 import usecases.events.EventManager;
-import usecases.events.worksessions.WorkSessionScheduler;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +21,7 @@ import java.util.UUID;
  * @author Sebin Im
  * @author Taite Cullen
  * @author Malik Lahlou
- * @see Event
+ * @see entities.Event
  * @see EventManager
  * @see RecursionController
  * @see WorkSessionController
@@ -31,8 +29,8 @@ import java.util.UUID;
 public class EventController {
 
     private final EventManager eventManager;
-    private final WorkSessionController workSessionController;
     private final RecursionController recursionController;
+    private final WorkSessionController workSessionController;
     private final IOController ioController;
 
     /**
@@ -54,7 +52,6 @@ public class EventController {
             this.eventManager = new EventManager(new ArrayList<>());
         }
         this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
-        this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         this.recursionController = new RecursionController();
         this.ioController = new IOController();
     }
@@ -68,18 +65,17 @@ public class EventController {
      * @param ioSerializable serialized
      */
     public EventController(boolean hasSavedData, IOSerializable ioSerializable, UserController userController) {
-        this.workSessionController = new WorkSessionController(new WorkSessionScheduler(new HashMap<>(),
-                true));
         if (hasSavedData) {
             this.eventManager =
                     new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()));
         } else {
             this.eventManager = new EventManager(new ArrayList<>());
-            this.eventManager.addObserver(this.workSessionController.getWorkSessionScheduler());
         }
         this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
         this.recursionController = new RecursionController();
         this.ioController = new IOController();
+        this.workSessionController = new WorkSessionController(userController.getUserManager().getPreferences(
+                userController.getCurrentUser()));
     }
 
     /**
@@ -117,8 +113,10 @@ public class EventController {
                 System.out.println(dm.displayMenu(content));
                 String next = ioController.getAnswer("Enter the Number of the Action You would like to Perform");
                 save = this.getAction(next, ID);
+                this.workSessionController.refresh(eventManager);
             }
         }
+        System.out.println(this.eventManager.getAllEvents());
     }
 
     /**
@@ -259,7 +257,11 @@ public class EventController {
      * @see WorkSessionController#edit
      */
     private void prep(UUID ID) {
-        this.workSessionController.edit(ID, this.eventManager);
+        this.workSessionController.edit(ID, eventManager);
+    }
+
+    public void update(UserPreferences userPreferences){
+        this.workSessionController.refresh(userPreferences, eventManager);
     }
 
     /**

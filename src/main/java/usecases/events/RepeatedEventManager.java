@@ -33,6 +33,16 @@ public class RepeatedEventManager implements EventListObserver {
         this.recursiveEventMap = new HashMap<>();
     }
 
+    public RepeatedEventManager(Map<UUID, List<Event>> recursiveIdToEventsMap){
+        this.recursiveIdToDateToEventsMap = new HashMap<>();
+        this.recursiveEventMap = new HashMap<>();
+        for(UUID uuid : recursiveIdToEventsMap.keySet()){
+            Map<LocalDateTime, List<Event>> newMap = eventListToMap(recursiveIdToEventsMap.get(uuid), 3);
+            recursiveIdToDateToEventsMap.put(uuid, newMap);
+        }
+
+    }
+
     /**
      *
      * Getter and Setter methods.
@@ -109,7 +119,7 @@ public class RepeatedEventManager implements EventListObserver {
         }
     }
 
-    private Map<LocalDateTime, List<Event>> EventListToMap(List<Event> events, int cycleLength){
+    private Map<LocalDateTime, List<Event>> eventListToMap(List<Event> events, int cycleLength){
         Map<LocalDateTime, List<Event>> datesAndEvents = new HashMap<>();
         int endLoop = events.size();
         int i = 1;
@@ -126,7 +136,7 @@ public class RepeatedEventManager implements EventListObserver {
     public void addEventsFromRecursiveEvent(RecursiveEvent recursiveEvent){
         int cycleLength = recursiveEvent.getCycleLength();
         List<Event> allEventsInCycles = recursiveEvent.listOfEventsInCycles(recursiveEvent.getEventsInOneCycle());
-        Map<LocalDateTime, List<Event>> datesAndEvents = EventListToMap(allEventsInCycles, cycleLength);
+        Map<LocalDateTime, List<Event>> datesAndEvents = eventListToMap(allEventsInCycles, cycleLength);
         UUID myID = recursiveEvent.getId();
         this.recursiveIdToDateToEventsMap.put(myID, datesAndEvents);
     }
@@ -186,7 +196,7 @@ public class RepeatedEventManager implements EventListObserver {
             cycleLength = this.recursiveEventMap.get(id).getCycleLength();
         }
         LocalDateTime firstTime = startTimeGetter(newCycles.get(0));
-        Map<LocalDateTime, List<Event>> newEventMap = EventListToMap(newCycles, cycleLength);
+        Map<LocalDateTime, List<Event>> newEventMap = eventListToMap(newCycles, cycleLength);
         Set<LocalDateTime> keySet = this.recursiveIdToDateToEventsMap.get(id).keySet();
         for(LocalDateTime localDateTime : keySet){
             if(localDateTime.isAfter(firstTime)){

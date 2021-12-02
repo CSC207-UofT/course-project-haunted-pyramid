@@ -190,7 +190,8 @@ public class IOSerializable {
      */
     public Map<UUID, List<Event>> eventsReadFromSerializable() {
         try {
-            InputStream  file = new FileInputStream(EVENTS_FILEPATH);
+            InputStream file = new FileInputStream(EVENTS_FILEPATH);
+
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
             //Please refer to specifications for explanation
@@ -215,6 +216,7 @@ public class IOSerializable {
     public static void eventsWriteToSerializable(Map<UUID, List<Event>> events) {
         try {
             OutputStream file = new FileOutputStream(EVENTS_FILEPATH);
+
             OutputStream buffer = new BufferedOutputStream(file);
             ObjectOutput output = new ObjectOutputStream(buffer);
             output.writeObject(events);
