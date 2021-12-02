@@ -239,6 +239,12 @@ public class ICalendar {
         LocalTime startTime = eventManager.getStartTime(eventID);
         LocalDate endDate = eventManager.getEndDate(eventID);
         LocalTime endTime = eventManager.getEndTime(eventID);
+        if (startDate == null) {
+            startDate = endDate;
+        }
+        if (startTime == null) {
+            startTime = endTime;
+        }
         StringBuilder startDateTime = getTzTimeStamp(startDate, startTime);
         StringBuilder endDateTime = getTzTimeStamp(endDate, endTime);
         String name = eventManager.getName(eventManager.get(eventID));
