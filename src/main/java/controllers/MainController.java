@@ -193,6 +193,10 @@ public class MainController {
         return userController;
     }
 
+    public LoginController getLoginController() {
+        return loginController;
+    }
+
     public void setEventController(EventController eventController){
         this.eventController = eventController;
     }
