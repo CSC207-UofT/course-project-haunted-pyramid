@@ -18,7 +18,7 @@ public class ProgramRun {
         WindowLaunch windowLaunch = new WindowLaunch();
 
         MainController controller = new MainController();
-
+        controller.displayInitScreen();
         controller.displayScreen();
     }
 }
