@@ -9,19 +9,27 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainMenu {
-    private JFrame frame;
-    private MainController mainController;
+    private final JFrame frame;
 
-    public MainMenu(JFrame frame) {
-        //this.mainController = new MainController();
-        this.frame = frame;
+    public MainMenu(MainController mainController) {
+        EventController eventController= mainController.getEventController();
+        CalendarController calendarController = mainController.getCalendarController();
+        UserController userController =  mainController.getUserController();
+        this.frame = new MainFrame();
         JLabel welcomeMessage = new JLabel();
-        setUpWelcomeMessage("Sean", welcomeMessage);
+        setUpWelcomeMessage(userController.getCurrentUsername(), welcomeMessage);
         this.frame.add(welcomeMessage);
         this.frame.setVisible(false);
         JPanel calendarPanel = new JPanel();
         calendarPanel.setBounds(444/2, 150, 1000, 500);
-        calendarPanel.setBackground(new Color(0, 161, 161));
+        calendarPanel.setBackground(new Color(233, 161, 161));
+        JLabel defaultCalendar = new JLabel();
+        defaultCalendar.setText(calendarController.showDefaultCalendar(eventController));
+        defaultCalendar.setHorizontalTextPosition(JLabel.CENTER);
+        defaultCalendar.setVerticalTextPosition(JLabel.CENTER);
+        defaultCalendar.setVerticalAlignment(JLabel.CENTER);
+        defaultCalendar.setHorizontalAlignment(JLabel.CENTER);
+        calendarPanel.add(defaultCalendar);
         this.frame.add(calendarPanel);
         JPanel menuPanel = new JPanel();
         menuPanel.setBounds(444/2, 700, 1000, 1444/2);
@@ -58,7 +66,6 @@ public class MainMenu {
         welcomeMessage.setText("Welcome " + name + "!");
         welcomeMessage.setHorizontalTextPosition(JLabel.CENTER);
         welcomeMessage.setVerticalTextPosition(JLabel.TOP);
-        welcomeMessage.setForeground(Color.black);
         welcomeMessage.setFont(new Font("MV Boli", Font.ITALIC, 25));
         welcomeMessage.setVerticalAlignment(JLabel.CENTER);
         welcomeMessage.setHorizontalAlignment(JLabel.CENTER);
@@ -67,11 +74,5 @@ public class MainMenu {
 
     public void display() {
         frame.setVisible(true);
-    }
-
-
-    public static void main(String[] args) {
-        MainMenu mainMenu = new MainMenu(new MainFrame());
-        mainMenu.display();
     }
 }
