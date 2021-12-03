@@ -1,9 +1,7 @@
 package GUISwing;
 
-import GUISwing.MainFrame;
 import controllers.*;
 import gateways.IOSerializable;
-import presenters.MenuStrategies.DisplayMenu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +14,7 @@ public class logInWindow implements ActionListener {
     JTextField fldUserName = new JTextField();
     JPasswordField fldPassword = new JPasswordField();
     JLabel lblUserName = new JLabel("username: ");
-    JLabel lblPassword = new JLabel("password");
+    JLabel lblPassword = new JLabel("password: ");
     JButton btnLogIn = new JButton("Log In");
     JButton btnSignUp = new JButton("Sign up");
     JLabel lblLoginMessage = new JLabel();
@@ -26,36 +24,101 @@ public class logInWindow implements ActionListener {
     public logInWindow(){
         this.mainController = new MainController();
         this.loginController = new LoginController(mainController.getUserController());
+        JPanel imagePanel = createImagePanel();
+        JPanel contributorPanel = createContributorPanel();
+        addTeamName(imagePanel);
+        addContributors(contributorPanel);
+        JPanel logInPanel = new JPanel();
+        this.frame.add(logInPanel);
+        logInPanel.setBounds(0, 1000/3, 1444, 1000/3);
+        logInPanel.setBackground(new Color(233, 161, 161));
+        logInPanel.setLayout(null);
+        updateLogInPanel(logInPanel);
+        setUpUserNameLabel();
+        setUpPasswordLabel();
+        addLogInMessage();
+        buttonSetUp();
+        frame.setVisible(true);
+    }
 
+    private void buttonSetUp() {
+        btnLogIn.setBounds(1164/2 + 20, 200, 100, 30);
+        btnSignUp.setBounds(1164/2 + 125, 200, 100, 30);
         btnLogIn.addActionListener(this);
         btnSignUp.addActionListener(this);
+    }
 
+    private void addLogInMessage() {
+        lblLoginMessage.setLayout(null);
+        lblLoginMessage.setHorizontalAlignment(JLabel.CENTER);
+        lblLoginMessage.setVerticalAlignment(JLabel.CENTER);
+        lblLoginMessage.setHorizontalTextPosition(JLabel.CENTER);
+        lblLoginMessage.setVerticalTextPosition(JLabel.CENTER);
+        lblLoginMessage.setBounds(1044/2, 170, 400, 20);
+    }
 
-        lblUserName.setBounds(100, 150, 100, 20);
-        lblPassword.setBounds(100, 190, 100, 20);
-        fldUserName.setBounds((int) (lblUserName.getBounds().getX() + 150), lblUserName.getY(), 100, 20);
-        fldUserName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        fldPassword.setBounds((int) (lblPassword.getBounds().getX() + 150), lblPassword.getY(), 100, 20);
+    private void setUpPasswordLabel() {
+        lblPassword.setBounds(1220/2, 135, 100, 25);
+        lblPassword.setFont(new Font("Times New Roman", Font.ITALIC | Font.BOLD, 15));
+        fldPassword.setBounds((int) (lblPassword.getBounds().getX() + 80), lblPassword.getY(), 120, 25);
         fldPassword.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        btnLogIn.setBounds(100, 300, 100, 20);
-        btnSignUp.setBounds(100, 350, 100, 20);
-        lblUserName.setVisible(true);
-        lblPassword.setVisible(true);
-        fldPassword.setVisible(true);
-        fldUserName.setVisible(true);
-        btnLogIn.setVisible(true);
-        btnSignUp.setVisible(true);
-        lblLoginMessage.setBounds(100, 240, 400, 20);
+    }
 
-        frame.add(lblUserName);
-        frame.add(lblPassword);
-        frame.add(fldUserName);
-        frame.add(fldPassword);
-        frame.add(btnSignUp);
-        frame.add(btnLogIn);
-        frame.add(lblLoginMessage);
+    private void setUpUserNameLabel() {
+        lblUserName.setBounds(1220/2, 100, 100, 25);
+        lblUserName.setFont(new Font("Times New Roman", Font.ITALIC | Font.BOLD, 15));
+        fldUserName.setBounds((int) (lblUserName.getBounds().getX() + 80), lblUserName.getY(), 120, 25);
+        fldUserName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    }
 
-        frame.setVisible(true);
+    private void updateLogInPanel(JPanel logInPanel) {
+        logInPanel.add(lblUserName);
+        logInPanel.add(lblPassword);
+        logInPanel.add(fldUserName);
+        logInPanel.add(fldPassword);
+        logInPanel.add(btnSignUp);
+        logInPanel.add(btnLogIn);
+        logInPanel.add(lblLoginMessage);
+    }
+
+    private JPanel createImagePanel() {
+        JPanel imagePanel = new JPanel();
+        this.frame.add(imagePanel);
+        imagePanel.setBounds(0, 0, 1444, 1000/3);
+        imagePanel.setBackground(new Color(233, 161, 161));
+        imagePanel.setLayout(null);
+        return imagePanel;
+    }
+
+    private JPanel createContributorPanel() {
+        JPanel contributorPanel = new JPanel();
+        this.frame.add(contributorPanel);
+        contributorPanel.setLayout(null);
+        contributorPanel.setBackground(new Color(233, 161, 161));
+        contributorPanel.setBounds(0, 1000*2/3, 1444, 1000/3);
+        return contributorPanel;
+    }
+
+    private void addTeamName(JPanel imagePanel) {
+        JLabel teamName = new JLabel("Team Haunted Pyramid");
+        imagePanel.add(teamName);
+        teamName.setFont(new Font("MV Boli", Font.ITALIC | Font.BOLD, 30));
+        teamName.setHorizontalAlignment(JLabel.CENTER);
+        teamName.setVerticalAlignment(JLabel.CENTER);
+        teamName.setHorizontalTextPosition(JLabel.CENTER);
+        teamName.setVerticalTextPosition(JLabel.CENTER);
+        teamName.setBounds(200, 100, 1000, 50);
+    }
+
+    private void addContributors(JPanel contributorPanel) {
+        JLabel contributors = new JLabel("Contributors:  Malik Lahlou,  Shahzada Muhammad Shameel Farooq,  Sebin Im,  Seo Won Yi,  Taite Cullen");
+        contributors.setFont(new Font("Times New Roman", Font.ITALIC | Font.BOLD, 20));
+        contributors.setBounds(200, 100, 1000, 100);
+        contributorPanel.add(contributors);
+        contributors.setHorizontalAlignment(JLabel.CENTER);
+        contributors.setVerticalAlignment(JLabel.CENTER);
+        contributors.setHorizontalTextPosition(JLabel.CENTER);
+        contributors.setVerticalTextPosition(JLabel.CENTER);
     }
 
     @Override
@@ -69,11 +132,11 @@ public class logInWindow implements ActionListener {
                 MainMenu mainMenu= new MainMenu(mainController);
                 mainMenu.display();
             }
-            lblLoginMessage.setText("incorrect username or password - please try again");
+            lblLoginMessage.setText("Incorrect Username or Password - Please Try Again");
         }
         if(e.getSource() == btnSignUp){
             loginController.signUp(fldUserName.getText(), Arrays.toString(fldPassword.getPassword()));
-            lblLoginMessage.setText("Successfully signed up - please log in");
+            lblLoginMessage.setText("Successfully Signed up - Please Log In");
         }
         fldPassword.setText("");
         fldUserName.setText("");
