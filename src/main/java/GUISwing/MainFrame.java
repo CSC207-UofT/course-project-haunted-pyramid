@@ -8,13 +8,11 @@ public class MainFrame extends JFrame {
         this.setTitle("Haunted Pyramid Calendar App");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1444, 1000);
-        this.setVisible(true);
+        this.setVisible(false);
         this.getContentPane().setBackground(new Color(233, 161, 161));
         this.setLayout(null);
         this.setResizable(false);
-    }
-
-    public static void main(String[] args) {
-        new MainFrame();
+        ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Icon.png");
+        this.setIconImage(hauntedPyramid.getImage());
     }
 }
