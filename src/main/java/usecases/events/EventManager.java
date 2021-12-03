@@ -171,6 +171,10 @@ public class EventManager {
         return eventMap.remove(ID);
     }
 
+    public Event removeWithoutUpdate(UUID id){
+        return eventMap.remove(id);
+    }
+
     public void removeAll(List<UUID> IDs){
         IDs.forEach(eventMap::remove);
     }

@@ -176,7 +176,6 @@ public class RecursiveEvent {
         else{
             newCycle.remove(eventToRemove);
         }
-        newCycle.remove(newCycle.size() - 1);
         List<List<Event>> result = new ArrayList<>();
         result.add(allEvents);
         result.add(newCycle);
