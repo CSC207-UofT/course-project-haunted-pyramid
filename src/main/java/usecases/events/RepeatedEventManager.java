@@ -173,6 +173,9 @@ public class RepeatedEventManager implements EventListObserver {
 
     private RecursiveEvent recursiveEventConstructor(List<Event> eventsInCycle, int numberOfRepetition){
         RecursiveEvent recursiveEvent = new RecursiveEvent(UUID.randomUUID());
+        for (Event event : eventsInCycle){
+            event.setRecursiveId(recursiveEvent.getId());
+        }
         recursiveEvent.setEventsInOneCycle(eventsInCycle);
         recursiveEvent.setNumberOfRepetitionDateGetter(numberOfRepetition);
         return recursiveEvent;
@@ -180,6 +183,9 @@ public class RepeatedEventManager implements EventListObserver {
 
     private RecursiveEvent recursiveEventConstructor(List<Event> eventsInCycle, LocalDateTime[] periodOfRepetition){
         RecursiveEvent recursiveEvent = new RecursiveEvent(UUID.randomUUID());
+        for (Event event : eventsInCycle){
+            event.setRecursiveId(recursiveEvent.getId());
+        }
         recursiveEvent.setIntervalDateDateGetter(periodOfRepetition);
         recursiveEvent.setEventsInOneCycle(eventsInCycle);
         return recursiveEvent;

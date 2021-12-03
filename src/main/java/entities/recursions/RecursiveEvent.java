@@ -48,6 +48,9 @@ public class RecursiveEvent {
 
     public RecursiveEvent(UUID uuid, List<Event> events){
         this.id = uuid;
+        for (Event event : events){
+            event.setRecursiveId(id);
+        }
         this.eventsInOneCycle = events;
     }
 
@@ -251,46 +254,13 @@ public class RecursiveEvent {
         events.add(e1);
         NumberOfRepetitionInput x = new NumberOfRepetitionInput(4);
         RecursiveEvent recursiveEvent = new RecursiveEvent(UUID.randomUUID(), events, x);
-        List<Event> z = recursiveEvent.listOfEventsInCycles(events);
         UUID uuid = UUID.randomUUID();
         User user = new User(uuid, "malik", "lahlou", "pass");
 
-        Map<UUID, Map<UUID, List<Event>>> mine = new HashMap<>();
-        Map<UUID, List<Event>> mine2 = new HashMap<>();
-        mine2.put(recursiveEvent.getId(), z);
+        Map<UUID, Map<UUID, RecursiveEvent>> mine = new HashMap<>();
+        Map<UUID, RecursiveEvent> mine2 = new HashMap<>();
+        mine2.put(recursiveEvent.getId(),recursiveEvent);
         mine.put(user.getId(), mine2);
 
-        OutputStream file = new FileOutputStream("ser_save_test");
-        OutputStream buffer = new BufferedOutputStream(file);
-        ObjectOutput output = new ObjectOutputStream(buffer);
-        output.writeObject(mine);
-        output.close();
-
-        InputStream file1 = new FileInputStream("ser_save_test");
-        InputStream buffer1 = new BufferedInputStream(file1);
-        ObjectInput input1 = new ObjectInputStream(buffer1);
-        Map<UUID, Map<UUID, List<Event>>> recoveredUsers = (Map<UUID, Map<UUID, List<Event>>>) input1.readObject();
-        input1.close();
-
-        System.out.println(recoveredUsers.size());
-        System.out.println(recoveredUsers.keySet());
-        UUID je = null;
-        for (UUID uuid1 : recoveredUsers.keySet()){
-            je = uuid1;
-        }
-        Map<UUID, List<Event>> fr = recoveredUsers.get(je);
-        UUID tu = null;
-        for (UUID uuid1 : fr.keySet()){
-            tu = uuid1;
-        }
-        System.out.println(tu);
-        System.out.println(recoveredUsers.get(je).get(tu));
-        System.out.println(recoveredUsers.get(je).get(tu).size());
-        System.out.println(z.size());
-
-        HashMap<Integer, String> ne = new HashMap<>();
-        ne.put(1, "me");
-        ne.put(1,"you");
-        System.out.println(ne.get(1));
     }
 }

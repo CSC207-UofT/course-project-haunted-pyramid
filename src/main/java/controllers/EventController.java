@@ -179,7 +179,7 @@ public class EventController {
             eventID = ioController.getAnswer("Please type a valid ID");
         }
         UUID uuid = converter.getUUIDFromInt(Integer.parseInt(eventID));
-        return uuid;
+        return this.eventManager.get(uuid).getRecursiveId();
     }
 
     private void addToRecursion(UUID id) {
