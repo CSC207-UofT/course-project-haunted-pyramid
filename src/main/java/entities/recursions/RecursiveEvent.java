@@ -6,6 +6,7 @@ import interfaces.DateGetter;
 import usecases.events.EventManager;
 
 import java.io.*;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -112,14 +113,15 @@ public class RecursiveEvent {
         int cycleLength = this.getCycleLength();
         int cycleNumber = 1;
         try{
-            while(startTimeGetter(event).isAfter(startTimeGetter(allEvents.get(cycleNumber*cycleLength)))){
+            while(startTimeGetter(event).isAfter(startTimeGetter(allEvents.get(cycleNumber*cycleLength))) ||
+                    startTimeGetter(event).isEqual(startTimeGetter(allEvents.get(cycleNumber*cycleLength)))){
                 cycleNumber++;
             }
         }
         catch (IndexOutOfBoundsException indexOutOfBoundsException){
             return allEvents.subList(cycleNumber*cycleLength, allEvents.size());
         }
-        return allEvents.subList((cycleNumber-1)*cycleLength, cycleNumber*cycleLength + 1);
+        return new ArrayList<>(allEvents.subList((cycleNumber-1)*cycleLength, cycleNumber*cycleLength + 1));
     }
 
 
@@ -156,34 +158,44 @@ public class RecursiveEvent {
         LocalDateTime lastEventEndTime = startTimeGetter(lastEvent);
         LocalDateTime[] intervalDates = new LocalDateTime[2];
         intervalDates[0] = startTimeGetter(newCycle.get(0));
-        intervalDates[1] = lastEventEndTime;
+        intervalDates[1] = lastEventEndTime.plus(Duration.ofDays(1));
         setIntervalDateDateGetter(intervalDates);
         setEventsInOneCycle(newCycle);
         return listOfEventsInCycles(newCycle);
     }
 
 
-    public List<Event> cycleAfterRemoval(Event eventToRemove){
-        List<Event> allEvents = this.listOfEventsInCycles(this.eventsInOneCycle);
+    public List<List<Event>> cycleAfterRemoval(Event eventToRemove, List<Event> allEvents){
         List<Event> newCycle = getSpecificCycle(allEvents, eventToRemove);
         if(eventToRemove.equals(newCycle.get(0))){
+            int newCycleLength = newCycle.size() - 1;
             newCycle.remove(eventToRemove);
-            newCycle.remove(newCycle.size() - 1);
-            newCycle.add(allEvents.get(allEvents.indexOf(eventToRemove) + 1));
+            newCycle.remove(newCycleLength - 1);
+            newCycle.add(allEvents.get(allEvents.indexOf(eventToRemove) + newCycleLength + 1));
         }
         else{
             newCycle.remove(eventToRemove);
         }
-        return listOfEventsInNewCycles(allEvents, newCycle);
+        newCycle.remove(newCycle.size() - 1);
+        List<List<Event>> result = new ArrayList<>();
+        result.add(allEvents);
+        result.add(newCycle);
+        // List<Event> result = listOfEventsInNewCycles(allEvents, newCycle);
+        // newCycle.addAll(result);
+        return result;
     }
 
 
-    public List<Event> cycleAfterAdditionChange(Event eventToAdd, String addChange){
-        List<Event> allEvents = this.listOfEventsInCycles(this.eventsInOneCycle);
+    public List<List<Event>> cycleAfterAdditionChange(Event eventToAdd, String addChange, List<Event> allEvents){
         List<Event> newCycle = getSpecificCycle(allEvents, eventToAdd);
         int indexOfNewEvent = getNewEventIndex(newCycle, eventToAdd, addChange);
         newCycle = addChangeCycle(addChange, newCycle, indexOfNewEvent, eventToAdd);
-        return listOfEventsInNewCycles(allEvents, newCycle);
+        List<List<Event>> result = new ArrayList<>();
+        result.add(allEvents);
+        result.add(newCycle);
+        // List<Event> result = listOfEventsInNewCycles(allEvents, newCycle);
+        // newCycle.addAll(result);
+        return result;
     }
 
 

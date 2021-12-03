@@ -148,7 +148,7 @@ public class EventManager {
                 }
             }
         }
-        return null;
+        return this.repeatedEventManager.getThisEventFromRecursion(ID);
     }
 
 
@@ -304,6 +304,7 @@ public class EventManager {
         }
         return events;
     }
+
 
     public List<Event> flatSplitEvents(List<Event> events) {
         List<Event> splitFlat = new ArrayList<>();
