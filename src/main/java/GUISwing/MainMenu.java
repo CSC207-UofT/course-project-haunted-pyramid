@@ -16,20 +16,12 @@ public class MainMenu {
         CalendarController calendarController = mainController.getCalendarController();
         UserController userController =  mainController.getUserController();
         this.frame = new MainFrame();
+        this.frame.setVisible(false);
         JLabel welcomeMessage = new JLabel();
         setUpWelcomeMessage(userController.getCurrentUsername(), welcomeMessage);
         this.frame.add(welcomeMessage);
-        this.frame.setVisible(false);
         JPanel calendarPanel = new JPanel();
-        calendarPanel.setBounds(444/2, 150, 1000, 500);
-        calendarPanel.setBackground(new Color(233, 161, 161));
-        JLabel defaultCalendar = new JLabel();
-        defaultCalendar.setText(calendarController.showDefaultCalendar(eventController));
-        defaultCalendar.setHorizontalTextPosition(JLabel.CENTER);
-        defaultCalendar.setVerticalTextPosition(JLabel.CENTER);
-        defaultCalendar.setVerticalAlignment(JLabel.CENTER);
-        defaultCalendar.setHorizontalAlignment(JLabel.CENTER);
-        calendarPanel.add(defaultCalendar);
+        setUpDefaultCalendar(eventController, calendarController, calendarPanel);
         this.frame.add(calendarPanel);
         JPanel menuPanel = new JPanel();
         menuPanel.setBounds(444/2, 700, 1000, 1444/2);
@@ -62,6 +54,18 @@ public class MainMenu {
 
     }
 
+    private void setUpDefaultCalendar(EventController eventController, CalendarController calendarController, JPanel calendarPanel) {
+        calendarPanel.setBounds(444/2, 150, 1000, 500);
+        calendarPanel.setBackground(new Color(233, 161, 161));
+        JLabel defaultCalendar = new JLabel();
+        defaultCalendar.setText(calendarController.showDefaultCalendar(eventController));
+        defaultCalendar.setHorizontalTextPosition(JLabel.CENTER);
+        defaultCalendar.setVerticalTextPosition(JLabel.CENTER);
+        defaultCalendar.setVerticalAlignment(JLabel.CENTER);
+        defaultCalendar.setHorizontalAlignment(JLabel.CENTER);
+        calendarPanel.add(defaultCalendar);
+    }
+
     private void setUpWelcomeMessage(String name, JLabel welcomeMessage) {
         welcomeMessage.setText("Welcome " + name + "!");
         welcomeMessage.setHorizontalTextPosition(JLabel.CENTER);
@@ -74,10 +78,5 @@ public class MainMenu {
 
     public void display() {
         frame.setVisible(true);
-    }
-
-    public static void main(String[] args){
-        MainMenu mainMenu = new MainMenu(new MainController());
-        mainMenu.display();
     }
 }
