@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-public class logInWindow implements ActionListener {
+public class LogInWindow implements ActionListener {
     JFrame frame = new MainFrame();
     JTextField fldUserName = new JTextField();
     JPasswordField fldPassword = new JPasswordField();
@@ -21,10 +21,19 @@ public class logInWindow implements ActionListener {
     MainController mainController;
     LoginController loginController;
 
-    public logInWindow(){
+    public LogInWindow(){
         this.mainController = new MainController();
         this.loginController = new LoginController(mainController.getUserController());
         JPanel imagePanel = createImagePanel();
+        JLabel imageLabel = new JLabel();
+        ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Logo.png");
+        imageLabel.setIcon(hauntedPyramid);
+        imagePanel.add(imageLabel);
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        imageLabel.setVerticalAlignment(JLabel.CENTER);
+        imageLabel.setHorizontalTextPosition(JLabel.CENTER);
+        imageLabel.setVerticalTextPosition(JLabel.CENTER);
+        imageLabel.setBounds(200, 150, 1000, 200);
         JPanel contributorPanel = createContributorPanel();
         addTeamName(imagePanel);
         addContributors(contributorPanel);
@@ -42,8 +51,8 @@ public class logInWindow implements ActionListener {
     }
 
     private void buttonSetUp() {
-        btnLogIn.setBounds(1164/2 + 20, 200, 100, 30);
-        btnSignUp.setBounds(1164/2 + 125, 200, 100, 30);
+        btnLogIn.setBounds(1164/2 + 30, 200, 100, 30);
+        btnSignUp.setBounds(1164/2 + 135, 200, 100, 30);
         btnLogIn.addActionListener(this);
         btnSignUp.addActionListener(this);
     }
@@ -100,20 +109,21 @@ public class logInWindow implements ActionListener {
     }
 
     private void addTeamName(JPanel imagePanel) {
-        JLabel teamName = new JLabel("Team Haunted Pyramid");
+        JLabel teamName = new JLabel();
+        teamName.setText("Haunted Pyramid Calendar App");
         imagePanel.add(teamName);
-        teamName.setFont(new Font("MV Boli", Font.ITALIC | Font.BOLD, 30));
+        teamName.setFont(new Font("MV Boli", Font.BOLD, 30));
         teamName.setHorizontalAlignment(JLabel.CENTER);
         teamName.setVerticalAlignment(JLabel.CENTER);
         teamName.setHorizontalTextPosition(JLabel.CENTER);
         teamName.setVerticalTextPosition(JLabel.CENTER);
-        teamName.setBounds(200, 100, 1000, 50);
+        teamName.setBounds(200, 50, 1000, 50);
     }
 
     private void addContributors(JPanel contributorPanel) {
         JLabel contributors = new JLabel("Contributors:  Malik Lahlou,  Shahzada Muhammad Shameel Farooq,  Sebin Im,  Seo Won Yi,  Taite Cullen");
         contributors.setFont(new Font("Times New Roman", Font.ITALIC | Font.BOLD, 20));
-        contributors.setBounds(200, 100, 1000, 100);
+        contributors.setBounds(200, 50, 1000, 100);
         contributorPanel.add(contributors);
         contributors.setHorizontalAlignment(JLabel.CENTER);
         contributors.setVerticalAlignment(JLabel.CENTER);
@@ -141,9 +151,5 @@ public class logInWindow implements ActionListener {
         fldPassword.setText("");
         fldUserName.setText("");
         lblLoginMessage.setVisible(true);
-    }
-
-    public static void main(String[] args){
-        new logInWindow();
     }
 }

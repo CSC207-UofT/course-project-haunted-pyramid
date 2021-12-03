@@ -1,10 +1,10 @@
 package main;
 
 
-import GUISwing.logInWindow;
+import GUISwing.LogInWindow;
 
 public class GUIRun {
     public static void main(String[] args) {
-        new logInWindow();
+        new LogInWindow();
     }
 }
