@@ -3,7 +3,7 @@ package GUISwing;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame{
+public class MainFrame extends JFrame {
     MainFrame() {
         this.setTitle("Haunted Pyramid Calendar App");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

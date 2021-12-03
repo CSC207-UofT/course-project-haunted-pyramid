@@ -1,11 +1,12 @@
 package entities;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserPreferences {
+public class UserPreferences implements Serializable {
     private boolean procrastinate;
 
     private boolean morningPerson;
