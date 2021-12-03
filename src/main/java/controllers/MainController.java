@@ -192,4 +192,8 @@ public class MainController {
     public UserController getUserController() {
         return userController;
     }
+
+    public void setEventController(EventController eventController){
+        this.eventController = eventController;
+    }
 }

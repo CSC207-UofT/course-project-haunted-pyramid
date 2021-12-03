@@ -79,4 +79,9 @@ public class MainMenu {
     public void display() {
         frame.setVisible(true);
     }
+
+    public static void main(String[] args){
+        MainMenu mainMenu = new MainMenu(new MainController());
+        mainMenu.display();
+    }
 }
