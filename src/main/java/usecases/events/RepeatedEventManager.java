@@ -4,6 +4,7 @@ import entities.Event;
 import entities.recursions.RecursiveEvent;
 import interfaces.EventListObserver;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -62,11 +63,12 @@ public class RepeatedEventManager implements EventListObserver {
     }
 
     public Event getThisEventFromRecursion(UUID uuid){
-        for(UUID uuid1 : this.recursiveEventMap.keySet()){
-            List<Event> events = getEventsFromRecursion(uuid1);
-            for(Event event : events){
-                if(event.getID() == uuid){
-                    return event;
+        for(UUID uuid1 : this.recursiveIdToDateToEventsMap.keySet()){
+            for(List<Event> events : this.recursiveIdToDateToEventsMap.get(uuid1).values()){
+                for(Event event : events){
+                    if(event.getID() == uuid){
+                        return event;
+                    }
                 }
             }
         }
@@ -209,36 +211,48 @@ public class RepeatedEventManager implements EventListObserver {
         for(List<Event> events : dateEventMap.values()){
             result.addAll(events);
         }
-        return result;
+        EventManager em = new EventManager(new ArrayList<>());
+        return em.timeOrder(result);
     }
 
+    private void newRecursiveEventForUpdate(List<Event> allEvents, List<Event> newCycle) {
+        Event lastEvent = allEvents.get(allEvents.size()-1);
+        LocalDateTime lastEventEndTime = startTimeGetter(lastEvent);
+        LocalDateTime[] intervalDates = new LocalDateTime[2];
+        intervalDates[0] = startTimeGetter(newCycle.get(0));
+        intervalDates[1] = lastEventEndTime.plus(Duration.ofDays(1));
+        addEventsFromRecursiveEvent(newCycle, intervalDates);
+    }
 
     @Override
     public void update(String addRemoveChange, Event changed, EventManager eventManager) {
         UUID id = changed.getRecursiveId();
-        int cycleLength;
+        List<Event> allEvents = new ArrayList<>(getAllEventsFromRecursiveEvent(id));
+        int cycleLength = this.recursiveEventMap.get(id).getCycleLength();
         List<Event> newCycles;
-        if (addRemoveChange.equals("Remove")){
-            newCycles = this.recursiveEventMap.get(id).cycleAfterRemoval(changed);
-            cycleLength = this.recursiveEventMap.get(id).getCycleLength() - 1;
+        if (addRemoveChange.equalsIgnoreCase("Remove")){
+            List<List<Event>> inputForNewRecursion = this.recursiveEventMap.get(id).cycleAfterRemoval(changed, allEvents);
+            newRecursiveEventForUpdate(inputForNewRecursion.get(0), inputForNewRecursion.get(1));
+            newCycles = inputForNewRecursion.get(1);
         }
-        else if(addRemoveChange.equals("add")){
-            newCycles = this.recursiveEventMap.get(id).cycleAfterAdditionChange(changed, "add");
-            cycleLength = this.recursiveEventMap.get(id).getCycleLength() + 1;
+        else if(addRemoveChange.equalsIgnoreCase("add")){
+            List<List<Event>> inputForNewRecursion = this.recursiveEventMap.get(id).cycleAfterAdditionChange(changed, "add", allEvents);
+            newRecursiveEventForUpdate(inputForNewRecursion.get(0), inputForNewRecursion.get(1));
+            newCycles = inputForNewRecursion.get(1);
         }
         else{
-            newCycles = this.recursiveEventMap.get(id).cycleAfterAdditionChange(changed, "Change");
-            cycleLength = this.recursiveEventMap.get(id).getCycleLength();
+            List<List<Event>> inputForNewRecursion = this.recursiveEventMap.get(id).cycleAfterAdditionChange(changed, "Change", allEvents);
+            newCycles = inputForNewRecursion.get(1);
         }
         LocalDateTime firstTime = startTimeGetter(newCycles.get(0));
-        Map<LocalDateTime, List<Event>> newEventMap = eventListToMap(newCycles, cycleLength);
-        Set<LocalDateTime> keySet = this.recursiveIdToDateToEventsMap.get(id).keySet();
+        Set<LocalDateTime> keySet = new HashSet<>(this.recursiveIdToDateToEventsMap.get(id).keySet());
+        this.recursiveIdToDateToEventsMap.get(id).remove(startTimeGetter(changed));
         for(LocalDateTime localDateTime : keySet){
             if(localDateTime.isAfter(firstTime)){
                 this.recursiveIdToDateToEventsMap.get(id).remove(localDateTime);
             }
         }
-        this.recursiveIdToDateToEventsMap.get(id).putAll(newEventMap);
+        // TODO: change dateGetter for recursion with UUID id
     }
 }
 
