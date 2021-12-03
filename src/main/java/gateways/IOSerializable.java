@@ -42,9 +42,9 @@ public class IOSerializable {
 
     // A public Dropbox link where the serialized files are stored
     private static final String eventsURL = "https://www.dropbox.com/s/vkant0coohn5fil/events.ser?dl=1";
-    private static final String usersURL = "https://www.dropbox.com/s/f6yan8l9e951b7x/users.ser?dl=1";
+    private static final String usersURL = "https://www.dropbox.com/s/fqto77tf70s0cyj/users.ser?dl=1";
 
-    private static final String recursiveEventsURL = ""; //TODO: sebin please add link.
+    private static final String recursiveEventsURL = "https://www.dropbox.com/s/m8ljpad3otbj9pv/ser_save_test.ser?dl=1";
 
     /**
      * Initialize an instance of IOSerializable.
@@ -299,7 +299,7 @@ public class IOSerializable {
      *
      * @param users an ArrayList of users to be serialized
      */
-    public static void usersWriteToSerializable(ArrayList<User> users) {
+    public static void usersWriteToSerializable(List<User> users) {
         try {
             OutputStream file = new FileOutputStream(USERS_FILEPATH);
             OutputStream buffer = new BufferedOutputStream(file);
