@@ -50,10 +50,6 @@ public class MainController {
         this.loginController = new LoginController(this.userController);
         this.calendarController = new CalendarController();
         this.displayMenu = new DisplayMenu();
-        this.displayInitScreen();
-        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable, this.userController);
-        System.out.println("WELCOME " + this.userController.getCurrentUsername() + "!");
-        this.displayScreen();
     }
 
     /**
@@ -75,6 +71,8 @@ public class MainController {
                 System.out.println("Invalid input! Try again.");
             }
         }
+        this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable, this.userController);
+        System.out.println("WELCOME " + this.userController.getCurrentUsername() + "!");
     }
 
     /**
@@ -181,5 +179,17 @@ public class MainController {
         this.ioSerializable.deleteOldFiles();
         this.ioSerializable.deleteNewFiles();
         System.exit(0);
+    }
+
+    public CalendarController getCalendarController() {
+        return calendarController;
+    }
+
+    public EventController getEventController() {
+        return eventController;
+    }
+
+    public UserController getUserController() {
+        return userController;
     }
 }
