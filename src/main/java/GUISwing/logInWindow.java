@@ -3,6 +3,7 @@ package GUISwing;
 import GUISwing.MainFrame;
 import controllers.CalendarController;
 import controllers.LoginController;
+import controllers.MainController;
 import controllers.UserController;
 import gateways.IOSerializable;
 import presenters.MenuStrategies.DisplayMenu;
@@ -21,6 +22,7 @@ public class logInWindow implements ActionListener {
     JLabel lblPassword = new JLabel("password");
     JButton btnLogIn = new JButton("Log In");
     JButton btnSignUp = new JButton("Sign up");
+    JLabel lblLoginMessage = new JLabel();
     IOSerializable ioSerializable;
     UserController userController;
     LoginController loginController;
@@ -35,19 +37,20 @@ public class logInWindow implements ActionListener {
 
 
         lblUserName.setBounds(100, 150, 100, 20);
-        lblPassword.setBounds(100, 200, 100, 20);
+        lblPassword.setBounds(100, 190, 100, 20);
         fldUserName.setBounds((int) (lblUserName.getBounds().getX() + 150), lblUserName.getY(), 100, 20);
         fldUserName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         fldPassword.setBounds((int) (lblPassword.getBounds().getX() + 150), lblPassword.getY(), 100, 20);
         fldPassword.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        btnLogIn.setBounds(0, 300, 100, 20);
-        btnSignUp.setBounds(0, 350, 100, 20);
+        btnLogIn.setBounds(100, 300, 100, 20);
+        btnSignUp.setBounds(100, 350, 100, 20);
         lblUserName.setVisible(true);
         lblPassword.setVisible(true);
         fldPassword.setVisible(true);
         fldUserName.setVisible(true);
         btnLogIn.setVisible(true);
         btnSignUp.setVisible(true);
+        lblLoginMessage.setBounds(100, 240, 400, 20);
 
         frame.add(lblUserName);
         frame.add(lblPassword);
@@ -55,6 +58,7 @@ public class logInWindow implements ActionListener {
         frame.add(fldPassword);
         frame.add(btnSignUp);
         frame.add(btnLogIn);
+        frame.add(lblLoginMessage);
 
         frame.setVisible(true);
     }
@@ -65,15 +69,18 @@ public class logInWindow implements ActionListener {
             loginController.login(fldUserName.getText(), Arrays.toString(fldPassword.getPassword()));
             if (loginController.isLoggedIn()){
                 frame.dispose();
-                MainMenu mainMenu= new MainMenu(new MainFrame());
+                MainMenu mainMenu= new MainMenu(new MainController());
                 mainMenu.display();
-
             }
+            lblLoginMessage.setText("incorrect username or password - please try again");
         }
         if(e.getSource() == btnSignUp){
             loginController.signUp(fldUserName.getText(), Arrays.toString(fldPassword.getPassword()));
-            frame.add(new JLabel("now you may log in"));
+            lblLoginMessage.setText("Successfully signed up - please log in");
         }
+        fldPassword.setText("");
+        fldUserName.setText("");
+        lblLoginMessage.setVisible(true);
     }
 
     public static void main(String[] args){
