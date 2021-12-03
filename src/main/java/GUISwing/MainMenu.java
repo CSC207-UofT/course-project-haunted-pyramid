@@ -105,10 +105,8 @@ public class MainMenu implements ActionListener {
             new LogInWindow();
         }
         else if (e.getSource() == buttonFour) {
-            //open small window for ical export file name selection
-            mc.getLoginController().logout();
-            frame.dispose();
-            new LogInWindow();
+            SaveICalendar saveCalendar = new SaveICalendar();
+            saveCalendar.save(mc.getEventController());
         }
         else if (e.getSource() == buttonFive) {
             mc.getLoginController().logout();

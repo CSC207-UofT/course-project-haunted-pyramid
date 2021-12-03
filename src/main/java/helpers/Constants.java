@@ -17,4 +17,6 @@ public class Constants {
     public static final LocalTime RETURN_NOTIFIER = LocalTime.of(4, 4, 4); // For termination purpose
     public static final int WINDOW_WIDTH = 1444;
     public static final int WINDOW_HEIGHT = 1000;
+    public static final int POPUP_WIDTH = 500;
+    public static final int POPUP_HEIGHT = 300;
 }
