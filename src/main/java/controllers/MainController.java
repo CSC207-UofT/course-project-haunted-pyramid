@@ -180,4 +180,16 @@ public class MainController {
         this.ioSerializable.deleteNewFiles();
         System.exit(0);
     }
+
+    public CalendarController getCalendarController() {
+        return calendarController;
+    }
+
+    public EventController getEventController() {
+        return eventController;
+    }
+
+    public UserController getUserController() {
+        return userController;
+    }
 }
