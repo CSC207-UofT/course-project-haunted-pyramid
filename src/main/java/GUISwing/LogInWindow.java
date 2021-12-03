@@ -23,17 +23,9 @@ public class LogInWindow implements ActionListener {
 
     public LogInWindow(){
         this.mainController = new MainController();
-        this.loginController = new LoginController(mainController.getUserController());
+        this.loginController = this.mainController.getLoginController();
         JPanel imagePanel = createImagePanel();
-        JLabel imageLabel = new JLabel();
-        ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Logo.png");
-        imageLabel.setIcon(hauntedPyramid);
-        imagePanel.add(imageLabel);
-        imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        imageLabel.setVerticalAlignment(JLabel.CENTER);
-        imageLabel.setHorizontalTextPosition(JLabel.CENTER);
-        imageLabel.setVerticalTextPosition(JLabel.CENTER);
-        imageLabel.setBounds(200, 150, 1000, 200);
+        addImage(imagePanel);
         JPanel contributorPanel = createContributorPanel();
         addTeamName(imagePanel);
         addContributors(contributorPanel);
@@ -48,6 +40,18 @@ public class LogInWindow implements ActionListener {
         addLogInMessage();
         buttonSetUp();
         frame.setVisible(true);
+    }
+
+    private void addImage(JPanel imagePanel) {
+        JLabel imageLabel = new JLabel();
+        ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Logo.png");
+        imageLabel.setIcon(hauntedPyramid);
+        imagePanel.add(imageLabel);
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        imageLabel.setVerticalAlignment(JLabel.CENTER);
+        imageLabel.setHorizontalTextPosition(JLabel.CENTER);
+        imageLabel.setVerticalTextPosition(JLabel.CENTER);
+        imageLabel.setBounds(200, 150, 1000, 200);
     }
 
     private void buttonSetUp() {
