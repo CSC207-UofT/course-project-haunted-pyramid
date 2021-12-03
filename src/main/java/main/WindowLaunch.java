@@ -1,7 +1,5 @@
 package main;
 
-import presenters.Pages.Window1;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +7,7 @@ import java.awt.event.ActionListener;
 public class WindowLaunch implements ActionListener {
 
     JFrame frame = new JFrame();
-    JButton button1 = new JButton("Open New Window");
+    JButton button1 = new JButton("Log in");
 
     public WindowLaunch() {
 
@@ -27,11 +25,8 @@ public class WindowLaunch implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         if(e.getSource() == button1) {
             frame.dispose();
-            Window1 window1 = new Window1();
         }
-
     }
 }

@@ -31,6 +31,18 @@ public class LoginController {
         String username = scanner.nextLine();
         System.out.println("Type your password.");
         String password = scanner.nextLine();
+        checkUser(username, password);
+    }
+
+    /**
+     * Login to verify account to access program.
+     * Temporary for now since the presenter isn't fully implemented.
+     */
+    public void login(String username, String password) {
+        checkUser(username, password);
+    }
+
+    private void checkUser(String username, String password) {
         if (this.userController.getUserManager().checkUsernameAndPassword(username, password) != null) {
             this.loggedIn = true;
             System.out.println("Login success!");
@@ -57,6 +69,14 @@ public class LoginController {
         System.out.println("Type your desired password.");
         String password = scanner.nextLine();
         this.userController.getUserManager().addNewUser(UUID.randomUUID(), name, username, password);
+    }
+
+    /**
+     * Sign up a new account for the login verification.
+     * Temporary for now since the presenter isn't fully implemented.
+     */
+    public void signUp(String username, String password) {
+        this.userController.getUserManager().addNewUser(UUID.randomUUID(), username, username, password);
     }
 
     /**
