@@ -24,6 +24,8 @@ public class LogInWindow implements ActionListener {
     public LogInWindow(){
         this.mainController = new MainController();
         this.loginController = new LoginController(mainController.getUserController());
+
+
         JPanel imagePanel = createImagePanel();
         JLabel imageLabel = new JLabel();
         ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Logo.png");
@@ -136,11 +138,12 @@ public class LogInWindow implements ActionListener {
         if (e.getSource() == btnLogIn){
             loginController.login(fldUserName.getText(), Arrays.toString(fldPassword.getPassword()));
             if (loginController.isLoggedIn()){
-                frame.dispose();
                 IOSerializable ioSerializable = new IOSerializable(true);
-                this.mainController.setEventController(new EventController(ioSerializable.hasSavedData(), ioSerializable, mainController.getUserController()));
-                MainMenu mainMenu= new MainMenu(mainController);
+                this.mainController.setEventController(new EventController(ioSerializable.hasSavedData(), ioSerializable,
+                        mainController.getUserController()));
+                MainMenu mainMenu = new MainMenu(mainController);
                 mainMenu.display();
+                frame.dispose();
             }
             lblLoginMessage.setText("Incorrect Username or Password - Please Try Again");
         }

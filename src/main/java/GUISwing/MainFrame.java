@@ -4,7 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    MainFrame() {
+
+    public MainFrame() {
         this.setTitle("Haunted Pyramid Calendar App");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1444, 1000);
@@ -14,5 +15,10 @@ public class MainFrame extends JFrame {
         this.setResizable(false);
         ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Icon.png");
         this.setIconImage(hauntedPyramid.getImage());
+    }
+
+    private void setupMenu(){
+        JMenuBar menuBar = new JMenuBar();
+        this.add(menuBar);
     }
 }

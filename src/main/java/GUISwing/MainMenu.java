@@ -15,7 +15,7 @@ public class MainMenu {
         EventController eventController= mainController.getEventController();
         CalendarController calendarController = mainController.getCalendarController();
         UserController userController =  mainController.getUserController();
-        this.frame = new MainFrame();
+        this.frame = new MainFrameWithMenu(mainController);
         JLabel welcomeMessage = new JLabel();
         setUpWelcomeMessage(userController.getCurrentUsername(), welcomeMessage);
         this.frame.add(welcomeMessage);
