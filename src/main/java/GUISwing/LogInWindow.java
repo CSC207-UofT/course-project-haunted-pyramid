@@ -2,6 +2,7 @@ package GUISwing;
 
 import controllers.*;
 import gateways.IOSerializable;
+import helpers.Constants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,7 @@ public class LogInWindow implements ActionListener {
         addContributors(contributorPanel);
         JPanel logInPanel = new JPanel();
         this.frame.add(logInPanel);
-        logInPanel.setBounds(0, 1000/3, 1444, 1000/3);
+        logInPanel.setBounds(0, Constants.WINDOW_HEIGHT/3, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT/3);
         logInPanel.setBackground(new Color(233, 161, 161));
         logInPanel.setLayout(null);
         updateLogInPanel(logInPanel);
@@ -51,7 +52,7 @@ public class LogInWindow implements ActionListener {
         imageLabel.setVerticalAlignment(JLabel.CENTER);
         imageLabel.setHorizontalTextPosition(JLabel.CENTER);
         imageLabel.setVerticalTextPosition(JLabel.CENTER);
-        imageLabel.setBounds(200, 150, 1000, 200);
+        imageLabel.setBounds(200, 150, Constants.WINDOW_WIDTH - 444, Constants.WINDOW_HEIGHT - 800);
     }
 
     private void buttonSetUp() {
@@ -97,7 +98,7 @@ public class LogInWindow implements ActionListener {
     private JPanel createImagePanel() {
         JPanel imagePanel = new JPanel();
         this.frame.add(imagePanel);
-        imagePanel.setBounds(0, 0, 1444, 1000/3);
+        imagePanel.setBounds(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT/3);
         imagePanel.setBackground(new Color(233, 161, 161));
         imagePanel.setLayout(null);
         return imagePanel;
@@ -108,7 +109,7 @@ public class LogInWindow implements ActionListener {
         this.frame.add(contributorPanel);
         contributorPanel.setLayout(null);
         contributorPanel.setBackground(new Color(233, 161, 161));
-        contributorPanel.setBounds(0, 1000*2/3, 1444, 1000/3);
+        contributorPanel.setBounds(0, 1000*2/3, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT/3);
         return contributorPanel;
     }
 

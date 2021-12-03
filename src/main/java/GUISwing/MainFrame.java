@@ -1,5 +1,7 @@
 package GUISwing;
 
+import helpers.Constants;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,7 +9,7 @@ public class MainFrame extends JFrame {
     MainFrame() {
         this.setTitle("Haunted Pyramid Calendar App");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(1444, 1000);
+        this.setSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
         this.setVisible(false);
         this.getContentPane().setBackground(new Color(233, 161, 161));
         this.setLayout(null);
