@@ -1,10 +1,7 @@
 package GUISwing;
 
 import GUISwing.MainFrame;
-import controllers.CalendarController;
-import controllers.LoginController;
-import controllers.MainController;
-import controllers.UserController;
+import controllers.*;
 import gateways.IOSerializable;
 import presenters.MenuStrategies.DisplayMenu;
 
@@ -23,14 +20,12 @@ public class logInWindow implements ActionListener {
     JButton btnLogIn = new JButton("Log In");
     JButton btnSignUp = new JButton("Sign up");
     JLabel lblLoginMessage = new JLabel();
-    IOSerializable ioSerializable;
-    UserController userController;
+    MainController mainController;
     LoginController loginController;
 
     public logInWindow(){
-        this.ioSerializable = new IOSerializable(true);
-        this.userController = new UserController(ioSerializable.hasSavedData(), ioSerializable);
-        this.loginController = new LoginController(userController);
+        this.mainController = new MainController();
+        this.loginController = new LoginController(mainController.getUserController());
 
         btnLogIn.addActionListener(this);
         btnSignUp.addActionListener(this);
@@ -69,7 +64,9 @@ public class logInWindow implements ActionListener {
             loginController.login(fldUserName.getText(), Arrays.toString(fldPassword.getPassword()));
             if (loginController.isLoggedIn()){
                 frame.dispose();
-                MainMenu mainMenu= new MainMenu(new MainController());
+                IOSerializable ioSerializable = new IOSerializable(true);
+                this.mainController.setEventController(new EventController(ioSerializable.hasSavedData(), ioSerializable, mainController.getUserController()));
+                MainMenu mainMenu= new MainMenu(mainController);
                 mainMenu.display();
             }
             lblLoginMessage.setText("incorrect username or password - please try again");
