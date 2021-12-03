@@ -181,8 +181,8 @@ public class WorkSessionScheduler {
         freeTime.put(LocalTime.of(0, 0), LocalTime.of(9, 0));
         WorkSessionScheduler workSessionScheduler = new WorkSessionScheduler(freeTime);
         EventManager eventManager = new EventManager(new ArrayList<>());
-        UUID deadline = eventManager.getID(eventManager.addEvent("deadline", LocalDateTime.of(2021, 12,
-                10, 22, 30)));
+        UUID deadline = eventManager.addEvent("deadline", LocalDateTime.of(2021, 12,
+                10, 22, 30));
         workSessionScheduler.addDayOrderer(new FewestSessions());
         workSessionScheduler.addTimeOrderer(new EveningPerson());
 //        workSessionScheduler.addTimeOrderer(new BreaksBetween("short"));

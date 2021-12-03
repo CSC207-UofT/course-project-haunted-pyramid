@@ -1,56 +1,83 @@
 package GUISwing;
 
 import controllers.UserController;
+import entities.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalTime;
+import java.util.Objects;
 
-public class FreeTimeWindow {
+public class FreeTimeWindow implements ActionListener {
     UserController userController;
     final JFrame frame;
-    ScrollPane panel;
-    JPanel pane;
+    JScrollPane slotsScrollPain;
+    JPanel panel = new JPanel(new GridLayout(0, 5));
+
+    JButton add = new JButton("add");
+    JButton save = new JButton("save");
 
     public FreeTimeWindow(UserController userController) {
         this.userController = userController;
         frame = new MainFrame();
+        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.PAGE_AXIS));
         frame.setSize(500, 500);
-        panel = new ScrollPane();
-        pane = new JPanel();
-        panel.add(pane);
-        pane.setBounds(frame.getWidth() / 4, frame.getHeight() / 6, frame.getWidth() / 2, 2 * frame.getHeight() / 3);
-        frame.add(pane);
+        slotsScrollPain = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        frame.add(slotsScrollPain);
         showFreeTime();
+        addButton();
+        saveButton();
+
         frame.setVisible(true);
-        pane.setVisible(true);
+        panel.setVisible(true);
     }
 
     private void showFreeTime() {
-        int y = 0;
         for (LocalTime start : userController.getCurrentFreeTime().keySet()) {
-            JComboBox<LocalTime> startTime = MenuCreationHelper.timeComboBox();
-            startTime.setBounds(0, y, 50, 20);
-            startTime.setSelectedItem(start);
-            JComboBox<LocalTime> endTime = MenuCreationHelper.timeComboBox();
-            endTime.setBounds(100, y, 50, 20);
-            endTime.setSelectedItem(userController.getCurrentFreeTime().get(start));
-            pane.add(startTime);
-            pane.add(endTime);
-            y += 50;
+            addFreeTime(start, userController.getCurrentFreeTime().get(start));
         }
     }
 
-    private void addButton() {
+    private void addFreeTime(LocalTime start, LocalTime end){
+        JComboBox<LocalTime> startTime = MenuCreationHelper.timeComboBox();
+        startTime.setSelectedItem(start);
+        JComboBox<LocalTime> endTime = MenuCreationHelper.timeComboBox();
+        endTime.setSelectedItem(end);
+        JButton delete = new JButton("delete");
+        panel.add(new JLabel("start: "));
+        panel.add(startTime);
+        panel.add(new JLabel("end: "));
+        panel.add(endTime);
+        panel.add(delete);
+        delete.setActionCommand(Objects.requireNonNull(startTime.getSelectedItem()).toString());
+        delete.addActionListener(this);
+    }
 
+    private void addButton() {
+        add = new JButton("add");
+        add.addActionListener(this);
+        frame.add(add);
     }
 
     private void saveButton() {
-
+        save = new JButton("save");
+        save.addActionListener(this);
+        frame.add(save);
     }
 
-    private void popUp() {
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == add){
+            addFreeTime(LocalTime.of(0, 0), LocalTime.of(0, 0));
+        }else {
+            String key = e.getActionCommand();
+            String[] hourMin = key.split(":");
+            userController.getCurrentFreeTime().remove(LocalTime.of(Integer.parseInt(hourMin[0]), Integer.parseInt(hourMin[1])));
+            new FreeTimeWindow(userController);
+            frame.dispose();
+        }
     }
-
 }

@@ -182,10 +182,10 @@ public class EventManager {
      * @param endTime LocalDateTime end time of the event
      * @return the event that was created with given title, endTime, and unique ID
      */
-    public Event addEvent(String title, LocalDateTime endTime) {
+    public UUID addEvent(String title, LocalDateTime endTime) {
         Event event = new Event(UUID.randomUUID(), title, endTime);
         this.addEvent(event);
-        return event;
+        return this.getID(event);
     }
 
 
@@ -207,9 +207,10 @@ public class EventManager {
      *
      * @param event event to be added
      */
-    public void addEvent(Event event) {
+    public UUID addEvent(Event event) {
         this.eventMap.put(event.getID(), event);
         this.update("add", event);
+        return this.getID(event);
     }
 
 
@@ -333,10 +334,11 @@ public class EventManager {
      * @param event any event (does not have to be in <code>this.eventMap</code>
      * @return the name of the event
      */
-    public String getName(Event event) {
-        return event.getName();
+    public String getName(UUID event) {
+        return get(event).getName();
     }
 
+    public String getName(Event event){return event.getName();}
     public void setStart(UUID id, LocalDateTime start) {
         this.get(id).setStartTime(start);
         this.update("change", this.get(id));
@@ -494,6 +496,10 @@ public class EventManager {
      * @param event the event to set name
      * @param name  String of new name
      */
+    public void setName(UUID event, String name) {
+        get(event).setName(name);
+    }
+
     public void setName(Event event, String name) {
         event.setName(name);
     }
@@ -504,8 +510,8 @@ public class EventManager {
      * @param event   the event with description to be set
      * @param describe String the new description
      */
-    public void setDescription(Event event, String describe) {
-        event.setDescription(describe);
+    public void setDescription(UUID event, String describe) {
+        get(event).setDescription(describe);
     }
 
     /**

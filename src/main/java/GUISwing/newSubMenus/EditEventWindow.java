@@ -2,12 +2,7 @@ package GUISwing.newSubMenus;
 
 import GUISwing.MainFrame;
 import GUISwing.MenuCreationHelper;
-import com.dropbox.core.v2.teamlog.DeviceManagementEnabledDetails;
 import controllers.EventController;
-import controllers.UserController;
-import entities.User;
-import gateways.IOSerializable;
-import usecases.events.EventManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,15 +12,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
-public class NewEventWindow implements ActionListener {
+public class EditEventWindow implements ActionListener {
     EventController eventController;
+    UUID event;
     JFrame frame = new MainFrame();
     JPanel datesPanel = new JPanel(new GridLayout(2, 4));
     JPanel infoPanel = new JPanel(new GridLayout(2, 1));
+    JPanel moreOptionsPanel = new JPanel(new FlowLayout());
     JComboBox<YearMonth> startMonth = MenuCreationHelper.monthComboBox();
     JComboBox<YearMonth> endMonth = MenuCreationHelper.monthComboBox();
     JComboBox<Integer> startDate = MenuCreationHelper.dateJComboBox(startMonth.getItemAt(0));
@@ -35,18 +31,22 @@ public class NewEventWindow implements ActionListener {
 
     JButton save = new JButton("save");
     JButton delete = new JButton("delete");
+    JButton workSessions = new JButton("work sessions ...");
+    JButton recursion = new JButton("repeats ...");
 
-    JTextField name = new JTextField("event name");
-    JTextArea description = new JTextArea("description");
+    JTextField name;
+    JTextArea description;
 
 
-    public NewEventWindow(EventController eventController){
+    public EditEventWindow(EventController eventController, UUID event){
         this.eventController = eventController;
+        this.event = event;
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
         frame.setSize(new Dimension( 500, 300));
         setNameField();
         setDateTimePickers();
         saveDeleteButtons();
+        otherOptionsSetup();
 
         frame.setVisible(true);
     }
@@ -67,6 +67,8 @@ public class NewEventWindow implements ActionListener {
     }
 
     private void setNameField(){
+        name = new JTextField(eventController.getEventManager().getName(event));
+        description = new JTextArea(eventController.getEventManager().getDescription(event));
         frame.getContentPane().add(infoPanel);
         infoPanel.add(name);
         infoPanel.add(description);
@@ -86,6 +88,12 @@ public class NewEventWindow implements ActionListener {
         delete.addActionListener(this);
     }
 
+    private void otherOptionsSetup(){
+        frame.getContentPane().add(moreOptionsPanel);
+        moreOptionsPanel.add(workSessions);
+        moreOptionsPanel.add(recursion);
+    }
+
     private void changeDays(ActionEvent e){
         if (e.getSource() == startMonth | e.getSource() == endMonth){
             startDate = MenuCreationHelper.dateJComboBox((YearMonth) Objects.requireNonNull(startMonth.getSelectedItem()));
@@ -94,14 +102,14 @@ public class NewEventWindow implements ActionListener {
     }
     private void save(ActionEvent e){
         if(e.getSource() == save){
-            UUID event = eventController.getEventManager().addEvent(name.getText(), LocalDateTime.of(LocalDate.of((
+            eventController.getEventManager().setName(event, name.getText());
+            eventController.getEventManager().setEnd(event, LocalDateTime.of(LocalDate.of((
                     (YearMonth) (endMonth.getSelectedItem())).getYear(), ((YearMonth) (endMonth.getSelectedItem())).
                     getMonthValue(), (Integer)(endDate.getSelectedItem())), (LocalTime) endTime.getSelectedItem()));
             eventController.getEventManager().setDescription(event, description.getText());
             eventController.getEventManager().setStart(event, LocalDateTime.of(LocalDate.of((
                     (YearMonth) (startMonth.getSelectedItem())).getYear(), ((YearMonth) (startMonth.getSelectedItem())).
                     getMonthValue(), (Integer)(startDate.getSelectedItem())), (LocalTime) startTime.getSelectedItem()));
-            new EditEventWindow(eventController, event);
             frame.dispose();
             System.out.println(eventController.getEventManager().getAllEvents());
         }
@@ -109,6 +117,7 @@ public class NewEventWindow implements ActionListener {
 
     private void delete(ActionEvent e){
         if (e.getSource() == delete){
+            eventController.getEventManager().remove(event);
             frame.dispose();
         }
     }
