@@ -11,11 +11,11 @@ import java.awt.*;
 public class MainMenu {
     private final JFrame frame;
 
-    public MainMenu(JFrame frame, MainController mainController) {
+    public MainMenu(MainController mainController) {
         EventController eventController= mainController.getEventController();
         CalendarController calendarController = mainController.getCalendarController();
         UserController userController =  mainController.getUserController();
-        this.frame = frame;
+        this.frame = new MainFrame();
         JLabel welcomeMessage = new JLabel();
         setUpWelcomeMessage(userController.getCurrentUsername(), welcomeMessage);
         this.frame.add(welcomeMessage);
