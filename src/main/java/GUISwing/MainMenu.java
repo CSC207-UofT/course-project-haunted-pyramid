@@ -67,7 +67,7 @@ public class MainMenu {
         defaultCalendar.setVerticalTextPosition(JLabel.CENTER);
         defaultCalendar.setVerticalAlignment(JLabel.CENTER);
         defaultCalendar.setHorizontalAlignment(JLabel.CENTER);
-        defaultCalendar.setBounds(0, 0, 1444, 1000);
+        defaultCalendar.setPreferredSize(new Dimension(2000, 2000));
         contentPanel.add(defaultCalendar);
         this.frame.add(contentPanel);
     }
