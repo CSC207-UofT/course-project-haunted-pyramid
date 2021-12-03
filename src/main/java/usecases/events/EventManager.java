@@ -49,7 +49,6 @@ public class EventManager {
         this.repeatedEventManager = new RepeatedEventManager();
     }
 
-
     public EventManager(List<Event> events, Map<UUID, RecursiveEvent> recursiveEventMap) {
         if (events.isEmpty()) {
             this.eventMap = new HashMap<>();
@@ -62,8 +61,6 @@ public class EventManager {
         this.toUpdate = new EventListObserver[]{};
         this.repeatedEventManager = new RepeatedEventManager(recursiveEventMap);
     }
-
-
 
     /**
      * Get this Events map
@@ -151,7 +148,6 @@ public class EventManager {
         return this.repeatedEventManager.getThisEventFromRecursion(ID);
     }
 
-
     public List<Event> getEvents(List<UUID> Ids){
         List<Event> result = new ArrayList<>();
         for (UUID uuid : Ids){
@@ -188,9 +184,6 @@ public class EventManager {
         return event;
     }
 
-
-
-
     /**
      * creates an event with given name and end time.
      *
@@ -211,7 +204,6 @@ public class EventManager {
         this.eventMap.put(event.getID(), event);
         this.update("add", event);
     }
-
 
     /**
      * takes a list of events that may contain work sessions and returns the same list of events in addition to
@@ -264,12 +256,9 @@ public class EventManager {
         return new ArrayList<>(List.of(new Event[]{event}));
     }
 
-
     public RepeatedEventManager getRepeatedEventManager() {
         return repeatedEventManager;
     }
-
-
 
     /**
      * @param recursiveEvent The RecursiveEvent from which the repeated events should be extracted.
@@ -304,7 +293,6 @@ public class EventManager {
         }
         return events;
     }
-
 
     public List<Event> flatSplitEvents(List<Event> events) {
         List<Event> splitFlat = new ArrayList<>();

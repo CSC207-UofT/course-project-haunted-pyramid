@@ -16,6 +16,7 @@ import java.util.*;
 
 import entities.Event;
 import entities.User;
+import entities.recursions.NumberOfRepetitionInput;
 import entities.recursions.RecursiveEvent;
 
 /**
@@ -44,7 +45,7 @@ public class IOSerializable {
     private static final String eventsURL = "https://www.dropbox.com/s/vkant0coohn5fil/events.ser?dl=1";
     private static final String usersURL = "https://www.dropbox.com/s/fqto77tf70s0cyj/users.ser?dl=1";
 
-    private static final String recursiveEventsURL = "https://www.dropbox.com/s/m8ljpad3otbj9pv/ser_save_test.ser?dl=1";
+    private static final String recursiveEventsURL = "https://www.dropbox.com/s/dwhr6z5l8srr3v3/recursive_events.ser?dl=1";
 
     /**
      * Initialize an instance of IOSerializable.
@@ -235,7 +236,7 @@ public class IOSerializable {
      */
     public Map<UUID, Map<UUID, RecursiveEvent>> recursiveEventsReadFromSerializable() {
         try {
-            InputStream  file = new FileInputStream(RECURSIVE_EVENTS_FILEPATH);
+            InputStream file = new FileInputStream(RECURSIVE_EVENTS_FILEPATH);
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
             //Please refer to specifications for explanation
@@ -311,9 +312,6 @@ public class IOSerializable {
         }
     }
 
-
-
-
     /**
      * Delete files that are newly created to avoid data breach.
      */
@@ -342,5 +340,28 @@ public class IOSerializable {
         Boolean b = usersSer.delete();
 
         Boolean c = recursiveEventsSer.delete();
+    }
+
+    public static void main(String[] args) {
+        User sean = new User(UUID.randomUUID(), "Sean Yi", "sean", "password");
+        ArrayList<User> user = new ArrayList<>(List.of(sean));
+
+        Event test = new Event(UUID.randomUUID(), "Sean Test 1", 2021, 11, 10, 9, 10, 0, 0);
+        Event assignment = new Event(UUID.randomUUID(), "Sean Assignment 1", 2021, 11, 10, 15, 16, 0, 0);
+        List<Event> eventList = new ArrayList<>(Arrays.asList(test, assignment));
+        Map<UUID, List<Event>> event = new HashMap<>();
+        event.put(sean.getId(), eventList);
+        usersWriteToSerializable(user);
+        eventsWriteToSerializable(event);
+
+        Map<UUID, Map<UUID, RecursiveEvent>> recMap= new HashMap<>();
+        Event reading = new Event(UUID.randomUUID(), "Sean Reading 1", 2021, 11, 10, 8, 9, 0, 0);
+        List<Event> recList = new ArrayList<>(List.of(reading));
+        NumberOfRepetitionInput recIn = new NumberOfRepetitionInput(1);
+        RecursiveEvent recEv = new RecursiveEvent(UUID.randomUUID(), recList, recIn);
+        Map<UUID, RecursiveEvent> recMapVal = new HashMap<>();
+        recMapVal.put(recEv.getId(), recEv);
+        recMap.put(sean.getId(), recMapVal);
+        recursiveEventsWriteToSerializable(recMap);
     }
 }
