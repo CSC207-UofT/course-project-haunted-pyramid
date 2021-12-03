@@ -4,6 +4,7 @@ import helpers.ConstantID;
 import entities.Event;
 import interfaces.DateGetter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -15,7 +16,7 @@ import java.util.UUID;
  * @author Malik Lahlou
  */
 
-public class NumberOfRepetitionInput implements DateGetter {
+public class NumberOfRepetitionInput implements DateGetter, Serializable {
 
     private final int numberOfRepetitions;
 

@@ -14,7 +14,7 @@ import java.util.*;
  * @author Malik Lahlou
  */
 
-public class RecursiveEvent {
+public class RecursiveEvent implements Serializable {
 
 
     /**
