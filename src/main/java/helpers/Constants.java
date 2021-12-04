@@ -15,6 +15,7 @@ public class Constants {
     public static final int MAXIMUM_SESSION_LENGTH = 10;
     public static final int MAXIMUM_WORK_SESSION_HOUR = 50;
     public static final LocalTime RETURN_NOTIFIER = LocalTime.of(4, 4, 4); // For termination purpose
+
     public static final int WINDOW_WIDTH = 1444;
     public static final int WINDOW_HEIGHT = 1000;
     public static final int POPUP_WIDTH = 500;

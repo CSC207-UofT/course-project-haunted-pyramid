@@ -26,8 +26,9 @@ public class EventEditMenuContent implements MenuContent {
             add("5. Add/Change Description");
             add("6. Change Name of the Event");
             add("7. Prepare by Creating Work Sessions");
-            add("8. Remove the Event");
-            add("9. Save the Changes");
+            add("8. Add this event to an existing recursion");
+            add("9. Remove the Event");
+            add("10. Save the Changes");
         }});
         return content;
     }

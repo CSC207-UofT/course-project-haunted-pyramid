@@ -3,6 +3,8 @@ package controllers;
 import entities.UserPreferences;
 import entities.recursions.RecursiveEvent;
 import gateways.IOSerializable;
+import helpers.ControllerHelper;
+import helpers.EventIDConverter;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
 import presenters.MenuStrategies.RecursionEditMenuContent;
@@ -11,10 +13,7 @@ import usecases.events.EventManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Controller for creating then editing, or editing selected individual events - change name, description
@@ -156,14 +155,40 @@ public class EventController {
                 this.prep(ID);
                 break;
             case "8":
+                this.addToRecursion(ID);
+                break;
+            case "9":
                 if (this.delete(ID)) {
                     return true;
                 }
                 break;
-            case "9":
+            case "10":
                 return true;
         }
         return false;
+    }
+
+
+    private UUID getRecursiveID(){
+        EventIDConverter converter = new EventIDConverter(this.getEventManager());
+        Map<Integer, UUID> eventIDMap = converter.getEventIDMap();
+        String eventID = ioController.getAnswer("Enter the ID of an event in the recursion in which you " +
+                "want to add your event to");
+        ControllerHelper helper = new ControllerHelper();
+        while (!(helper.isInteger(eventID) && eventIDMap.containsKey(Integer.valueOf(eventID)))) {
+            eventID = ioController.getAnswer("Please type a valid ID");
+        }
+        UUID uuid = converter.getUUIDFromInt(Integer.parseInt(eventID));
+        return this.eventManager.get(uuid).getRecursiveId();
+    }
+
+    private void addToRecursion(UUID id) {
+        this.eventManager.get(id).setRecursiveId(getRecursiveID());
+        this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
+        this.eventManager.getRepeatedEventManager().update("add", this.eventManager.get(id), this.eventManager);
+        this.eventManager.removeWithoutUpdate(id);
+        this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
+
     }
 
 
@@ -212,14 +237,18 @@ public class EventController {
                 this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
             }
-            this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
+            else {
+                this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
+            }
         } else {
             if(carryToRecursion(ID)){
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
                 this.eventManager.setStart(ID, LocalDateTime.of(newStart, this.eventManager.getStartTime(ID)));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
             }
-            this.eventManager.setStart(ID, LocalDateTime.of(newStart, this.eventManager.getStartTime(ID)));
+            else {
+                this.eventManager.setStart(ID, LocalDateTime.of(newStart, this.eventManager.getStartTime(ID)));
+            }
         }
     }
 
@@ -235,7 +264,9 @@ public class EventController {
             this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
             this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
         }
-        this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
+        else {
+            this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
+        }
     }
 
     /**
@@ -250,7 +281,9 @@ public class EventController {
             this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
             this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
         }
-        this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
+        else{
+            this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
+        }
     }
 
     /**
@@ -266,14 +299,19 @@ public class EventController {
                 this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
             }
+            else{
             this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
-        } else {
+            }
+        }
+        else {
             if(carryToRecursion(ID)){
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
                 this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
             }
-            this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
+            else {
+                this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
+            }
         }
     }
 
