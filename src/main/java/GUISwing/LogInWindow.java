@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class LogInWindow implements ActionListener {
     JFrame frame = new MainFrame();
     JTextField fldUserName = new JTextField();
-    JPasswordField fldPassword = new JPasswordField();
+    JTextField fldPassword = new JTextField();
     JLabel lblUserName = new JLabel("username: ");
     JLabel lblPassword = new JLabel("password: ");
     JButton btnLogIn = new JButton("Log In");
@@ -139,7 +139,7 @@ public class LogInWindow implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnLogIn){
-            loginController.login(fldUserName.getText(), Arrays.toString(fldPassword.getPassword()));
+            loginController.login(fldUserName.getText(), fldPassword.getText());
             if (loginController.isLoggedIn()){
                 frame.dispose();
                 IOSerializable ioSerializable = new IOSerializable(true);
@@ -150,7 +150,7 @@ public class LogInWindow implements ActionListener {
             lblLoginMessage.setText("Incorrect Username or Password - Please Try Again");
         }
         if(e.getSource() == btnSignUp){
-            loginController.signUp(fldUserName.getText(), Arrays.toString(fldPassword.getPassword()));
+            loginController.signUp(fldUserName.getText(), fldPassword.getText());
             lblLoginMessage.setText("Successfully Signed up - Please Log In");
         }
         fldPassword.setText("");
