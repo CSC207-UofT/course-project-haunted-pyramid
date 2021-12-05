@@ -141,11 +141,12 @@ public class LogInWindow implements ActionListener {
         if (e.getSource() == btnLogIn){
             loginController.login(fldUserName.getText(), fldPassword.getText());
             if (loginController.isLoggedIn()){
-                frame.dispose();
                 IOSerializable ioSerializable = new IOSerializable(true);
-                this.mainController.setEventController(new EventController(ioSerializable.hasSavedData(), ioSerializable, mainController.getUserController()));
-                MainMenu mainMenu= new MainMenu(mainController);
+                this.mainController.setEventController(new EventController(ioSerializable.hasSavedData(), ioSerializable,
+                        mainController.getUserController()));
+                MainMenu mainMenu = new MainMenu(mainController);
                 mainMenu.display();
+                frame.dispose();
             }
             lblLoginMessage.setText("Incorrect Username or Password - Please Try Again");
         }

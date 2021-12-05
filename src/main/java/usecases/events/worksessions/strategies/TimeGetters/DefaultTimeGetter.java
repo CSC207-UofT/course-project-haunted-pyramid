@@ -26,7 +26,7 @@ public class DefaultTimeGetter implements TimeGetter {
                 eventManager, deadline);
         Map<LocalDateTime, Long> eligible = new HashMap<>();
         for (LocalDateTime time : times.keySet()) {
-            if (times.get(time) >= length) {
+            if (times.get(time) >= length && time.isAfter(LocalDateTime.now())) {
                 eligible.put(time, times.get(time));
             }
         }

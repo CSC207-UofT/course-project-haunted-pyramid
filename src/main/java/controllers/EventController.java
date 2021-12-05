@@ -101,7 +101,7 @@ public class EventController {
         String title = ioController.getName();
         LocalDateTime dateTime = ioController.getDateTime("Enter the End Time of the Event",
                 "Enter the end date of the event");
-        this.edit(this.eventManager.getID(this.eventManager.addEvent(title, dateTime)));
+        this.edit(this.eventManager.addEvent(title, dateTime));
     }
 
     /**
@@ -322,7 +322,7 @@ public class EventController {
      */
     private void changeDescription(UUID ID) {
         String description = ioController.getAnswer("Please Enter a Description for This Event");
-        this.eventManager.setDescription(this.eventManager.get(ID), description);
+        this.eventManager.setDescription(ID, description);
     }
 
     /**
@@ -332,7 +332,7 @@ public class EventController {
      */
     private void changeName(UUID ID) {
         String name = ioController.getAnswer("please Enter a New Name");
-        this.eventManager.setName(this.eventManager.get(ID), name);
+        this.eventManager.setName(ID, name);
     }
 
     /**
@@ -345,7 +345,8 @@ public class EventController {
         this.workSessionController.edit(ID, eventManager);
     }
 
-    public void update(UserPreferences userPreferences){
+    public boolean update(UserPreferences userPreferences){
         this.workSessionController.refresh(userPreferences, eventManager);
+        return true;
     }
 }

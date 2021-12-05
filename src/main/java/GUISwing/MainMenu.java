@@ -4,11 +4,16 @@ import controllers.CalendarController;
 import controllers.EventController;
 import controllers.MainController;
 import controllers.UserController;
+import entities.UserPreferences;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.UUID;
 
 public class MainMenu implements ActionListener {
     private final JFrame frame;
@@ -21,8 +26,9 @@ public class MainMenu implements ActionListener {
     private final JButton buttonLogOut = new JButton("6. Log Out");
     private final JButton buttonExit = new JButton("7. Exit");
 
+
     public MainMenu(MainController mainController) {
-        this.frame = new MainFrame();
+        this.frame = new MainFrameWithMenu(mainController, this);
         this.mc = mainController;
         EventController eventController= mc.getEventController();
         CalendarController calendarController = mc.getCalendarController();
@@ -58,13 +64,13 @@ public class MainMenu implements ActionListener {
         menuPanel.add(button);
     }
 
-    private JPanel setUpCalendarPanel() {
+    public JPanel setUpCalendarPanel() {
         JPanel calendarPanel = new JPanel();
         calendarPanel.setBackground(new Color(233, 161, 161));
         return calendarPanel;
     }
 
-    private void setUpDefaultCalendar(EventController eventController, CalendarController calendarController, JPanel calendarPanel) {
+    public void setUpDefaultCalendar(EventController eventController, CalendarController calendarController, JPanel calendarPanel) {
         JLabel defaultCalendar = new JLabel();
         String defaultCalendarString = calendarController.showDefaultCalendar(eventController);
         defaultCalendarString = defaultCalendarString.replaceAll("\n", "<br/>");
@@ -102,9 +108,9 @@ public class MainMenu implements ActionListener {
         }
         else if (e.getSource() == buttonAddEvent) {
             //lead to add event page
-            mc.getLoginController().logout();
-            frame.dispose();
-            new LogInWindow();
+            UUID newEvent = mc.getEventController().getEventManager().addEvent("event title", LocalDateTime.of(
+                    LocalDate.now(), LocalTime.of(0, 0)));
+            new EditEventWindow(mc.getUserController(), mc.getEventController(), newEvent, this);
         }
         else if (e.getSource() == buttonModifyEvent) {
             //lead to modify event page
@@ -124,10 +130,25 @@ public class MainMenu implements ActionListener {
         else if (e.getSource() == buttonExit) {
             mc.saveAndExitProgram();
             frame.dispose();
+        } else if (e.getSource() == editEvent){
+            new SelectEvent(mc.getEventController(), mc.getUserController(), this);
+        }
+        else{
+            UUID user = mc.getUserController().getCurrentUser();
+            UserPreferences preferences = mc.getUserController().getUserManager().getPreferences(user);
+            mc.getEventController().update(preferences);
+            frame.dispose();
+            new MainMenu(mc);
+            this.dispose();
         }
     }
 
+    public MainController getmc(){return this.mc;}
+
     public void display() {
         frame.setVisible(true);
+    }
+
+    public void dispose() {frame.dispose();
     }
 }
