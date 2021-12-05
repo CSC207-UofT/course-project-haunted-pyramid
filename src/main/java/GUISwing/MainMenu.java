@@ -1,10 +1,8 @@
 package GUISwing;
 
-import controllers.CalendarController;
-import controllers.EventController;
-import controllers.MainController;
-import controllers.UserController;
+import controllers.*;
 import entities.UserPreferences;
+import helpers.Constants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,9 +13,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
-public class MainMenu implements ActionListener {
+public class MainMenu implements ActionListener, MeltParentWindow {
     private final JFrame frame;
     private final MainController mc;
+    private final EventController ec;
+    private final UserController uc;
+    private final LoginController lc;
     private final JButton buttonProfile = new JButton("1. Profile Setting");
     private final JButton buttonCalendar = new JButton("2. View/Export Calendar");
     private final JButton buttonAddEvent = new JButton("3. Add a new Event");
@@ -27,23 +28,24 @@ public class MainMenu implements ActionListener {
     private final JButton buttonExit = new JButton("7. Exit");
 
 
-    public MainMenu(MainController mainController) {
-        this.frame = new MainFrameWithMenu(mainController, this);
+    public MainMenu(MainController mainController, EventController eventController, UserController userController) {
+        this.frame = new MainFrameWithMenu(userController, this);
         this.mc = mainController;
-        EventController eventController= mc.getEventController();
-        CalendarController calendarController = mc.getCalendarController();
-        UserController userController =  mc.getUserController();
+        this.ec = eventController;
+        this.uc = userController;
+        this.lc = new LoginController(this.uc);
+        CalendarController calendarController = new CalendarController();
         JLabel welcomeMessage = new JLabel();
         setUpWelcomeMessage(userController.getCurrentUsername(), welcomeMessage);
         frame.add(welcomeMessage);
         JPanel calendarPanel = setUpCalendarPanel();
-        setUpDefaultCalendar(eventController, calendarController, calendarPanel);
+        setUpDefaultCalendar(this.ec, calendarController, calendarPanel);
         JScrollPane calendarScrollPane = new JScrollPane(calendarPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         calendarScrollPane.setBounds(50, 150, 1344, 500);
         frame.add(calendarScrollPane);
         JPanel menuPanel = new JPanel();
         menuPanel.setBounds(0, 700, 1444, 1000/2);
-        menuPanel.setBackground(new Color(233, 161, 161));
+        menuPanel.setBackground(Constants.WINDOW_COLOR);
         frame.add(menuPanel);
         buttonSetUp(menuPanel);
     }
@@ -66,7 +68,7 @@ public class MainMenu implements ActionListener {
 
     public JPanel setUpCalendarPanel() {
         JPanel calendarPanel = new JPanel();
-        calendarPanel.setBackground(new Color(233, 161, 161));
+        calendarPanel.setBackground(Constants.WINDOW_COLOR);
         return calendarPanel;
     }
 
@@ -96,31 +98,31 @@ public class MainMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttonProfile) {
             //lead to profile setting page
-            mc.getLoginController().logout();
+            this.lc.logout();
             frame.dispose();
             new LogInWindow();
         }
         else if (e.getSource() == buttonCalendar) {
             //lead to calendar page
-            mc.getLoginController().logout();
+            this.lc.logout();
             frame.dispose();
             new LogInWindow();
         }
         else if (e.getSource() == buttonAddEvent) {
-            //lead to add event page
-            UUID newEvent = mc.getEventController().getEventManager().addEvent("event title", LocalDateTime.of(
+            this.frame.setEnabled(false);
+            UUID newEventID = this.ec.getEventManager().addEvent("Event Name", LocalDateTime.of(
                     LocalDate.now(), LocalTime.of(0, 0)));
-            new EditEventWindow(mc.getUserController(), mc.getEventController(), newEvent, this);
+            new EditEventWindow(this.mc, this.ec, this.uc , newEventID, this);
         }
         else if (e.getSource() == buttonModifyEvent) {
-            new SelectEvent(mc.getEventController(), mc.getUserController(), this);
+            new SelectEvent(this.ec, this.uc, this);
         }
         else if (e.getSource() == buttonExport) {
             SaveICalendar saveCalendar = new SaveICalendar();
-            saveCalendar.save(mc.getEventController());
+            saveCalendar.save(this.ec);
         }
         else if (e.getSource() == buttonLogOut) {
-            mc.getLoginController().logout();
+            this.lc.logout();
             frame.dispose();
             new LogInWindow();
         }
@@ -129,12 +131,27 @@ public class MainMenu implements ActionListener {
             frame.dispose();
         }
         else {
-            UUID user = mc.getUserController().getCurrentUser();
-            UserPreferences preferences = mc.getUserController().getUserManager().getPreferences(user);
-            mc.getEventController().update(preferences);
+            UUID user = this.uc.getCurrentUser();
+            UserPreferences preferences = this.uc.getUserManager().getPreferences(user);
+            this.ec.update(preferences);
             frame.revalidate();
             frame.repaint();
         }
+    }
+
+    @Override
+    public void enableFrame() {
+        this.frame.setEnabled(true);
+    }
+
+    @Override
+    public void exitFrame() {
+        this.frame.dispose();
+    }
+
+    @Override
+    public MeltParentWindow getParent() {
+        return null;
     }
 
     public void display() {

@@ -1,16 +1,17 @@
 package GUISwing;
 
 import controllers.MainController;
+import controllers.UserController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class MainFrameWithMenu extends MainFrame{
-    MainController mainController;
+    private UserController uc;
     ActionListener parent;
-    public MainFrameWithMenu(MainController mainController, ActionListener parent){
-        this.mainController = mainController;
+    public MainFrameWithMenu(UserController userController, ActionListener parent){
+        this.uc = userController;
         this.parent = parent;
         JMenuBar menu = setUpMenu();
         setUpMenus(menu);
@@ -27,7 +28,7 @@ public class MainFrameWithMenu extends MainFrame{
     }
 
     private void setUpMenus(JMenuBar menuBar){
-        menuBar.add(new SettingsMenu(mainController.getUserController(), parent));
+        menuBar.add(new SettingsMenu(this.uc, parent));
     }
 
 }

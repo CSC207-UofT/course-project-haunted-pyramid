@@ -1,5 +1,6 @@
 package helpers;
 
+import java.awt.*;
 import java.time.LocalTime;
 
 public class Constants {
@@ -20,4 +21,5 @@ public class Constants {
     public static final int WINDOW_HEIGHT = 1000;
     public static final int POPUP_WIDTH = 500;
     public static final int POPUP_HEIGHT = 300;
+    public static final Color WINDOW_COLOR = new Color(233, 161, 161);
 }

@@ -184,8 +184,7 @@ public class EventManager {
      */
     public UUID addEvent(String title, LocalDateTime endTime) {
         Event event = new Event(UUID.randomUUID(), title, endTime);
-        this.addEvent(event);
-        return this.getID(event);
+        return this.addEvent(event);
     }
 
     /**
@@ -257,8 +256,7 @@ public class EventManager {
                 return splitByDay;
             }
         }
-        ArrayList<Event> thins =new ArrayList<>(List.of(new Event[]{event}));
-        return thins;
+        return new ArrayList<>(List.of(new Event[]{event}));
     }
 
     public RepeatedEventManager getRepeatedEventManager() {
@@ -331,8 +329,14 @@ public class EventManager {
     }
 
     public String getName(Event event){return event.getName();}
+
     public void setStart(UUID id, LocalDateTime start) {
-        this.get(id).setStartTime(start);
+        if (start == null) {
+            this.get(id).setStartTime(this.get(id).getEndTime());
+        }
+        else {
+            this.get(id).setStartTime(start);
+        }
         this.update("change", this.get(id));
     }
 

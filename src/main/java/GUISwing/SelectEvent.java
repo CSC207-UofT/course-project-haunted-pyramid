@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.UUID;
 
 public class SelectEvent extends PopUpWindowFrame implements ActionListener{
     EventController eventController;
@@ -45,7 +44,7 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new EditEventWindow(userController, eventController, UUID.fromString(e.getActionCommand()), parent);
+ //       new EditEventWindow(this.mainController, UUID.fromString(e.getActionCommand()));
         this.dispose();
     }
 }

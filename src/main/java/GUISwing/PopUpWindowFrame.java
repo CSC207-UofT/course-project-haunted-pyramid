@@ -11,7 +11,7 @@ public class PopUpWindowFrame extends JFrame {
         this.setResizable(false);
         ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Icon.png");
         this.setIconImage(hauntedPyramid.getImage());
-        this.getContentPane().setBackground(new Color(233, 161, 161));
+        this.getContentPane().setBackground(Constants.WINDOW_COLOR);
         this.setLayout(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setSize(Constants.POPUP_WIDTH, Constants.POPUP_HEIGHT);
