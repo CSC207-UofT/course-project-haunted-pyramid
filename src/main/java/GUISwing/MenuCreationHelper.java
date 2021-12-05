@@ -1,11 +1,8 @@
 package GUISwing;
 
-import usecases.calendar.CalendarManager;
-
 import javax.swing.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.YearMonth;
 import java.util.ArrayList;
 

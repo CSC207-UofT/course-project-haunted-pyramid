@@ -132,15 +132,12 @@ public class MainMenu implements ActionListener {
             UUID user = mc.getUserController().getCurrentUser();
             UserPreferences preferences = mc.getUserController().getUserManager().getPreferences(user);
             mc.getEventController().update(preferences);
-            frame.dispose();
-            new MainMenu(mc);
-            this.dispose();
+            frame.revalidate();
+            frame.repaint();
         }
     }
 
     public void display() {
         frame.setVisible(true);
     }
-
-    public void dispose() { frame.dispose(); }
 }
