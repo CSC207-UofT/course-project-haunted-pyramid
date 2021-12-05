@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MenuCreationHelper {
     public static JComboBox<LocalTime> timeComboBox() {
@@ -18,29 +19,28 @@ public class MenuCreationHelper {
         return new JComboBox<>(timeList);
     }
 
-    public static JComboBox<Integer> dateJComboBox(YearMonth month, boolean canBeNull){
+    public static Integer[] dateList(YearMonth month, boolean canBeNull){
         int days = month.lengthOfMonth();
-        Integer[] daysList;
-        if (canBeNull){
-            days += 1;
-            daysList = new Integer[days];
-            for (int index = 0; index < days - 1; index += 1){
-                daysList[index] = index + 1;
+        List<Integer> dayList = new ArrayList<>();
+        if (canBeNull) {
+            int index = 1;
+            while (index <= days) {
+                dayList.add(index);
+                index += 1;
             }
-            daysList[days-1] = null;
+            dayList.add(null);
         } else {
-            daysList = new Integer[days];
-            for (int index = 0; index < days - 1; index += 1){
-                daysList[index] = index + 1;
+            for (int index = 1; index <= days; index += 1){
+                dayList.add(index);
             }
         }
+        Integer[] arr = new Integer[dayList.size()];
 
-        return new JComboBox<>(daysList);
+        return dayList.toArray(arr);
     }
 
     public static JComboBox<YearMonth> monthComboBox(){
         ArrayList<YearMonth> months = new ArrayList<>();
-
         months.add(YearMonth.of(LocalDate.now().minusMonths(3).getYear(), LocalDate.now().minusMonths(3).getMonth()));
         months.add(YearMonth.of(LocalDate.now().minusMonths(2).getYear(), LocalDate.now().minusMonths(2).getMonth()));
         months.add(YearMonth.of(LocalDate.now().minusMonths(1).getYear(), LocalDate.now().minusMonths(1).getMonth()));

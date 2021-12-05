@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 public class LogInWindow implements ActionListener {
     JFrame frame = new MainFrame();
@@ -21,10 +20,12 @@ public class LogInWindow implements ActionListener {
     JLabel lblLoginMessage = new JLabel();
     MainController mainController;
     LoginController loginController;
+    EventController eventController;
 
     public LogInWindow(){
         this.mainController = new MainController();
         this.loginController = this.mainController.getLoginController();
+        this.eventController = this.mainController.getEventController();
         JPanel imagePanel = createImagePanel();
         addImage(imagePanel);
         JPanel contributorPanel = createContributorPanel();
@@ -33,7 +34,7 @@ public class LogInWindow implements ActionListener {
         JPanel logInPanel = new JPanel();
         this.frame.add(logInPanel);
         logInPanel.setBounds(0, Constants.WINDOW_HEIGHT/3, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT/3);
-        logInPanel.setBackground(new Color(233, 161, 161));
+        logInPanel.setBackground(Constants.WINDOW_COLOR);
         logInPanel.setLayout(null);
         updateLogInPanel(logInPanel);
         setUpUserNameLabel();
@@ -99,7 +100,7 @@ public class LogInWindow implements ActionListener {
         JPanel imagePanel = new JPanel();
         this.frame.add(imagePanel);
         imagePanel.setBounds(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT/3);
-        imagePanel.setBackground(new Color(233, 161, 161));
+        imagePanel.setBackground(Constants.WINDOW_COLOR);
         imagePanel.setLayout(null);
         return imagePanel;
     }
@@ -108,7 +109,7 @@ public class LogInWindow implements ActionListener {
         JPanel contributorPanel = new JPanel();
         this.frame.add(contributorPanel);
         contributorPanel.setLayout(null);
-        contributorPanel.setBackground(new Color(233, 161, 161));
+        contributorPanel.setBackground(Constants.WINDOW_COLOR);
         contributorPanel.setBounds(0, 1000*2/3, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT/3);
         return contributorPanel;
     }
@@ -144,7 +145,7 @@ public class LogInWindow implements ActionListener {
                 IOSerializable ioSerializable = new IOSerializable(true);
                 this.mainController.setEventController(new EventController(ioSerializable.hasSavedData(), ioSerializable,
                         mainController.getUserController()));
-                MainMenu mainMenu = new MainMenu(mainController);
+                MainMenu mainMenu = new MainMenu(mainController, mainController.getEventController(), mainController.getUserController());
                 mainMenu.display();
                 frame.dispose();
             }
