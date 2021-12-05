@@ -98,9 +98,8 @@ public class MainMenu implements ActionListener, MeltParentWindow {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttonProfile) {
             //lead to profile setting page
-            this.lc.logout();
-            frame.dispose();
-            new LogInWindow();
+            SettingsMenu sM = new SettingsMenu(mc.getUserController(), this);
+            sM.display();
         }
         else if (e.getSource() == buttonCalendar) {
             //lead to calendar page
