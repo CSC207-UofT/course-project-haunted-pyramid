@@ -1,9 +1,6 @@
 package GUISwing;
 
 import controllers.UserController;
-import entities.User;
-import entities.UserPreferences;
-import gateways.IOSerializable;
 import helpers.Constants;
 
 import javax.swing.*;
@@ -15,7 +12,6 @@ import java.util.Iterator;
 import java.util.Objects;
 
 public class SettingsMenu extends JMenu implements ActionListener {
-//    JMenuItem freeTime;
     JMenuItem profile;
     JCheckBoxMenuItem cram;
     JCheckBoxMenuItem procrastinate;
@@ -25,7 +21,6 @@ public class SettingsMenu extends JMenu implements ActionListener {
 
     JFrame frame = new JFrame();
 
-
     JButton saveFT = new JButton("save");
 
     JButton saveName = new JButton("save name");
@@ -33,7 +28,6 @@ public class SettingsMenu extends JMenu implements ActionListener {
 
     JComboBox<LocalTime> startTime = MenuCreationHelper.timeComboBox();
     JComboBox<LocalTime> endTime = MenuCreationHelper.timeComboBox();
-    JPanel datesPanel = new JPanel(new GridLayout(2, 4));
 
 
     ActionListener parent;
@@ -49,15 +43,6 @@ public class SettingsMenu extends JMenu implements ActionListener {
         profile.addActionListener(this);
         this.add(profile);
 
-
-//        freeTime = new JMenuItem("free time");
-//        freeTime.setIcon(new ImageIcon("/res/freeTimeIcon.jpg"));
-//        freeTime.addActionListener(this);
-//        this.add(freeTime);
-
-
-
-
         this.addSeparator();
         morningPerson = new JCheckBoxMenuItem("morning person");
         morningPerson.setSelected(userController.getUserManager().getPreferences(userController.getCurrentUser()).getMorningPerson());
@@ -65,8 +50,6 @@ public class SettingsMenu extends JMenu implements ActionListener {
         morningPerson.setActionCommand("morning");
         morningPerson.addActionListener(parent);
         morningPerson.addActionListener(this);
-
-
 
         this.addSeparator();
         cram = new JCheckBoxMenuItem("cram");
@@ -79,7 +62,6 @@ public class SettingsMenu extends JMenu implements ActionListener {
         procrastinate.addActionListener(this);
         this.add(cram);
         this.add(procrastinate);
-
 
         spacing = new JMenu("spacing");
         ButtonGroup spacings = new ButtonGroup();
@@ -105,12 +87,6 @@ public class SettingsMenu extends JMenu implements ActionListener {
         frame.setSize(Constants.POPUP_WIDTH, 370);
         frame.setVisible(false);
 
-//        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-//        JPanel panel1 = new JPanel();
-//        panel1.setBackground(Color.ORANGE);
-//        panel1.setPreferredSize(new Dimension(100, 50));
-//        panel1.add(freeTime);
-//        frame.add(panel1, BorderLayout.NORTH);
         setFreeTimePanel();
         setCheckItems();
         setChangeNameField();
@@ -212,8 +188,6 @@ public class SettingsMenu extends JMenu implements ActionListener {
         JLabel instructions4c = new JLabel(     "(if it is null, they will be merged).");
 
 
-
-
         panel2.add(procrastinate);
         panel2.add(cram);
         panel2.add(morningPerson);
@@ -224,11 +198,6 @@ public class SettingsMenu extends JMenu implements ActionListener {
         panel2.add(instructions4);
         panel2.add(instructions4b);
         panel2.add(instructions4c);
-
-
-
-
-
 
         frame.add(panel2, BorderLayout.CENTER);
 
