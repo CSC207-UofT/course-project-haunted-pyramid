@@ -14,6 +14,7 @@ import presenters.MenuStrategies.BasicMenuContent;
 import usecases.events.EventManager;
 import usecases.UserManager;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -128,7 +129,10 @@ public class MainController {
         System.out.println("Please type your file name (a-Z, 0-9, -, _, . are allowed");
         String fileName = this.calendarController.getFileName();
         ICalendar iCalendar = new ICalendar(this.eventController.getEventManager());
-        iCalendar.create(fileName);
+        try {
+            iCalendar.create(fileName);
+        } catch (IOException ignored) {
+        }
     }
 
     /**

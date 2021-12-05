@@ -68,13 +68,13 @@ public class ICalendar {
      * create ics file for entire events
      * @param name name of the file
      */
-    public void create(String name) {
+    public void create(String name) throws IOException {
         try {
             File newFile = createFile(name);
             BufferedWriter bw = setUp(newFile);
             exportEntireCalendar(bw, newFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException();
         }
     }
 
