@@ -3,21 +3,35 @@ package GUISwing;
 import controllers.UserController;
 import entities.User;
 import entities.UserPreferences;
+import gateways.IOSerializable;
+import helpers.Constants;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalTime;
 import java.util.Iterator;
 
 public class SettingsMenu extends JMenu implements ActionListener {
-    JMenuItem freeTime;
+//    JMenuItem freeTime;
     JMenuItem profile;
     JCheckBoxMenuItem cram;
     JCheckBoxMenuItem procrastinate;
     JMenu spacing;
     UserController userController;
     JCheckBoxMenuItem morningPerson;
+
+    JFrame frame = new JFrame();
+
+
+    JButton freeTime = new JButton("free time");
+    JButton saveFT = new JButton("save");
+
+    JComboBox<LocalTime> startTime = MenuCreationHelper.timeComboBox();
+    JComboBox<LocalTime> endTime = MenuCreationHelper.timeComboBox();
+    JPanel datesPanel = new JPanel(new GridLayout(2, 4));
+
 
     ActionListener parent;
 
@@ -33,10 +47,12 @@ public class SettingsMenu extends JMenu implements ActionListener {
         this.add(profile);
 
 
-        freeTime = new JMenuItem("free time");
-        freeTime.setIcon(new ImageIcon("/res/freeTimeIcon.jpg"));
-        freeTime.addActionListener(this);
-        this.add(freeTime);
+//        freeTime = new JMenuItem("free time");
+//        freeTime.setIcon(new ImageIcon("/res/freeTimeIcon.jpg"));
+//        freeTime.addActionListener(this);
+//        this.add(freeTime);
+
+
 
 
         this.addSeparator();
@@ -74,6 +90,26 @@ public class SettingsMenu extends JMenu implements ActionListener {
 
         }
         this.add(spacing);
+
+        frame.setTitle("Profile Settings");
+        frame.setResizable(false);
+        ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Icon.png");
+        frame.setIconImage(hauntedPyramid.getImage());
+        frame.getContentPane().setBackground(new Color(233, 161, 161));
+        frame.setLayout(new BorderLayout());
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(Constants.POPUP_WIDTH, Constants.POPUP_HEIGHT);
+        frame.setVisible(true);
+
+//        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+//        JPanel panel1 = new JPanel();
+//        panel1.setBackground(Color.ORANGE);
+//        panel1.setPreferredSize(new Dimension(100, 50));
+//        panel1.add(freeTime);
+//        frame.add(panel1, BorderLayout.NORTH);
+        setFreeTimePanel();
+        setCheckItems();
+
     }
 
     private void getCramButton(String spacing, ButtonGroup spacings){
@@ -119,4 +155,35 @@ public class SettingsMenu extends JMenu implements ActionListener {
     private void freeTime(){
         new FreeTimeWindow(userController);
     }
+
+    public void setFreeTimePanel() {
+        JPanel panel1 = new JPanel();
+        panel1.setBackground(Color.ORANGE);
+        panel1.setPreferredSize(new Dimension(100, 50));
+
+        JLabel startText = new JLabel("Start Time: ");
+        JLabel endText = new JLabel("End Time: ");
+        panel1.add(startText);
+        panel1.add(startTime);
+        panel1.add(endText);
+        panel1.add(endTime);
+        panel1.add(saveFT);
+
+        frame.add(panel1, BorderLayout.NORTH);
+    }
+
+    public void setCheckItems(){
+        JPanel panel2 = new JPanel();
+        panel2.setBackground(Color.BLUE);
+        panel2.setPreferredSize(new Dimension(100, 50));
+
+        panel2.add(procrastinate);
+        panel2.add(cram);
+        panel2.add(morningPerson);
+        frame.add(panel2, BorderLayout.CENTER);
+
+    }
+
+
 }
+
