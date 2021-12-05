@@ -182,10 +182,10 @@ public class EventManager {
      * @param endTime LocalDateTime end time of the event
      * @return the event that was created with given title, endTime, and unique ID
      */
-    public Event addEvent(String title, LocalDateTime endTime) {
+    public UUID addEvent(String title, LocalDateTime endTime) {
         Event event = new Event(UUID.randomUUID(), title, endTime);
         this.addEvent(event);
-        return event;
+        return this.getID(event);
     }
 
     /**
@@ -204,9 +204,10 @@ public class EventManager {
      *
      * @param event event to be added
      */
-    public void addEvent(Event event) {
+    public UUID addEvent(Event event) {
         this.eventMap.put(event.getID(), event);
         this.update("add", event);
+        return this.getID(event);
     }
 
     /**
@@ -246,18 +247,18 @@ public class EventManager {
             if (event.getStartTime().toLocalDate().isBefore(event.getEndTime().toLocalDate())) {
                 splitByDay.add(new Event(event.getID(), event.getName(), event.getStartTime(),
                         LocalDateTime.of(event.getStartTime().toLocalDate(), LocalTime.of(23, 59))));
-                for (LocalDate nextDay = event.getStartTime().plusDays(1L).toLocalDate(); !event.getEndTime().
-                        toLocalDate().isBefore(nextDay); nextDay = nextDay.plusDays(1)) {
+                for (LocalDate nextDay = event.getStartTime().plusDays(1L).toLocalDate(); event.getEndTime().
+                        toLocalDate().isAfter(nextDay); nextDay = nextDay.plusDays(1)) {
                     splitByDay.add(new Event(event.getID(), event.getName(), LocalDateTime.of(nextDay, LocalTime.of(0, 0)),
                             LocalDateTime.of(nextDay, LocalTime.of(23, 59))));
-                    nextDay = nextDay.plusDays(1L);
                 }
                 splitByDay.add(new Event(event.getID(), event.getName(), LocalDateTime.of(event.getEndTime().toLocalDate(),
                         LocalTime.of(0, 0)), event.getEndTime()));
                 return splitByDay;
             }
         }
-        return new ArrayList<>(List.of(new Event[]{event}));
+        ArrayList<Event> thins =new ArrayList<>(List.of(new Event[]{event}));
+        return thins;
     }
 
     public RepeatedEventManager getRepeatedEventManager() {
@@ -325,10 +326,11 @@ public class EventManager {
      * @param event any event (does not have to be in <code>this.eventMap</code>
      * @return the name of the event
      */
-    public String getName(Event event) {
-        return event.getName();
+    public String getName(UUID event) {
+        return get(event).getName();
     }
 
+    public String getName(Event event){return event.getName();}
     public void setStart(UUID id, LocalDateTime start) {
         this.get(id).setStartTime(start);
         this.update("change", this.get(id));
@@ -486,6 +488,10 @@ public class EventManager {
      * @param event the event to set name
      * @param name  String of new name
      */
+    public void setName(UUID event, String name) {
+        get(event).setName(name);
+    }
+
     public void setName(Event event, String name) {
         event.setName(name);
     }
@@ -496,8 +502,8 @@ public class EventManager {
      * @param event   the event with description to be set
      * @param describe String the new description
      */
-    public void setDescription(Event event, String describe) {
-        event.setDescription(describe);
+    public void setDescription(UUID event, String describe) {
+        get(event).setDescription(describe);
     }
 
     /**

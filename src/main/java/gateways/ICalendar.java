@@ -247,7 +247,7 @@ public class ICalendar {
         }
         StringBuilder startDateTime = getTzTimeStamp(startDate, startTime);
         StringBuilder endDateTime = getTzTimeStamp(endDate, endTime);
-        String name = eventManager.getName(eventManager.get(eventID));
+        String name = eventManager.getName(eventID);
         String description = eventManager.getDescription(eventID);
         try {
             String beginEvent = "BEGIN:VEVENT" + iCalSpacer;
