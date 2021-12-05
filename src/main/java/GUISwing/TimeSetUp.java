@@ -34,15 +34,14 @@ public class TimeSetUp implements ActionListener {
     private int date;
     private LocalTime time;
 
-    public TimeSetUp(MainController mainController, EventController eventController, UserController userController,
-                     UUID eventID, MeltParentWindow parent, String option) {
+    public TimeSetUp(MainController mainController, UUID eventID, MeltParentWindow parent, String option) {
         this.option = option;
         this.mc = mainController;
         this.eventID = eventID;
         this.parent = parent;
         this.frame = new PopUpWindowFrame();
-        this.ec = eventController;
-        this.uc = userController;
+        this.ec = mainController.getEventController();
+        this.uc = mainController.getUserController();
         this.timeBox = MenuCreationHelper.timeComboBox();
         this.yearMonthBox = MenuCreationHelper.monthComboBox();
         this.yearMonthBox.setSelectedIndex(3);
@@ -199,7 +198,7 @@ public class TimeSetUp implements ActionListener {
             }
             this.parent.enableFrame();
             this.parent.exitFrame();
-            new EditEventWindow(this.mc, this.ec, this.uc, eventID, this.parent.getParent());
+            new EditEventWindow(this.mc, eventID, this.parent.getParent());
             exitFrame();
         }
         if (e.getSource() == cancelButton) {

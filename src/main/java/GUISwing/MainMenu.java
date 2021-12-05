@@ -28,10 +28,10 @@ public class MainMenu implements ActionListener, MeltParentWindow {
     private final JButton buttonExit = new JButton("7. Exit");
 
 
-    public MainMenu(MainController mainController, EventController eventController, UserController userController) {
+    public MainMenu(MainController mainController, UserController userController) {
         this.frame = new MainFrameWithMenu(userController, this);
         this.mc = mainController;
-        this.ec = eventController;
+        this.ec = mainController.getEventController();
         this.uc = userController;
         this.lc = new LoginController(this.uc);
         CalendarController calendarController = new CalendarController();
@@ -112,7 +112,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             this.frame.setEnabled(false);
             UUID newEventID = this.ec.getEventManager().addEvent("Event Name", LocalDateTime.of(
                     LocalDate.now(), LocalTime.of(0, 0)));
-            new EditEventWindow(this.mc, this.ec, this.uc , newEventID, this);
+            new EditEventWindow(this.mc, newEventID, this);
         }
         else if (e.getSource() == buttonModifyEvent) {
             new SelectEvent(this.ec, this.uc, this);
