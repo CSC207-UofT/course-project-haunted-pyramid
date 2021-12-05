@@ -1,4 +1,4 @@
-package GUISwing;
+package interfaces;
 
 public interface MeltParentWindow {
     void enableFrame();

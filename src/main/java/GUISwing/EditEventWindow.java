@@ -5,6 +5,7 @@ import controllers.MainController;
 import controllers.UserController;
 import helpers.Constants;
 import helpers.GUIInfoProvider;
+import interfaces.MeltParentWindow;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
