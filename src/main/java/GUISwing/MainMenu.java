@@ -113,10 +113,7 @@ public class MainMenu implements ActionListener {
             new EditEventWindow(mc.getUserController(), mc.getEventController(), newEvent, this);
         }
         else if (e.getSource() == buttonModifyEvent) {
-            //lead to modify event page
-            mc.getLoginController().logout();
-            frame.dispose();
-            new LogInWindow();
+            new SelectEvent(mc.getEventController(), mc.getUserController(), this);
         }
         else if (e.getSource() == buttonExport) {
             SaveICalendar saveCalendar = new SaveICalendar();
@@ -130,10 +127,8 @@ public class MainMenu implements ActionListener {
         else if (e.getSource() == buttonExit) {
             mc.saveAndExitProgram();
             frame.dispose();
-        } else if (e.getSource() == editEvent){
-            new SelectEvent(mc.getEventController(), mc.getUserController(), this);
         }
-        else{
+        else {
             UUID user = mc.getUserController().getCurrentUser();
             UserPreferences preferences = mc.getUserController().getUserManager().getPreferences(user);
             mc.getEventController().update(preferences);
@@ -143,12 +138,9 @@ public class MainMenu implements ActionListener {
         }
     }
 
-    public MainController getmc(){return this.mc;}
-
     public void display() {
         frame.setVisible(true);
     }
 
-    public void dispose() {frame.dispose();
-    }
+    public void dispose() { frame.dispose(); }
 }

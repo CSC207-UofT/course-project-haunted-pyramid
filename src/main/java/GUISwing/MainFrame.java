@@ -20,9 +20,4 @@ public class MainFrame extends JFrame {
         ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Icon.png");
         this.setIconImage(hauntedPyramid.getImage());
     }
-
-    private void setupMenu(){
-        JMenuBar menuBar = new JMenuBar();
-        this.add(menuBar);
-    }
 }
