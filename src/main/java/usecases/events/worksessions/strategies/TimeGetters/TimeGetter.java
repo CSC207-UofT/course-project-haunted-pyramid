@@ -22,20 +22,36 @@ public interface TimeGetter {
      */
     default Map<LocalDateTime, Long> freeSlots(LocalDateTime start, LocalDateTime end, EventManager eventManager,
                                                UUID deadline){
+        // Schedule in a form of a list
         List<Event> schedule = this.getListSchedule(eventManager, start.toLocalDate(), deadline);
+        // Sorts the list
         eventManager.timeOrder(schedule);
+
         Map<LocalDateTime, Long> freeSlots = new HashMap<>();
+
         for (Event event : schedule) {
-            if (event.hasStart()) {
-                if (event.getEndTime().isAfter(start)) {
-                    if (event.getStartTime().isBefore(end) && event.getStartTime().isAfter(start)) {
+
+            boolean hasStart = event.hasStart();
+            boolean isAfterStart = event.getEndTime().isAfter(start);
+
+            if (hasStart && isAfterStart) {
+
+                // start time of event is before End AND start time is after Start (event is in between start and end)
+                    boolean startTimeBeforeEnd = event.getStartTime().isBefore(end);
+                    boolean startTimeAfterStart = event.getStartTime().isAfter(start);
+
+                    if (startTimeBeforeEnd && startTimeAfterStart) {
+
+                        // Adds the key value pair to the Hash map
                         freeSlots.put(start, Duration.between(start, event.getStartTime()).toHours());
+
                         start = event.getEndTime();
+
                         if (start.isAfter(end)){
                             return freeSlots;
                         }
-                        freeSlots.putAll(this.freeSlots(start, end, eventManager, deadline));
-                    } else if (!event.getStartTime().isBefore(end)) {
+
+                    } else if (!startTimeBeforeEnd) {
                         freeSlots.put(start, Duration.between(start, end).toHours());
                         return freeSlots;
                     }
@@ -43,7 +59,7 @@ public interface TimeGetter {
                     if (start.isAfter(end)){
                         return freeSlots;
                     }
-                }
+
             }
         }
         return freeSlots;
