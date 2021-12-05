@@ -109,7 +109,6 @@ public class MainMenu implements ActionListener {
             //lead to event page
             UUID newEvent = mc.getEventController().getEventManager().addEvent("event title", LocalDateTime.of(
                     LocalDate.now(), LocalTime.of(0, 0)));
-            System.out.println(mc.getEventController().getEventManager().getStartWorking(newEvent));
             new EditEventWindow(mc.getUserController(), mc.getEventController(), newEvent, this);
         }
         else if (e.getSource() == buttonFour) {

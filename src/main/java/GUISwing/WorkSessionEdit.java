@@ -52,7 +52,6 @@ public class WorkSessionEdit implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         workSessionScheduler.setHoursNeeded(event, (Long) totalHours.getSelectedItem(), eventController.getEventManager());
         workSessionScheduler.setSessionLength(event, (Long) sessionLength.getSelectedItem(), eventController.getEventManager());
-        System.out.println(eventController.getEventManager().getWorkSessions(event));
         frame.dispose();
     }
 }

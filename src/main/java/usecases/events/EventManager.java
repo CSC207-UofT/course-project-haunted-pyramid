@@ -258,7 +258,6 @@ public class EventManager {
             }
         }
         ArrayList<Event> thins =new ArrayList<>(List.of(new Event[]{event}));
-        System.out.println(thins);
         return thins;
     }
 

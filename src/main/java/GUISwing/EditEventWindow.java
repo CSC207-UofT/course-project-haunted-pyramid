@@ -124,7 +124,6 @@ public class EditEventWindow implements ActionListener {
     }
     private void save(ActionEvent e){
         if(e.getSource() == save){
-            System.out.println(eventController.getEventManager().getStartWorking(event));
             eventController.getEventManager().setName(event, name.getText());
             eventController.getEventManager().setEnd(event, LocalDateTime.of(LocalDate.of((
                     (YearMonth) (Objects.requireNonNull(endMonth.getSelectedItem()))).getYear(), ((YearMonth) (endMonth.getSelectedItem())).
@@ -136,8 +135,6 @@ public class EditEventWindow implements ActionListener {
                         getMonthValue(), (Integer)(startDate.getSelectedItem())), (LocalTime) Objects.requireNonNull(startTime.getSelectedItem())));
             }
             frame.dispose();
-            System.out.println(eventController.getEventManager().getAllEventsFlatSplit());
-            System.out.println(eventController.getEventManager().getStartWorking(event));
         }
 
     }

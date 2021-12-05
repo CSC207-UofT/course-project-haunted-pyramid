@@ -17,7 +17,6 @@ public class MorningPerson implements TimeOrderer{
             ordered.add(earliest(times));
         }
         times.addAll(ordered);
-        System.out.println(times);
         this.dateOrder(idealDates, times);
     }
 
