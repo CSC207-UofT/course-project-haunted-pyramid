@@ -13,6 +13,8 @@ import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -61,7 +63,8 @@ public class TimeSetUp implements ActionListener {
             currentTimeInfo = new JLabel(helper.getEventEndInfo(eventID, this.ec));
             dateBox = new JComboBox<>(MenuCreationHelper.dateList(this.yearMonthBox.getItemAt(3), false));
         }
-        date = dateBox.getItemAt(0);
+        dateBox.setSelectedIndex(LocalDateTime.now().getDayOfMonth() - 1);
+        date = dateBox.getItemAt(LocalDateTime.now().getDayOfMonth() - 1);
         setUpInfoPanel(infoPanel, currentTimeText, currentTimeInfo, setUpNewTime);
         JPanel comboBoxPanel = new JPanel();
         configureBoxPanel(comboBoxPanel);
@@ -208,8 +211,7 @@ public class TimeSetUp implements ActionListener {
             this.ec.getEventManager().setEnd(eventID, endTime);
         }
         this.parent.enableFrame();
-        this.parent.exitFrame();
-        new EditEventWindow(this.mc, eventID, this.parent.getParent());
+        this.parent.refresh();
         exitFrame();
     }
 

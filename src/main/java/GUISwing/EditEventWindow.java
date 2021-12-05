@@ -14,14 +14,15 @@ import java.util.UUID;
 
 
 public class EditEventWindow implements ActionListener, MeltParentWindow {
+    private GUIInfoProvider helper;
     private final UUID eventID;
     private final MeltParentWindow parent;
     private final JFrame frame;
     private final MainController mc;
     private final EventController ec;
-    private final UserController uc;
     private JTextField eventName;
     private JTextArea eventDescription;
+    private JPanel timeInfoPanel;
     private JButton setUpStart;
     private JButton setUpEnd;
     private JButton workSessionButton;
@@ -30,26 +31,28 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
     private JButton deleteButton;
 
     public EditEventWindow(MainController mc, UUID eventID, MeltParentWindow parent) {
-        GUIInfoProvider helper = new GUIInfoProvider();
+        this.helper = new GUIInfoProvider();
         this.eventID = eventID;
         this.parent = parent;
         this.frame = new PopUpWindowFrame();
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.mc = mc;
         this.ec = mc.getEventController();
-        this.uc = mc.getUserController();
-        JPanel infoPanel = new JPanel();
-        infoPanelSetUp(infoPanel);
-        setUpLabels(eventID, helper, infoPanel);
-
+        this.timeInfoPanel = new JPanel();
+        JPanel textInfoPanel = new JPanel();
+        textInfoPanelSetUp(textInfoPanel);
+        setUpTextInfo(textInfoPanel);
+        timeInfoPanelSetUp();
+        setUpTimeInfo(eventID, helper);
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(null);
         buttonPanel.setBackground(Constants.WINDOW_COLOR);
         buttonPanel.setBounds(0, 80, Constants.POPUP_WIDTH, Constants.POPUP_HEIGHT * 2 / 3);
-
         setUpButtons();
         addButtons(buttonPanel);
         addActionLister();
+        this.frame.add(textInfoPanel);
+        this.frame.add(timeInfoPanel);
         this.frame.add(buttonPanel);
         this.frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -62,26 +65,34 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         this.frame.setVisible(true);
     }
 
-    private void setUpLabels(UUID eventID, GUIInfoProvider helper, JPanel infoPanel) {
+    private void textInfoPanelSetUp(JPanel textInfoPanel) {
+        textInfoPanel.setBounds(0, 0, 230, Constants.POPUP_HEIGHT / 3);
+        textInfoPanel.setLayout(null);
+        textInfoPanel.setBackground(Constants.WINDOW_COLOR);
+    }
+
+    private void setUpTimeInfo(UUID eventID, GUIInfoProvider helper) {
+        JLabel viewStart = new JLabel("Current Event Start Time:");
+        viewStart.setBounds(40, 13, 270, 20);
+        JLabel startTime = new JLabel(helper.getEventStartInfo(eventID, this.ec));
+        startTime.setBounds(40, 33, 270, 20);
+        JLabel viewEnd = new JLabel("Current Event End Time:");
+        viewEnd.setBounds(40, 53, 270, 20);
+        JLabel endTime = new JLabel(helper.getEventEndInfo(eventID, this.ec));
+        endTime.setBounds(40, 73, 270, 20);
+        timeInfoPanel.add(viewStart);
+        timeInfoPanel.add(viewEnd);
+        timeInfoPanel.add(startTime);
+        timeInfoPanel.add(endTime);
+    }
+
+    private void setUpTextInfo(JPanel panel) {
         eventName = new JTextField(this.ec.getEventManager().getName(this.eventID));
         eventName.setBounds(30, 17, 200, 20);
         eventDescription = new JTextArea(this.ec.getEventManager().getDescription(this.eventID));
         eventDescription.setBounds(30, 47, 200, 50);
-        JLabel viewStart = new JLabel("Current Event Start Time:");
-        viewStart.setBounds(270, 10, 270, 20);
-        JLabel startTime = new JLabel(helper.getEventStartInfo(eventID, this.ec));
-        startTime.setBounds(270, 30, 270, 20);
-        JLabel viewEnd = new JLabel("Current Event End Time:");
-        viewEnd.setBounds(270, 50, 270, 20);
-        JLabel endTime = new JLabel(helper.getEventEndInfo(eventID, this.ec));
-        endTime.setBounds(270, 70, 270, 20);
-
-        infoPanel.add(eventName);
-        infoPanel.add(eventDescription);
-        infoPanel.add(viewStart);
-        infoPanel.add(viewEnd);
-        infoPanel.add(startTime);
-        infoPanel.add(endTime);
+        panel.add(eventName);
+        panel.add(eventDescription);
     }
 
     private void setUpButtons() {
@@ -117,11 +128,10 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         buttonPanel.add(deleteButton);
     }
 
-    private void infoPanelSetUp(JPanel infoPanel) {
-        infoPanel.setBounds(0, 0, Constants.POPUP_WIDTH, Constants.POPUP_HEIGHT / 3);
-        infoPanel.setLayout(null);
-        infoPanel.setBackground(Constants.WINDOW_COLOR);
-        this.frame.add(infoPanel);
+    private void timeInfoPanelSetUp() {
+        this.timeInfoPanel.setBounds(230, 0, Constants.POPUP_WIDTH - 230, Constants.POPUP_HEIGHT / 3);
+        this.timeInfoPanel.setLayout(null);
+        this.timeInfoPanel.setBackground(Constants.WINDOW_COLOR);
     }
 
     @Override
@@ -152,8 +162,7 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
             this.ec.getEventManager().setName(this.eventID, eventName.getText());
             this.ec.getEventManager().setDescription(this.eventID, eventDescription.getText());
             this.parent.enableFrame();
-            this.parent.exitFrame();
-            new MainMenu(this.mc);
+            this.parent.refresh();
             this.exitFrame();
         }
 
@@ -168,6 +177,15 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
             }
         }
     }
+    @Override
+    public void refresh() {
+        this.timeInfoPanel.removeAll();
+        timeInfoPanelSetUp();
+        setUpTimeInfo(this.eventID, this.helper);
+        this.frame.revalidate();
+        this.frame.repaint();
+    }
+
     @Override
     public MeltParentWindow getParent() {
         return this.parent;
