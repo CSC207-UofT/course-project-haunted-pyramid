@@ -6,7 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-
+    /**
+     * Set up the main frame to be used for all the common windows
+     */
     public MainFrame() {
         this.setTitle("Haunted Pyramid Calendar App");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

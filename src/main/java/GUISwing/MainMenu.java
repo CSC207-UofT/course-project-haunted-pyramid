@@ -18,13 +18,14 @@ import java.util.UUID;
 public class MainMenu implements ActionListener {
     private final JFrame frame;
     private final MainController mc;
-    private final JButton buttonOne = new JButton("1. Profile Setting");
-    private final JButton buttonTwo = new JButton("2. View/Export Calendar");
-    private final JButton buttonThree = new JButton("3. Add Event");
-    private final JButton editEvent = new JButton("4. Edit Event");
-    private final JButton buttonFour = new JButton("5. Export Entire Calendar to iCal File");
-    private final JButton buttonFive = new JButton("6. Log Out");
-    private final JButton buttonSix = new JButton("7. Exit");
+    private final JButton buttonProfile = new JButton("1. Profile Setting");
+    private final JButton buttonCalendar = new JButton("2. View/Export Calendar");
+    private final JButton buttonAddEvent = new JButton("3. Add a new Event");
+    private final JButton buttonModifyEvent = new JButton("4. Modify an Event");
+    private final JButton buttonExport = new JButton("5. Export Entire Calendar to iCal File");
+    private final JButton buttonLogOut = new JButton("6. Log Out");
+    private final JButton buttonExit = new JButton("7. Exit");
+
 
     public MainMenu(MainController mainController) {
         this.frame = new MainFrameWithMenu(mainController, this);
@@ -48,13 +49,13 @@ public class MainMenu implements ActionListener {
     }
 
     private void buttonSetUp(JPanel menuPanel) {
-        setUpIndividualButton(buttonOne, menuPanel);
-        setUpIndividualButton(buttonTwo, menuPanel);
-        setUpIndividualButton(buttonThree, menuPanel);
-        setUpIndividualButton(editEvent, menuPanel);
-        setUpIndividualButton(buttonFour, menuPanel);
-        setUpIndividualButton(buttonFive, menuPanel);
-        setUpIndividualButton(buttonSix, menuPanel);
+        setUpIndividualButton(buttonProfile, menuPanel);
+        setUpIndividualButton(buttonCalendar, menuPanel);
+        setUpIndividualButton(buttonAddEvent, menuPanel);
+        setUpIndividualButton(buttonModifyEvent, menuPanel);
+        setUpIndividualButton(buttonExport, menuPanel);
+        setUpIndividualButton(buttonLogOut, menuPanel);
+        setUpIndividualButton(buttonExit, menuPanel);
     }
 
     private void setUpIndividualButton(JButton button, JPanel menuPanel) {
@@ -93,34 +94,40 @@ public class MainMenu implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == buttonOne) {
+        if (e.getSource() == buttonProfile) {
             //lead to profile setting page
             mc.getLoginController().logout();
             frame.dispose();
             new LogInWindow();
         }
-        else if (e.getSource() == buttonTwo) {
+        else if (e.getSource() == buttonCalendar) {
             //lead to calendar page
             mc.getLoginController().logout();
             frame.dispose();
             new LogInWindow();
         }
-        else if (e.getSource() == buttonThree) {
-            //lead to event page
+        else if (e.getSource() == buttonAddEvent) {
+            //lead to add event page
             UUID newEvent = mc.getEventController().getEventManager().addEvent("event title", LocalDateTime.of(
                     LocalDate.now(), LocalTime.of(0, 0)));
             new EditEventWindow(mc.getUserController(), mc.getEventController(), newEvent, this);
         }
-        else if (e.getSource() == buttonFour) {
-            SaveICalendar saveCalendar = new SaveICalendar();
-            saveCalendar.save(mc.getEventController());
-        }
-        else if (e.getSource() == buttonFive) {
+        else if (e.getSource() == buttonModifyEvent) {
+            //lead to modify event page
             mc.getLoginController().logout();
             frame.dispose();
             new LogInWindow();
         }
-        else if (e.getSource() == buttonSix) {
+        else if (e.getSource() == buttonExport) {
+            SaveICalendar saveCalendar = new SaveICalendar();
+            saveCalendar.save(mc.getEventController());
+        }
+        else if (e.getSource() == buttonLogOut) {
+            mc.getLoginController().logout();
+            frame.dispose();
+            new LogInWindow();
+        }
+        else if (e.getSource() == buttonExit) {
             mc.saveAndExitProgram();
             frame.dispose();
         } else if (e.getSource() == editEvent){
