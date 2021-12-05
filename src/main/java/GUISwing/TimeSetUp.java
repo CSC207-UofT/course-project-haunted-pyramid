@@ -4,6 +4,7 @@ import controllers.EventController;
 import controllers.MainController;
 import helpers.Constants;
 import helpers.GUIInfoProvider;
+import interfaces.MeltParentWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +39,7 @@ public class TimeSetUp implements ActionListener {
         this.eventID = eventID;
         this.parent = parent;
         this.frame = new PopUpWindowFrame();
+        this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.ec = mainController.getEventController();
         this.timeBox = MenuCreationHelper.timeComboBox();
         this.yearMonthBox = MenuCreationHelper.monthComboBox();

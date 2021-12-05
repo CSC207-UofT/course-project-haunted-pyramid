@@ -3,6 +3,7 @@ package GUISwing;
 import controllers.*;
 import entities.UserPreferences;
 import helpers.Constants;
+import interfaces.MeltParentWindow;
 
 import javax.swing.*;
 import java.awt.*;
