@@ -145,7 +145,7 @@ public class LogInWindow implements ActionListener {
                 IOSerializable ioSerializable = new IOSerializable(true);
                 this.mainController.setEventController(new EventController(ioSerializable.hasSavedData(), ioSerializable,
                         mainController.getUserController()));
-                MainMenu mainMenu = new MainMenu(mainController, mainController.getUserController());
+                MainMenu mainMenu = new MainMenu(mainController);
                 mainMenu.display();
                 frame.dispose();
             }

@@ -2,7 +2,6 @@ package GUISwing;
 
 import controllers.EventController;
 import controllers.MainController;
-import controllers.UserController;
 import helpers.Constants;
 import helpers.GUIInfoProvider;
 
@@ -23,7 +22,6 @@ public class TimeSetUp implements ActionListener {
     private final MeltParentWindow parent;
     private final JFrame frame;
     private final EventController ec;
-    private final UserController uc;
     private final JComboBox<YearMonth> yearMonthBox;
     private JComboBox<Integer> dateBox;
     private final JComboBox<LocalTime> timeBox;
@@ -41,7 +39,6 @@ public class TimeSetUp implements ActionListener {
         this.parent = parent;
         this.frame = new PopUpWindowFrame();
         this.ec = mainController.getEventController();
-        this.uc = mainController.getUserController();
         this.timeBox = MenuCreationHelper.timeComboBox();
         this.yearMonthBox = MenuCreationHelper.monthComboBox();
         this.yearMonthBox.setSelectedIndex(3);
@@ -49,8 +46,6 @@ public class TimeSetUp implements ActionListener {
         GUIInfoProvider helper = new GUIInfoProvider();
         JPanel infoPanel = new JPanel();
         configureInfoPanel(infoPanel);
-        JPanel comboBoxPanel = new JPanel();
-        configureBoxPanel(comboBoxPanel);
         JLabel currentTimeText = new JLabel();
         JLabel currentTimeInfo = new JLabel();
         JLabel setUpNewTime = new JLabel("Set Up the New Time");
@@ -66,10 +61,10 @@ public class TimeSetUp implements ActionListener {
         }
         date = dateBox.getItemAt(0);
         setUpInfoPanel(infoPanel, currentTimeText, currentTimeInfo, setUpNewTime);
-
+        JPanel comboBoxPanel = new JPanel();
+        configureBoxPanel(comboBoxPanel);
         JPanel optionPanel = new JPanel();
         configureOptionPanel(optionPanel);
-        this.frame.add(optionPanel);
         this.saveButton = new JButton("Save");
         this.cancelButton = new JButton("Cancel");
         addActionListener();
@@ -82,6 +77,7 @@ public class TimeSetUp implements ActionListener {
         optionPanel.setLayout(new GridLayout(1,2, 40, 0));
         optionPanel.setBackground(Constants.WINDOW_COLOR);
         optionPanel.setBounds(120, 200, 200, 30);
+        this.frame.add(optionPanel);
     }
 
     private void setDefaultTimeLine() {
@@ -158,17 +154,7 @@ public class TimeSetUp implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == yearMonthBox) {
-            YearMonth choice = (YearMonth) yearMonthBox.getSelectedItem();
-            if (choice != null) {
-                year = choice.getYear();
-                month = choice.getMonthValue();
-                if (option.equalsIgnoreCase("Start")) {
-                    dateBox.setModel(new DefaultComboBoxModel<>(MenuCreationHelper.dateList(choice, true)));
-                }
-                else {
-                    dateBox.setModel(new DefaultComboBoxModel<>(MenuCreationHelper.dateList(choice, false)));
-                }
-            }
+            setYearMonth();
         }
 
         if (e.getSource() == dateBox) {
@@ -182,29 +168,47 @@ public class TimeSetUp implements ActionListener {
         }
 
         if (e.getSource() == saveButton) {
-            if (option.equalsIgnoreCase("Start")) {
-                if (dateBox.getSelectedItem() == null) {
-                    this.ec.getEventManager().setStart(this.eventID, null);
-                }
-                else {
-                    LocalDateTime startTime = getLocalDateTime();
-                    this.ec.getEventManager().setStart(this.eventID, startTime);
-                }
-            }
-
-            else if (option.equalsIgnoreCase("End")) {
-                LocalDateTime endTime = getLocalDateTime();
-                this.ec.getEventManager().setEnd(eventID, endTime);
-            }
-            this.parent.enableFrame();
-            this.parent.exitFrame();
-            new EditEventWindow(this.mc, eventID, this.parent.getParent());
-            exitFrame();
+            save();
         }
         if (e.getSource() == cancelButton) {
             this.parent.enableFrame();
             exitFrame();
         }
+    }
+
+    private void setYearMonth() {
+        YearMonth choice = (YearMonth) yearMonthBox.getSelectedItem();
+        if (choice != null) {
+            year = choice.getYear();
+            month = choice.getMonthValue();
+            if (option.equalsIgnoreCase("Start")) {
+                dateBox.setModel(new DefaultComboBoxModel<>(MenuCreationHelper.dateList(choice, true)));
+            }
+            else {
+                dateBox.setModel(new DefaultComboBoxModel<>(MenuCreationHelper.dateList(choice, false)));
+            }
+        }
+    }
+
+    private void save() {
+        if (option.equalsIgnoreCase("Start")) {
+            if (dateBox.getSelectedItem() == null) {
+                this.ec.getEventManager().setStart(this.eventID, null);
+            }
+            else {
+                LocalDateTime startTime = getLocalDateTime();
+                this.ec.getEventManager().setStart(this.eventID, startTime);
+            }
+        }
+
+        else if (option.equalsIgnoreCase("End")) {
+            LocalDateTime endTime = getLocalDateTime();
+            this.ec.getEventManager().setEnd(eventID, endTime);
+        }
+        this.parent.enableFrame();
+        this.parent.exitFrame();
+        new EditEventWindow(this.mc, eventID, this.parent.getParent());
+        exitFrame();
     }
 
     private LocalDateTime getLocalDateTime() {

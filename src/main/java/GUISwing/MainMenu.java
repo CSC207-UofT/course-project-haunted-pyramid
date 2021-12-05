@@ -28,15 +28,15 @@ public class MainMenu implements ActionListener, MeltParentWindow {
     private final JButton buttonExit = new JButton("7. Exit");
 
 
-    public MainMenu(MainController mainController, UserController userController) {
-        this.frame = new MainFrameWithMenu(userController, this);
+    public MainMenu(MainController mainController) {
+        this.frame = new MainFrameWithMenu(mainController.getUserController(), this);
         this.mc = mainController;
         this.ec = mainController.getEventController();
-        this.uc = userController;
+        this.uc = mainController.getUserController();
         this.lc = new LoginController(this.uc);
         CalendarController calendarController = new CalendarController();
         JLabel welcomeMessage = new JLabel();
-        setUpWelcomeMessage(userController.getCurrentUsername(), welcomeMessage);
+        setUpWelcomeMessage(this.uc.getCurrentUsername(), welcomeMessage);
         frame.add(welcomeMessage);
         JPanel calendarPanel = setUpCalendarPanel();
         setUpDefaultCalendar(this.ec, calendarController, calendarPanel);
