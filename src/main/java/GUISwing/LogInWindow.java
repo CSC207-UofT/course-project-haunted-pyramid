@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 public class LogInWindow implements ActionListener {
     JFrame frame = new MainFrame();
     JTextField fldUserName = new JTextField();
-    JTextField fldPassword = new JTextField();
+    JPasswordField fldPassword = new JPasswordField();
     JLabel lblUserName = new JLabel("username: ");
     JLabel lblPassword = new JLabel("password: ");
     JButton btnLogIn = new JButton("Log In");
@@ -139,8 +139,8 @@ public class LogInWindow implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnLogIn){
-            loginController.login(fldUserName.getText(), fldPassword.getText());
+        if (e.getSource() == btnLogIn) {
+            loginController.login(fldUserName.getText(), String.valueOf(fldPassword.getPassword()));
             if (loginController.isLoggedIn()){
                 IOSerializable ioSerializable = new IOSerializable(true);
                 this.mainController.setEventController(new EventController(ioSerializable.hasSavedData(), ioSerializable,
@@ -152,7 +152,7 @@ public class LogInWindow implements ActionListener {
             lblLoginMessage.setText("Incorrect Username or Password - Please Try Again");
         }
         if(e.getSource() == btnSignUp){
-            loginController.signUp(fldUserName.getText(), fldPassword.getText());
+            loginController.signUp(fldUserName.getText(), String.valueOf(fldPassword.getPassword()));
             lblLoginMessage.setText("Successfully Signed up - Please Log In");
         }
         fldPassword.setText("");
