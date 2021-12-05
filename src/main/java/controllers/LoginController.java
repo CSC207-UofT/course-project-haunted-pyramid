@@ -75,8 +75,8 @@ public class LoginController {
      * Sign up a new account for the login verification.
      * Temporary for now since the presenter isn't fully implemented.
      */
-    public void signUp(String username, String password) {
-        this.userController.getUserManager().addNewUser(UUID.randomUUID(), username, username, password);
+    public void signUp(String name, String username, String password) {
+        this.userController.getUserManager().addNewUser(UUID.randomUUID(), name, username, password);
     }
 
     /**
