@@ -28,15 +28,15 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
     private JButton saveButton;
     private JButton deleteButton;
 
-    public EditEventWindow(MainController mc, EventController ec, UserController uc, UUID eventID, MeltParentWindow parent) {
+    public EditEventWindow(MainController mc, UUID eventID, MeltParentWindow parent) {
         GUIInfoProvider helper = new GUIInfoProvider();
         this.eventID = eventID;
         this.parent = parent;
         this.frame = new PopUpWindowFrame();
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.mc = mc;
-        this.ec = ec;
-        this.uc = uc;
+        this.ec = mc.getEventController();
+        this.uc = mc.getUserController();
         JPanel infoPanel = new JPanel();
         infoPanelSetUp(infoPanel);
         setUpLabels(eventID, helper, infoPanel);
@@ -127,12 +127,12 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == setUpStart) {
             this.frame.setEnabled(false);
-            new TimeSetUp(this.mc, this.ec, this.uc, this.eventID,this, "Start");
+            new TimeSetUp(this.mc, this.eventID,this, "Start");
         }
 
         if (e.getSource() == setUpEnd) {
             this.frame.setEnabled(false);
-            new TimeSetUp(this.mc, this.ec, this.uc, this.eventID,this, "End");
+            new TimeSetUp(this.mc, this.eventID,this, "End");
         }
 
         if (e.getSource() == workSessionButton) {
@@ -152,7 +152,7 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
             this.ec.getEventManager().setDescription(this.eventID, eventDescription.getText());
             this.parent.enableFrame();
             this.parent.exitFrame();
-            new MainMenu(this.mc, this.ec, this.uc);
+            new MainMenu(this.mc, this.uc);
             this.exitFrame();
         }
 
@@ -162,7 +162,7 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
                 this.ec.getEventManager().remove(eventID);
                 this.parent.enableFrame();
                 this.parent.exitFrame();
-                new MainMenu(this.mc, this.ec, this.uc);
+                new MainMenu(this.mc, this.uc);
                 exitFrame();
             }
         }
