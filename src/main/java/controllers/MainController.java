@@ -131,7 +131,8 @@ public class MainController {
         ICalendar iCalendar = new ICalendar(this.eventController.getEventManager());
         try {
             iCalendar.create(fileName);
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -172,11 +173,13 @@ public class MainController {
         // Variables below are only for the final serialization process
         IOSerializable tempIoSerializable = new IOSerializable(false);
         UserController tempUserController = new UserController(true, tempIoSerializable);
-        Map<UUID, List<Event>> map = this.eventController.getEventManager().getUuidEventsMap();
-        Map<UUID, Map<UUID, RecursiveEvent>> map1 = this.eventController.getEventManager().getUuidRecursiveEventsMap();
-        map.put(this.userController.getCurrentUser(), this.eventController.getEventManager().getAllEvents());
-        tempIoSerializable.eventsWriteToSerializable(map);
-        tempIoSerializable.recursiveEventsWriteToSerializable(map1);
+        if (this.eventController != null) {
+            Map<UUID, List<Event>> map = this.eventController.getEventManager().getUuidEventsMap();
+            Map<UUID, Map<UUID, RecursiveEvent>> map1 = this.eventController.getEventManager().getUuidRecursiveEventsMap();
+            map.put(this.userController.getCurrentUser(), this.eventController.getEventManager().getAllEvents());
+            tempIoSerializable.eventsWriteToSerializable(map);
+            tempIoSerializable.recursiveEventsWriteToSerializable(map1);
+        }
         tempIoSerializable.usersWriteToSerializable(combineTwoUserFileContents(this.userController.getUserManager(),
                 tempUserController.getUserManager()));
         tempIoSerializable.saveToDropbox();

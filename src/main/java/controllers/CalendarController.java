@@ -18,6 +18,7 @@ import usecases.calendar.CalendarManager;
 import usecases.events.EventManager;
 
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -268,7 +269,11 @@ public class CalendarController {
         System.out.println("The file will be created in the same folder as the project");
         System.out.println("Please type your file name (a-Z, 0-9, -, _, . are allowed");
         String fileName = getFileName();
-        iCalendar.create(fileName, option, yearMonthDate);
+        try {
+            iCalendar.create(fileName, option, yearMonthDate);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

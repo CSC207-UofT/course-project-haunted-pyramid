@@ -44,7 +44,7 @@ public class ICalendar {
      * @param option type of calendar to create
      * @param yearMonthDate list of year, month, date to consider
      */
-    public void create(String name, String option, List<Integer> yearMonthDate) {
+    public void create(String name, String option, List<Integer> yearMonthDate) throws IOException {
         try {
             File newFile = createFile(name);
             BufferedWriter bw = setUp(newFile);
@@ -60,7 +60,7 @@ public class ICalendar {
                     break;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException();
         }
     }
 
