@@ -171,9 +171,8 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
                     "Remove Event", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                 this.ec.getEventManager().remove(eventID);
                 this.parent.enableFrame();
-                this.parent.exitFrame();
-                new MainMenu(this.mc);
-                exitFrame();
+                this.parent.refresh();
+                this.exitFrame();
             }
         }
     }
