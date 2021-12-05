@@ -96,9 +96,10 @@ public class MainMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttonProfile) {
             //lead to profile setting page
-            mc.getLoginController().logout();
-            frame.dispose();
-            new LogInWindow();
+//            mc.getLoginController().logout();
+//            frame.dispose();
+//            new LogInWindow();
+            new SettingsMenu(mc.getUserController(), this);
         }
         else if (e.getSource() == buttonCalendar) {
             //lead to calendar page
