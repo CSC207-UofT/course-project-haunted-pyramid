@@ -152,7 +152,7 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
             this.ec.getEventManager().setDescription(this.eventID, eventDescription.getText());
             this.parent.enableFrame();
             this.parent.exitFrame();
-            new MainMenu(this.mc, this.uc);
+            new MainMenu(this.mc);
             this.exitFrame();
         }
 
@@ -162,7 +162,7 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
                 this.ec.getEventManager().remove(eventID);
                 this.parent.enableFrame();
                 this.parent.exitFrame();
-                new MainMenu(this.mc, this.uc);
+                new MainMenu(this.mc);
                 exitFrame();
             }
         }
