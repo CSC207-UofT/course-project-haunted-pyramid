@@ -152,8 +152,7 @@ public class LogInWindow implements ActionListener {
             lblLoginMessage.setText("Incorrect Username or Password - Please Try Again");
         }
         if(e.getSource() == btnSignUp){
-            loginController.signUp(fldUserName.getText(), String.valueOf(fldPassword.getPassword()));
-            lblLoginMessage.setText("Successfully Signed up - Please Log In");
+            new SignUpPage(this.loginController);
         }
         fldPassword.setText("");
         fldUserName.setText("");
