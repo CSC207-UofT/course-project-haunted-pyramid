@@ -21,24 +21,37 @@ public class MenuCreationHelper {
         return new JComboBox<>(timeList);
     }
 
-    public static JComboBox<Integer> dateJComboBox(YearMonth month){
+    public static JComboBox<Integer> dateJComboBox(YearMonth month, boolean canBeNull){
         int days = month.lengthOfMonth();
-        Integer[] daysList = new Integer[days];
-        for (int index = 0; index < days; index += 1){
-            daysList[index] = index + 1;
+        Integer[] daysList;
+        if (canBeNull){
+            days += 1;
+            daysList = new Integer[days];
+            for (int index = 0; index < days - 1; index += 1){
+                daysList[index] = index + 1;
+            }
+            daysList[days-1] = null;
+        } else {
+            daysList = new Integer[days];
+            for (int index = 0; index < days - 1; index += 1){
+                daysList[index] = index + 1;
+            }
         }
+
         return new JComboBox<>(daysList);
     }
 
     public static JComboBox<YearMonth> monthComboBox(){
         ArrayList<YearMonth> months = new ArrayList<>();
-        months.add(YearMonth.of(LocalDate.now().getYear(), LocalDate.now().getMonth()));
+
         months.add(YearMonth.of(LocalDate.now().minusMonths(3).getYear(), LocalDate.now().minusMonths(3).getMonth()));
         months.add(YearMonth.of(LocalDate.now().minusMonths(2).getYear(), LocalDate.now().minusMonths(2).getMonth()));
         months.add(YearMonth.of(LocalDate.now().minusMonths(1).getYear(), LocalDate.now().minusMonths(1).getMonth()));
-        months.add(YearMonth.of(LocalDate.now().plusMonths(3).getYear(), LocalDate.now().plusMonths(3).getMonth()));
-        months.add(YearMonth.of(LocalDate.now().plusMonths(2).getYear(), LocalDate.now().plusMonths(2).getMonth()));
+        months.add(YearMonth.of(LocalDate.now().getYear(), LocalDate.now().getMonth()));
         months.add(YearMonth.of(LocalDate.now().plusMonths(1).getYear(), LocalDate.now().plusMonths(1).getMonth()));
+        months.add(YearMonth.of(LocalDate.now().plusMonths(2).getYear(), LocalDate.now().plusMonths(2).getMonth()));
+        months.add(YearMonth.of(LocalDate.now().plusMonths(3).getYear(), LocalDate.now().plusMonths(3).getMonth()));
+
         return new JComboBox<>(months.toArray(new YearMonth[7]));
     }
 }

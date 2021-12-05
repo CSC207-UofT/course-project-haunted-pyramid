@@ -247,18 +247,19 @@ public class EventManager {
             if (event.getStartTime().toLocalDate().isBefore(event.getEndTime().toLocalDate())) {
                 splitByDay.add(new Event(event.getID(), event.getName(), event.getStartTime(),
                         LocalDateTime.of(event.getStartTime().toLocalDate(), LocalTime.of(23, 59))));
-                for (LocalDate nextDay = event.getStartTime().plusDays(1L).toLocalDate(); !event.getEndTime().
-                        toLocalDate().isBefore(nextDay); nextDay = nextDay.plusDays(1)) {
+                for (LocalDate nextDay = event.getStartTime().plusDays(1L).toLocalDate(); event.getEndTime().
+                        toLocalDate().isAfter(nextDay); nextDay = nextDay.plusDays(1)) {
                     splitByDay.add(new Event(event.getID(), event.getName(), LocalDateTime.of(nextDay, LocalTime.of(0, 0)),
                             LocalDateTime.of(nextDay, LocalTime.of(23, 59))));
-                    nextDay = nextDay.plusDays(1L);
                 }
                 splitByDay.add(new Event(event.getID(), event.getName(), LocalDateTime.of(event.getEndTime().toLocalDate(),
                         LocalTime.of(0, 0)), event.getEndTime()));
                 return splitByDay;
             }
         }
-        return new ArrayList<>(List.of(new Event[]{event}));
+        ArrayList<Event> thins =new ArrayList<>(List.of(new Event[]{event}));
+        System.out.println(thins);
+        return thins;
     }
 
     public RepeatedEventManager getRepeatedEventManager() {

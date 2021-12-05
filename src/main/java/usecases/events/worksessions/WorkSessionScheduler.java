@@ -90,15 +90,12 @@ public class WorkSessionScheduler {
     public void autoSchedule(UUID deadline, EventManager eventManager) {
         long totalHours = eventManager.getTotalHoursNeeded(deadline)- (long)
                 (eventManager.totalHours(eventManager.getPastSessions(deadline)));
-        if (eventManager.getStartWorking(deadline).isBefore(LocalDate.now())){
-            eventManager.changeStartWorking(deadline, LocalDate.now().plusDays(1));
-        }
+
         eventManager.setWorkSessions(deadline, eventManager.getPastSessions(deadline));
 
         while (totalHours > 0) {
             //Step one: determine the length the work session should be by default
             Long length = this.getLength(deadline, totalHours, eventManager);
-
             //step two: get a list of eligible times the event could take place according to
             // timeGetters analysis of scheduleGetters list of interfering events
             List<LocalDateTime> times = this.timeGetter.getStartTimes(deadline, eventManager, length);

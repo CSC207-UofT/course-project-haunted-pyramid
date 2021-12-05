@@ -21,7 +21,7 @@ public class FreeTimeWindow implements ActionListener {
 
     public FreeTimeWindow(UserController userController) {
         this.userController = userController;
-        frame = new MainFrame();
+        frame = new PopUpWindowFrame();
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.PAGE_AXIS));
         frame.setSize(500, 500);
         slotsScrollPain = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);

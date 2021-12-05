@@ -345,7 +345,8 @@ public class EventController {
         this.workSessionController.edit(ID, eventManager);
     }
 
-    public void update(UserPreferences userPreferences){
+    public boolean update(UserPreferences userPreferences){
         this.workSessionController.refresh(userPreferences, eventManager);
+        return true;
     }
 }

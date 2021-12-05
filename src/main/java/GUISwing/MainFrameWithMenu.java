@@ -1,15 +1,17 @@
 package GUISwing;
 
-import GUISwing.newSubMenus.EventMenu;
 import controllers.MainController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class MainFrameWithMenu extends MainFrame{
     MainController mainController;
-    public MainFrameWithMenu(MainController mainController){
+    ActionListener parent;
+    public MainFrameWithMenu(MainController mainController, ActionListener parent){
         this.mainController = mainController;
+        this.parent = parent;
         JMenuBar menu = setUpMenu();
         setUpMenus(menu);
         this.setVisible(true);
@@ -25,8 +27,7 @@ public class MainFrameWithMenu extends MainFrame{
     }
 
     private void setUpMenus(JMenuBar menuBar){
-        menuBar.add(new SettingsMenu(mainController.getUserController()));
-        menuBar.add(new EventMenu(mainController.getEventController()));
+        menuBar.add(new SettingsMenu(mainController.getUserController(), parent));
     }
 
 }
