@@ -48,6 +48,46 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 - And much more minor bug fixes and extensions
 
 
+### Brief Summary of what each member has been working on since phase 1
+
+#### Seo Won Yi
+
+After phase 1, focused on decoupling Calendar and Event classes by making calendar classes contain map of Events' UUID instead of the objects directly.
+
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/191
+
+  (Refactoring so that instead of calendar possessing Event object, it now possesses UUID of events)
+
+After finishing the refactoring task, focused on implementing file export function which would allow users to export the current saved schedule information in iCalendar format.
+
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/218
+
+  (iCal export development + Java docs)
+
+Built main menu GUI that would act as a core part of GUI version of our program.
+
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/234
+
+  (GUI for Main Menu)
+
+Implemented iCal export feature to the GUI version of our program.
+
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/241
+
+  (ICal export in GUI)
+
+Modified the EditEventWindow for its performance.
+
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/248
+
+  (modification in EditEvent GUI)
+
+Built GUI windows and implement functionalities necessary for calendar selection screen which now enables users to select the type of calendars.
+
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/267
+
+  (GUI for Calendar Selection)
+
 #### Sebin:
 https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/186
 
