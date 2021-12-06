@@ -130,7 +130,6 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             frame.dispose();
         }
         else {
-            this.ec.updatePreferences(uc.getPreferences());
             this.refresh();
         }
     }

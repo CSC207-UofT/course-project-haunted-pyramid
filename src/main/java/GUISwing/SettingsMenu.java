@@ -39,17 +39,14 @@ public class SettingsMenu extends JMenu implements ActionListener {
         morningPerson.setSelected(userController.getUserManager().getPreferences(userController.getCurrentUser()).getMorningPerson());
         this.add(morningPerson);
         morningPerson.setActionCommand("morning");
-        morningPerson.addActionListener((ActionListener) parent);
         morningPerson.addActionListener(this);
 
         this.addSeparator();
         cram = new JCheckBoxMenuItem("cram");
         cram.setSelected(userController.getUserManager().getPreferences(userController.getCurrentUser()).getCram());
-        cram.addActionListener((ActionListener) parent);
         cram.addActionListener(this);
         procrastinate = new JCheckBoxMenuItem("procrastinate");
         procrastinate.setSelected(userController.getCurrentProcrastinate());
-        procrastinate.addActionListener((ActionListener) parent);
         procrastinate.addActionListener(this);
         this.add(cram);
         this.add(procrastinate);
@@ -62,7 +59,6 @@ public class SettingsMenu extends JMenu implements ActionListener {
 
             spacing.add(button);
             button.setActionCommand(button.getText());
-            button.addActionListener((ActionListener) parent);
             button.addActionListener(this);
         }
         this.add(spacing);
@@ -74,9 +70,9 @@ public class SettingsMenu extends JMenu implements ActionListener {
         JRadioButtonMenuItem medium = new JRadioButtonMenuItem("medium");
         JRadioButtonMenuItem large = new JRadioButtonMenuItem("large");
         spacings.add(none);
-        spacings.add(small);
+//        spacings.add(small);
         spacings.add(medium);
-        spacings.add(large);
+//        spacings.add(large);
         switch (spacing) {
             case "none":
                 spacings.setSelected(none.getModel(), true);
@@ -113,6 +109,7 @@ public class SettingsMenu extends JMenu implements ActionListener {
         } else{
             userController.setSessionSpacing(e.getActionCommand());
         }
+         parent.refresh();
     }
 }
 
