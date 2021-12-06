@@ -57,6 +57,10 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 #### Malik Lahlou
 
 #### Shahzada Muhammad Shameel
+- Worked on improving the runtime of worksession scheduler. The main problem was being caused by a method freeSlots being used. Changed implementation of method.
+- Refactored code in Event Manager
+- Implemented GUI for profile settings. Once button for profile settings is clicked, a pop up window appears showing different settings which can be changed. 
+- Connected the buttons on the Profile settings window to the backend of the program.
 
 #### Sebin Im
 
