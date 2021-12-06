@@ -1,9 +1,11 @@
 package GUISwing;
 
 import controllers.UserController;
+import entities.Event;
 import interfaces.MeltParentWindow;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
@@ -63,6 +65,7 @@ public class SettingsMenu extends JMenu implements ActionListener {
         }
         this.add(spacing);
     }
+
 
     private void getCramButton(String spacing, ButtonGroup spacings){
         JRadioButtonMenuItem none = new JRadioButtonMenuItem("none");
