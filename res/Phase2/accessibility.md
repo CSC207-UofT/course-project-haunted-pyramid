@@ -1,18 +1,35 @@
-For each Principle of Universal Design, write 2-5 sentences or point form notes explaining which features your program 
-adhere to that principle. If you do not have any such features you can either:
-
-(a) Describe features that you could implement in the future that would adhere to principle or
-
-(b) Explain why the principle does not apply to a program like yours.
-
 1. Equitable Use
 - 
 2. Flexibility in use
 - Future: implement dark mode or high contrast mode to allow users to change the display
-- 
+- Right now, users can change their settings for how they like events to be automatically scheduled - they can be a morning person 
+or evening person, they can choose to procrastinate or not, cram, have spacing between events, etc. They can also decide when
+in the day they have free time (lunch, dinner, sleeping, etc)
+
 3. Simple and Intuitive Use
-4. Tolerance for Error
+- We use combo boxes for all dates and times, and large buttons with options displayed on them simply. Every process
+follows clear steps to complete for the user, such as adding an event
+- Event title and time are labled on every event when selecting an event to edit
+- In the future, will change event selection so that event buttons are added into the calendar as opposed to a string calendar
+that can't be interacted with so that users can directly edit events by locating them on the calendar
+- In the settings menu, there are a variety of options that can be quickly toggled such as procrastinate - this may not be 
+obvious to a user, and clarification / a popup may be created to help guide a user through setting their autoscheduling
+preferences in the future
+
+4. Perceptible Information
+- It is currently difficult to see and read the words or figure out the lengths of events
+- in the future, we will implement button sizes for events that are proportional to their length
+- Everything that has a time is always in chronological order
+- conflicts between events are displayed clearly below to avoid confusion
+
+5. Tolerance for Error
+- in creating or editing an event, there is no way for a user invalid information, as everything is controlled in combo boxes.
+- it is the same in work sessions - everything is controlled in combo boxes with all legal options, and every combination is allowed
+- simple mistakes such as a start time after an end time are corrected automatically
+- confirmation is required to delete an event, since it is not recoverable
+
 5. Low Physical Effort
+
 6. Size and Space for Approach and Use
 
 
