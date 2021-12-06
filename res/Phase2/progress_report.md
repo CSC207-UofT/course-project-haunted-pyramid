@@ -58,4 +58,13 @@ https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/186
 Taite:
 https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/210#issue-1068833602
 
+Shahzada Muhammad Shameel:
+This pull request was for the initial development on CalendarManager, which is a central part of the program.
+https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/4
+
+This pull request was for initial implementation of profile settings GUI. The GUI was an important part for phase 2.
+https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/247/files
+
+
+
 
