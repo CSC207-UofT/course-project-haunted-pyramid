@@ -42,10 +42,10 @@ public class IOSerializable {
     private static final String ACCESS_TOKEN = "EfBUX9G7zxkAAAAAAAAAAaXr-kGtiOL1cwBhwIe7BcI0hvt-uH5LBsEh4FXJ31Ry";
 
     // A public Dropbox link where the serialized files are stored
-    private static final String eventsURL = "https://www.dropbox.com/s/cdqrwusinpk2dlt/events.ser?dl=1";
-    private static final String usersURL = "https://www.dropbox.com/s/mbzcb082f80nqcb/users.ser?dl=1";
+    private static final String eventsURL = "https://www.dropbox.com/s/orhivcw1pp97uok/events.ser?dl=1";
+    private static final String usersURL = "https://www.dropbox.com/s/eslr7ub5zbozqhu/users.ser?dl=1";
 
-    private static final String recursiveEventsURL = "https://www.dropbox.com/s/gy8e7nspio2gdwo/recursive_events.ser?dl=1";
+    private static final String recursiveEventsURL = "https://www.dropbox.com/s/4v035a67unelj75/recursive_events.ser?dl=1";
 
     /**
      * Initialize an instance of IOSerializable.
