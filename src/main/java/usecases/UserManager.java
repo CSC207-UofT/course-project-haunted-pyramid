@@ -170,4 +170,11 @@ public class UserManager {
     public void toggleMorningPerson(UUID user) {
         this.getPreferences(user).setMorningPerson(!this.getPreferences(user).getMorningPerson());
     }
+
+    public void sendSuggestion(UUID currentUser, UUID categoryID, UUID adminID, UUID eventID){
+        this.userInfo.get(currentUser);
+    }
+
+
+
 }
