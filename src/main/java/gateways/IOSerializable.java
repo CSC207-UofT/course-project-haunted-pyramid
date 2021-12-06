@@ -43,7 +43,7 @@ public class IOSerializable {
 
     // A public Dropbox link where the serialized files are stored
     private static final String eventsURL = "https://www.dropbox.com/s/cdqrwusinpk2dlt/events.ser?dl=1";
-    private static final String usersURL = "https://www.dropbox.com/s/7mh8loi10oy9gfr/users.ser?dl=1";
+    private static final String usersURL = "https://www.dropbox.com/s/mbzcb082f80nqcb/users.ser?dl=1";
 
     private static final String recursiveEventsURL = "https://www.dropbox.com/s/gy8e7nspio2gdwo/recursive_events.ser?dl=1";
 
