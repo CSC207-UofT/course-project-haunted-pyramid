@@ -144,6 +144,7 @@ public class RepeatedEventManager implements EventListObserver {
 
     public Map<LocalDateTime, List<Event>> eventListToMap(List<Event> events, int cycleLength){
         Map<LocalDateTime, List<Event>> datesAndEvents = new HashMap<>();
+        try{
         int endLoop = events.size();
         int i = 1;
         while(cycleLength*i < endLoop){
@@ -153,6 +154,10 @@ public class RepeatedEventManager implements EventListObserver {
         }
         datesAndEvents.put(startTimeGetter(events.get(cycleLength*(i-1))), events.subList(cycleLength*(i-1), endLoop));
         return datesAndEvents;
+        }
+        catch (IndexOutOfBoundsException e){
+            return datesAndEvents;
+        }
     }
 
 
