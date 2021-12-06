@@ -47,21 +47,6 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 - General program beautification through windows
 - And much more minor bug fixes and extensions
 
-### Significant Pull Requests
-
-#### Seo Won Yi:
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/191
- (Refactoring so that instead of calendar possessing Event object, it now possesses UUID of events)
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/218 
- (ICal export development + Java docs)
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/234 
- (GUI for Main Menu)
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/241 
- (ICal export in GUI)
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/248 
- (modification in EditEvent GUI)
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/267 
- (GUI for Calendar Selection)
 
 #### Sebin:
 https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/186
