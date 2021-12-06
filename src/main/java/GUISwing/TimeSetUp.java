@@ -123,7 +123,7 @@ public class TimeSetUp implements ActionListener {
     private void configureBoxPanel(JPanel comboBoxPanel) {
         this.frame.add(comboBoxPanel);
         comboBoxPanel.setLayout(new GridLayout(1, 3));
-        comboBoxPanel.setBounds(0, Constants.POPUP_HEIGHT / 3, Constants.POPUP_WIDTH - 17, Constants.POPUP_HEIGHT / 5);
+        comboBoxPanel.setBounds(0, 120, Constants.POPUP_WIDTH - 17, Constants.POPUP_HEIGHT / 7);
     }
 
     private void configureInfoPanel(JPanel infoPanel) {
@@ -196,7 +196,8 @@ public class TimeSetUp implements ActionListener {
     private void save() {
         if (option.equalsIgnoreCase("Start")) {
             if (dateBox.getSelectedItem() == null) {
-                this.ec.changeStartDate(this.eventID, null);
+                this.ec.changeStartDate(this.eventID, this.ec.getEnd(this.eventID).toLocalDate());
+                this.ec.changeStartTime(this.eventID, this.ec.getEnd(this.eventID).toLocalTime());
             }
             else {
                 LocalDateTime startTime = getLocalDateTime();

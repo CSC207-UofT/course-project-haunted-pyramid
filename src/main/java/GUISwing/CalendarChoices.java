@@ -2,24 +2,23 @@ package GUISwing;
 
 import controllers.MainController;
 import helpers.Constants;
+import interfaces.MeltParentWindow;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CalendarChoices implements ActionListener {
+public class CalendarChoices implements ActionListener, MeltParentWindow {
     private final JFrame frame;
-    private final MainController mc;
-    private MainMenu parent;
-    private JButton buttonMonthly = new JButton("View Calendar By Monthly");
-    private JButton buttonWeekly = new JButton("View Calendar By Weekly");
-    private JButton buttonDaily = new JButton("View Calendar By Daily");
-    private JButton buttonReturn = new JButton("Return to the Main Menu");
+    private final MainMenu parent;
+    private final JButton buttonMonthly = new JButton("View Calendar By Monthly");
+    private final JButton buttonWeekly = new JButton("View Calendar By Weekly");
+    private final JButton buttonDaily = new JButton("View Calendar By Daily");
+    private final JButton buttonReturn = new JButton("Return to the Main Menu");
 
-    public CalendarChoices(MainController mainController, MainMenu parent) {
+    public CalendarChoices (MainMenu parent) {
         this.frame = new PopUpWindowFrame();
-        this.mc = mainController;
         this.frame.setLayout(new BorderLayout());
         this.parent = parent;
         JPanel buttonPanel = new JPanel();
@@ -47,20 +46,43 @@ public class CalendarChoices implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttonMonthly) {
-
+            this.frame.setEnabled(false);
+            new CalendarDateSelection("Monthly", this, this.parent);
         }
 
         if (e.getSource() == buttonWeekly) {
-
+            this.frame.setEnabled(false);
+            new CalendarDateSelection("Weekly", this, this.parent);
         }
 
         if (e.getSource() == buttonDaily) {
-
+            this.frame.setEnabled(false);
+            new CalendarDateSelection("Daily", this, this.parent);
         }
-
         if (e.getSource() == buttonReturn) {
             parent.refresh();
             this.frame.dispose();
         }
+    }
+
+    @Override
+    public void refresh() {
+        this.frame.revalidate();
+        this.frame.repaint();
+    }
+
+    @Override
+    public void enableFrame() {
+        this.frame.setEnabled(true);
+    }
+
+    @Override
+    public void exitFrame() {
+        this.frame.dispose();
+    }
+
+    @Override
+    public MeltParentWindow getParent() {
+        return this.parent;
     }
 }
