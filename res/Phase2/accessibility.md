@@ -1,4 +1,6 @@
-1. Equitable Use
+# Accessibility Report
+
+2. Equitable Use
 - 
 2. Flexibility in use
 - Future: implement dark mode or high contrast mode to allow users to change the display
