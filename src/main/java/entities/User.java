@@ -114,11 +114,13 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public void addToSuggestions(Event event, Category category, User user){
-        user.getSuggestions().get(category.getId()).add(event);
+    public void addToSuggestions(Event event, Category category){
+        this.getSuggestions().get(category.getId()).add(event);
     }
 
-
+    public Map<UUID, Category> getCategories() {
+        return categories;
+    }
 
     public void setEvents(ArrayList<Event> events) {
         this.events = events;

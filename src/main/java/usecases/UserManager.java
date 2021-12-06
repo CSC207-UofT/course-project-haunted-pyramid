@@ -1,5 +1,6 @@
 package usecases;
 
+import entities.Event;
 import entities.User;
 import entities.UserPreferences;
 
@@ -171,8 +172,12 @@ public class UserManager {
         this.getPreferences(user).setMorningPerson(!this.getPreferences(user).getMorningPerson());
     }
 
-    public void sendSuggestion(UUID currentUser, UUID categoryID, UUID adminID, UUID eventID){
-        this.userInfo.get(currentUser);
+    public void sendSuggestion(UUID categoryID, UUID adminID, Event event){
+        User currentUser = this.userInfo.get(adminID);
+        currentUser.addToSuggestions(event, currentUser.getCategories().get(categoryID));
+    }
+
+    public void integrateSuggestions(User currentUser, boolean decision, UUID categoryID, Event event){
     }
 
 
