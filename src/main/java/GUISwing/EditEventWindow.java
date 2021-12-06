@@ -89,9 +89,14 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         eventName = new JTextField(ec.getName(this.eventID));
         eventName.setBounds(30, 17, 200, 20);
         eventDescription = new JTextArea(this.ec.getDescription(this.eventID));
-        eventDescription.setBounds(30, 47, 200, 50);
+        //eventDescription.setBounds(30, 47, 200, 50);
+        eventDescription.setWrapStyleWord(true);
+        eventDescription.setLineWrap(true);
+        JScrollPane descriptionPane = new JScrollPane(eventDescription, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        descriptionPane.setBounds(30, 47, 200, 50);
         panel.add(eventName);
-        panel.add(eventDescription);
+        this.frame.add(descriptionPane);
     }
 
     private void setUpButtons() {
