@@ -50,18 +50,18 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 ### Significant Pull Requests
 
 #### Seo Won Yi:
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/d65a0ebd0586cbb47c0d803d56f3bed0b0923de3 
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/191
  (Refactoring so that instead of calendar possessing Event object, it now possesses UUID of events)
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/e1b656458602525beeb73d4ab8fab91c7cf9b85a 
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/218 
  (ICal export development + Java docs)
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/b0ca57ae98a57f94b9f8170f3bf32abafe3934d2 
- (GUI for Calendar Selection)
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/8fffcf267d6d4d710f8302f7241046b0c4b82285 
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/234 
  (GUI for Main Menu)
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/95847b53a79139b03bbbd6462bf5ab2847d93bdc 
- (modification in EditEvent GUI)
-- https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/2fca9e883fa8565ea0cf0435eed1cfbbb192b809 
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/241 
  (ICal export in GUI)
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/248 
+ (modification in EditEvent GUI)
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/267 
+ (GUI for Calendar Selection)
 
 #### Sebin:
 https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/186
