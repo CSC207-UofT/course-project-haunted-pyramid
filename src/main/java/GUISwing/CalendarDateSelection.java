@@ -97,9 +97,9 @@ public class CalendarDateSelection  implements ActionListener {
     }
 
     private void nonMonthlyCaseComboBox(JPanel dateSelectionPanel) {
-        dateSelectionPanel.setBounds(100, 110, 300, 30);
-        dateSelectionPanel.setLayout(new GridLayout(1, 2));
         dateSelectionPanel.add(yearMonthBox);
+        dateSelectionPanel.setLayout(new GridLayout(1, 2));
+        dateSelectionPanel.setBounds(0, 100, Constants.POPUP_WIDTH - 17, Constants.POPUP_HEIGHT / 7);
         dateBox = new JComboBox<>(helper.dateList(this.yearMonthBox.getItemAt(3), false));
         this.date = dateBox.getItemAt(0);
         dateSelectionPanel.add(dateBox);
