@@ -34,44 +34,24 @@ public class CalendarDateSelection  implements ActionListener {
         this.save = new JButton("Save");
         this.cancel = new JButton("Cancel");
         JPanel textPanel = new JPanel();
-        JLabel instruction = new JLabel("Please select the date information to view Calendar");
-        instruction.setHorizontalAlignment(JLabel.CENTER);
-        instruction.setHorizontalTextPosition(JLabel.CENTER);
-        instruction.setFont(new Font("Verdana", Font.BOLD, 14));
-        textPanel.setBackground(Constants.WINDOW_COLOR);
-        textPanel.setBounds(0, 50, 500, 100);
-        textPanel.add(instruction);
+        writeInstruction(textPanel);
 
         yearMonthBox = this.helper.monthComboBox();
         yearMonthBox.setSelectedIndex(3);
         JPanel dateSelectionPanel = new JPanel();
         if (this.option.equalsIgnoreCase("Monthly")) {
-            dateSelectionPanel.setBounds(0, 110, 500, 50);
-            dateSelectionPanel.setLayout(null);
-            dateSelectionPanel.setBackground(Constants.WINDOW_COLOR);
-            yearMonthBox.setBounds(150, 0, 200, 50);
-            dateSelectionPanel.add(yearMonthBox);
+            monthlyCaseComboBox(dateSelectionPanel);
         }
         else {
-            dateSelectionPanel.setBounds(100, 110, 300, 30);
-            dateSelectionPanel.setLayout(new GridLayout(1, 2));
-            dateSelectionPanel.add(yearMonthBox);
-            dateBox = new JComboBox<>(helper.dateList(this.yearMonthBox.getItemAt(3), false));
-            this.date = dateBox.getItemAt(0);
-            dateSelectionPanel.add(dateBox);
-            dateBox.addActionListener(this);
+            nonMonthlyCaseComboBox(dateSelectionPanel);
         }
         this.year = yearMonthBox.getItemAt(3).getYear();
         this.month = yearMonthBox.getItemAt(3).getMonthValue();
 
-        JPanel optionPanel = new JPanel();
-        optionPanel.setBackground(Constants.WINDOW_COLOR);
-        optionPanel.setBounds(0, 170, 500, 70);
+        JPanel optionPanel = optionPanelSetUp();
         optionPanel.add(save);
         optionPanel.add(cancel);
-        yearMonthBox.addActionListener(this);
-        save.addActionListener(this);
-        cancel.addActionListener(this);
+        enableButtons();
         this.frame.add(dateSelectionPanel);
         this.frame.add(textPanel);
         this.frame.add(optionPanel);
@@ -83,6 +63,47 @@ public class CalendarDateSelection  implements ActionListener {
             }
         });
         this.frame.setVisible(true);
+    }
+
+    private void enableButtons() {
+        yearMonthBox.addActionListener(this);
+        save.addActionListener(this);
+        cancel.addActionListener(this);
+    }
+
+    private JPanel optionPanelSetUp() {
+        JPanel optionPanel = new JPanel();
+        optionPanel.setBackground(Constants.WINDOW_COLOR);
+        optionPanel.setBounds(0, 170, 500, 70);
+        return optionPanel;
+    }
+
+    private void writeInstruction(JPanel textPanel) {
+        JLabel instruction = new JLabel("Please select the date information to view Calendar");
+        instruction.setHorizontalAlignment(JLabel.CENTER);
+        instruction.setHorizontalTextPosition(JLabel.CENTER);
+        instruction.setFont(new Font("Verdana", Font.BOLD, 14));
+        textPanel.setBackground(Constants.WINDOW_COLOR);
+        textPanel.setBounds(0, 50, 500, 100);
+        textPanel.add(instruction);
+    }
+
+    private void monthlyCaseComboBox(JPanel dateSelectionPanel) {
+        dateSelectionPanel.setBounds(0, 110, 500, 50);
+        dateSelectionPanel.setLayout(null);
+        dateSelectionPanel.setBackground(Constants.WINDOW_COLOR);
+        yearMonthBox.setBounds(150, 0, 200, 50);
+        dateSelectionPanel.add(yearMonthBox);
+    }
+
+    private void nonMonthlyCaseComboBox(JPanel dateSelectionPanel) {
+        dateSelectionPanel.setBounds(100, 110, 300, 30);
+        dateSelectionPanel.setLayout(new GridLayout(1, 2));
+        dateSelectionPanel.add(yearMonthBox);
+        dateBox = new JComboBox<>(helper.dateList(this.yearMonthBox.getItemAt(3), false));
+        this.date = dateBox.getItemAt(0);
+        dateSelectionPanel.add(dateBox);
+        dateBox.addActionListener(this);
     }
 
     public void exitFrame() {
@@ -116,26 +137,30 @@ public class CalendarDateSelection  implements ActionListener {
         }
 
         if (e.getSource() == save) {
-            if (option.equalsIgnoreCase("Monthly")) {
-                this.grandParent.setDateInfo(LocalDate.of(this.year, this.month, 1));
-                this.grandParent.setCalendarMode("Monthly");
-            }
-            else if (option.equalsIgnoreCase("Weekly")) {
-                this.grandParent.setDateInfo(LocalDate.of(this.year, this.month, this.date));
-                this.grandParent.setCalendarMode("Weekly");
-            }
-            else if (option.equalsIgnoreCase("Daily")) {
-                this.grandParent.setDateInfo(LocalDate.of(this.year, this.month, this.date));
-                this.grandParent.setCalendarMode("Daily");
-            }
-            this.parent.enableFrame();
-            this.grandParent.refresh();
-            this.parent.exitFrame();
-            exitFrame();
+            saveCalendar();
         }
         if (e.getSource() == cancel) {
             this.parent.enableFrame();
             exitFrame();
         }
+    }
+
+    private void saveCalendar() {
+        if (option.equalsIgnoreCase("Monthly")) {
+            this.grandParent.setDateInfo(LocalDate.of(this.year, this.month, 1));
+            this.grandParent.setCalendarMode("Monthly");
+        }
+        else if (option.equalsIgnoreCase("Weekly")) {
+            this.grandParent.setDateInfo(LocalDate.of(this.year, this.month, this.date));
+            this.grandParent.setCalendarMode("Weekly");
+        }
+        else if (option.equalsIgnoreCase("Daily")) {
+            this.grandParent.setDateInfo(LocalDate.of(this.year, this.month, this.date));
+            this.grandParent.setCalendarMode("Daily");
+        }
+        this.parent.enableFrame();
+        this.grandParent.refresh();
+        this.parent.exitFrame();
+        exitFrame();
     }
 }
