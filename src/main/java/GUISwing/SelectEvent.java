@@ -1,8 +1,6 @@
 package GUISwing;
 
-import controllers.EventController;
 import controllers.MainController;
-import controllers.UserController;
 import entities.Event;
 import interfaces.MeltParentWindow;
 
@@ -12,10 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.UUID;
 
-public class SelectEvent extends PopUpWindowFrame implements ActionListener{
+public class SelectEvent extends PopUpWindowFrame implements ActionListener {
+
     MainController mc;
     MeltParentWindow parent;
-    public SelectEvent(MainController mc, MeltParentWindow parent){
+
+    public SelectEvent (MainController mc, MeltParentWindow parent) {
         this.parent = parent;
         this.mc = mc;
         JScrollPane eventScroller = displayEvents();
