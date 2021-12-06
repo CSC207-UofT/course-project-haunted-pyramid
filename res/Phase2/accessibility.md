@@ -8,6 +8,9 @@
 - Future: implement dark mode or high contrast mode to allow users to change the display
 
 
+- Our current GUI program only allows time set up in hours without any minute configurations. This will be improved in the future for more flexibility.
+
+
 - Right now, users can change their settings for how they like events to be automatically scheduled - they can be a morning person or evening person, they can choose to procrastinate or not, cram, have spacing between events, etc. They can also decide when in the day they have free time (lunch, dinner, sleeping, etc.). The users can also choose to view different kinds of calendars for their schedules. Currently, monthly, weekly and daily calendars are available for the view.
 
 
