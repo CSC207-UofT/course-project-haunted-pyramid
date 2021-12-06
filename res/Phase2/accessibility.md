@@ -1,6 +1,7 @@
 # Accessibility Report
 
 2. Equitable Use
+- text to speach 
 - 
 2. Flexibility in use
 - Future: implement dark mode or high contrast mode to allow users to change the display
@@ -17,6 +18,9 @@ that can't be interacted with so that users can directly edit events by locating
 - In the settings menu, there are a variety of options that can be quickly toggled such as procrastinate - this may not be 
 obvious to a user, and clarification / a popup may be created to help guide a user through setting their autoscheduling
 preferences in the future
+- We will add more intuitive basic options for recursive settings on events for ease of use, 
+but will keep our more flexible recursive UI for users who want to be able to more fully
+customize their schedule
 
 4. Perceptible Information
 - It is currently difficult to see and read the words or figure out the lengths of events
