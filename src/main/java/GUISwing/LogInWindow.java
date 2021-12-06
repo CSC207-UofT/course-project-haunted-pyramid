@@ -140,6 +140,12 @@ public class LogInWindow implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnLogIn) {
+            if (fldUserName.getText().equals("") || fldPassword.getPassword().length == 0) {
+                lblLoginMessage.setText("Please make sure all the fields are filled in.");
+                fldPassword.setText("");
+                fldUserName.setText("");
+                return;
+            }
             loginController.login(fldUserName.getText(), String.valueOf(fldPassword.getPassword()));
             if (loginController.isLoggedIn()){
                 IOSerializable ioSerializable = new IOSerializable(true);
