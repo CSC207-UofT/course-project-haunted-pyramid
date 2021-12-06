@@ -2,7 +2,6 @@ package GUISwing;
 
 import controllers.EventController;
 import controllers.MainController;
-import controllers.UserController;
 import helpers.Constants;
 import helpers.GUIInfoProvider;
 import interfaces.MeltParentWindow;
@@ -14,7 +13,7 @@ import java.util.UUID;
 
 
 public class EditEventWindow implements ActionListener, MeltParentWindow {
-    private GUIInfoProvider helper;
+    private final GUIInfoProvider helper;
     private final UUID eventID;
     private final MeltParentWindow parent;
     private final JFrame frame;
@@ -22,7 +21,7 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
     private final EventController ec;
     private JTextField eventName;
     private JTextArea eventDescription;
-    private JPanel timeInfoPanel;
+    private final JPanel timeInfoPanel;
     private JButton setUpStart;
     private JButton setUpEnd;
     private JButton workSessionButton;
@@ -87,9 +86,9 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
     }
 
     private void setUpTextInfo(JPanel panel) {
-        eventName = new JTextField(this.ec.getEventManager().getName(this.eventID));
+        eventName = new JTextField(ec.getName(this.eventID));
         eventName.setBounds(30, 17, 200, 20);
-        eventDescription = new JTextArea(this.ec.getEventManager().getDescription(this.eventID));
+        eventDescription = new JTextArea(this.ec.getDescription(this.eventID));
         eventDescription.setBounds(30, 47, 200, 50);
         panel.add(eventName);
         panel.add(eventDescription);
@@ -147,9 +146,8 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         }
 
         if (e.getSource() == workSessionButton) {
-            // lead to work session
-            this.parent.enableFrame();
-            exitFrame();
+            this.frame.setEnabled(false);
+            new WorkSessionEdit(mc.getEventController(), this, eventID);
         }
 
         if (e.getSource() == recursionButton) {
@@ -159,8 +157,8 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         }
 
         if (e.getSource() == saveButton) {
-            this.ec.getEventManager().setName(this.eventID, eventName.getText());
-            this.ec.getEventManager().setDescription(this.eventID, eventDescription.getText());
+            this.ec.changeName(this.eventID, eventName.getText());
+            this.ec.changeDescription(this.eventID, eventDescription.getText());
             this.parent.enableFrame();
             this.parent.refresh();
             this.exitFrame();
@@ -169,7 +167,7 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         if (e.getSource() == deleteButton) {
             if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to remove this event?",
                     "Remove Event", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                this.ec.getEventManager().remove(eventID);
+                this.ec.delete(eventID);
                 this.parent.enableFrame();
                 this.parent.refresh();
                 this.exitFrame();

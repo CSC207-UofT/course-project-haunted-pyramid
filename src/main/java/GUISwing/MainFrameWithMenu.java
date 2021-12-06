@@ -2,6 +2,7 @@ package GUISwing;
 
 import controllers.MainController;
 import controllers.UserController;
+import interfaces.MeltParentWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,8 +10,8 @@ import java.awt.event.ActionListener;
 
 public class MainFrameWithMenu extends MainFrame{
     private UserController uc;
-    ActionListener parent;
-    public MainFrameWithMenu(UserController userController, ActionListener parent){
+    MeltParentWindow parent;
+    public MainFrameWithMenu(UserController userController, MeltParentWindow parent){
         this.uc = userController;
         this.parent = parent;
         JMenuBar menu = setUpMenu();
@@ -26,9 +27,7 @@ public class MainFrameWithMenu extends MainFrame{
         this.setJMenuBar(menuBar);
         return menuBar;
     }
-
     private void setUpMenus(JMenuBar menuBar){
         menuBar.add(new SettingsMenu(this.uc, parent));
     }
-
 }
