@@ -13,14 +13,11 @@ import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
 public class TimeSetUp implements ActionListener {
     private final String option;
-    private final MainController mc;
     private final UUID eventID;
     private final MeltParentWindow parent;
     private final JFrame frame;
@@ -37,7 +34,6 @@ public class TimeSetUp implements ActionListener {
 
     public TimeSetUp(MainController mainController, UUID eventID, MeltParentWindow parent, String option) {
         this.option = option;
-        this.mc = mainController;
         this.eventID = eventID;
         this.parent = parent;
         this.frame = new PopUpWindowFrame();
@@ -198,17 +194,19 @@ public class TimeSetUp implements ActionListener {
     private void save() {
         if (option.equalsIgnoreCase("Start")) {
             if (dateBox.getSelectedItem() == null) {
-                this.ec.getEventManager().setStart(this.eventID, null);
+                this.ec.changeStartDate(this.eventID, null);
             }
             else {
                 LocalDateTime startTime = getLocalDateTime();
-                this.ec.getEventManager().setStart(this.eventID, startTime);
+                this.ec.changeStartDate(this.eventID, startTime.toLocalDate());
+                this.ec.changeStartTime(this.eventID, startTime.toLocalTime());
             }
         }
 
         else if (option.equalsIgnoreCase("End")) {
             LocalDateTime endTime = getLocalDateTime();
-            this.ec.getEventManager().setEnd(eventID, endTime);
+            this.ec.changeEndDate(eventID, endTime.toLocalDate());
+            this.ec.changeEndTime(eventID, endTime.toLocalTime());
         }
         this.parent.enableFrame();
         this.parent.refresh();

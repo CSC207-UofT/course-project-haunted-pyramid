@@ -10,6 +10,7 @@ import usecases.events.EventManager;
 import usecases.events.worksessions.WorkSessionScheduler;
 import usecases.events.worksessions.WorkSessionSchedulerBuilder;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 /**
@@ -121,8 +122,13 @@ public class WorkSessionController {
     }
 
     private void changeStartWorking(UUID eventID, EventManager eventManager) {
-        workSessionScheduler.changeStartWorking(eventID, ioController.getDate("please enter a date to start working on " +
-                "this project"), eventManager);
+        LocalDate startWorking = ioController.getDate("please enter a date to start working on " +
+                "this project");
+        changeStartWorking(eventID, eventManager, startWorking);
+    }
+
+    public void changeStartWorking(UUID Id, EventManager eventManager, LocalDate startWorking){
+        workSessionScheduler.changeStartWorking(Id, startWorking, eventManager);
     }
 
     /**
@@ -135,8 +141,12 @@ public class WorkSessionController {
         String chosenHour = ioController.getAnswer("Please type the new Total Hour (Max: 50)");
         chosenHour = helper.invalidCheckNoMenu(chosenHour, Constants.MAXIMUM_WORK_SESSION_HOUR,
                 "Please type the valid Total Work Session Hour (Max: 50)");
-        this.workSessionScheduler.setHoursNeeded(eventID, Long.valueOf(chosenHour), eventManager);
+        changeTotalHour(eventID, eventManager, Long.valueOf(chosenHour));
         System.out.println("The change has been applied");
+    }
+
+    public void changeTotalHour(UUID eventID, EventManager eventManager, Long chosenHour){
+        this.workSessionScheduler.setHoursNeeded(eventID, chosenHour, eventManager);
     }
 
     /**
@@ -149,8 +159,12 @@ public class WorkSessionController {
         String chosenLength = ioController.getAnswer("Please type new Session Length (Max: 10)");
         chosenLength = helper.invalidCheckNoMenu(chosenLength, Constants.MAXIMUM_SESSION_LENGTH,
                 "Please type the valid Session Length (Max: 10");
-        this.workSessionScheduler.setSessionLength(eventID, Long.valueOf(chosenLength), eventManager);
+        changeSessionLength(eventID, eventManager, Long.valueOf(chosenLength));
         System.out.println("The change has been applied");
+    }
+
+    public void changeSessionLength(UUID eventID, EventManager eventManager, Long chosenLength){
+        this.workSessionScheduler.setSessionLength(eventID, chosenLength, eventManager);
     }
 
     /**

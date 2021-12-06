@@ -101,21 +101,20 @@ public class MainMenu implements ActionListener, MeltParentWindow {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttonProfile) {
-            SettingsMenu sM = new SettingsMenu(mc.getUserController(), this);
+            ProfileSettings sM = new ProfileSettings(mc.getUserController(), this);
             sM.display();
         }
         else if (e.getSource() == buttonCalendar) {
             this.frame.setEnabled(false);
-
         }
         else if (e.getSource() == buttonAddEvent) {
             this.frame.setEnabled(false);
-            UUID newEventID = this.ec.getEventManager().addEvent("Event Name", LocalDateTime.of(
+            UUID newEventID = this.ec.createDefaultEvent("Event Name", LocalDateTime.of(
                     LocalDate.now(), LocalTime.of(0, 0)));
             new EditEventWindow(this.mc, newEventID, this);
         }
         else if (e.getSource() == buttonModifyEvent) {
-            new SelectEvent(this.ec, this.uc, this);
+            new SelectEvent(mc, this);
         }
         else if (e.getSource() == buttonExport) {
             SaveICalendar saveCalendar = new SaveICalendar();
@@ -131,11 +130,8 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             frame.dispose();
         }
         else {
-            UUID user = this.uc.getCurrentUser();
-            UserPreferences preferences = this.uc.getUserManager().getPreferences(user);
-            this.ec.update(preferences);
-            frame.revalidate();
-            frame.repaint();
+            this.ec.updatePreferences(uc.getPreferences());
+            this.refresh();
         }
     }
 
@@ -145,6 +141,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
 
     @Override
     public void refresh() {
+        this.mc.getEventController().updatePreferences(this.mc.getUserController().getPreferences());
         this.calendarPanel.removeAll();
         setUpCalendarPanel();
         setDefaultCalendar(this.mc.getEventController(), this.calendarPanel);

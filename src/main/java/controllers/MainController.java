@@ -93,7 +93,7 @@ public class MainController {
             switch (firstChoice) {
                 case "1":
                     this.userController.editProfile();
-                    this.eventController.update(this.userController.getUserManager().getPreferences(this.userController.getCurrentUser()));
+                    this.eventController.updatePreferences(this.userController.getPreferences());
                     break;
                 case "2":
                     this.calendarController.showCalendar(this.eventController);
@@ -176,7 +176,7 @@ public class MainController {
         if (this.eventController != null) {
             Map<UUID, List<Event>> map = this.eventController.getEventManager().getUuidEventsMap();
             Map<UUID, Map<UUID, RecursiveEvent>> map1 = this.eventController.getEventManager().getUuidRecursiveEventsMap();
-            map.put(this.userController.getCurrentUser(), this.eventController.getEventManager().getAllEvents());
+            map.put(this.userController.getCurrentUser(), this.eventController.getAllEvents());
             tempIoSerializable.eventsWriteToSerializable(map);
             tempIoSerializable.recursiveEventsWriteToSerializable(map1);
         }

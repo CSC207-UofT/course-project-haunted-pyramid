@@ -1,5 +1,6 @@
 package controllers;
 
+import entities.UserPreferences;
 import gateways.IOSerializable;
 import helpers.Constants;
 import helpers.ControllerHelper;
@@ -165,6 +166,10 @@ public class UserController {
     private void changeName() {
         System.out.println("You may type Return to return to the menu");
         String name = ioController.getAnswer("What is your new name?");
+        changeName(name);
+    }
+
+    public void changeName(String name){
         if (name.equalsIgnoreCase("Return")) {
             return;
         }
@@ -177,10 +182,14 @@ public class UserController {
     private void addFreeTime() {
         System.out.println("You may type Return to return to the menu");
         LocalTime start = ioController.getTime("Enter the start time of your regular free time");
+        LocalTime end = ioController.getTime("Enter the end time of your regular free time");
+        addFreeTime(start, end);
+    }
+
+    public void addFreeTime(LocalTime start, LocalTime end){
         if (start.equals(Constants.RETURN_NOTIFIER)) {
             return;
         }
-        LocalTime end = ioController.getTime("Enter the end time of your regular free time");
         if (end.equals(Constants.RETURN_NOTIFIER)) {
             return;
         }
@@ -194,6 +203,10 @@ public class UserController {
     private void removeFreeTime() {
         System.out.println("You may type Return to return to the menu");
         LocalTime start = ioController.getTime("Enter the start time of your regular free time");
+        removeFreeTime(start);
+    }
+
+    public void removeFreeTime(LocalTime start){
         if (start.equals(Constants.RETURN_NOTIFIER)){
             return;
         }
@@ -206,7 +219,15 @@ public class UserController {
     private void toggleProcrastinate() {
         this.userManager.toggleProcrastinate(this.currentUser);
     }
+    public void setProcrastinate(boolean procrastinate){this.userManager.getPreferences(currentUser).setProcrastinate(procrastinate);}
     private void toggleMorningPerson(){this.userManager.toggleMorningPerson(this.currentUser);}
+    public void setMorningPerson(boolean morningPerson){this.userManager.getPreferences(currentUser).setMorningPerson(morningPerson);}
     private void toggleCram(){this.userManager.toggleEvenSpacing(this.currentUser);}
+    public void setCram(boolean cram){this.userManager.getPreferences(currentUser).setCram(cram);}
     private void toggleSessionSpacing(){this.userManager.toggleWorkSessionSpacing(this.currentUser);}
+    public void setSessionSpacing(String sessionSpacing){this.userManager.getPreferences(currentUser).setSpacingSameDay(sessionSpacing);}
+
+    public UserPreferences getPreferences(){
+        return this.getUserManager().getPreferences(currentUser);
+    }
 }

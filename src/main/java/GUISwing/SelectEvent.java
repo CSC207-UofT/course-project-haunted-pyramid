@@ -1,22 +1,23 @@
 package GUISwing;
 
 import controllers.EventController;
+import controllers.MainController;
 import controllers.UserController;
 import entities.Event;
+import interfaces.MeltParentWindow;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.UUID;
 
 public class SelectEvent extends PopUpWindowFrame implements ActionListener{
-    EventController eventController;
-    UserController userController;
-    ActionListener parent;
-    public SelectEvent(EventController eventController, UserController userController, ActionListener parent){
+    MainController mc;
+    MeltParentWindow parent;
+    public SelectEvent(MainController mc, MeltParentWindow parent){
         this.parent = parent;
-        this.eventController = eventController;
-        this.userController = userController;
+        this.mc = mc;
         JScrollPane eventScroller = displayEvents();
         eventScroller.setBounds(0, 0, this.getWidth(), 2*this.getHeight()/3);
         this.setVisible(true);
@@ -26,12 +27,12 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener{
         JPanel eventPanel = new JPanel();
         eventPanel.setLayout(new BoxLayout(eventPanel, BoxLayout.Y_AXIS));
         JScrollPane eventScroller= new JScrollPane(eventPanel);
-        for (Event event: this.eventController.getEventManager().getAllEvents()) {
-            JButton btn= new JButton(eventController.getEventManager().getName(event) + " start:  " +
-                    eventController.getEventManager().getStart(event) + "  end: " +
-                    eventController.getEventManager().getEnd(event));
+        for (Event event: this.mc.getEventController().getAllEvents()) {
+            JButton btn= new JButton(this.mc.getEventController().getName(this.mc.getEventController().getID(event)) + " start:  " +
+                    this.mc.getEventController().getStart(this.mc.getEventController().getID(event)) + "  end: " +
+                    this.mc.getEventController().getEnd(this.mc.getEventController().getID(event)));
             btn.setPreferredSize(new Dimension(100, 30));
-            btn.setActionCommand(eventController.getEventManager().getID(event).toString());
+            btn.setActionCommand(this.mc.getEventController().getID(event).toString());
             btn.addActionListener(this);
             eventPanel.add(btn);
         }
@@ -44,7 +45,7 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
- //       new EditEventWindow(this.mainController, UUID.fromString(e.getActionCommand()));
+        new EditEventWindow(mc, UUID.fromString(e.getActionCommand()), parent);
         this.dispose();
     }
 }
