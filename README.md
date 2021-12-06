@@ -1,7 +1,9 @@
 # Where to Find Stuff
 ## Running Instructions
 #### 1. Clone repository, make sure `src/java/main` is marked as sources root 
-#### 2. Run file `src/main/java/main/ProgramRun.java` for console version / Run file `src/main/java/main/GUIRun.java` for GUI version
+#### 2. You may run two different versions of calendar
+#### Run file `src/main/java/main/ProgramRun.java` for console version 
+#### Run file `src/main/java/main/GUIRun.java` for GUI version
 #### 3. Create username and password, then login. 
 
 ### Console Version
