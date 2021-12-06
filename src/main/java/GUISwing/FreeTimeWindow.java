@@ -1,7 +1,6 @@
 package GUISwing;
 
 import controllers.UserController;
-import entities.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +12,7 @@ import java.util.Objects;
 public class FreeTimeWindow implements ActionListener {
     UserController userController;
     final JFrame frame;
+    private MenuCreationHelper helper;
     JScrollPane slotsScrollPain;
     JPanel panel = new JPanel(new GridLayout(0, 5));
 
@@ -24,6 +24,7 @@ public class FreeTimeWindow implements ActionListener {
         frame = new PopUpWindowFrame();
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.PAGE_AXIS));
         frame.setSize(500, 500);
+        this.helper = new MenuCreationHelper();
         slotsScrollPain = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         frame.add(slotsScrollPain);
         showFreeTime();
@@ -41,9 +42,9 @@ public class FreeTimeWindow implements ActionListener {
     }
 
     private void addFreeTime(LocalTime start, LocalTime end){
-        JComboBox<LocalTime> startTime = MenuCreationHelper.timeComboBox();
+        JComboBox<LocalTime> startTime = helper.timeComboBox();
         startTime.setSelectedItem(start);
-        JComboBox<LocalTime> endTime = MenuCreationHelper.timeComboBox();
+        JComboBox<LocalTime> endTime = helper.timeComboBox();
         endTime.setSelectedItem(end);
         JButton delete = new JButton("delete");
         panel.add(new JLabel("start: "));

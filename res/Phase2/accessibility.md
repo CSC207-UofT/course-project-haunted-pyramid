@@ -1,8 +1,8 @@
 # Accessibility Report
 
 2. Equitable Use
-- text to speach 
-- 
+- text to speach
+
 2. Flexibility in use
 - Future: implement dark mode or high contrast mode to allow users to change the display
 - Right now, users can change their settings for how they like events to be automatically scheduled - they can be a morning person 
@@ -34,9 +34,9 @@ customize their schedule
 - simple mistakes such as a start time after an end time are corrected automatically
 - confirmation is required to delete an event, since it is not recoverable
 
-5. Low Physical Effort
+6. Low Physical Effort
 
-6. Size and Space for Approach and Use
+7. Size and Space for Approach and Use
 
 
 Haunted Pyramid, as an all undergraduate student group, aims to fill a void in productivity automation - automatic scheduling of time to work individually to meet goals. We aim to market this program towards University

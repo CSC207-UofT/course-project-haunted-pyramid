@@ -1,5 +1,5 @@
-#Design Document
-##Haunted Pyramid Productivity V 1.0
+# Design Document
+## Haunted Pyramid Productivity V 1.0
 
 #### SOLID
 
@@ -130,7 +130,7 @@ inputs.
   has five parameters which are majorly from extractions to avoid long method code smell,
   but tried our best to not go over it.
 
-####Code Organization
+#### Code Organization
 
 We looked at various strategies for packaging the code. We looked at packaging by
 Layer, by feature and by Inside/outside. We chose to package our code by Layer. It
@@ -142,7 +142,7 @@ and it would also cause for conflicts as different people would be working on th
 folder of classes. Since people were not working on front or back end strictly or on
 different features it made more sense to package the code by Layers.
 
-####Functionality
+#### Functionality
 
 A User can log in to access their 'account' (ability to 'load state' and save Users by serialization and dropbox file)
 and see a calendar of the current month with their saved events listed by

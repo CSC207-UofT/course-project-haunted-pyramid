@@ -41,6 +41,7 @@ public class LogInWindow implements ActionListener {
         setUpPasswordLabel();
         addLogInMessage();
         buttonSetUp();
+        this.frame.getRootPane().setDefaultButton(btnLogIn);
         frame.setVisible(true);
     }
 
@@ -157,7 +158,7 @@ public class LogInWindow implements ActionListener {
             }
             lblLoginMessage.setText("Incorrect Username or Password - Please Try Again");
         }
-        if(e.getSource() == btnSignUp){
+        if (e.getSource() == btnSignUp) {
             new SignUpPage(this.loginController);
         }
         fldPassword.setText("");

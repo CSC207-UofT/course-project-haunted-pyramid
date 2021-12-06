@@ -1,9 +1,9 @@
 package GUISwing;
 
 import controllers.*;
-import entities.UserPreferences;
 import helpers.Constants;
 import interfaces.MeltParentWindow;
+import presenters.CalendarFactory.CalendarDisplayFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,12 +18,15 @@ public class MainMenu implements ActionListener, MeltParentWindow {
     private final JFrame frame;
     private final MainController mc;
     private final EventController ec;
-    private final UserController uc;
     private final LoginController lc;
     private JLabel calendar;
-    private JPanel calendarPanel;
+    private LocalDate dateInfo;
+    private String calendarMode;
+    private final JPanel calendarPanel;
+    private final JPanel welcomePanel;
+    private JLabel welcomeMessage;
     private final JButton buttonProfile = new JButton("1. Profile Setting");
-    private final JButton buttonCalendar = new JButton("2. View/Export Calendar");
+    private final JButton buttonCalendar = new JButton("2. Change Calendar");
     private final JButton buttonAddEvent = new JButton("3. Add a new Event");
     private final JButton buttonModifyEvent = new JButton("4. Modify an Event");
     private final JButton buttonExport = new JButton("5. Export Entire Calendar to iCal File");
@@ -35,22 +38,30 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         this.frame = new MainFrameWithMenu(mainController.getUserController(), this);
         this.mc = mainController;
         this.ec = mainController.getEventController();
-        this.uc = mainController.getUserController();
-        this.lc = new LoginController(this.uc);
+        UserController uc = mainController.getUserController();
+        this.lc = new LoginController(uc);
         this.calendar = new JLabel();
-        JLabel welcomeMessage = new JLabel();
-        setUpWelcomeMessage(this.uc.getCurrentUsername(), welcomeMessage);
-        frame.add(welcomeMessage);
+        this.dateInfo = LocalDate.now();
+        this.calendarMode = "Default";
+        this.welcomePanel = new JPanel();
+        this.welcomePanel.setBackground(Constants.WINDOW_COLOR);
+        this.welcomePanel.setBounds(0, 0, Constants.WINDOW_WIDTH, 200);
+        this.welcomePanel.setLayout(null);
+        this.welcomeMessage = new JLabel();
+        setUpWelcomeMessage(uc.getCurrentUsername());
+        this.welcomePanel.add(welcomeMessage);
         this.calendarPanel = setUpCalendarPanel();
-        setDefaultCalendar(this.ec, calendarPanel);
+        setDefaultCalendar(this.ec);
+        this.calendarPanel.add(this.calendar);
         JScrollPane calendarScrollPane = new JScrollPane(calendarPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         calendarScrollPane.setBounds(50, 150, 1344, 500);
         frame.add(calendarScrollPane);
         JPanel menuPanel = new JPanel();
-        menuPanel.setBounds(0, 700, 1444, 1000/2);
+        menuPanel.setBounds(0, 700, 1444, 300);
         menuPanel.setBackground(Constants.WINDOW_COLOR);
         frame.add(menuPanel);
+        frame.add(welcomePanel);
         buttonSetUp(menuPanel);
     }
 
@@ -76,19 +87,30 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         return calendarPanel;
     }
 
-    public void setDefaultCalendar(EventController eventController, JPanel calendarPanel) {
+    public void setDefaultCalendar(EventController eventController) {
         CalendarController calendarController = new CalendarController();
         String defaultCalendarString = calendarController.showDefaultCalendar(eventController);
-        defaultCalendarString = defaultCalendarString.replaceAll("\n", "<br/>");
-        this.calendar.setText("<html><pre>" + defaultCalendarString + "</pre><html>");
+        refactorCalendarString(defaultCalendarString);
+    }
+
+    private void setCalendar(EventController eventController, LocalDate date, String option) {
+        CalendarController calendarController = new CalendarController();
+        CalendarDisplayFactory calendarFactory = calendarController.getDisplayCalendarFactory(eventController);
+        String calendarString = calendarFactory.displaySpecificCalendarByType(option, date.getYear(), date.getMonthValue(),
+                date.getDayOfMonth()).displayCalendar();
+        refactorCalendarString(calendarString);
+    }
+
+    private void refactorCalendarString(String calendarString) {
+        calendarString = calendarString.replaceAll("\n", "<br/>");
+        this.calendar.setText("<html><pre>" + calendarString + "</pre><html>");
         this.calendar.setHorizontalTextPosition(JLabel.CENTER);
         this.calendar.setVerticalTextPosition(JLabel.TOP);
         this.calendar.setVerticalAlignment(JLabel.TOP);
         this.calendar.setHorizontalAlignment(JLabel.CENTER);
-        calendarPanel.add(this.calendar);
     }
 
-    private void setUpWelcomeMessage(String name, JLabel welcomeMessage) {
+    private void setUpWelcomeMessage(String name) {
         welcomeMessage.setText("Welcome " + name + "!");
         welcomeMessage.setHorizontalTextPosition(JLabel.CENTER);
         welcomeMessage.setVerticalTextPosition(JLabel.TOP);
@@ -105,12 +127,12 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             sM.display();
         }
         else if (e.getSource() == buttonCalendar) {
-            this.frame.setEnabled(false);
+            new CalendarChoices(this);
         }
         else if (e.getSource() == buttonAddEvent) {
             this.frame.setEnabled(false);
             UUID newEventID = this.ec.createDefaultEvent("Event Name", LocalDateTime.of(
-                    LocalDate.now(), LocalTime.of(0, 0)));
+                    LocalDate.now(), LocalTime.of(23, 59)));
             new EditEventWindow(this.mc, newEventID, this);
         }
         else if (e.getSource() == buttonModifyEvent) {
@@ -134,16 +156,41 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         }
     }
 
-    public void setCalendar(JLabel newCalendar) {
-        this.calendar = newCalendar;
+    public void setDateInfo(LocalDate newDate) {
+        this.dateInfo = newDate;
+    }
+
+    public void setCalendarMode(String option) {
+        if (option.equalsIgnoreCase("default")) {
+            this.calendarMode = "Default";
+        }
+        else if (option.equalsIgnoreCase("monthly")) {
+            this.calendarMode = "Monthly";
+        }
+        else if (option.equalsIgnoreCase("weekly")) {
+            this.calendarMode = "Weekly";
+        }
+        else if (option.equalsIgnoreCase("daily")) {
+            this.calendarMode = "Daily";
+        }
     }
 
     @Override
     public void refresh() {
         this.mc.getEventController().updatePreferences(this.mc.getUserController().getPreferences());
+        this.welcomePanel.removeAll();
+        this.welcomeMessage = new JLabel();
+        setUpWelcomeMessage(this.mc.getUserController().getCurrentUsername());
+        welcomePanel.add(welcomeMessage);
         this.calendarPanel.removeAll();
         setUpCalendarPanel();
-        setDefaultCalendar(this.mc.getEventController(), this.calendarPanel);
+        this.calendar = new JLabel();
+        if (this.calendarMode.equalsIgnoreCase("default")) {
+            setDefaultCalendar(this.ec);
+        }
+        else {
+            setCalendar(this.ec, dateInfo, this.calendarMode);
+        }
         this.calendarPanel.add(this.calendar);
         this.frame.revalidate();
         this.frame.repaint();

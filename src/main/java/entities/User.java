@@ -25,6 +25,7 @@ public class User implements Serializable {
     private ArrayList<Event> events;
     private UserPreferences userPreferences;
     private Map<UUID, Category> categories;
+    private Map<UUID, List<Event>> suggestions;
 
 
     public User(UUID id, String name, String username, String password) {
@@ -35,11 +36,14 @@ public class User implements Serializable {
         this.events = new ArrayList<>();
         this.userPreferences = new UserPreferences();
         categories = new HashMap<>();
+        suggestions = new HashMap<>();
     }
 
     public UUID getId() {
         return this.id;
     }
+
+    public Map<UUID, List<Event>> getSuggestions() {return suggestions;}
 
     public String getName() {
         return this.name;
@@ -56,28 +60,36 @@ public class User implements Serializable {
     public void createCategory(String name){
         Category category = new Category(UUID.randomUUID(), name, this);
         this.categories.put(category.getId(), category);
+        suggestions.put(category.getId(), new ArrayList<>());
     }
 
-    public void deleteCategory(UUID uuid){
-        this.categories.get(uuid).removeUser(this);
+    public void deleteCategory(UUID uuid, User replacement){
+        this.categories.get(uuid).removeUser(this, replacement);
         this.categories.remove(uuid);
     }
 
-//    public LocalDate getBirthDate() {
-//        return this.birthDate;
-//    }
-//
-//    public String getEmail() {
-//        return this.email;
-//    }
-//
-//    public String getPhoneNumber() {
-//        return this.phoneNumber;
-//    }
-//
-//    public String getHomeAddress() {
-//        return this.homeAddress;
-//    }
+    public Map<Event, Boolean> respondToSuggestionsInCategory(Category category, List<Boolean> decisions){
+        List<Event> categorySuggestions = this.suggestions.get(category.getId());
+        Map<Event, Boolean> result = new HashMap<>();
+        int i = 0;
+        for(Boolean decision : decisions){
+            result.put(categorySuggestions.get(i), decision);
+            i++;
+        }
+        return result;
+    }
+
+    public void addOrNotSuggestionsToCategory(Category category, List<Boolean> decisions){
+        Map<Event, Boolean> suggestionMap = respondToSuggestionsInCategory(category, decisions);
+        for(Event event : suggestionMap.keySet()){
+            if(suggestionMap.get(event)){
+                this.categories.get(category.getId()).addEvent(event);
+            }
+        }
+    }
+
+
+
 
     public ArrayList<Event> getEvents() {
         return this.events;
@@ -102,21 +114,13 @@ public class User implements Serializable {
         this.password = password;
     }
 
-//    public void setBirthDate(LocalDate birthDate) {
-//        this.birthDate = birthDate;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
-//
-//    public void setPhoneNumber(String phoneNumber) {
-//        this.phoneNumber = phoneNumber;
-//    }
-//
-//    public void setHomeAddress(String homeAddress) {
-//        this.homeAddress = homeAddress;
-//    }
+    public void addToSuggestions(Event event, Category category){
+        this.getSuggestions().get(category.getId()).add(event);
+    }
+
+    public Map<UUID, Category> getCategories() {
+        return categories;
+    }
 
     public void setEvents(ArrayList<Event> events) {
         this.events = events;

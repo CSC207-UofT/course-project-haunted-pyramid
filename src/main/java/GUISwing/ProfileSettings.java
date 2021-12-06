@@ -1,7 +1,6 @@
 package GUISwing;
 
 import controllers.UserController;
-import entities.User;
 import helpers.Constants;
 import interfaces.MeltParentWindow;
 
@@ -13,24 +12,23 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class ProfileSettings implements ActionListener {
-    JFrame frame = new PopUpWindowFrame();
 
-    JButton saveFT = new JButton("save");
-
-    JButton saveName = new JButton("save name");
-    JTextField changeName = new JTextField();
-
-    JComboBox<LocalTime> startTime = MenuCreationHelper.timeComboBox();
-    JComboBox<LocalTime> endTime = MenuCreationHelper.timeComboBox();
-
-    UserController userController;
-
-    MeltParentWindow parent;
-
+    private final UserController userController;
+    private final MeltParentWindow parent;
+    private final JFrame frame = new PopUpWindowFrame();
+    private final MenuCreationHelper helper;
+    private final JButton saveFT = new JButton("save");
+    private final JButton saveName = new JButton("save name");
+    private final JTextField changeName = new JTextField();
+    private final JComboBox<LocalTime> startTime;
+    private final JComboBox<LocalTime> endTime;
 
     public ProfileSettings(UserController uc, MeltParentWindow parent){
         this.userController = uc;
         this.parent = parent;
+        this.helper = new MenuCreationHelper();
+        startTime = helper.timeComboBox();
+        endTime = helper.timeComboBox();
         frame.setTitle("Profile Settings");
         frame.setResizable(false);
         ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Icon.png");
@@ -50,8 +48,10 @@ public class ProfileSettings implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == saveFT){
             freeTime();
+            this.parent.refresh();
         } else if(e.getSource() == saveName){
             changeName();
+            this.parent.refresh();
         }
     }
 
