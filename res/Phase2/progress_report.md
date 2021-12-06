@@ -11,9 +11,10 @@ What you've been working on:
 
 Decouple calendar and event (now calendars only deal with UUIDs instead of Event object directly)
 
-Developing auto scheduling strategy and builder pattern.
-Updating User to use a userPreferences object
-JavaFX windows for Event editing and user profile
+Taite
+- Developing auto scheduling strategy and builder pattern.
+- Updating User to use a userPreferences object.
+- Java swing menus for adding, editing events, and changing autoscheduling preferences
 
 
 
