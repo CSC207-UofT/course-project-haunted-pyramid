@@ -29,6 +29,9 @@ public class SignUpPage implements ActionListener {
     public SignUpPage(LoginController loginController) {
         this.loginController = loginController;
 
+        ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Icon.png");
+        frame.setIconImage(hauntedPyramid.getImage());
+        frame.setTitle("Sign Up");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setSize(Constants.POPUP_WIDTH, Constants.POPUP_HEIGHT);
@@ -54,7 +57,7 @@ public class SignUpPage implements ActionListener {
     }
 
     public void createLabels() {
-        addInfo.setBounds(80, 30, frame.getX(), 50);
+        addInfo.setBounds(80, 20, frame.getX(), 50);
         addInfo.setFont(new Font("Monaco", Font.BOLD, 14));
 
         addName.setBounds(70, 65, 150, 50);
@@ -90,7 +93,7 @@ public class SignUpPage implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == signUpButton) {
             if (name.getText().equals("") || username.getText().equals("") || password.getPassword().length == 0) {
-                addInfo.setText("Please make sure all the fields are filled.");
+                addInfo.setText("Please make sure all the fields are filled in.");
                 name.setText("");
                 username.setText("");
                 password.setText("");
