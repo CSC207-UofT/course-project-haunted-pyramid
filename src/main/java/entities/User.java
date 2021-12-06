@@ -13,7 +13,6 @@ import java.util.*;
  * @author Sebin Im
  */
 
-// TODO (for Phase 2) add more user information
 public class User implements Serializable {
     private UUID id;
     private String name;
