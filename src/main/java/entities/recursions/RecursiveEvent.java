@@ -95,6 +95,10 @@ public class RecursiveEvent implements Serializable {
         return toReturn;
     }
 
+    public Event getLastEvent(){
+        return this.eventsInOneCycle.get(eventsInOneCycle.size()-1);
+    }
+
 
     /**
      * If user were to Remove/add/change an event from/to a recursion, these methods return cycle in which they will be.
@@ -122,7 +126,7 @@ public class RecursiveEvent implements Serializable {
             }
         }
         catch (IndexOutOfBoundsException indexOutOfBoundsException){
-            return allEvents.subList(cycleNumber*cycleLength, allEvents.size());
+            return new ArrayList<>(allEvents.subList(cycleNumber*cycleLength, allEvents.size()));
         }
         return new ArrayList<>(allEvents.subList((cycleNumber-1)*cycleLength, cycleNumber*cycleLength + 1));
     }
@@ -225,18 +229,6 @@ public class RecursiveEvent implements Serializable {
     }
 
 
-    private Map<LocalDateTime, List<Event>> eventListToMap(List<Event> events, int cycleLength){
-        Map<LocalDateTime, List<Event>> datesAndEvents = new HashMap<>();
-        int endLoop = events.size();
-        int i = 1;
-        while(cycleLength*i < endLoop){
-            datesAndEvents.put(startTimeGetter(events.get(cycleLength*(i-1))),
-                    events.subList(cycleLength*(i-1), cycleLength*i));
-            i++;
-        }
-        datesAndEvents.put(startTimeGetter(events.get(cycleLength*(i-1))), events.subList(cycleLength*(i-1), endLoop));
-        return datesAndEvents;
-    }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         UUID id1 = UUID.randomUUID();
@@ -261,6 +253,12 @@ public class RecursiveEvent implements Serializable {
         Map<UUID, RecursiveEvent> mine2 = new HashMap<>();
         mine2.put(recursiveEvent.getId(),recursiveEvent);
         mine.put(user.getId(), mine2);
+
+        List<Object> truc = new ArrayList<>();
+        truc.add("elnfiuerf");
+        truc.add(2);
+        truc.add(e1);
+        System.out.println(truc);
 
     }
 }

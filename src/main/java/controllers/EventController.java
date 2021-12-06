@@ -149,7 +149,7 @@ public class EventController {
                 break;
             case "8":
                 this.addToRecursion(ID);
-                break;
+                return true;
             case "9":
                 if (this.delete(ID, false)) {
                     return true;

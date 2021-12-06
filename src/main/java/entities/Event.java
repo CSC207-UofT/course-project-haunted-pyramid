@@ -22,7 +22,7 @@ public class Event implements Serializable {
     private final UUID ID;
     private String name;
     private String description = null;
-    private List<String> Categories;
+    private List<UUID> Categories;
     private List<Event> workSessions;
     private Long hoursNeeded;
     private Long sessionLength;
@@ -117,13 +117,13 @@ public class Event implements Serializable {
         this.recursiveId = recursiveId;
     }
 
-    public List<String> getCategories() {return Categories;}
-    public void setCategories(List<String> categories) {Categories = categories;}
+    public List<UUID> getCategories() {return Categories;}
+    public void setCategories(List<UUID> categories) {Categories = categories;}
 
-    public void removeCategory(String category){
+    public void removeCategory(UUID category){
         this.getCategories().remove(category);
     }
-    public void addToCategory(String category){
+    public void addToCategory(UUID category){
         this.getCategories().add(category);
     }
 
