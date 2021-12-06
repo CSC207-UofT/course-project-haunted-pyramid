@@ -84,6 +84,15 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 
 #### Malik Lahlou
 
+- Created the algorithms that are used to update recursions 
+https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/b553ffeccb2760796014a3ec68361660145616c3
+https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/366f3a92ddd81e831ba55c5d8c564fa279fd64ed
+- Refactoring of the recursiveController class, split the one huge method into multiple small ones.
+https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/525b3284a4676986f4ece240388e9a5e76ddf076
+- Fixing the recursive event update methods and start implementing the Category class.
+https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/9661a9a14a74bfbb277c09882c8c4a9a5b8dd57e
+
+
 #### Shahzada Muhammad Shameel
 
 This pull request was for the initial development on CalendarManager, which is a central part of the program.
@@ -116,6 +125,9 @@ Built main menu GUI that would act as a core part of GUI version of our program.
 #### Taite Cullen
 
 https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/210#issue-1068833602
+
+
+
 
 
 
