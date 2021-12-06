@@ -39,6 +39,7 @@ public class SignUpPage implements ActionListener {
         frame.setLayout(null);
         frame.setResizable(false);
         frame.getContentPane().setBackground(Constants.WINDOW_COLOR);
+        this.frame.getRootPane().setDefaultButton(signUpButton);
         frame.setVisible(true);
 
         this.createButtons();

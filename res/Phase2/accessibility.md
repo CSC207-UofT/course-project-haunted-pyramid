@@ -1,6 +1,6 @@
 # Accessibility Report
 
-2. Equitable Use
+1. Equitable Use
 - 
 2. Flexibility in use
 - Future: implement dark mode or high contrast mode to allow users to change the display
@@ -30,9 +30,9 @@ preferences in the future
 - simple mistakes such as a start time after an end time are corrected automatically
 - confirmation is required to delete an event, since it is not recoverable
 
-5. Low Physical Effort
+6. Low Physical Effort
 
-6. Size and Space for Approach and Use
+7. Size and Space for Approach and Use
 
 
 Haunted Pyramid, as an all undergraduate student group, aims to fill a void in productivity automation we have felt is

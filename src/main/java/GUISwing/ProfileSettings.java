@@ -1,7 +1,6 @@
 package GUISwing;
 
 import controllers.UserController;
-import entities.User;
 import helpers.Constants;
 import interfaces.MeltParentWindow;
 
@@ -14,15 +13,15 @@ import java.util.Objects;
 
 public class ProfileSettings implements ActionListener {
 
-    private UserController userController;
-    private MeltParentWindow parent;
-    private JFrame frame = new PopUpWindowFrame();
-    private MenuCreationHelper helper;
-    private JButton saveFT = new JButton("save");
-    private JButton saveName = new JButton("save name");
-    private JTextField changeName = new JTextField();
-    private JComboBox<LocalTime> startTime;
-    private JComboBox<LocalTime> endTime;
+    private final UserController userController;
+    private final MeltParentWindow parent;
+    private final JFrame frame = new PopUpWindowFrame();
+    private final MenuCreationHelper helper;
+    private final JButton saveFT = new JButton("save");
+    private final JButton saveName = new JButton("save name");
+    private final JTextField changeName = new JTextField();
+    private final JComboBox<LocalTime> startTime;
+    private final JComboBox<LocalTime> endTime;
 
     public ProfileSettings(UserController uc, MeltParentWindow parent){
         this.userController = uc;
@@ -49,8 +48,10 @@ public class ProfileSettings implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == saveFT){
             freeTime();
+            this.parent.refresh();
         } else if(e.getSource() == saveName){
             changeName();
+            this.parent.refresh();
         }
     }
 
