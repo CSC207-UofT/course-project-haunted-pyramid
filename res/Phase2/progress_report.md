@@ -59,4 +59,3 @@ Taite:
 https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/210#issue-1068833602
 
 
-

@@ -2,6 +2,7 @@ package GUISwing;
 
 import controllers.EventController;
 import controllers.UserController;
+import entities.Event;
 import interfaces.MeltParentWindow;
 import usecases.events.worksessions.WorkSessionScheduler;
 import usecases.events.worksessions.WorkSessionSchedulerBuilder;
@@ -19,6 +20,9 @@ public class WorkSessionEdit implements ActionListener{
     JLabel sessionlbl = new JLabel("session length: ");
     JComboBox<Long> sessionLength = fromTo(10);
     JButton save = new JButton("save");
+    JLabel startlbl = new JLabel("start working ");
+    JComboBox<Long> startWorking = fromTo(10);
+    JLabel dayslbl = new JLabel("days before deadline");
     EventController eventController;
     UUID event;
     MeltParentWindow parent;

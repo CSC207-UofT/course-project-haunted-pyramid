@@ -201,7 +201,7 @@ public class CalendarController {
      * @param eventController the event information provided
      * @return displayCalendarFactory with the calendarManager that contains event information from eventController
      */
-    private CalendarDisplayFactory getDisplayCalendarFactory(EventController eventController) {
+    public CalendarDisplayFactory getDisplayCalendarFactory(EventController eventController) {
         CalendarManager calendarManager = new CalendarManager();
         EventManager eventManager = eventController.getEventManager();
         EventCalendarCollaborator collaborator = new EventCalendarCollaborator(eventManager, calendarManager);
