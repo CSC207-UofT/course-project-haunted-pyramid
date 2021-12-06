@@ -13,24 +13,23 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class ProfileSettings implements ActionListener {
-    JFrame frame = new PopUpWindowFrame();
 
-    JButton saveFT = new JButton("save");
-
-    JButton saveName = new JButton("save name");
-    JTextField changeName = new JTextField();
-
-    JComboBox<LocalTime> startTime = MenuCreationHelper.timeComboBox();
-    JComboBox<LocalTime> endTime = MenuCreationHelper.timeComboBox();
-
-    UserController userController;
-
-    MeltParentWindow parent;
-
+    private UserController userController;
+    private MeltParentWindow parent;
+    private JFrame frame = new PopUpWindowFrame();
+    private MenuCreationHelper helper;
+    private JButton saveFT = new JButton("save");
+    private JButton saveName = new JButton("save name");
+    private JTextField changeName = new JTextField();
+    private JComboBox<LocalTime> startTime;
+    private JComboBox<LocalTime> endTime;
 
     public ProfileSettings(UserController uc, MeltParentWindow parent){
         this.userController = uc;
         this.parent = parent;
+        this.helper = new MenuCreationHelper();
+        startTime = helper.timeComboBox();
+        endTime = helper.timeComboBox();
         frame.setTitle("Profile Settings");
         frame.setResizable(false);
         ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Icon.png");

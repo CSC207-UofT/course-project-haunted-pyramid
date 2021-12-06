@@ -17,9 +17,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class TimeSetUp implements ActionListener {
-    private final String option;
     private final UUID eventID;
     private final MeltParentWindow parent;
+    private final String option;
+    private final MenuCreationHelper boxHelper;
     private final JFrame frame;
     private final EventController ec;
     private final JComboBox<YearMonth> yearMonthBox;
@@ -33,14 +34,15 @@ public class TimeSetUp implements ActionListener {
     private LocalTime time;
 
     public TimeSetUp(MainController mainController, UUID eventID, MeltParentWindow parent, String option) {
-        this.option = option;
         this.eventID = eventID;
         this.parent = parent;
+        this.option = option;
+        this.boxHelper = new MenuCreationHelper();
         this.frame = new PopUpWindowFrame();
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.ec = mainController.getEventController();
-        this.timeBox = MenuCreationHelper.timeComboBox();
-        this.yearMonthBox = MenuCreationHelper.monthComboBox();
+        this.timeBox = boxHelper.timeComboBox();
+        this.yearMonthBox = boxHelper.monthComboBox();
         this.yearMonthBox.setSelectedIndex(3);
         setDefaultTimeLine();
         GUIInfoProvider helper = new GUIInfoProvider();
@@ -52,12 +54,12 @@ public class TimeSetUp implements ActionListener {
         if (option.equalsIgnoreCase("Start")) {
             currentTimeText = new JLabel("Current Event Start Time:");
             currentTimeInfo = new JLabel(helper.getEventStartInfo(eventID, this.ec));
-            dateBox = new JComboBox<>(MenuCreationHelper.dateList(this.yearMonthBox.getItemAt(3), true));
+            dateBox = new JComboBox<>(boxHelper.dateList(this.yearMonthBox.getItemAt(3), true));
         }
         else if (option.equalsIgnoreCase("End")) {
             currentTimeText = new JLabel("Current Event End Time:");
             currentTimeInfo = new JLabel(helper.getEventEndInfo(eventID, this.ec));
-            dateBox = new JComboBox<>(MenuCreationHelper.dateList(this.yearMonthBox.getItemAt(3), false));
+            dateBox = new JComboBox<>(boxHelper.dateList(this.yearMonthBox.getItemAt(3), false));
         }
         dateBox.setSelectedIndex(LocalDateTime.now().getDayOfMonth() - 1);
         date = dateBox.getItemAt(LocalDateTime.now().getDayOfMonth() - 1);
@@ -183,10 +185,10 @@ public class TimeSetUp implements ActionListener {
             year = choice.getYear();
             month = choice.getMonthValue();
             if (option.equalsIgnoreCase("Start")) {
-                dateBox.setModel(new DefaultComboBoxModel<>(MenuCreationHelper.dateList(choice, true)));
+                dateBox.setModel(new DefaultComboBoxModel<>(boxHelper.dateList(choice, true)));
             }
             else {
-                dateBox.setModel(new DefaultComboBoxModel<>(MenuCreationHelper.dateList(choice, false)));
+                dateBox.setModel(new DefaultComboBoxModel<>(boxHelper.dateList(choice, false)));
             }
         }
     }
@@ -198,14 +200,14 @@ public class TimeSetUp implements ActionListener {
             }
             else {
                 LocalDateTime startTime = getLocalDateTime();
-                this.ec.changeStartDate(this.eventID, startTime.toLocalDate());
+                this.ec.changeStartDate(this.eventID, Objects.requireNonNull(startTime).toLocalDate());
                 this.ec.changeStartTime(this.eventID, startTime.toLocalTime());
             }
         }
 
         else if (option.equalsIgnoreCase("End")) {
             LocalDateTime endTime = getLocalDateTime();
-            this.ec.changeEndDate(eventID, endTime.toLocalDate());
+            this.ec.changeEndDate(eventID, Objects.requireNonNull(endTime).toLocalDate());
             this.ec.changeEndTime(eventID, endTime.toLocalTime());
         }
         this.parent.enableFrame();
