@@ -26,7 +26,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
     private final JPanel welcomePanel;
     private JLabel welcomeMessage;
     private final JButton buttonProfile = new JButton("1. Profile Setting");
-    private final JButton buttonCalendar = new JButton("2. View/Export Calendar");
+    private final JButton buttonCalendar = new JButton("2. Change Calendar");
     private final JButton buttonAddEvent = new JButton("3. Add a new Event");
     private final JButton buttonModifyEvent = new JButton("4. Modify an Event");
     private final JButton buttonExport = new JButton("5. Export Entire Calendar to iCal File");
@@ -93,7 +93,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         refactorCalendarString(defaultCalendarString);
     }
 
-    public void setCalendar(EventController eventController, LocalDate date, String option) {
+    private void setCalendar(EventController eventController, LocalDate date, String option) {
         CalendarController calendarController = new CalendarController();
         CalendarDisplayFactory calendarFactory = calendarController.getDisplayCalendarFactory(eventController);
         String calendarString = calendarFactory.displaySpecificCalendarByType(option, date.getYear(), date.getMonthValue(),
@@ -127,7 +127,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             sM.display();
         }
         else if (e.getSource() == buttonCalendar) {
-            new CalendarChoices(this.mc, this);
+            new CalendarChoices(this);
         }
         else if (e.getSource() == buttonAddEvent) {
             this.frame.setEnabled(false);
@@ -184,6 +184,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         welcomePanel.add(welcomeMessage);
         this.calendarPanel.removeAll();
         setUpCalendarPanel();
+        this.calendar = new JLabel();
         if (this.calendarMode.equalsIgnoreCase("default")) {
             setDefaultCalendar(this.ec);
         }
