@@ -419,4 +419,6 @@ public class EventController {
     public LocalDateTime getEnd(UUID ID){
         return eventManager.getEnd(ID);
     }
+
+    public Long getStartWorking(UUID ID){return workSessionController.getWorkSessionManager(eventManager).getStartWorking(ID);}
 }

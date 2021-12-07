@@ -1,14 +1,11 @@
 package usecases.events.worksessions;
 
 import entities.Event;
-import interfaces.EventListObserver;
-import usecases.events.worksessions.strategies.DayOrderer.FewestSessions;
+
 import usecases.events.worksessions.strategies.TimeGetters.DefaultTimeGetter;
 import usecases.events.worksessions.strategies.TimeGetters.TimeGetter;
 import usecases.events.worksessions.strategies.DayOrderer.DayOrderer;
-import usecases.events.worksessions.strategies.TimeOrderer.BreaksBetween;
-import usecases.events.worksessions.strategies.TimeOrderer.EveningPerson;
-import usecases.events.worksessions.strategies.TimeOrderer.MorningPerson;
+
 import usecases.events.worksessions.strategies.TimeOrderer.TimeOrderer;
 
 import usecases.events.EventManager;
@@ -77,7 +74,6 @@ public class WorkSessionScheduler {
     public void setHoursNeeded(UUID deadline, Long hoursNeeded, EventManager eventManager) {
         WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
         workSessionManager.setHoursNeeded(deadline, hoursNeeded);
-        System.out.println("set session length");
         this.autoSchedule(deadline, eventManager);
     }
 
@@ -110,7 +106,6 @@ public class WorkSessionScheduler {
         workSessionManager.setWorkSessions(deadline, workSessionManager.getPastSessions(deadline));
 
         while (totalHours > 0) {
-            System.out.println("scheduling");
             //Step one: determine the length the work session should be by default
             Long length = this.getLength(deadline, totalHours, eventManager);
             //step two: get a list of eligible times the event could take place according to
@@ -135,7 +130,6 @@ public class WorkSessionScheduler {
     //checks if session intersects with or flows into other work session for this event - if it does, merge them into
     //one event
     private void mergeSessions(UUID deadline, EventManager eventManager, Event newSession) {
-        System.out.println("attempt merge");
         WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
         Event toMerge = timeGetter.sessionAdjacent(deadline, eventManager, newSession);
         if (toMerge != null) {

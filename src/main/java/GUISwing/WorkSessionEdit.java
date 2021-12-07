@@ -4,6 +4,7 @@ import controllers.EventController;
 
 import interfaces.MeltParentWindow;
 import interfaces.WorkSessionInfoGetter;
+import usecases.events.worksessions.WorkSessionManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -33,7 +34,10 @@ public class WorkSessionEdit implements ActionListener{
     JPanel futureSessionPanel = new JPanel();
     JScrollPane futureSessionScroller = new JScrollPane(futureSessionPanel);
 
+    WorkSessionInfoGetter workSessionInfoGetter;
+
     public WorkSessionEdit(EventController eventController, WorkSessionInfoGetter workSessionInfoGetter, MeltParentWindow parent, UUID event){
+        this.workSessionInfoGetter = workSessionInfoGetter;
         this.parent = parent;
         this.event = event;
         this.eventController = eventController;
@@ -41,11 +45,11 @@ public class WorkSessionEdit implements ActionListener{
 
         frame.setVisible(true);
 
-        addSettings(workSessionInfoGetter);
+        addSettings();
 
-        pastSessionScroller.setBounds(0, 60, frame.getWidth()/2 - 5, frame.getHeight()-60);
+        pastSessionScroller.setBounds(0, 60, frame.getWidth()/2 - 10, frame.getHeight()-70);
         pastSessionScroller.setVisible(true);
-        futureSessionScroller.setBounds(frame.getWidth()/2 + 5, 60, frame.getWidth()/2 - 5, frame.getHeight()-60);
+        futureSessionScroller.setBounds(frame.getWidth()/2 + 5, 60, frame.getWidth()/2 - 10, frame.getHeight()-70);
         futureSessionScroller.setVisible(true);
         reset();
         frame.add(pastSessionScroller);
@@ -54,9 +58,7 @@ public class WorkSessionEdit implements ActionListener{
 
 
 
-    public void addSettings(WorkSessionInfoGetter workSessionInfoGetter){
-        totalHours.setSelectedItem(workSessionInfoGetter.getTotalHoursNeeded(event));
-        sessionLength.setSelectedItem(workSessionInfoGetter.getEventSessionLength(event));
+    public void addSettings(){
         startWorking.setSelectedItem(9L);
         hourslbl.setBounds(10, 5, 100, 20);
         totalHours.setBounds(110, 5, 50, 20);
@@ -84,11 +86,15 @@ public class WorkSessionEdit implements ActionListener{
     private void reset(){
         pastWorkSessionsReset();
         futureWorkSessionsReset();
+        totalHours.setSelectedItem(workSessionInfoGetter.getTotalHoursNeeded(event));
+        sessionLength.setSelectedItem(workSessionInfoGetter.getEventSessionLength(event));
+        startWorking.setSelectedItem(workSessionInfoGetter.getStartWorking(event));
         frame.revalidate();
         frame.repaint();
     }
 
     private void pastWorkSessionsReset(){
+        pastSessionPanel.removeAll();
         pastSessionPanel.setLayout(new BoxLayout(pastSessionPanel, BoxLayout.Y_AXIS));
         Border line = BorderFactory.createTitledBorder("past sessions");
         pastSessionPanel.setBorder(line);
@@ -100,6 +106,7 @@ public class WorkSessionEdit implements ActionListener{
     }
 
     private void futureWorkSessionsReset(){
+        futureSessionPanel.removeAll();
         futureSessionPanel.setLayout(new BoxLayout(futureSessionPanel, BoxLayout.Y_AXIS));
         Border line = BorderFactory.createTitledBorder("upcoming sessions");
         futureSessionPanel.setBorder(line);
@@ -112,19 +119,21 @@ public class WorkSessionEdit implements ActionListener{
 
     private JPanel addWorkSession(UUID session, boolean past){
         JPanel sessionOptions = new JPanel(new FlowLayout());
-        sessionOptions.setPreferredSize(new Dimension(200, 30));
+        sessionOptions.setPreferredSize(new Dimension(200, 100));
 
         sessionOptions.add(new JLabel("start: " + eventController.getStart(session)));
         sessionOptions.add(new JLabel("end: " + eventController.getEnd(session)));
 
         JButton complete = new JButton("completed (remove)");
+        complete.setPreferredSize(new Dimension(100, 20));
         sessionOptions.add(complete);
-        complete.setActionCommand("complete-" + session);
+        complete.setActionCommand("complete: " + session);
         complete.addActionListener(this);
         if (past){
             JButton incomplete = new JButton("incompleted (reschedule)");
+            incomplete.setPreferredSize(new Dimension(100, 20));
             sessionOptions.add(incomplete);
-            incomplete.setActionCommand("incomplete-" + session);
+            incomplete.setActionCommand("incomplete: " + session);
             incomplete.addActionListener(this);
         }
         return sessionOptions;
@@ -144,22 +153,21 @@ public class WorkSessionEdit implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == save){
             eventController.setTotalHours(event, (Long) totalHours.getSelectedItem());
-//            eventController.setSessionLength(event, (Long) sessionLength.getSelectedItem());
-//            eventController.getWorkSessionController().changeStartWorking(event, eventController.getEventManager(), (Long) startWorking.getSelectedItem());
-            reset();
+            eventController.setSessionLength(event, (Long) sessionLength.getSelectedItem());
+            eventController.getWorkSessionController().changeStartWorking(event, eventController.getEventManager(), (Long) startWorking.getSelectedItem());
 
-            System.out.println(eventController.getEventManager().get(event).getHoursNeeded());
+            reset();
         } else if (e.getSource() == done){
             eventController.setTotalHours(event, (Long) totalHours.getSelectedItem());
             eventController.setSessionLength(event, (Long) sessionLength.getSelectedItem());
             eventController.getWorkSessionController().changeStartWorking(event, eventController.getEventManager(), (Long) startWorking.getSelectedItem());
             parent.enableFrame();
             frame.dispose();
-        } else if (e.getActionCommand().split("-")[0].equalsIgnoreCase("complete")){
-            eventController.markComplete(event, UUID.fromString(e.getActionCommand().split("-")[1]));
+        } else if (e.getActionCommand().split(": ")[0].equalsIgnoreCase("complete")){
+            eventController.markComplete(event, UUID.fromString(e.getActionCommand().split(": ")[1]));
             reset();
-        } else if (e.getActionCommand().split("-")[0].equalsIgnoreCase("incomplete")) {
-            eventController.markInComplete(event, UUID.fromString(e.getActionCommand().split("-")[1]));
+        } else if (e.getActionCommand().split(": ")[0].equalsIgnoreCase("incomplete")) {
+            eventController.markInComplete(event, UUID.fromString(e.getActionCommand().split(": ")[1]));
             reset();
         }
     }

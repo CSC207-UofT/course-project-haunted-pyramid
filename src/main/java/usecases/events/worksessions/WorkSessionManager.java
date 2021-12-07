@@ -21,11 +21,11 @@ public class WorkSessionManager implements WorkSessionInfoGetter {
     }
 
     public List<Event> getPastSessions(UUID ID){
-        return eventManager.timeOrder(eventManager.get(ID).pastWorkSessions());
+        return eventManager.get(ID).pastWorkSessions();
     }
 
     public List<Event> getWorkSessions(UUID ID){
-        return eventManager.timeOrder(eventManager.get(ID).getWorkSessions());
+        return eventManager.get(ID).getWorkSessions();
     }
 
     public void removeWorkSession(UUID id, Event session) {
@@ -56,6 +56,13 @@ public class WorkSessionManager implements WorkSessionInfoGetter {
     public List<Event> getTotalWorkSession(UUID eventID) {
         if (eventManager.containsID(eventID)) {
             return eventManager.timeOrder(eventManager.get(eventID).getWorkSessions());
+        }
+        return null;
+    }
+
+    public Long getStartWorking(UUID eventID){
+        if (eventManager.containsID(eventID)){
+            return eventManager.get(eventID).getStartWorking();
         }
         return null;
     }

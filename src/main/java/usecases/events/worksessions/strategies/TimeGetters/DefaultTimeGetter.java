@@ -36,6 +36,9 @@ public class DefaultTimeGetter implements TimeGetter {
     @Override
     public List<Event> getListSchedule(EventManager eventManager, LocalDate start, UUID deadline) {
         List<Event> schedule = eventManager.getAllEventsFlatSplit();
+        schedule.add(new Event(UUID.randomUUID(), "now", LocalDateTime.of(LocalDate.now(), LocalTime.of(
+                LocalTime.now().getHour(), 0)), LocalDateTime.of(LocalDate.now(), LocalTime.of(LocalTime.now().
+                plusHours(1).getHour(), 0))));
         for(LocalDate current = start; !current.isAfter(eventManager.getEndDate(deadline)); current = current.plusDays(1)){
             for (LocalTime startTime: this.freeTime.keySet()){
                 schedule.add(new Event(UUID.randomUUID(), "free time", LocalDateTime.of(current, startTime),
