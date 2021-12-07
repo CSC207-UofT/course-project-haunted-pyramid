@@ -1,6 +1,5 @@
 package controllers;
 
-import entities.Event;
 import entities.UserPreferences;
 import gateways.IOSerializable;
 import helpers.ControllerHelper;
@@ -291,7 +290,7 @@ public class EventController {
     }
 
     public void changeEndTime(UUID ID, LocalTime newEnd){
-        if(carryToRecursion(ID)){
+        if (carryToRecursion(ID)){
             this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
             this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
             this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
@@ -324,7 +323,7 @@ public class EventController {
             }
         }
         else {
-            if(carryToRecursion(ID)){
+            if (carryToRecursion(ID)){
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
                 this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
@@ -360,8 +359,8 @@ public class EventController {
         this.changeName(ID, name);
     }
 
-    public void changeName(UUID ID, String name){
-        this.eventManager.setName(ID, name);
+    public void changeName (UUID ID, String name) {
+            this.eventManager.setName(ID, name);
     }
 
     /**
@@ -374,11 +373,8 @@ public class EventController {
         this.workSessionController.edit(ID, eventManager);
     }
 
-    public WorkSessionController getWorkSessionController(){return this.workSessionController;}
-
-    public boolean updatePreferences(UserPreferences userPreferences){
+    public void updatePreferences(UserPreferences userPreferences){
         this.workSessionController.refresh(userPreferences, eventManager);
-        return true;
     }
 
     public void setSessionLength(UUID ID, Long sessionLength){
@@ -387,29 +383,5 @@ public class EventController {
 
     public void setTotalHours(UUID ID, Long totalHours){
         workSessionController.changeTotalHour(ID, eventManager, totalHours);
-    }
-
-    public List<Event> getAllEvents() {
-        return eventManager.getAllEvents();
-    }
-
-    public String getName(UUID event) {
-        return eventManager.getName(event);
-    }
-
-    public LocalDateTime getStart(UUID event) {
-        return eventManager.getStart(event);
-    }
-
-    public LocalDateTime getEnd(UUID event) {
-        return eventManager.getEnd(event);
-    }
-
-    public UUID getID(Event event) {
-        return eventManager.getID(event);
-    }
-
-    public String getDescription(UUID eventID) {
-        return eventManager.getDescription(eventID);
     }
 }

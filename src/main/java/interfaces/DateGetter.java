@@ -3,7 +3,6 @@ package interfaces;
 import entities.Event;
 
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface DateGetter {

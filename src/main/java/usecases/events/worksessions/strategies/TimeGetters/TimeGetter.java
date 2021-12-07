@@ -2,6 +2,8 @@ package usecases.events.worksessions.strategies.TimeGetters;
 
 import entities.Event;
 import usecases.events.EventManager;
+import usecases.events.worksessions.WorkSessionManager;
+import usecases.events.worksessions.WorkSessionScheduler;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -100,7 +102,8 @@ public interface TimeGetter {
 
     //helper method for mergeSessions
     default Event sessionAdjacent(UUID deadline, EventManager eventManager, Event newSession) {
-        for (Event session: eventManager.getWorkSessions(deadline)){
+        WorkSessionManager workSessionManager = new WorkSessionManager();
+        for (Event session: workSessionManager.getWorkSessions(eventManager, deadline)){
             if (eventManager.getEnd(session).isEqual(eventManager.getStart(newSession)) || eventManager.getStart(
                     session).isEqual(eventManager.getEnd(newSession))){
                 return session;

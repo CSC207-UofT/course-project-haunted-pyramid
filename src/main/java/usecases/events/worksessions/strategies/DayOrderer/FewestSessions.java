@@ -2,6 +2,7 @@ package usecases.events.worksessions.strategies.DayOrderer;
 
 import entities.Event;
 import usecases.events.EventManager;
+import usecases.events.worksessions.WorkSessionManager;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -11,9 +12,9 @@ public class FewestSessions implements DayOrderer{
     public void order(UUID deadline, EventManager eventManager, List<LocalDate> eligibleDates,
                            Map<LocalDate, List<Event>> schedule) {
         List<LocalDate> ordered = new ArrayList<>();
-
+        WorkSessionManager workSessionManager = new WorkSessionManager();
         while (!eligibleDates.isEmpty()) {
-            LocalDate leastWorkSessions = this.leastSessions(eligibleDates, eventManager.getWorkSessions(deadline),eventManager);
+            LocalDate leastWorkSessions = this.leastSessions(eligibleDates, workSessionManager.getWorkSessions(eventManager, deadline),eventManager);
             eligibleDates.remove(leastWorkSessions);
             ordered.add(leastWorkSessions);
         }
