@@ -5,7 +5,6 @@ import usecases.events.EventManager;
 import usecases.events.worksessions.WorkSessionManager;
 import usecases.events.worksessions.strategies.TimeGetters.TimeGetter;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class BreaksBetween implements TimeOrderer {
-    private String spacing;
+    private final String spacing;
     public BreaksBetween(String spacing){
         this.spacing = spacing;
     }
@@ -114,8 +113,8 @@ public class BreaksBetween implements TimeOrderer {
     }
 
     private boolean sessionBefore(EventManager eventManager, UUID deadline, LocalDateTime start){
-        WorkSessionManager workSessionManager = new WorkSessionManager();
-        for (Event session: workSessionManager.getWorkSessions(eventManager, deadline)){
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        for (Event session: workSessionManager.getWorkSessions(deadline)){
             if (eventManager.getEnd(session).equals(start)){
                 return true;
             }
@@ -123,8 +122,8 @@ public class BreaksBetween implements TimeOrderer {
         return false;
     }
     private boolean sessionAfter(EventManager eventManager, UUID deadline, LocalDateTime start, Long length){
-        WorkSessionManager workSessionManager = new WorkSessionManager();
-        for (Event session: workSessionManager.getWorkSessions(eventManager, deadline)){
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        for (Event session: workSessionManager.getWorkSessions(deadline)){
             if (eventManager.getStart(session).equals(start.plusHours(length))){
                 return true;
             }

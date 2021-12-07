@@ -155,7 +155,8 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
 
         if (e.getSource() == workSessionButton) {
             this.frame.setEnabled(false);
-            new WorkSessionEdit(mc.getEventController(), this, eventID);
+            new WorkSessionEdit(this.ec, this.ec.getWorkSessionController()
+                    .getWorkSessionManager(this.ec.getEventManager()), this, eventID);
         }
 
         if (e.getSource() == recursionButton) {

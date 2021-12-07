@@ -10,7 +10,6 @@ import entities.Event;
 import entities.recursions.RecursiveEvent;
 import interfaces.EventInfoGetter;
 import interfaces.EventListObserver;
-import usecases.events.worksessions.WorkSessionManager;
 
 /**
  * stores and Manages events
@@ -170,12 +169,8 @@ public class EventManager implements EventInfoGetter {
         return eventMap.remove(ID);
     }
 
-    public Event removeWithoutUpdate(UUID id){
-        return eventMap.remove(id);
-    }
-
-    public void removeAll(List<UUID> IDs){
-        IDs.forEach(eventMap::remove);
+    public void removeWithoutUpdate(UUID id){
+        eventMap.remove(id);
     }
 
     /**
@@ -501,10 +496,6 @@ public class EventManager implements EventInfoGetter {
         get(event).setName(name);
     }
 
-    public void setName(Event event, String name) {
-        event.setName(name);
-    }
-
     /**
      * Sets the description of an event, does not have to be in <code>this.eventMap</code>
      *
@@ -559,104 +550,6 @@ public class EventManager implements EventInfoGetter {
         Event event = this.get(eventID);
         String[] date = event.getEndTime().toString().split("-");
         return date[2].substring(3, 8);
-    }
-
-    /**
-     * Return the session length of the event given by the ID
-     * @param eventID ID of the event
-     * @return session length of the event
-     */
-    public Long getEventSessionLength(UUID eventID) {
-        if (this.containsID(eventID)) {
-            return this.get(eventID).getSessionLength();
-        }
-        else {
-            return null;
-        }
-    }
-
-    /**
-     * Return the events' total work session list
-     * @param eventID ID of the event
-     * @return list of the total work session
-     */
-    public List<Event> getTotalWorkSession(UUID eventID) {
-        if (this.containsID(eventID)) {
-            return this.timeOrder(this.get(eventID).getWorkSessions());
-        }
-        return null;
-    }
-
-    /**
-     * Return the list of the past work sessions of the event
-     * @param id ID of the event
-     * @return list of the past work session
-     */
-    public List<Event> getPastWorkSession(UUID id) {
-        if (this.containsID(id)) {
-            List<Event> totalWorkSession = this.get(id).getWorkSessions();
-            List<Event> pastWorkSession = new ArrayList<>();
-            for (Event event : totalWorkSession) {
-                if (event.getEndTime().isBefore(LocalDateTime.now())) {
-                    pastWorkSession.add(event);
-                }
-            }
-            return this.timeOrder(pastWorkSession);
-        }
-        else {
-            return null;
-        }
-    }
-
-    /**
-     * Return the list of the future work sessions of the event
-     * @param id ID of the event
-     * @return the list of the future work sessions of the event
-     */
-    public List<Event> getFutureWorkSession(UUID id) {
-        if (this.containsID(id)) {
-            List<Event> totalWorkSession = this.get(id).getWorkSessions();
-            List<Event> futureWorkSession = new ArrayList<>();
-            for (Event event : totalWorkSession) {
-                if (event.getEndTime().isAfter(LocalDateTime.now())) {
-                    futureWorkSession.add(event);
-                }
-            }
-            return this.timeOrder(futureWorkSession);
-        }
-        else {
-            return null;
-        }
-    }
-
-    public String getPastSessionsString(UUID id){
-        StringBuilder options = new StringBuilder();
-        for (Event session: this.getPastWorkSession(id)){
-            options.append("\n").append(this.getTotalWorkSession(id).indexOf(session)).append(" ----\n ").append(session);
-        }
-        return options.toString();
-    }
-
-    public String getFutureSessionsString(UUID id){
-        StringBuilder options = new StringBuilder();
-        for (Event session: this.getFutureWorkSession(id)){
-            options.append("\n").append(this.getTotalWorkSession(id).indexOf(session)).append(" ----\n ").append(session);
-        }
-        return options.toString();
-    }
-
-    /**
-     * Return the total session hours of the event
-     * @param id ID of the event
-     * @return the total session hours set by the event
-     */
-    public Long getTotalHoursNeeded(UUID id) {
-        if (this.containsID(id)) {
-            return this.get(id).getHoursNeeded();
-        }
-        else {
-            return null;
-        }
     }
 
     /**

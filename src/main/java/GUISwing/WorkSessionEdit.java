@@ -4,6 +4,7 @@ import controllers.EventController;
 import controllers.UserController;
 import entities.Event;
 import interfaces.MeltParentWindow;
+import interfaces.WorkSessionInfoGetter;
 import usecases.events.worksessions.WorkSessionScheduler;
 import usecases.events.worksessions.WorkSessionSchedulerBuilder;
 
@@ -27,14 +28,15 @@ public class WorkSessionEdit implements ActionListener{
     UUID event;
     MeltParentWindow parent;
 
-    public WorkSessionEdit(EventController eventController, MeltParentWindow parent, UUID event){
+    public WorkSessionEdit(EventController eventController, WorkSessionInfoGetter workSessionInfoGetter,
+                           MeltParentWindow parent, UUID eventID){
         this.parent = parent;
         frame.setVisible(true);
         frame.setLayout(new FlowLayout());
-        this.event = event;
+        this.event = eventID;
         this.eventController = eventController;
-        totalHours.setSelectedItem(eventController.getEventManager().getTotalHoursNeeded(event));
-        sessionLength.setSelectedItem(eventController.getEventManager().getEventSessionLength(event));
+        totalHours.setSelectedItem(workSessionInfoGetter.getTotalHoursNeeded(event));
+        sessionLength.setSelectedItem(workSessionInfoGetter.getEventSessionLength(event));
         frame.add(hourslbl);
         frame.add(totalHours);
         frame.add(sessionlbl);
