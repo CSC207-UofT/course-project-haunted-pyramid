@@ -38,7 +38,12 @@ public class WorkSessionScheduler {
      */
     public void markInComplete(UUID event, String session, EventManager eventManager) {
         eventManager.timeOrder(eventManager.getWorkSessions(event));
-        eventManager.getWorkSessions(event).remove(eventManager.getWorkSessions(event).get(Integer.parseInt(session)));
+        this.markInComplete(event, eventManager.getID(eventManager.getWorkSessions(event).get(Integer.parseInt(session))), eventManager);
+        this.autoSchedule(event, eventManager);
+    }
+
+    public void markInComplete(UUID event, UUID session, EventManager eventManager) {
+        eventManager.getWorkSessions(event).remove(eventManager.get(session));
         this.autoSchedule(event, eventManager);
     }
 
@@ -51,9 +56,13 @@ public class WorkSessionScheduler {
      */
     public void markComplete(UUID event, String session, EventManager eventManager) {
         eventManager.timeOrder(eventManager.getWorkSessions(event));
+        this.markComplete(event, eventManager.getID(eventManager.getWorkSessions(event).get(Integer.parseInt(session))), eventManager);
+    }
+
+    public void markComplete(UUID event, UUID session, EventManager eventManager) {
         eventManager.setHoursNeeded(event, (long) (eventManager.getHoursNeeded(event) -
-                eventManager.getLength(eventManager.getWorkSessions(event).get(Integer.parseInt(session)))));
-        eventManager.getWorkSessions(event).remove(eventManager.getWorkSessions(event).get(Integer.parseInt(session)));
+                eventManager.getLength(eventManager.get(session))));
+        eventManager.getWorkSessions(event).remove(eventManager.get(session));
         this.autoSchedule(event, eventManager);
     }
 
@@ -171,47 +180,12 @@ public class WorkSessionScheduler {
         return dates;
     }
 
-
-    public static void main(String[] args) {
-        HashMap<LocalTime, LocalTime> freeTime = new HashMap<>();
-        freeTime.put(LocalTime.of(21, 0), LocalTime.of(23, 59));
-        freeTime.put(LocalTime.of(0, 0), LocalTime.of(9, 0));
-        WorkSessionScheduler workSessionScheduler = new WorkSessionScheduler(freeTime);
-
-        UUID uuid = UUID.randomUUID();
-        UUID uuid2 = UUID.randomUUID();
-
-        Event newEvent1 = new Event(uuid, "e1", LocalDateTime.of(2021, 12, 7, 13, 0), LocalDateTime.of(2021, 12, 7, 14, 0));
-        Event newEvent2 = new Event(uuid2, "e2", LocalDateTime.of(2021, 12, 7, 16, 0), LocalDateTime.of(2021, 12, 7, 17, 0));
-        List<Event> l1 = new ArrayList<>();
-        l1.add(newEvent1);
-        l1.add(newEvent2);
-
-        EventManager eventManager = new EventManager(l1);
-
-
-
-        UUID deadline = eventManager.addEvent("deadline", LocalDateTime.of(2021, 12, 8, 22, 30));
-        workSessionScheduler.addDayOrderer(new FewestSessions());
-        workSessionScheduler.addTimeOrderer(new EveningPerson());
-//        workSessionScheduler.addTimeOrderer(new BreaksBetween("short"));
-
-//        System.out.println(workSessionScheduler.timeGetter.getListSchedule(eventManager, LocalDate.now(), deadline));
-//        System.out.println(eventManager.getStartWorking(deadline));
-
-
-//        List<Event> schedule = workSessionScheduler.timeGetter.getListSchedule(eventManager, LocalDate.now(), deadline);
-//        System.out.println(schedule);
-//        System.out.println(eventManager.timeOrder(schedule));
-        System.out.println(workSessionScheduler.timeGetter.freeSlots(LocalDateTime.now(),eventManager.getEnd(deadline), eventManager, deadline));
-        eventManager.changeStartWorking(deadline, LocalDate.of(2021, 12, 5));
-        workSessionScheduler.setHoursNeeded(deadline, 10L, eventManager);
-
-
-//        System.out.println(eventManager.getWorkSessions(deadline));
+    public void changeStartWorking(UUID eventID, LocalDate date, EventManager eventManager) {
+        eventManager.changeStartWorking(eventID, date);
+        autoSchedule(eventID, eventManager);
     }
 
-    public void changeStartWorking(UUID eventID, LocalDate date, EventManager eventManager) {
+    public void changeStartWorking(UUID eventID, Long date, EventManager eventManager) {
         eventManager.changeStartWorking(eventID, date);
         autoSchedule(eventID, eventManager);
     }

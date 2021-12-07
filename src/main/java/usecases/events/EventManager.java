@@ -770,6 +770,10 @@ public class EventManager {
                 LocalDateTime.of(this.getEndDate(event), LocalTime.of(0, 0))).toDays());
     }
 
+    public void changeStartWorking(UUID event, Long date){
+        this.get(event).setStartWorking(date);
+    }
+
     public LocalDate getStartWorking(UUID event) {
         return getEndDate(event).minusDays(get(event).getStartWorking());
     }

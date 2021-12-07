@@ -412,4 +412,28 @@ public class EventController {
     public String getDescription(UUID eventID) {
         return eventManager.getDescription(eventID);
     }
+
+    public List<UUID> getPastWorkSessions(UUID ID){
+        List<UUID> workSessions = new ArrayList<>();
+        for (Event session: eventManager.getPastWorkSession(ID)){
+            workSessions.add(eventManager.getID(session));
+        }
+        return workSessions;
+    }
+
+    public List<UUID> getFutureWorkSessions(UUID ID){
+        List<UUID> workSessions = new ArrayList<>();
+        for (Event session: eventManager.getFutureWorkSession(ID)){
+            workSessions.add(eventManager.getID(session));
+        }
+        return workSessions;
+    }
+
+    public void markComplete(UUID event, UUID session){
+        workSessionController.markComplete(event, session, eventManager);
+    }
+
+    public void markInComplete(UUID event, UUID session){
+        workSessionController.markInComplete(event, session, eventManager);
+    }
 }

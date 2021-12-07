@@ -153,5 +153,5 @@ to a weekly or daily view for a specified week or day. A user can edit the recur
 prep time of an event, and have automatically scheduled work sessions scheduled and updated
 depending on their input. The program allows the user to mark work sessions as complete
 and have the sessions rescheduled accordingly. The user can specify their free time during which work sessions
-are prohibited to be scheduled, and their preffered method of scheduling (procrastinating or not).
+are prohibited to be scheduled, and their preferred method of scheduling (procrastinating or not).
 When the user logs off, their profile info and events are serialized and saved to a dropbox. 

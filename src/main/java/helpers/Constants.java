@@ -22,4 +22,6 @@ public class Constants {
     public static final int POPUP_WIDTH = 500;
     public static final int POPUP_HEIGHT = 300;
     public static final Color WINDOW_COLOR = new Color(233, 161, 161);
+    public static final Color CONTRAST_WINDOW_COLOR = new Color(20, 20, 20);
+    public static final Color CONTRAST_TEXT_COLOR = new Color(200, 200, 50);
 }

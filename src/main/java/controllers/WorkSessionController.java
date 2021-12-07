@@ -131,6 +131,10 @@ public class WorkSessionController {
         workSessionScheduler.changeStartWorking(Id, startWorking, eventManager);
     }
 
+    public void changeStartWorking(UUID Id, EventManager eventManager, Long startWorking){
+        workSessionScheduler.changeStartWorking(Id, startWorking, eventManager);
+    }
+
     /**
      * Change total hour of the work session
      * @param eventID ID of the event to change from
@@ -192,6 +196,14 @@ public class WorkSessionController {
             this.workSessionScheduler.markInComplete(eventID, sessionNumber, eventManager);
             System.out.println("The session was marked Incomplete");
         }
+    }
+
+    public void markComplete(UUID event, UUID session, EventManager eventManager){
+        workSessionScheduler.markComplete(event, session, eventManager);
+    }
+
+    public void markInComplete(UUID event, UUID session, EventManager eventManager){
+        workSessionScheduler.markInComplete(event, session, eventManager);
     }
 
 

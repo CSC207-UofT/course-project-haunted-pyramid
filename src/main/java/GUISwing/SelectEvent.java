@@ -31,7 +31,7 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
             JButton btn= new JButton(this.mc.getEventController().getName(this.mc.getEventController().getID(event)) + " start:  " +
                     this.mc.getEventController().getStart(this.mc.getEventController().getID(event)) + "  end: " +
                     this.mc.getEventController().getEnd(this.mc.getEventController().getID(event)));
-            btn.setPreferredSize(new Dimension(100, 30));
+            btn.setPreferredSize(new Dimension(eventPanel.getWidth(), 30));
             btn.setActionCommand(this.mc.getEventController().getID(event).toString());
             btn.addActionListener(this);
             eventPanel.add(btn);
