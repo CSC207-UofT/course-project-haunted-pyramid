@@ -3,9 +3,16 @@ package GUISwing;
 import helpers.Constants;
 
 import javax.swing.*;
-import java.awt.*;
+
+/**
+ * Set up the pop-up window to be used for the app
+ * @author Seo Won Yi
+ */
 
 public class PopUpWindowFrame extends JFrame {
+    /**
+     * Set up the pop-up window to be used
+     */
     public PopUpWindowFrame() {
         this.setTitle("Haunted Pyramid Calendar App");
         this.setResizable(false);

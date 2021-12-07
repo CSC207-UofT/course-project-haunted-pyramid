@@ -14,6 +14,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
+/**
+ * Main Menu of GUI
+ * @author Seo Won Yi
+ * @see MainFrame
+ * @see MainFrameWithMenu
+ * @see MainController
+ */
+
 public class MainMenu implements ActionListener, MeltParentWindow {
     private final JFrame frame;
     private final MainController mc;
@@ -33,7 +41,10 @@ public class MainMenu implements ActionListener, MeltParentWindow {
     private final JButton buttonLogOut = new JButton("6. Log Out");
     private final JButton buttonExit = new JButton("7. Exit");
 
-
+    /**
+     * Set up the main menu GUI
+     * @param mainController MainController object to access every other controllers
+     */
     public MainMenu(MainController mainController) {
         this.frame = new MainFrameWithMenu(mainController.getUserController(), this);
         this.mc = mainController;
@@ -65,6 +76,10 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         buttonSetUp(menuPanel);
     }
 
+    /**
+     * Set up the buttons to the panel
+     * @param menuPanel panel that buttons will be added on
+     */
     private void buttonSetUp(JPanel menuPanel) {
         setUpIndividualButton(buttonProfile, menuPanel);
         setUpIndividualButton(buttonCalendar, menuPanel);
@@ -75,32 +90,55 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         setUpIndividualButton(buttonExit, menuPanel);
     }
 
+    /**
+     * Configuration of button size and action
+     * @param button buttons to be configured
+     * @param menuPanel panel that buttons will be added on
+     */
     private void setUpIndividualButton(JButton button, JPanel menuPanel) {
         button.setPreferredSize(new Dimension(300, 50));
         button.addActionListener(this);
         menuPanel.add(button);
     }
 
+    /**
+     * Set up the panel that will contain calendar information
+     * @return Calendar Panel that will have calendar information on
+     */
     public JPanel setUpCalendarPanel() {
         JPanel calendarPanel = new JPanel();
         calendarPanel.setBackground(Constants.WINDOW_COLOR);
         return calendarPanel;
     }
 
+    /**
+     * Set up the default Calendar (current month calendar)
+     * @param eventController EventController object to obtain events information from
+     */
     public void setDefaultCalendar(EventController eventController) {
         CalendarController calendarController = new CalendarController();
         String defaultCalendarString = calendarController.showDefaultCalendar(eventController);
         refactorCalendarString(defaultCalendarString);
     }
 
-    private void setCalendar(EventController eventController, LocalDate date, String option) {
+    /**
+     * Set up the calendar with given date and type (by the option)
+     * @param eventController EventController object to obtain event information from
+     * @param date date of the event
+     */
+    private void setCalendar(EventController eventController, LocalDate date) {
         CalendarController calendarController = new CalendarController();
         CalendarDisplayFactory calendarFactory = calendarController.getDisplayCalendarFactory(eventController);
-        String calendarString = calendarFactory.displaySpecificCalendarByType(option, date.getYear(), date.getMonthValue(),
+        String calendarString = calendarFactory.displaySpecificCalendarByType(this.calendarMode,
+                date.getYear(), date.getMonthValue(),
                 date.getDayOfMonth()).displayCalendar();
         refactorCalendarString(calendarString);
     }
 
+    /**
+     * Refactor the string of calendar to be presentable on the panel
+     * @param calendarString raw calendarString to be refactored
+     */
     private void refactorCalendarString(String calendarString) {
         calendarString = calendarString.replaceAll("\n", "<br/>");
         this.calendar.setText("<html><pre>" + calendarString + "</pre><html>");
@@ -110,6 +148,10 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         this.calendar.setHorizontalAlignment(JLabel.CENTER);
     }
 
+    /**
+     * Set up the welcome message
+     * @param name name of the user
+     */
     private void setUpWelcomeMessage(String name) {
         welcomeMessage.setText("Welcome " + name + "!");
         welcomeMessage.setHorizontalTextPosition(JLabel.CENTER);
@@ -120,6 +162,44 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         welcomeMessage.setBounds(1444/3, 0, 1444/3, 200);
     }
 
+    /**
+     * set up the date information for the calendar
+     * @param newDate new date information to be set
+     */
+    public void setDateInfo(LocalDate newDate) {
+        this.dateInfo = newDate;
+    }
+
+    /**
+     * Set up the type of calendar to show
+     * @param option type of calendar
+     */
+    public void setCalendarMode(String option) {
+        if (option.equalsIgnoreCase("default")) {
+            this.calendarMode = "Default";
+        }
+        else if (option.equalsIgnoreCase("monthly")) {
+            this.calendarMode = "Monthly";
+        }
+        else if (option.equalsIgnoreCase("weekly")) {
+            this.calendarMode = "Weekly";
+        }
+        else if (option.equalsIgnoreCase("daily")) {
+            this.calendarMode = "Daily";
+        }
+    }
+
+    /**
+     * display the calendar
+     */
+    public void display() {
+        frame.setVisible(true);
+    }
+
+    /**
+     * Add actions for the buttons
+     * @param e action to be considered
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttonProfile) {
@@ -156,25 +236,9 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         }
     }
 
-    public void setDateInfo(LocalDate newDate) {
-        this.dateInfo = newDate;
-    }
-
-    public void setCalendarMode(String option) {
-        if (option.equalsIgnoreCase("default")) {
-            this.calendarMode = "Default";
-        }
-        else if (option.equalsIgnoreCase("monthly")) {
-            this.calendarMode = "Monthly";
-        }
-        else if (option.equalsIgnoreCase("weekly")) {
-            this.calendarMode = "Weekly";
-        }
-        else if (option.equalsIgnoreCase("daily")) {
-            this.calendarMode = "Daily";
-        }
-    }
-
+    /**
+     * Refresh the screen by reloading the contents on the panels
+     */
     @Override
     public void refresh() {
         this.mc.getEventController().updatePreferences(this.mc.getUserController().getPreferences());
@@ -189,29 +253,35 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             setDefaultCalendar(this.ec);
         }
         else {
-            setCalendar(this.ec, dateInfo, this.calendarMode);
+            setCalendar(this.ec, dateInfo);
         }
         this.calendarPanel.add(this.calendar);
         this.frame.revalidate();
         this.frame.repaint();
     }
 
+    /**
+     * enable the frame
+     */
     @Override
     public void enableFrame() {
         this.frame.setEnabled(true);
     }
 
+    /**
+     * exit the frame
+     */
     @Override
     public void exitFrame() {
         this.frame.dispose();
     }
 
+    /**
+     * get parent object (previous window)
+     * @return none because this class is the main menu (no prev window)
+     */
     @Override
     public MeltParentWindow getParent() {
         return null;
-    }
-
-    public void display() {
-        frame.setVisible(true);
     }
 }

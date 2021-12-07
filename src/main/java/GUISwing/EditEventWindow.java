@@ -12,6 +12,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.UUID;
 
+/**
+ * Event editing page
+ * @author Seo Won Yi
+ * @author Taite Cullen
+ * @see EventController
+ * @see EventInfoGetter
+ */
 
 public class EditEventWindow implements ActionListener, MeltParentWindow {
     private final MainController mc;
@@ -31,6 +38,13 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
     private JButton saveButton;
     private JButton deleteButton;
 
+    /**
+     * Construct the EditEventWindow
+     * @param mc MainController with access to every controller
+     * @param eventInfoGetter Interface used for obtaining event information
+     * @param eventID ID of the event to edit on
+     * @param parent parent window (prev window)
+     */
     public EditEventWindow(MainController mc, EventInfoGetter eventInfoGetter, UUID eventID, MeltParentWindow parent) {
         this.helper = new GUIInfoProvider();
         this.eventID = eventID;
@@ -67,12 +81,21 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         this.frame.setVisible(true);
     }
 
+    /**
+     * Set up the text info panel that will have text information such as name and description
+     * @param textInfoPanel panel to have text information on
+     */
     private void textInfoPanelSetUp(JPanel textInfoPanel) {
         textInfoPanel.setBounds(0, 0, 230, Constants.POPUP_HEIGHT / 3);
         textInfoPanel.setLayout(null);
         textInfoPanel.setBackground(Constants.WINDOW_COLOR);
     }
 
+    /**
+     * Set up the time information and put them on the panel
+     * @param eventID ID of an event to be considered
+     * @param helper GUIInfoProvider object that will help to provide with time information of the event
+     */
     private void setUpTimeInfo(UUID eventID, GUIInfoProvider helper) {
         JLabel viewStart = new JLabel("Current Event Start Time:");
         viewStart.setBounds(40, 13, 270, 20);
@@ -88,6 +111,10 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         timeInfoPanel.add(endTime);
     }
 
+    /**
+     * set up the text information (name and description of event) and put them on the panel
+     * @param panel panel to contain the text information
+     */
     private void setUpTextInfo(JPanel panel) {
         eventName = new JTextField(eventInfoGetter.getName(this.eventID));
         eventName.setBounds(30, 17, 200, 20);
@@ -102,6 +129,9 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         this.frame.add(descriptionPane);
     }
 
+    /**
+     * Set up the buttons to be used
+     */
     private void setUpButtons() {
         setUpStart = new JButton("Modify Start Time");
         setUpStart.setBounds(30, 50, 200, 20);
@@ -117,6 +147,9 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         deleteButton.setBounds(270, 130, 200, 20);
     }
 
+    /**
+     * Enable actions with buttons
+     */
     private void addActionLister() {
         setUpStart.addActionListener(this);
         setUpEnd.addActionListener(this);
@@ -126,6 +159,10 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         deleteButton.addActionListener(this);
     }
 
+    /**
+     * Add buttons to the panel
+     * @param buttonPanel panel that contains all the buttons
+     */
     private void addButtons(JPanel buttonPanel) {
         buttonPanel.add(setUpStart);
         buttonPanel.add(setUpEnd);
@@ -135,12 +172,19 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         buttonPanel.add(deleteButton);
     }
 
+    /**
+     * Set up the time information panel
+     */
     private void timeInfoPanelSetUp() {
         this.timeInfoPanel.setBounds(230, 0, Constants.POPUP_WIDTH - 230, Constants.POPUP_HEIGHT / 3);
         this.timeInfoPanel.setLayout(null);
         this.timeInfoPanel.setBackground(Constants.WINDOW_COLOR);
     }
 
+    /**
+     * configuration of button actions
+     * @param e each action to be considered from
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == setUpStart) {
@@ -183,6 +227,10 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
             }
         }
     }
+
+    /**
+     * Refresh the page by reloading specific panels
+     */
     @Override
     public void refresh() {
         this.timeInfoPanel.removeAll();
@@ -192,16 +240,26 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         this.frame.repaint();
     }
 
+    /**
+     * get parent object (prev window)
+     * @return the parent object (prev window)
+     */
     @Override
     public MeltParentWindow getParent() {
         return this.parent;
     }
 
+    /**
+     * enable the frame
+     */
     @Override
     public void enableFrame() {
         this.frame.setEnabled(true);
     }
 
+    /**
+     * exit the frame
+     */
     @Override
     public void exitFrame() {
         this.frame.dispose();

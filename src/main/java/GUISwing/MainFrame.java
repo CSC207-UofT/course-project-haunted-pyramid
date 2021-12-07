@@ -4,6 +4,11 @@ import helpers.Constants;
 
 import javax.swing.*;
 
+/**
+ * Main Frame to be used for the app
+ * @author Seo Won Yi
+ */
+
 public class MainFrame extends JFrame {
     /**
      * Set up the main frame to be used for all the common windows
