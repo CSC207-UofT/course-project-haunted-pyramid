@@ -29,7 +29,6 @@ import java.util.*;
 public class EventController {
 
     private final EventManager eventManager;
-    private final RecursionController recursionController;
     private final WorkSessionController workSessionController;
     private final IOController ioController;
 
@@ -54,7 +53,6 @@ public class EventController {
         }
         this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
         this.eventManager.setUuidRecursiveEventsMap(ioSerializable.recursiveEventsReadFromSerializable());
-        this.recursionController = new RecursionController();
         this.ioController = new IOController();
     }
 
@@ -76,7 +74,6 @@ public class EventController {
         }
         this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
         this.eventManager.setUuidRecursiveEventsMap(ioSerializable.recursiveEventsReadFromSerializable());
-        this.recursionController = new RecursionController();
         this.ioController = new IOController();
         this.workSessionController = new WorkSessionController(userController.getPreferences());
     }
@@ -179,6 +176,13 @@ public class EventController {
     }
 
     private void addToRecursion(UUID id) {
+        if (this.eventManager.getRepeatedEventManager().getAllEventsFromRecursiveEvent(id) == null) {
+            System.out.println("There is no Recursion events set up yet");
+            return;
+        }
+        else if (this.eventManager.getRepeatedEventManager().getAllEventsFromRecursiveEvent(id).size() == 0) {
+            System.out.println("There is no recursion set up for the given ID");
+        }
         this.eventManager.get(id).setRecursiveId(getRecursiveID());
         this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
         this.eventManager.getRepeatedEventManager().update("add", this.eventManager.get(id), this.eventManager);
@@ -383,5 +387,9 @@ public class EventController {
 
     public void setTotalHours(UUID ID, Long totalHours){
         workSessionController.changeTotalHour(ID, eventManager, totalHours);
+    }
+
+    public WorkSessionController getWorkSessionController() {
+        return workSessionController;
     }
 }

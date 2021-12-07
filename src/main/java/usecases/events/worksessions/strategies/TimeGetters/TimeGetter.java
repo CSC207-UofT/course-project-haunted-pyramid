@@ -102,8 +102,8 @@ public interface TimeGetter {
 
     //helper method for mergeSessions
     default Event sessionAdjacent(UUID deadline, EventManager eventManager, Event newSession) {
-        WorkSessionManager workSessionManager = new WorkSessionManager();
-        for (Event session: workSessionManager.getWorkSessions(eventManager, deadline)){
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        for (Event session: workSessionManager.getWorkSessions(deadline)){
             if (eventManager.getEnd(session).isEqual(eventManager.getStart(newSession)) || eventManager.getStart(
                     session).isEqual(eventManager.getEnd(newSession))){
                 return session;

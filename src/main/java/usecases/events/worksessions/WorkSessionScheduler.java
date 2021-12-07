@@ -19,13 +19,11 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class WorkSessionScheduler {
-    private final WorkSessionManager workSessionManager;
     private final TimeGetter timeGetter;
     private final List<DayOrderer> dayOrderers;
     private final List<TimeOrderer> timeOrderers;
 
     public WorkSessionScheduler(Map<LocalTime, LocalTime> freeTime) {
-        this.workSessionManager = new WorkSessionManager();
         this.timeGetter = new DefaultTimeGetter(freeTime);
         this.dayOrderers = new ArrayList<>();
         this.timeOrderers = new ArrayList<>();
@@ -39,7 +37,8 @@ public class WorkSessionScheduler {
      * @param eventManager An EventManager
      */
     public void markInComplete(UUID event, String session, EventManager eventManager) {
-        List<Event> workSessions = workSessionManager.getWorkSessions(eventManager, event);
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        List<Event> workSessions = workSessionManager.getWorkSessions(event);
         workSessions = eventManager.timeOrder(workSessions);
         workSessions.remove(workSessions.get(Integer.parseInt(session)));
         this.autoSchedule(event, eventManager);
@@ -53,8 +52,9 @@ public class WorkSessionScheduler {
      * @param eventManager An EventManager
      */
     public void markComplete(UUID event, String session, EventManager eventManager) {
-        List<Event> workSessions = eventManager.timeOrder(workSessionManager.getWorkSessions(eventManager, event));
-        workSessionManager.setHoursNeeded(eventManager, event, (long) (workSessionManager.getHoursNeeded(eventManager, event) -
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        List<Event> workSessions = eventManager.timeOrder(workSessionManager.getWorkSessions(event));
+        workSessionManager.setHoursNeeded(event, (long) (workSessionManager.getHoursNeeded(event) -
                 eventManager.getLength(workSessions.get(Integer.parseInt(session)))));
         workSessions.remove(workSessions.get(Integer.parseInt(session)));
         this.autoSchedule(event, eventManager);
@@ -66,7 +66,8 @@ public class WorkSessionScheduler {
      * @param eventManager the eventManager to autoSchedule around
      */
     public void setHoursNeeded(UUID deadline, Long hoursNeeded, EventManager eventManager) {
-        workSessionManager.setHoursNeeded(eventManager, deadline, hoursNeeded);
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        workSessionManager.setHoursNeeded(deadline, hoursNeeded);
         this.autoSchedule(deadline, eventManager);
     }
 
@@ -78,7 +79,8 @@ public class WorkSessionScheduler {
      * @param eventManager  An EventManager
      */
     public void setSessionLength(UUID deadline, Long sessionLength, EventManager eventManager) {
-        workSessionManager.setSessionLength(eventManager, deadline, sessionLength);
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        workSessionManager.setSessionLength(deadline, sessionLength);
         this.autoSchedule(deadline, eventManager);
     }
 
@@ -91,10 +93,11 @@ public class WorkSessionScheduler {
     }
 
     public void autoSchedule(UUID deadline, EventManager eventManager) {
-        long totalHours = eventManager.getTotalHoursNeeded(deadline)- (long)
-                (eventManager.totalHours(workSessionManager.getPastSessions(eventManager, deadline)));
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        long totalHours = workSessionManager.getTotalHoursNeeded(deadline)- (long)
+                (eventManager.totalHours(workSessionManager.getPastSessions(deadline)));
 
-        workSessionManager.setWorkSessions(eventManager, deadline, workSessionManager.getPastSessions(eventManager, deadline));
+        workSessionManager.setWorkSessions(deadline, workSessionManager.getPastSessions(deadline));
 
         while (totalHours > 0) {
             //Step one: determine the length the work session should be by default
@@ -107,9 +110,9 @@ public class WorkSessionScheduler {
 
             if(!(idealStartTime == null)){
                 //step four: adds the work sessions and merges adjacent work sessions
-                workSessionManager.addWorkSession(eventManager, deadline, idealStartTime, idealStartTime.plusHours(length));
-                this.mergeSessions(deadline, eventManager, workSessionManager.getWorkSessions(eventManager, deadline)
-                        .get(workSessionManager.getWorkSessions(eventManager, deadline).size()-1));
+                workSessionManager.addWorkSession(deadline, idealStartTime, idealStartTime.plusHours(length));
+                this.mergeSessions(deadline, eventManager, workSessionManager.getWorkSessions(deadline)
+                        .get(workSessionManager.getWorkSessions(deadline).size()-1));
             }
             totalHours -= length;
         }
@@ -121,22 +124,24 @@ public class WorkSessionScheduler {
     //checks if session intersects with or flows into other work session for this event - if it does, merge them into
     //one event
     private void mergeSessions(UUID deadline, EventManager eventManager, Event newSession) {
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
         Event toMerge = timeGetter.sessionAdjacent(deadline, eventManager, newSession);
         if (toMerge != null) {
-            workSessionManager.removeWorkSession(eventManager, deadline, newSession);
-            workSessionManager.removeWorkSession(eventManager, deadline, toMerge);
+            workSessionManager.removeWorkSession(deadline, newSession);
+            workSessionManager.removeWorkSession(deadline, toMerge);
             if (eventManager.getStart(newSession).isBefore(eventManager.getStart(toMerge))) {
-                workSessionManager.addWorkSession(eventManager, deadline, eventManager.getStart(newSession), eventManager.getEnd(toMerge));
+                workSessionManager.addWorkSession(deadline, eventManager.getStart(newSession), eventManager.getEnd(toMerge));
             } else {
-                workSessionManager.addWorkSession(eventManager, deadline, eventManager.getStart(toMerge), eventManager.getEnd(newSession));
+                workSessionManager.addWorkSession(deadline, eventManager.getStart(toMerge), eventManager.getEnd(newSession));
             }
-            mergeSessions(deadline, eventManager, workSessionManager.getWorkSessions(eventManager, deadline).get(workSessionManager.getWorkSessions(eventManager, deadline).size()-1));
+            mergeSessions(deadline, eventManager, workSessionManager.getWorkSessions(deadline).get(workSessionManager.getWorkSessions(deadline).size()-1));
         }
     }
 
     private Long getLength(UUID deadline, Long totalHours, EventManager eventManager) {
-        Long length = eventManager.getEventSessionLength(deadline);
-        if (eventManager.getEventSessionLength(deadline) > totalHours) {
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        Long length = workSessionManager.getEventSessionLength(deadline);
+        if (workSessionManager.getEventSessionLength(deadline) > totalHours) {
             length = totalHours;
         }
         return length;

@@ -7,6 +7,7 @@ import helpers.ControllerHelper;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.WorkSessionMenuContent;
 import usecases.events.EventManager;
+import usecases.events.worksessions.WorkSessionManager;
 import usecases.events.worksessions.WorkSessionScheduler;
 import usecases.events.worksessions.WorkSessionSchedulerBuilder;
 
@@ -50,42 +51,39 @@ public class WorkSessionController {
         }
     }
 
-    public WorkSessionScheduler getWorkSessionScheduler(){
-        return this.workSessionScheduler;
-    }
-
     /**
      * Confirm and perform necessary action from the user regarding modification of work session
      * @param eventID ID of the event to set/modify work session
      * @param eventManager EventManager object to bring necessary methods
      */
     public void edit(UUID eventID, EventManager eventManager) {
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
         boolean done = false;
         while (!done) {
             DisplayMenu displayMenu = new DisplayMenu();
-            if (eventManager.getTotalWorkSession(eventID).size() == 0) {
+            if (workSessionManager.getTotalWorkSession(eventID).size() == 0) {
                 System.out.println("There is no Work Session assigned for this Event");
                 System.out.println("Please Set up the Work Session");
             } else {
                 System.out.println("The following Work Sessions are assigned for this Event");
-                if (eventManager.getPastWorkSession(eventID).size() == 0) {
+                if (workSessionManager.getPastWorkSession(eventID).size() == 0) {
                     System.out.println("There is no Past Work Sessions");
                 }
                 else {
-                    System.out.println("Past: " + eventManager.getPastSessionsString(eventID));
+                    System.out.println("Past: " + workSessionManager.getPastSessionsString(eventID));
                 }
-                if (eventManager.getFutureWorkSession(eventID).size() == 0) {
+                if (workSessionManager.getFutureWorkSession(eventID).size() == 0) {
                     System.out.println("All Work Sessions were assigned for the Past.");
                     System.out.println("Please mark them to update or change Total Work Session Hours");
                 }
                 else {
-                    System.out.println("Current: " + eventManager.getFutureSessionsString(eventID));
+                    System.out.println("Current: " + workSessionManager.getFutureSessionsString(eventID));
                 }
-                System.out.println("Current Session Length: " + eventManager.getEventSessionLength(eventID));
-                System.out.println("Total Work Session Hours: " + eventManager.getTotalHoursNeeded(eventID));
+                System.out.println("Current Session Length: " + workSessionManager.getEventSessionLength(eventID));
+                System.out.println("Total Work Session Hours: " + workSessionManager.getTotalHoursNeeded(eventID));
             }
             System.out.println("Please choose your next action");
-            done = finalChoice(eventID, eventManager, done, displayMenu);
+            done = finalChoice(eventID, eventManager, displayMenu);
         }
     }
 
@@ -93,11 +91,11 @@ public class WorkSessionController {
      * Ask and confirm what the user wants to do with the work session related tasks
      * @param eventID ID of the event
      * @param eventManager eventManager that has event information
-     * @param done whether to terminate or not
      * @param displayMenu DisplayMenu class to show the appropriate menu
      * @return perform the task, unless chosen to, do not return to the main menu
      */
-    private boolean finalChoice(UUID eventID, EventManager eventManager, boolean done, DisplayMenu displayMenu) {
+    private boolean finalChoice(UUID eventID, EventManager eventManager, DisplayMenu displayMenu) {
+        boolean done = false;
         WorkSessionMenuContent menu = new WorkSessionMenuContent();
         String choice = ioController.getAnswer(displayMenu.displayMenu(menu));
         choice = helper.invalidCheck(displayMenu, choice, menu.numberOfOptions(), menu);
@@ -137,7 +135,8 @@ public class WorkSessionController {
      * @param eventManager eventManager object with the necessary function
      */
     private void changeTotalHour(UUID eventID, EventManager eventManager) {
-        System.out.println("Original Total Work Session Hour: " + eventManager.getTotalHoursNeeded(eventID));
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        System.out.println("Original Total Work Session Hour: " + workSessionManager.getTotalHoursNeeded(eventID));
         String chosenHour = ioController.getAnswer("Please type the new Total Hour (Max: 50)");
         chosenHour = helper.invalidCheckNoMenu(chosenHour, Constants.MAXIMUM_WORK_SESSION_HOUR,
                 "Please type the valid Total Work Session Hour (Max: 50)");
@@ -155,7 +154,8 @@ public class WorkSessionController {
      * @param eventManager eventManager object with the necessary function
      */
     private void changeSessionLength(UUID eventID, EventManager eventManager) {
-        System.out.println("Original Length: " + eventManager.getEventSessionLength(eventID));
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        System.out.println("Original Length: " + workSessionManager.getEventSessionLength(eventID));
         String chosenLength = ioController.getAnswer("Please type new Session Length (Max: 10)");
         chosenLength = helper.invalidCheckNoMenu(chosenLength, Constants.MAXIMUM_SESSION_LENGTH,
                 "Please type the valid Session Length (Max: 10");
@@ -173,11 +173,12 @@ public class WorkSessionController {
      * @param eventManager eventManager object with the necessary function
      */
     private void markCompletion(UUID eventID, EventManager eventManager) {
-        if (eventManager.getTotalWorkSession(eventID).size() == 0) {
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        if (workSessionManager.getTotalWorkSession(eventID).size() == 0) {
             return;
         }
         String sessionNumber = ioController.getAnswer("Please type the session #");
-        sessionNumber = helper.invalidCheckNoMenu(sessionNumber, eventManager.getTotalWorkSession(eventID).size(),
+        sessionNumber = helper.invalidCheckNoMenu(sessionNumber, workSessionManager.getTotalWorkSession(eventID).size(),
                 "Please Choose the Valid Session # from the Past Sessions");
         System.out.println("Please type Complete to indicate the completion of the session");
         String marking = ioController.getAnswer("Otherwise, please type Incomplete to perform rescheduling");
@@ -194,5 +195,8 @@ public class WorkSessionController {
         }
     }
 
+    public WorkSessionManager getWorkSessionManager(EventManager eventManager) {
+        return new WorkSessionManager(eventManager);
+    }
 
 }
