@@ -37,7 +37,7 @@ public class RepeatedEventManager implements EventListObserver {
     public RepeatedEventManager(Map<UUID, RecursiveEvent> recursiveIdToRecursiveEvent){
         this.recursiveIdToDateToEventsMap = new HashMap<>();
         this.recursiveEventMap = recursiveIdToRecursiveEvent;
-        for(UUID uuid : recursiveIdToRecursiveEvent.keySet()){
+        for (UUID uuid : recursiveIdToRecursiveEvent.keySet()) {
             RecursiveEvent recursiveEvent = recursiveIdToRecursiveEvent.get(uuid);
             int cycleLength = recursiveEvent.getCycleLength();
             List<Event> allEvents = recursiveEvent.listOfEventsInCycles(recursiveEvent.getEventsInOneCycle());
@@ -214,12 +214,17 @@ public class RepeatedEventManager implements EventListObserver {
 
     public List<Event> getAllEventsFromRecursiveEvent(UUID id){
         List<Event> result = new ArrayList<>();
-        Map<LocalDateTime, List<Event>> dateEventMap = this.recursiveIdToDateToEventsMap.get(id);
-        for(List<Event> events : dateEventMap.values()){
-            result.addAll(events);
+        if (!this.recursiveIdToDateToEventsMap.isEmpty()) {
+            Map<LocalDateTime, List<Event>> dateEventMap = this.recursiveIdToDateToEventsMap.get(id);
+            for (List<Event> events : dateEventMap.values()) {
+                result.addAll(events);
+            }
+            EventManager em = new EventManager(new ArrayList<>());
+            return em.timeOrder(result);
         }
-        EventManager em = new EventManager(new ArrayList<>());
-        return em.timeOrder(result);
+        else {
+            return null;
+        }
     }
 
     private UUID newRecursiveEventForUpdate(List<Event> allEvents, List<Event> newCycle) {

@@ -1,16 +1,15 @@
 package GUISwing;
 
-import controllers.MainController;
 import controllers.UserController;
 import interfaces.MeltParentWindow;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class MainFrameWithMenu extends MainFrame{
-    private UserController uc;
+    private final UserController uc;
     MeltParentWindow parent;
+
     public MainFrameWithMenu(UserController userController, MeltParentWindow parent){
         this.uc = userController;
         this.parent = parent;

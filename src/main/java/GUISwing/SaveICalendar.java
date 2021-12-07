@@ -8,7 +8,18 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Save iCalendar file with the user specified name and directory
+ * @author Seo Won Yi
+ * @see ICalendar
+ */
+
 public class SaveICalendar {
+    /**
+     * save iCalendar File that contains all the event information from eventController to the specified directory and
+     * name
+     * @param eventController EventController object that has all the event information
+     */
     public void save(EventController eventController) {
         JFileChooser jFileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("iCal Format", "ics");

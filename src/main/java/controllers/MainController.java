@@ -176,7 +176,7 @@ public class MainController {
         if (this.eventController != null) {
             Map<UUID, List<Event>> map = this.eventController.getEventManager().getUuidEventsMap();
             Map<UUID, Map<UUID, RecursiveEvent>> map1 = this.eventController.getEventManager().getUuidRecursiveEventsMap();
-            map.put(this.userController.getCurrentUser(), this.eventController.getAllEvents());
+            map.put(this.userController.getCurrentUser(), this.eventController.getEventManager().getAllEvents());
             tempIoSerializable.eventsWriteToSerializable(map);
             tempIoSerializable.recursiveEventsWriteToSerializable(map1);
         }

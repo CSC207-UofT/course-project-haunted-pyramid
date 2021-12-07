@@ -2,6 +2,7 @@ package GUISwing;
 
 import controllers.MainController;
 import entities.Event;
+import interfaces.EventInfoGetter;
 import interfaces.MeltParentWindow;
 
 import javax.swing.*;
@@ -14,10 +15,12 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
 
     MainController mc;
     MeltParentWindow parent;
+    EventInfoGetter eventInfoGetter;
 
-    public SelectEvent (MainController mc, MeltParentWindow parent) {
+    public SelectEvent (MainController mc, MeltParentWindow parent, EventInfoGetter eventInfoGetter) {
         this.parent = parent;
         this.mc = mc;
+        this.eventInfoGetter = eventInfoGetter;
         JScrollPane eventScroller = displayEvents();
         eventScroller.setBounds(0, 0, this.getWidth(), 2*this.getHeight()/3);
         this.setVisible(true);
@@ -27,12 +30,13 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
         JPanel eventPanel = new JPanel();
         eventPanel.setLayout(new BoxLayout(eventPanel, BoxLayout.Y_AXIS));
         JScrollPane eventScroller= new JScrollPane(eventPanel);
-        for (Event event: this.mc.getEventController().getAllEvents()) {
-            JButton btn= new JButton(this.mc.getEventController().getName(this.mc.getEventController().getID(event)) + " start:  " +
-                    this.mc.getEventController().getStart(this.mc.getEventController().getID(event)) + "  end: " +
-                    this.mc.getEventController().getEnd(this.mc.getEventController().getID(event)));
-            btn.setPreferredSize(new Dimension(eventPanel.getWidth(), 30));
-            btn.setActionCommand(this.mc.getEventController().getID(event).toString());
+
+        for (Event event: eventInfoGetter.getAllEvents()) {
+            JButton btn= new JButton(eventInfoGetter.getName(eventInfoGetter.getID(event)) + " start:  " +
+                    eventInfoGetter.getStart(eventInfoGetter.getID(event)) + "  end: " +
+                    eventInfoGetter.getEnd(eventInfoGetter.getID(event)));
+            btn.setPreferredSize(new Dimension(100, 30));
+            btn.setActionCommand(eventInfoGetter.getID(event).toString());
             btn.addActionListener(this);
             eventPanel.add(btn);
         }
@@ -45,7 +49,7 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new EditEventWindow(mc, UUID.fromString(e.getActionCommand()), parent);
+        new EditEventWindow(mc, eventInfoGetter,UUID.fromString(e.getActionCommand()), parent);
         this.dispose();
     }
 }

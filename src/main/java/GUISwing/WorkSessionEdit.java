@@ -1,19 +1,15 @@
 package GUISwing;
 
 import controllers.EventController;
-import controllers.UserController;
-import entities.Event;
+
 import interfaces.MeltParentWindow;
-import usecases.events.worksessions.WorkSessionScheduler;
-import usecases.events.worksessions.WorkSessionSchedulerBuilder;
+import interfaces.WorkSessionInfoGetter;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalTime;
-import java.util.Objects;
 import java.util.UUID;
 
 public class WorkSessionEdit implements ActionListener{
@@ -37,7 +33,7 @@ public class WorkSessionEdit implements ActionListener{
     JPanel futureSessionPanel = new JPanel();
     JScrollPane futureSessionScroller = new JScrollPane(futureSessionPanel);
 
-    public WorkSessionEdit(EventController eventController, MeltParentWindow parent, UUID event){
+    public WorkSessionEdit(EventController eventController, WorkSessionInfoGetter workSessionInfoGetter, MeltParentWindow parent, UUID event){
         this.parent = parent;
         this.event = event;
         this.eventController = eventController;
@@ -45,7 +41,7 @@ public class WorkSessionEdit implements ActionListener{
 
         frame.setVisible(true);
 
-        addSettings();
+        addSettings(workSessionInfoGetter);
 
         pastSessionScroller.setBounds(0, 60, frame.getWidth()/2 - 5, frame.getHeight()-60);
         pastSessionScroller.setVisible(true);
@@ -58,9 +54,9 @@ public class WorkSessionEdit implements ActionListener{
 
 
 
-    public void addSettings(){
-        totalHours.setSelectedItem(eventController.getEventManager().getTotalHoursNeeded(event));
-        sessionLength.setSelectedItem(eventController.getEventManager().getEventSessionLength(event));
+    public void addSettings(WorkSessionInfoGetter workSessionInfoGetter){
+        totalHours.setSelectedItem(workSessionInfoGetter.getTotalHoursNeeded(event));
+        sessionLength.setSelectedItem(workSessionInfoGetter.getEventSessionLength(event));
         startWorking.setSelectedItem(9L);
         hourslbl.setBounds(10, 5, 100, 20);
         totalHours.setBounds(110, 5, 50, 20);
@@ -71,13 +67,14 @@ public class WorkSessionEdit implements ActionListener{
         dayslbl.setBounds(160, 30, 150, 20);
         save.setBounds(310, 5, frame.getWidth()-315, 25);
         done.setBounds(310, 30, frame.getWidth()-315, 25);
-        frame.add(hourslbl);
+
         frame.add(totalHours);
-        frame.add(sessionlbl);
         frame.add(sessionLength);
-        frame.add(startlbl);
         frame.add(startWorking);
+        frame.add(startlbl);
         frame.add(dayslbl);
+        frame.add(hourslbl);
+        frame.add(sessionlbl);
         frame.add(save);
         frame.add(done);
         save.addActionListener(this);
@@ -147,9 +144,11 @@ public class WorkSessionEdit implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == save){
             eventController.setTotalHours(event, (Long) totalHours.getSelectedItem());
-            eventController.setSessionLength(event, (Long) sessionLength.getSelectedItem());
-            eventController.getWorkSessionController().changeStartWorking(event, eventController.getEventManager(), (Long) startWorking.getSelectedItem());
+//            eventController.setSessionLength(event, (Long) sessionLength.getSelectedItem());
+//            eventController.getWorkSessionController().changeStartWorking(event, eventController.getEventManager(), (Long) startWorking.getSelectedItem());
             reset();
+
+            System.out.println(eventController.getEventManager().get(event).getHoursNeeded());
         } else if (e.getSource() == done){
             eventController.setTotalHours(event, (Long) totalHours.getSelectedItem());
             eventController.setSessionLength(event, (Long) sessionLength.getSelectedItem());

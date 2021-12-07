@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 import entities.Event;
 import entities.recursions.RecursiveEvent;
+import interfaces.EventInfoGetter;
 import interfaces.EventListObserver;
 
 /**
@@ -22,7 +23,7 @@ import interfaces.EventListObserver;
  * @author Seo Won Yi
  */
 
-public class EventManager {
+public class EventManager implements EventInfoGetter {
     private final Map<UUID, Event> eventMap;
     private final RepeatedEventManager repeatedEventManager;
     private EventListObserver[] toUpdate;
@@ -94,6 +95,7 @@ public class EventManager {
      * @param event any Event
      * @return the ID of the Event (Event.getID())
      */
+    @Override
     public UUID getID(Event event) {
         return event.getID();
     }
@@ -128,29 +130,29 @@ public class EventManager {
     /**
      * returns an event in <code>this.eventMap</code> with the input ID if it is there, otherwise returns null
      *
-     * @param ID the ID of an event
+     * @param eventID the ID of an event
      * @return the event with this ID, or null
      */
-    public Event get(UUID ID) {
-        if (this.eventMap.containsKey(ID)) {
-            return eventMap.get(ID);
+    public Event get(UUID eventID) {
+        if (this.eventMap.containsKey(eventID)) {
+            return eventMap.get(eventID);
         } else {
             for (Event event: getAllEvents()){
                 if (!event.getWorkSessions().isEmpty()){
                     for (Event session: event.getWorkSessions()){
-                        if (session.getID().equals(ID)){
+                        if (session.getID().equals(eventID)){
                             return session;
                         }
                     }
                 }
             }
         }
-        return this.repeatedEventManager.getThisEventFromRecursion(ID);
+        return this.repeatedEventManager.getThisEventFromRecursion(eventID);
     }
 
-    public List<Event> getEvents(List<UUID> Ids){
+    public List<Event> getEvents(List<UUID> eventIDList){
         List<Event> result = new ArrayList<>();
-        for (UUID uuid : Ids){
+        for (UUID uuid : eventIDList){
             result.add(eventMap.get(uuid));
         }
         return result;
@@ -167,12 +169,8 @@ public class EventManager {
         return eventMap.remove(ID);
     }
 
-    public Event removeWithoutUpdate(UUID id){
-        return eventMap.remove(id);
-    }
-
-    public void removeAll(List<UUID> IDs){
-        IDs.forEach(eventMap::remove);
+    public void removeWithoutUpdate(UUID id){
+        eventMap.remove(id);
     }
 
     /**
@@ -310,6 +308,7 @@ public class EventManager {
      *
      * @return list of events (without work sessions, not split)
      */
+    @Override
     public List<Event> getAllEvents() {
         List<Event> allEvents = new ArrayList<>(this.eventMap.values());
         for(RecursiveEvent recursiveEvent : this.repeatedEventManager.getRecursiveEventMap().values()){
@@ -321,11 +320,12 @@ public class EventManager {
     /**
      * returns the name of any event [event.getName()]
      *
-     * @param event any event (does not have to be in <code>this.eventMap</code>
+     * @param eventID ID of an event
      * @return the name of the event
      */
-    public String getName(UUID event) {
-        return get(event).getName();
+    @Override
+    public String getName(UUID eventID) {
+        return get(eventID).getName();
     }
 
     public String getName(Event event){return event.getName();}
@@ -458,12 +458,12 @@ public class EventManager {
     /**
      * checks if an Event of this ID is contained in <code>this.eventMap</code>
      *
-     * @param ID any UUID
+     * @param eventID any UUID
      * @return true if an event with this integer ID is in <code>this.eventMap</code>, false otherwise
      */
-    public boolean containsID(UUID ID) {
+    public boolean containsID(UUID eventID) {
 
-        return !(this.get(ID) == null);
+        return !(this.get(eventID) == null);
     }
 
     /**
@@ -496,10 +496,6 @@ public class EventManager {
         get(event).setName(name);
     }
 
-    public void setName(Event event, String name) {
-        event.setName(name);
-    }
-
     /**
      * Sets the description of an event, does not have to be in <code>this.eventMap</code>
      *
@@ -515,6 +511,7 @@ public class EventManager {
      * @param eventID ID of the event
      * @return get description of the event from eventID
      */
+    @Override
     public String getDescription(UUID eventID) {
         if (eventMap.containsKey(eventID)) {
             if (this.eventMap.get(eventID).getDescription() != null) {
@@ -553,104 +550,6 @@ public class EventManager {
         Event event = this.get(eventID);
         String[] date = event.getEndTime().toString().split("-");
         return date[2].substring(3, 8);
-    }
-
-    /**
-     * Return the session length of the event given by the ID
-     * @param id ID of the event
-     * @return session length of the event
-     */
-    public Long getEventSessionLength(UUID id) {
-        if (this.containsID(id)) {
-            return this.get(id).getSessionLength();
-        }
-        else {
-            return null;
-        }
-    }
-
-    /**
-     * Return the events' total work session list
-     * @param id ID of the event
-     * @return list of the total work session
-     */
-    public List<Event> getTotalWorkSession(UUID id) {
-        if (this.containsID(id)) {
-            return this.timeOrder(this.get(id).getWorkSessions());
-        }
-        return null;
-    }
-
-    /**
-     * Return the list of the past work sessions of the event
-     * @param id ID of the event
-     * @return list of the past work session
-     */
-    public List<Event> getPastWorkSession(UUID id) {
-        if (this.containsID(id)) {
-            List<Event> totalWorkSession = this.get(id).getWorkSessions();
-            List<Event> pastWorkSession = new ArrayList<>();
-            for (Event event : totalWorkSession) {
-                if (event.getEndTime().isBefore(LocalDateTime.now())) {
-                    pastWorkSession.add(event);
-                }
-            }
-            return this.timeOrder(pastWorkSession);
-        }
-        else {
-            return null;
-        }
-    }
-
-    /**
-     * Return the list of the future work sessions of the event
-     * @param id ID of the event
-     * @return the list of the future work sessions of the event
-     */
-    public List<Event> getFutureWorkSession(UUID id) {
-        if (this.containsID(id)) {
-            List<Event> totalWorkSession = this.get(id).getWorkSessions();
-            List<Event> futureWorkSession = new ArrayList<>();
-            for (Event event : totalWorkSession) {
-                if (event.getEndTime().isAfter(LocalDateTime.now())) {
-                    futureWorkSession.add(event);
-                }
-            }
-            return this.timeOrder(futureWorkSession);
-        }
-        else {
-            return null;
-        }
-    }
-
-    public String getPastSessionsString(UUID id){
-        StringBuilder options = new StringBuilder();
-        for (Event session: this.getPastWorkSession(id)){
-            options.append("\n").append(this.getTotalWorkSession(id).indexOf(session)).append(" ----\n ").append(session);
-        }
-        return options.toString();
-    }
-
-    public String getFutureSessionsString(UUID id){
-        StringBuilder options = new StringBuilder();
-        for (Event session: this.getFutureWorkSession(id)){
-            options.append("\n").append(this.getTotalWorkSession(id).indexOf(session)).append(" ----\n ").append(session);
-        }
-        return options.toString();
-    }
-
-    /**
-     * Return the total session hours of the event
-     * @param id ID of the event
-     * @return the total session hours set by the event
-     */
-    public Long getTotalHoursNeeded(UUID id) {
-        if (this.containsID(id)) {
-            return this.get(id).getHoursNeeded();
-        }
-        else {
-            return null;
-        }
     }
 
     /**
@@ -709,53 +608,22 @@ public class EventManager {
         return event.getEndTime();
     }
 
-    public LocalDateTime getEnd(UUID ID){
-        return this.get(ID).getEndTime();
+    @Override
+    public LocalDateTime getEnd(UUID eventID){
+        return this.get(eventID).getEndTime();
     }
 
     public LocalDateTime getStart(Event event){
         return event.getStartTime();
     }
 
+    @Override
     public LocalDateTime getStart(UUID event){
         return this.get(event).getStartTime();
     }
 
-
-    public void setWorkSessions(UUID ID, List<Event> sessions){
-        this.get(ID).setWorkSessions(sessions);
-    }
-
-    public List<Event> getPastSessions(UUID ID){
-        return this.get(ID).pastWorkSessions();
-    }
-
-    public List<Event> getWorkSessions(UUID ID){
-        return this.get(ID).getWorkSessions();
-    }
-
-    public void removeWorkSession(UUID id, Event session){
-        this.getWorkSessions(id).remove(session);
-    }
-
-    public void addWorkSession(UUID ID, LocalDateTime start, LocalDateTime end){
-        this.get(ID).addWorkSession(start, end);
-    }
-
-    public void setSessionLength(UUID ID, Long sessionLength) {
-        this.get(ID).setSessionLength(sessionLength);
-    }
-
-    public void setHoursNeeded(UUID deadline, Long hoursNeeded) {
-        this.get(deadline).setHoursNeeded(hoursNeeded);
-    }
-
     public double getLength(Event event) {
         return event.getLength();
-    }
-
-    public double getHoursNeeded(UUID event) {
-        return this.get(event).getHoursNeeded();
     }
 
     public void addAll(List<Event> events) {

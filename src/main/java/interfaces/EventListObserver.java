@@ -3,8 +3,6 @@ package interfaces;
 import entities.Event;
 import usecases.events.EventManager;
 
-import java.util.ArrayList;
-
 public interface EventListObserver {
     /**
      * @param addRemoveChange what to do with the events in the map, 'add', 'remove' or 'change'

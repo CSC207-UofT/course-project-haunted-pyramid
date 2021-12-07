@@ -47,3 +47,6 @@ Specification, CRC model, Progress report, and scenario walkthrough are all cont
 
 ## Phase 1 Other Resources
 Specification, Progress Report, Flow Chart, Design Question included in `res/Phase1` folder
+
+## Phase 2 Other Resources
+Accessibility, Progress Report, Flow Chart, Specification included in `res/Phase2` folder 

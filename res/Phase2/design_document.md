@@ -6,30 +6,33 @@
 - Single Responsibility Principle
 
 Calendar related objects all focus on only one responsibility, which is to read the events information and
-display them on the calendar.
+display them on the calendar. We have made huge changes so that calendar objects do not depend on Event objects directly. We've built an intermediate class called EventCalendarCollaborator that deals with adding events to calendar. But, before that, calendars will only store UUID's of events to appropriate slots. 
 
-Each controller has a separate responsibility. The MainController instantiates and delegates to EventController, CalendarController
-and UserController, which in turn delegate to their more specific controllers. EventController delegates to RecursionController
-and WorkSessionController for cases that require accessing any Manager aside from EventManager.
-The RecursiveController contains a UserSpecific RecursiveController, and user the EventController's EventManager,
-while the WorkSessionController contains a UserSpecific workSessionScheduler that autoschedules events based on
-Event parameters and user preferences.
+In short, calendar object just has ID's of events in different dates.
+
+In order to adhere Single Responsibility Principle, we've made separate GUI's for each task by involving corresponding controllers. 
+
+Each controller has a separate responsibility. The MainController instantiates and delegates to EventController, CalendarController and UserController, which in turn delegate to their more specific controllers. EventController delegates to RecursionController and WorkSessionController for cases that require accessing any Manager aside from EventManager.
+
+The RecursiveController contains a UserSpecific RecursiveController, and user the EventController's EventManager, while the WorkSessionController contains a UserSpecific workSessionScheduler that auto-schedules events based on Event parameters and user preferences.
 
 The EventManager performs many functions, all related to the sorting, finding, filtering, modifying and creating of events.
-To better adhere to the Single Responsibility principle, some methods for sorting and returning lists of events should be
-part of a different Classes. Using strategies for sorting and returning sub-lists and information about the relationships
-between events in EventManager would make this Class smaller and easier to understand.
+
+To better adhere to the Single Responsibility principle, some methods for sorting and returning lists of events should be part of a different Classes. Using strategies for sorting and returning sub-lists and information about the relationships between events in EventManager would make this Class smaller and easier to understand.
 
 - Open / Closed Principle
 
-
+We've implemented Design Patterns such as Factory Method Design Pattern (CalendarDisplayFactory), Strategy Design Pattern (MenuContent Interface) or used abstractions (DisplayConflict) to increase extensibility for openness of the program while keeping the closeness from modification by decoupling some classes such as calendar-event coupling we had before phase 2. Our GUI still needs a lot of work to make it more flexible, but we've tried to separate the pages to keep the extensibility open.
 
 the Event and Event collection handling classes are open for extension - an Event is a very basic object that contains
 general references to other Events that can be handled in different ways by different kinds of Managers.
 our idea to generalize repetition and courses to the more broad collections - courses whose times are related
-by some pattern or reference eachother in some way - makes the event handling functionality open for extension.
+by some pattern or reference each other in some way - makes the event handling functionality open for extension.
 events and collections of events.
+
 - Liskov Substitution Principle
+
+Abstract classes, interfaces can be substituted by their subclasses.
 
 - Interface Segregation Principle
 
@@ -38,6 +41,8 @@ in its map is changed. This adheres to the Interface segregation principle. Ther
 implementations of methods in an interface it inherits from.
 
 - Dependency Inversion Principle
+
+Interfaces are utilized, but not necessarily for DIP.
 
 
 #### Clean Architecture
@@ -48,33 +53,32 @@ OurCalendar (entity) is being used by CalendarManager, GetCalendar and its subcl
 CalendarManager and GetCalendar are being used by DisplayCalendar and its subclasses (Presenters).
 CalendarController (Controller) cooperates with DisplayCalendar.
 
+Our GUI's only import and uses controllers to keep the clean architecture of the program.
+
 
 - Event Classes
+
+
   EventManager accesses only the Event class. All other classes consistently use the EventManager class
   to manipulate Events, either by referring to them by ID or passing Event objects to EventManager using
   EventManager methods Events.
 
 - Gateway Classes
-  IOController controls the user input and handles exceptions in UserInput before passing to other Controllers. Other
-  controllers do not directly use scanner or read user input.
-  Only one class, IOSerializable and helpers, directly interacts with the external storage dropbox and serialized data.
+
+ICalendar Class uses necessary Use Case classes to do its work. It does not import any of entities. 
+
+IOSerializable and helpers, directly interact with the external storage dropbox and serialized data.
 
 #### Design Patterns
 
 - Strategy Pattern
 
 DisplayMenu utilizes strategy pattern to display different types of contents with the minimum effort.
-All the menu strategies implement MenuContent interface. The interface is used as a parameter for DisplayMenu class.
-DisplayMenu class sets which menu content to show and applies it.
+All the menu strategies implement MenuContent interface. The interface is used as a parameter for DisplayMenu class. DisplayMenu class sets which menu content to show and applies it.
 
-A strategy pattern is implemented by the WorkSessionScheduler class, which sorts days and times according to an ordered list of 
-day sorters, and comes up with unsorted schedules using a modifiable time getter.
+A strategy pattern is implemented by the WorkSessionScheduler class, which sorts days and times according to an ordered list of day sorters, and comes up with unsorted schedules using a modifiable time getter.
 
-RecursiveEvent utilizes strategy pattern to get different 'rules' to recurse over events. Depending on the user
-choice, recursiveEvent can repeat a set of events a fixed amount of times, or repeat them over and over again between
-two dates. More ways of repetition can be added latter on by creating a class that implements the DateGetter interface
-and override the method listOfDatesInCycles, which returns a list of repetitions of input events, given the repetition
-'rule' of this new class.
+RecursiveEvent utilizes strategy pattern to get different 'rules' to recurse over events. Depending on the user choice, recursiveEvent can repeat a set of events a fixed amount of times, or repeat them over and over again between two dates. More ways of repetition can be added latter on by creating a class that implements the DateGetter interface and override the method listOfDatesInCycles, which returns a list of repetitions of input events, given the repetition 'rule' of this new class.
 
 - Factory Method Pattern
 
@@ -84,51 +88,48 @@ By running the overridden method displayCalendar(), the image gets displayed.
 
 - Observer Pattern
 
-To keep workSchedules updated by due date and Recursion up to date with exceptions eventually, every time an event is
-changed in event manager it updates all observing managers which adjust accordingly.
-We created the EventListObserver interface and an update method in EventManager, but we still need to implement the
-update method in EventManager observers. Our goal it to allow users, in case they edit or delete an event, to carry
-this change the recursion the modified event is part of, and to modify study session according to the new change as
-well.
+To keep workSchedules updated by due date and Recursion up to date with exceptions eventually, every time an event is changed in event manager it updates all observing managers which adjust accordingly.
+We created the EventListObserver interface and an update method in EventManager, but we still need to implement the update method in EventManager observers. Our goal it to allow users, in case they edit or delete an event, to carry this change the recursion the modified event is part of, and to modify study session according to the new change as well.
 
 - Builder Pattern
 
-WorkSessionScheduleBuilder uses a UserPreference object to construct a workSessionScheduler, adding the appropriate strategy 
-classes and forming its lists of sorters according to the users preferences. 
+WorkSessionScheduleBuilder uses a UserPreference object to construct a workSessionScheduler, adding the appropriate strategy classes and forming its lists of sorters according to the users preferences. 
 
 #### Use of GitHub features
 
-Github pull requests and commit logs were used to confirm changes and determine errors in merging.
-GitHub Issues was used to communicate what features were being worked on by whom.
+GitHub pull requests and commit logs were used to confirm changes and determine errors in merging.
+
+We've utilized pull requests mainly to avoid conflicts and resolve them if there are any. If there are any issues while reviewing the pull requests, we've effectively communicated with the responsible group mates to deal with the problems.
+
+GitHub Issues was used to communicate what features were being worked on by whom, and GitHub Project was used to effectively see what issues are being dealt with.
 
 #### Code Style and Documentation
 
-All classes are fully documented other than RecursionController and WorkSessionController.
+All classes are fully documented other than RecursionController and WorkSessionController. GUI classes need documentation.
+
 All use case and entity classes are fully documented with descriptions of the class and authors at
 the top.
 
 If a programmer were to open this project to a random class they would have a harder time understanding
-the managers since their output is not primarily for the user, nor is it an entity object to be used. However, the
-core entities are clear and easy to understand, and each of the controllers performs a unique task despite the
-programmer possibly needing to refer to the @see tags in the documentation for the presenters and Manager classes
-to which the Controllers refer.
+the managers since their output is not primarily for the user, nor is it an entity object to be used. However, the core entities are clear and easy to understand, and each of the controllers performs a unique task despite the programmer possibly needing to refer to the @see tags in the documentation for the presenters and Manager classes to which the Controllers refer.
 
 #### Testing
 
 All the major use cases classes and entities such as OurCalendar, Event, and EventManager are tested using
 junit.
+
 All the calendar presenter classes were tested very frequently while building it by every component.
 
-The autoSchedule class needs to be tested more fully, included the EventManager classes related on a wider range of
-inputs.
+The autoSchedule class needs to be tested more fully, included the EventManager classes related on a wider range of inputs.
 
 #### Refactoring
 
 - Attempted to avoid long method (some methods go over 10 lines because of conditional statements
   that need to be applied)
+
 - Attempted to keep the number of parameters to be four or less. There are few cases where the method
   has five parameters which are majorly from extractions to avoid long method code smell,
-  but tried our best to not go over it.
+  but tried our best to not go over it. Or date info (for calendar classes we kept the usage of parameter year, month and date separately without making it into a separate object simply for simplicity of the matter.)
 
 #### Code Organization
 

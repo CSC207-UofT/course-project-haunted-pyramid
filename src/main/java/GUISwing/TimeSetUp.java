@@ -4,6 +4,7 @@ import controllers.EventController;
 import controllers.MainController;
 import helpers.Constants;
 import helpers.GUIInfoProvider;
+import interfaces.EventInfoGetter;
 import interfaces.MeltParentWindow;
 
 import javax.swing.*;
@@ -16,13 +17,21 @@ import java.time.YearMonth;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Window used for setting up the start or end time of the event
+ * @author Seo Won Yi
+ * @see MenuCreationHelper
+ * @see EditEventWindow
+ */
+
 public class TimeSetUp implements ActionListener {
+    private final EventController ec;
+    private final EventInfoGetter eventInfoGetter;
     private final UUID eventID;
     private final MeltParentWindow parent;
     private final String option;
-    private final MenuCreationHelper boxHelper;
-    private final JFrame frame;
-    private final EventController ec;
+    private final MenuCreationHelper boxHelper  = new MenuCreationHelper();
+    private final JFrame frame = new PopUpWindowFrame();
     private final JComboBox<YearMonth> yearMonthBox;
     private JComboBox<Integer> dateBox;
     private final JComboBox<LocalTime> timeBox;
@@ -33,41 +42,46 @@ public class TimeSetUp implements ActionListener {
     private int date;
     private LocalTime time;
 
-    public TimeSetUp(MainController mainController, UUID eventID, MeltParentWindow parent, String option) {
+    /**
+     * Construct the TimeSetUp window
+     * @param mainController MainController used for accessing all the other controllers
+     * @param eventInfoGetter Interface used for gathering event information
+     * @param eventID ID of an event
+     * @param parent parent window (prev window)
+     * @param option option that decides setting up start time or end time
+     */
+    public TimeSetUp(MainController mainController, EventInfoGetter eventInfoGetter,
+                     UUID eventID, MeltParentWindow parent, String option) {
+        this.ec = mainController.getEventController();
+        this.eventInfoGetter = eventInfoGetter;
         this.eventID = eventID;
         this.parent = parent;
         this.option = option;
-        this.boxHelper = new MenuCreationHelper();
-        this.frame = new PopUpWindowFrame();
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.ec = mainController.getEventController();
         this.timeBox = boxHelper.timeComboBox();
         this.yearMonthBox = boxHelper.monthComboBox();
         this.yearMonthBox.setSelectedIndex(3);
         setDefaultTimeLine();
         GUIInfoProvider helper = new GUIInfoProvider();
-        JPanel infoPanel = new JPanel();
-        configureInfoPanel(infoPanel);
+        JPanel infoPanel = configureInfoPanel();
         JLabel currentTimeText = new JLabel();
         JLabel currentTimeInfo = new JLabel();
         JLabel setUpNewTime = new JLabel("Set Up the New Time");
         if (option.equalsIgnoreCase("Start")) {
             currentTimeText = new JLabel("Current Event Start Time:");
-            currentTimeInfo = new JLabel(helper.getEventStartInfo(eventID, this.ec));
+            currentTimeInfo = new JLabel(helper.getEventStartInfo(eventID, eventInfoGetter));
             dateBox = new JComboBox<>(boxHelper.dateList(this.yearMonthBox.getItemAt(3), true));
         }
         else if (option.equalsIgnoreCase("End")) {
             currentTimeText = new JLabel("Current Event End Time:");
-            currentTimeInfo = new JLabel(helper.getEventEndInfo(eventID, this.ec));
+            currentTimeInfo = new JLabel(helper.getEventEndInfo(eventID, eventInfoGetter));
             dateBox = new JComboBox<>(boxHelper.dateList(this.yearMonthBox.getItemAt(3), false));
         }
         dateBox.setSelectedIndex(LocalDateTime.now().getDayOfMonth() - 1);
         date = dateBox.getItemAt(LocalDateTime.now().getDayOfMonth() - 1);
         setUpInfoPanel(infoPanel, currentTimeText, currentTimeInfo, setUpNewTime);
-        JPanel comboBoxPanel = new JPanel();
-        configureBoxPanel(comboBoxPanel);
-        JPanel optionPanel = new JPanel();
-        configureOptionPanel(optionPanel);
+        JPanel comboBoxPanel = configureBoxPanel();
+        JPanel optionPanel = configureOptionPanel();
         this.saveButton = new JButton("Save");
         this.cancelButton = new JButton("Cancel");
         addActionListener();
@@ -76,11 +90,13 @@ public class TimeSetUp implements ActionListener {
         this.frame.setVisible(true);
     }
 
-    private void configureOptionPanel(JPanel optionPanel) {
+    private JPanel configureOptionPanel() {
+        JPanel optionPanel = new JPanel();
         optionPanel.setLayout(new GridLayout(1,2, 40, 0));
         optionPanel.setBackground(Constants.WINDOW_COLOR);
         optionPanel.setBounds(120, 200, 200, 30);
         this.frame.add(optionPanel);
+        return optionPanel;
     }
 
     private void setDefaultTimeLine() {
@@ -120,17 +136,21 @@ public class TimeSetUp implements ActionListener {
         this.timeBox.addActionListener(this);
     }
 
-    private void configureBoxPanel(JPanel comboBoxPanel) {
+    private JPanel configureBoxPanel() {
+        JPanel comboBoxPanel = new JPanel();
         this.frame.add(comboBoxPanel);
         comboBoxPanel.setLayout(new GridLayout(1, 3));
         comboBoxPanel.setBounds(0, 120, Constants.POPUP_WIDTH - 17, Constants.POPUP_HEIGHT / 7);
+        return comboBoxPanel;
     }
 
-    private void configureInfoPanel(JPanel infoPanel) {
+    private JPanel configureInfoPanel() {
+        JPanel infoPanel = new JPanel();
         this.frame.add(infoPanel);
         infoPanel.setLayout(null);
         infoPanel.setBounds(0, 0, Constants.POPUP_WIDTH, Constants.POPUP_HEIGHT / 3);
         infoPanel.setBackground(Constants.WINDOW_COLOR);
+        return infoPanel;
     }
 
     private void setUpInfoPanel(JPanel infoPanel, JLabel currentTimeText, JLabel currentTimeInfo, JLabel setUpNewTime) {
@@ -196,8 +216,8 @@ public class TimeSetUp implements ActionListener {
     private void save() {
         if (option.equalsIgnoreCase("Start")) {
             if (dateBox.getSelectedItem() == null) {
-                this.ec.changeStartDate(this.eventID, this.ec.getEnd(this.eventID).toLocalDate());
-                this.ec.changeStartTime(this.eventID, this.ec.getEnd(this.eventID).toLocalTime());
+                this.ec.changeStartDate(this.eventID, eventInfoGetter.getEnd(this.eventID).toLocalDate());
+                this.ec.changeStartTime(this.eventID, eventInfoGetter.getEnd(this.eventID).toLocalTime());
             }
             else {
                 LocalDateTime startTime = getLocalDateTime();

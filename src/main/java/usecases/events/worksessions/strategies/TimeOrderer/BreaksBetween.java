@@ -2,9 +2,9 @@ package usecases.events.worksessions.strategies.TimeOrderer;
 
 import entities.Event;
 import usecases.events.EventManager;
+import usecases.events.worksessions.WorkSessionManager;
 import usecases.events.worksessions.strategies.TimeGetters.TimeGetter;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class BreaksBetween implements TimeOrderer {
-    private String spacing;
+    private final String spacing;
     public BreaksBetween(String spacing){
         this.spacing = spacing;
     }
@@ -21,7 +21,7 @@ public class BreaksBetween implements TimeOrderer {
                       List<LocalDateTime> times, TimeGetter timeGetter) {
         List<LocalDateTime> ordered = new ArrayList<>();
         for (LocalDateTime time: times){
-            if (!sessionBefore(eventManager, deadline, time, length) && !sessionAfter(eventManager, deadline, time,
+            if (!sessionBefore(eventManager, deadline, time) && !sessionAfter(eventManager, deadline, time,
                     length)){
                 ordered.add(time);
             }
@@ -49,7 +49,7 @@ public class BreaksBetween implements TimeOrderer {
         timeGetter.freeSlots(LocalDateTime.now(), eventManager.getEnd(deadline), eventManager, deadline);
         List<LocalDateTime> toRemove = new ArrayList<>();
         for (LocalDateTime time: times){
-            if (sessionBefore(eventManager, deadline, time, length)){
+            if (sessionBefore(eventManager, deadline, time)){
                 Long timeAfter = timeGetter.freeSlots(time, eventManager.getEnd(deadline), eventManager, deadline).get(time);
                 if (timeAfter >= 4L){
                     ordered.add(time.plusHours(2));
@@ -71,7 +71,7 @@ public class BreaksBetween implements TimeOrderer {
         timeGetter.freeSlots(LocalDateTime.now(), eventManager.getEnd(deadline), eventManager, deadline);
         List<LocalDateTime> toRemove = new ArrayList<>();
         for (LocalDateTime time: times){
-            if (sessionBefore(eventManager, deadline, time, length)){
+            if (sessionBefore(eventManager, deadline, time)){
                 Long timeAfter = timeGetter.freeSlots(time, eventManager.getEnd(deadline), eventManager, deadline).get(time);
                 if (timeAfter >= 4L){
                     ordered.add(time.plusHours(2));
@@ -94,7 +94,7 @@ public class BreaksBetween implements TimeOrderer {
         timeGetter.freeSlots(LocalDateTime.now(), eventManager.getEnd(deadline), eventManager, deadline);
         List<LocalDateTime> toRemove = new ArrayList<>();
         for (LocalDateTime time: times){
-            if (sessionBefore(eventManager, deadline, time, length)){
+            if (sessionBefore(eventManager, deadline, time)){
                 Long timeAfter = timeGetter.freeSlots(time, eventManager.getEnd(deadline), eventManager, deadline).get(time);
                 if (timeAfter >= 4L){
                     ordered.add(time.plusHours(2));
@@ -112,8 +112,9 @@ public class BreaksBetween implements TimeOrderer {
         ordered.addAll(times);
     }
 
-    private boolean sessionBefore(EventManager eventManager, UUID deadline, LocalDateTime start, Long length){
-        for (Event session: eventManager.getWorkSessions(deadline)){
+    private boolean sessionBefore(EventManager eventManager, UUID deadline, LocalDateTime start){
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        for (Event session: workSessionManager.getWorkSessions(deadline)){
             if (eventManager.getEnd(session).equals(start)){
                 return true;
             }
@@ -121,7 +122,8 @@ public class BreaksBetween implements TimeOrderer {
         return false;
     }
     private boolean sessionAfter(EventManager eventManager, UUID deadline, LocalDateTime start, Long length){
-        for (Event session: eventManager.getWorkSessions(deadline)){
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        for (Event session: workSessionManager.getWorkSessions(deadline)){
             if (eventManager.getStart(session).equals(start.plusHours(length))){
                 return true;
             }

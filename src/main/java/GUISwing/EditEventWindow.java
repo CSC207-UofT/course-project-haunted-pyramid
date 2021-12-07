@@ -4,6 +4,7 @@ import controllers.EventController;
 import controllers.MainController;
 import helpers.Constants;
 import helpers.GUIInfoProvider;
+import interfaces.EventInfoGetter;
 import interfaces.MeltParentWindow;
 
 import javax.swing.*;
@@ -11,13 +12,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.UUID;
 
+/**
+ * Event editing page
+ * @author Seo Won Yi
+ * @author Taite Cullen
+ * @see EventController
+ * @see EventInfoGetter
+ */
 
 public class EditEventWindow implements ActionListener, MeltParentWindow {
-    private final GUIInfoProvider helper;
+    private final MainController mc;
+    private final EventInfoGetter eventInfoGetter;
     private final UUID eventID;
     private final MeltParentWindow parent;
+    private final GUIInfoProvider helper;
     private final JFrame frame;
-    private final MainController mc;
     private final EventController ec;
     private JTextField eventName;
     private JTextArea eventDescription;
@@ -29,10 +38,18 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
     private JButton saveButton;
     private JButton deleteButton;
 
-    public EditEventWindow(MainController mc, UUID eventID, MeltParentWindow parent) {
+    /**
+     * Construct the EditEventWindow
+     * @param mc MainController with access to every controller
+     * @param eventInfoGetter Interface used for obtaining event information
+     * @param eventID ID of the event to edit on
+     * @param parent parent window (prev window)
+     */
+    public EditEventWindow(MainController mc, EventInfoGetter eventInfoGetter, UUID eventID, MeltParentWindow parent) {
         this.helper = new GUIInfoProvider();
         this.eventID = eventID;
         this.parent = parent;
+        this.eventInfoGetter = eventInfoGetter;
         this.frame = new PopUpWindowFrame();
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.mc = mc;
@@ -64,20 +81,29 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         this.frame.setVisible(true);
     }
 
+    /**
+     * Set up the text info panel that will have text information such as name and description
+     * @param textInfoPanel panel to have text information on
+     */
     private void textInfoPanelSetUp(JPanel textInfoPanel) {
         textInfoPanel.setBounds(0, 0, 230, Constants.POPUP_HEIGHT / 3);
         textInfoPanel.setLayout(null);
         textInfoPanel.setBackground(Constants.WINDOW_COLOR);
     }
 
+    /**
+     * Set up the time information and put them on the panel
+     * @param eventID ID of an event to be considered
+     * @param helper GUIInfoProvider object that will help to provide with time information of the event
+     */
     private void setUpTimeInfo(UUID eventID, GUIInfoProvider helper) {
         JLabel viewStart = new JLabel("Current Event Start Time:");
         viewStart.setBounds(40, 13, 270, 20);
-        JLabel startTime = new JLabel(helper.getEventStartInfo(eventID, this.ec));
+        JLabel startTime = new JLabel(helper.getEventStartInfo(eventID, eventInfoGetter));
         startTime.setBounds(40, 33, 270, 20);
         JLabel viewEnd = new JLabel("Current Event End Time:");
         viewEnd.setBounds(40, 53, 270, 20);
-        JLabel endTime = new JLabel(helper.getEventEndInfo(eventID, this.ec));
+        JLabel endTime = new JLabel(helper.getEventEndInfo(eventID, eventInfoGetter));
         endTime.setBounds(40, 73, 270, 20);
         timeInfoPanel.add(viewStart);
         timeInfoPanel.add(viewEnd);
@@ -85,15 +111,27 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         timeInfoPanel.add(endTime);
     }
 
+    /**
+     * set up the text information (name and description of event) and put them on the panel
+     * @param panel panel to contain the text information
+     */
     private void setUpTextInfo(JPanel panel) {
-        eventName = new JTextField(ec.getName(this.eventID));
+        eventName = new JTextField(eventInfoGetter.getName(this.eventID));
         eventName.setBounds(30, 17, 200, 20);
-        eventDescription = new JTextArea(this.ec.getDescription(this.eventID));
-        eventDescription.setBounds(30, 47, 200, 50);
+        eventDescription = new JTextArea(eventInfoGetter.getDescription(this.eventID));
+        //eventDescription.setBounds(30, 47, 200, 50);
+        eventDescription.setWrapStyleWord(true);
+        eventDescription.setLineWrap(true);
+        JScrollPane descriptionPane = new JScrollPane(eventDescription, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        descriptionPane.setBounds(30, 47, 200, 50);
         panel.add(eventName);
-        panel.add(eventDescription);
+        this.frame.add(descriptionPane);
     }
 
+    /**
+     * Set up the buttons to be used
+     */
     private void setUpButtons() {
         setUpStart = new JButton("Modify Start Time");
         setUpStart.setBounds(30, 50, 200, 20);
@@ -109,6 +147,9 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         deleteButton.setBounds(270, 130, 200, 20);
     }
 
+    /**
+     * Enable actions with buttons
+     */
     private void addActionLister() {
         setUpStart.addActionListener(this);
         setUpEnd.addActionListener(this);
@@ -118,6 +159,10 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         deleteButton.addActionListener(this);
     }
 
+    /**
+     * Add buttons to the panel
+     * @param buttonPanel panel that contains all the buttons
+     */
     private void addButtons(JPanel buttonPanel) {
         buttonPanel.add(setUpStart);
         buttonPanel.add(setUpEnd);
@@ -127,27 +172,35 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         buttonPanel.add(deleteButton);
     }
 
+    /**
+     * Set up the time information panel
+     */
     private void timeInfoPanelSetUp() {
         this.timeInfoPanel.setBounds(230, 0, Constants.POPUP_WIDTH - 230, Constants.POPUP_HEIGHT / 3);
         this.timeInfoPanel.setLayout(null);
         this.timeInfoPanel.setBackground(Constants.WINDOW_COLOR);
     }
 
+    /**
+     * configuration of button actions
+     * @param e each action to be considered from
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == setUpStart) {
             this.frame.setEnabled(false);
-            new TimeSetUp(this.mc, this.eventID,this, "Start");
+            new TimeSetUp(this.mc, this.eventInfoGetter, this.eventID,this, "Start");
         }
 
         if (e.getSource() == setUpEnd) {
             this.frame.setEnabled(false);
-            new TimeSetUp(this.mc, this.eventID,this, "End");
+            new TimeSetUp(this.mc, this.eventInfoGetter, this.eventID,this, "End");
         }
 
         if (e.getSource() == workSessionButton) {
             this.frame.setEnabled(false);
-            new WorkSessionEdit(mc.getEventController(), this, eventID);
+            new WorkSessionEdit(this.ec, this.ec.getWorkSessionController()
+                    .getWorkSessionManager(this.ec.getEventManager()), this, eventID);
         }
 
         if (e.getSource() == recursionButton) {
@@ -174,6 +227,10 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
             }
         }
     }
+
+    /**
+     * Refresh the page by reloading specific panels
+     */
     @Override
     public void refresh() {
         this.timeInfoPanel.removeAll();
@@ -183,16 +240,26 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         this.frame.repaint();
     }
 
+    /**
+     * get parent object (prev window)
+     * @return the parent object (prev window)
+     */
     @Override
     public MeltParentWindow getParent() {
         return this.parent;
     }
 
+    /**
+     * enable the frame
+     */
     @Override
     public void enableFrame() {
         this.frame.setEnabled(true);
     }
 
+    /**
+     * exit the frame
+     */
     @Override
     public void exitFrame() {
         this.frame.dispose();

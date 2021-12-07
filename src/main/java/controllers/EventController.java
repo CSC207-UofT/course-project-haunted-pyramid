@@ -1,6 +1,5 @@
 package controllers;
 
-import entities.Event;
 import entities.UserPreferences;
 import gateways.IOSerializable;
 import helpers.ControllerHelper;
@@ -8,6 +7,7 @@ import helpers.EventIDConverter;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
 import usecases.events.EventManager;
+import usecases.events.worksessions.WorkSessionManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,7 +30,6 @@ import java.util.*;
 public class EventController {
 
     private final EventManager eventManager;
-    private final RecursionController recursionController;
     private final WorkSessionController workSessionController;
     private final IOController ioController;
 
@@ -55,7 +54,6 @@ public class EventController {
         }
         this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
         this.eventManager.setUuidRecursiveEventsMap(ioSerializable.recursiveEventsReadFromSerializable());
-        this.recursionController = new RecursionController();
         this.ioController = new IOController();
     }
 
@@ -77,7 +75,6 @@ public class EventController {
         }
         this.eventManager.setUuidEventsMap(ioSerializable.eventsReadFromSerializable());
         this.eventManager.setUuidRecursiveEventsMap(ioSerializable.recursiveEventsReadFromSerializable());
-        this.recursionController = new RecursionController();
         this.ioController = new IOController();
         this.workSessionController = new WorkSessionController(userController.getPreferences());
     }
@@ -180,6 +177,13 @@ public class EventController {
     }
 
     private void addToRecursion(UUID id) {
+        if (this.eventManager.getRepeatedEventManager().getAllEventsFromRecursiveEvent(id) == null) {
+            System.out.println("There is no Recursion events set up yet");
+            return;
+        }
+        else if (this.eventManager.getRepeatedEventManager().getAllEventsFromRecursiveEvent(id).size() == 0) {
+            System.out.println("There is no recursion set up for the given ID");
+        }
         this.eventManager.get(id).setRecursiveId(getRecursiveID());
         this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
         this.eventManager.getRepeatedEventManager().update("add", this.eventManager.get(id), this.eventManager);
@@ -291,7 +295,7 @@ public class EventController {
     }
 
     public void changeEndTime(UUID ID, LocalTime newEnd){
-        if(carryToRecursion(ID)){
+        if (carryToRecursion(ID)){
             this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
             this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
             this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
@@ -324,7 +328,7 @@ public class EventController {
             }
         }
         else {
-            if(carryToRecursion(ID)){
+            if (carryToRecursion(ID)){
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
                 this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
@@ -360,8 +364,8 @@ public class EventController {
         this.changeName(ID, name);
     }
 
-    public void changeName(UUID ID, String name){
-        this.eventManager.setName(ID, name);
+    public void changeName (UUID ID, String name) {
+            this.eventManager.setName(ID, name);
     }
 
     /**
@@ -374,11 +378,8 @@ public class EventController {
         this.workSessionController.edit(ID, eventManager);
     }
 
-    public WorkSessionController getWorkSessionController(){return this.workSessionController;}
-
-    public boolean updatePreferences(UserPreferences userPreferences){
+    public void updatePreferences(UserPreferences userPreferences){
         this.workSessionController.refresh(userPreferences, eventManager);
-        return true;
     }
 
     public void setSessionLength(UUID ID, Long sessionLength){
@@ -389,44 +390,18 @@ public class EventController {
         workSessionController.changeTotalHour(ID, eventManager, totalHours);
     }
 
-    public List<Event> getAllEvents() {
-        return eventManager.getAllEvents();
-    }
-
-    public String getName(UUID event) {
-        return eventManager.getName(event);
-    }
-
-    public LocalDateTime getStart(UUID event) {
-        return eventManager.getStart(event);
-    }
-
-    public LocalDateTime getEnd(UUID event) {
-        return eventManager.getEnd(event);
-    }
-
-    public UUID getID(Event event) {
-        return eventManager.getID(event);
-    }
-
-    public String getDescription(UUID eventID) {
-        return eventManager.getDescription(eventID);
+    public WorkSessionController getWorkSessionController() {
+        return workSessionController;
     }
 
     public List<UUID> getPastWorkSessions(UUID ID){
-        List<UUID> workSessions = new ArrayList<>();
-        for (Event session: eventManager.getPastWorkSession(ID)){
-            workSessions.add(eventManager.getID(session));
-        }
-        return workSessions;
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        return workSessionManager.getPastWorkSession(ID);
     }
 
     public List<UUID> getFutureWorkSessions(UUID ID){
-        List<UUID> workSessions = new ArrayList<>();
-        for (Event session: eventManager.getFutureWorkSession(ID)){
-            workSessions.add(eventManager.getID(session));
-        }
-        return workSessions;
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        return workSessionManager.getFutureWorkSession(ID);
     }
 
     public void markComplete(UUID event, UUID session){
@@ -435,5 +410,13 @@ public class EventController {
 
     public void markInComplete(UUID event, UUID session){
         workSessionController.markInComplete(event, session, eventManager);
+    }
+
+    public LocalDateTime getStart(UUID ID){
+        return eventManager.getStart(ID);
+    }
+
+    public LocalDateTime getEnd(UUID ID){
+        return eventManager.getEnd(ID);
     }
 }
