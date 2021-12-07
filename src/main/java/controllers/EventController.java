@@ -7,6 +7,7 @@ import helpers.EventIDConverter;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
 import usecases.events.EventManager;
+import usecases.events.worksessions.WorkSessionManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -392,4 +393,32 @@ public class EventController {
     public WorkSessionController getWorkSessionController() {
         return workSessionController;
     }
+
+    public List<UUID> getPastWorkSessions(UUID ID){
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        return workSessionManager.getPastWorkSession(ID);
+    }
+
+    public List<UUID> getFutureWorkSessions(UUID ID){
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        return workSessionManager.getFutureWorkSession(ID);
+    }
+
+    public void markComplete(UUID event, UUID session){
+        workSessionController.markComplete(event, session, eventManager);
+    }
+
+    public void markInComplete(UUID event, UUID session){
+        workSessionController.markInComplete(event, session, eventManager);
+    }
+
+    public LocalDateTime getStart(UUID ID){
+        return eventManager.getStart(ID);
+    }
+
+    public LocalDateTime getEnd(UUID ID){
+        return eventManager.getEnd(ID);
+    }
+
+    public Long getStartWorking(UUID ID){return workSessionController.getWorkSessionManager(eventManager).getStartWorking(ID);}
 }

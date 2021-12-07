@@ -30,6 +30,7 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
         JPanel eventPanel = new JPanel();
         eventPanel.setLayout(new BoxLayout(eventPanel, BoxLayout.Y_AXIS));
         JScrollPane eventScroller= new JScrollPane(eventPanel);
+
         for (Event event: eventInfoGetter.getAllEvents()) {
             JButton btn= new JButton(eventInfoGetter.getName(eventInfoGetter.getID(event)) + " start:  " +
                     eventInfoGetter.getStart(eventInfoGetter.getID(event)) + "  end: " +

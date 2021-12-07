@@ -1,14 +1,11 @@
 package usecases.events.worksessions;
 
 import entities.Event;
-import interfaces.EventListObserver;
-import usecases.events.worksessions.strategies.DayOrderer.FewestSessions;
+
 import usecases.events.worksessions.strategies.TimeGetters.DefaultTimeGetter;
 import usecases.events.worksessions.strategies.TimeGetters.TimeGetter;
 import usecases.events.worksessions.strategies.DayOrderer.DayOrderer;
-import usecases.events.worksessions.strategies.TimeOrderer.BreaksBetween;
-import usecases.events.worksessions.strategies.TimeOrderer.EveningPerson;
-import usecases.events.worksessions.strategies.TimeOrderer.MorningPerson;
+
 import usecases.events.worksessions.strategies.TimeOrderer.TimeOrderer;
 
 import usecases.events.EventManager;
@@ -38,9 +35,13 @@ public class WorkSessionScheduler {
      */
     public void markInComplete(UUID event, String session, EventManager eventManager) {
         WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
-        List<Event> workSessions = workSessionManager.getWorkSessions(event);
-        workSessions = eventManager.timeOrder(workSessions);
-        workSessions.remove(workSessions.get(Integer.parseInt(session)));
+        eventManager.timeOrder(workSessionManager.getWorkSessions(event));
+        this.markInComplete(event, eventManager.getID(workSessionManager.getWorkSessions(event).get(Integer.parseInt(session))), eventManager);
+    }
+
+    public void markInComplete(UUID event, UUID session, EventManager eventManager) {
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        workSessionManager.getWorkSessions(event).remove(eventManager.get(session));
         this.autoSchedule(event, eventManager);
     }
 
@@ -53,10 +54,15 @@ public class WorkSessionScheduler {
      */
     public void markComplete(UUID event, String session, EventManager eventManager) {
         WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
-        List<Event> workSessions = eventManager.timeOrder(workSessionManager.getWorkSessions(event));
+        this.markComplete(event, eventManager.getID(workSessionManager.getWorkSessions(event).get(Integer.parseInt(session))), eventManager);
+    }
+
+    public void markComplete(UUID event, UUID session, EventManager eventManager) {
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
         workSessionManager.setHoursNeeded(event, (long) (workSessionManager.getHoursNeeded(event) -
-                eventManager.getLength(workSessions.get(Integer.parseInt(session)))));
-        workSessions.remove(workSessions.get(Integer.parseInt(session)));
+                eventManager.getLength(eventManager.get(session))));
+        workSessionManager.getWorkSessions(event).remove(eventManager.get(session));
+
         this.autoSchedule(event, eventManager);
     }
 
@@ -181,6 +187,11 @@ public class WorkSessionScheduler {
     }
 
     public void changeStartWorking(UUID eventID, LocalDate date, EventManager eventManager) {
+        eventManager.changeStartWorking(eventID, date);
+        autoSchedule(eventID, eventManager);
+    }
+
+    public void changeStartWorking(UUID eventID, Long date, EventManager eventManager) {
         eventManager.changeStartWorking(eventID, date);
         autoSchedule(eventID, eventManager);
     }
