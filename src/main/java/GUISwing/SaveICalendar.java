@@ -11,6 +11,7 @@ import java.io.IOException;
 /**
  * Save iCalendar file with the user specified name and directory
  * @author Seo Won Yi
+ * @see ICalendar
  */
 
 public class SaveICalendar {
