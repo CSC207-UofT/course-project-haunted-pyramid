@@ -12,7 +12,7 @@ import java.util.Objects;
 public class FreeTimeWindow implements ActionListener {
     UserController userController;
     final JFrame frame;
-    private MenuCreationHelper helper;
+    private final MenuCreationHelper helper;
     JScrollPane slotsScrollPain;
     JPanel panel = new JPanel(new GridLayout(0, 5));
 

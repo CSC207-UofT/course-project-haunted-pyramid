@@ -1,7 +1,5 @@
 package interfaces;
 
-import javax.swing.*;
-
 public interface MeltParentWindow {
     void enableFrame();
 
