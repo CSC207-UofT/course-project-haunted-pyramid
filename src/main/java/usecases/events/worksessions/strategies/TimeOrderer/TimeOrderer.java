@@ -10,6 +10,15 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TimeOrderer {
+    /**
+     *
+     * @param deadline
+     * @param eventManager
+     * @param length
+     * @param idealDates
+     * @param times
+     * @param timeGetter
+     */
     public void order(UUID deadline, EventManager eventManager, Long length, List<LocalDate> idealDates, List<LocalDateTime> times,
                       TimeGetter timeGetter);
 
