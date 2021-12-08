@@ -51,6 +51,12 @@ public class EventHelper {
         return earliest;
     }
 
+    /**
+     * Return the start time if the event has one, return the end time otherwise.
+     *
+     * @param event the event in question.
+     */
+
     public LocalDateTime startTimeGetter(Event event){
         if(event.getStartTime() == null){
             return event.getEndTime();

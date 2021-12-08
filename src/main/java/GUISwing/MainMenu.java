@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -37,9 +39,10 @@ public class MainMenu implements ActionListener, MeltParentWindow {
     private final JButton buttonCalendar = new JButton("2. Change Calendar");
     private final JButton buttonAddEvent = new JButton("3. Add a new Event");
     private final JButton buttonModifyEvent = new JButton("4. Modify an Event");
-    private final JButton buttonExport = new JButton("5. Export Entire Calendar to iCal File");
-    private final JButton buttonLogOut = new JButton("6. Log Out");
-    private final JButton buttonExit = new JButton("7. Save and Exit");
+    private final JButton buttonCreateRecursion = new JButton("5. CreateRecursion");
+    private final JButton buttonExport = new JButton("6. Export Entire Calendar to iCal File");
+    private final JButton buttonLogOut = new JButton("7. Log Out");
+    private final JButton buttonExit = new JButton("8. Save and Exit");
 
     /**
      * Set up the main menu GUI
@@ -101,6 +104,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         setUpIndividualButton(buttonCalendar, menuPanel);
         setUpIndividualButton(buttonAddEvent, menuPanel);
         setUpIndividualButton(buttonModifyEvent, menuPanel);
+        setUpIndividualButton(buttonCreateRecursion, menuPanel);
         setUpIndividualButton(buttonExport, menuPanel);
         setUpIndividualButton(buttonLogOut, menuPanel);
         setUpIndividualButton(buttonExit, menuPanel);
@@ -234,6 +238,15 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         else if (e.getSource() == buttonModifyEvent) {
             this.frame.setEnabled(false);
             new SelectEvent(mc, mc.getEventController().getEventManager().getDefaultEventInfoGetter(), this);
+        }
+        else if (e.getSource() == buttonCreateRecursion) {
+            if(ec.getEventManager().getEventMap().size()>0){
+                Object[] set = this.ec.getEventManager().getEventMap().keySet().toArray();
+                UUID id = this.ec.getEventManager().getEventMap().get(set[0]).getID();
+                this.frame.setEnabled(false);
+                new RecursionMenu(mc, mc.getEventController().getEventManager().getDefaultEventInfoGetter(),
+                        id, this, "modify");
+            }
         }
         else if (e.getSource() == buttonExport) {
             SaveICalendar saveCalendar = new SaveICalendar();
