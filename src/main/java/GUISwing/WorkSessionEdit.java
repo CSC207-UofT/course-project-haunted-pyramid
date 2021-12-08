@@ -54,6 +54,16 @@ public class WorkSessionEdit implements ActionListener{
         reset();
         frame.add(pastSessionScroller);
         frame.add(futureSessionScroller);
+        this.frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                {
+                    parent.enableFrame();
+                    parent.refresh();
+
+                }
+            }
+        });
     }
 
 
