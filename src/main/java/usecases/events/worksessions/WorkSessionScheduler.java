@@ -46,7 +46,7 @@ public class WorkSessionScheduler {
      */
     public void markInComplete(UUID event, String session, EventManager eventManager) {
         WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
-        eventManager.timeOrder(workSessionManager.getWorkSessions(event));
+        eventManager.eventHelper.timeOrder(workSessionManager.getWorkSessions(event));
         this.markInComplete(event, eventManager.getDefaultEventInfoGetter().getID(workSessionManager.getWorkSessions(event).get(Integer.parseInt(session))), eventManager);
     }
 

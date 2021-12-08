@@ -71,6 +71,6 @@ public class DefaultTimeGetter implements TimeGetter {
                         LocalDateTime.of(current, this.freeTime.get(startTime))));
             }
         }
-        return eventManager.timeOrder(schedule);
+        return eventManager.eventHelper.timeOrder(schedule);
     }
 }

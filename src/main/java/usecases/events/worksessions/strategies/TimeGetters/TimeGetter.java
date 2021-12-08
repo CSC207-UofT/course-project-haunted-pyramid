@@ -44,7 +44,7 @@ public interface TimeGetter {
         // Schedule in a form of a list
         List<Event> schedule = this.getListSchedule(eventManager, start.toLocalDate(), deadline);
         // Sorts the list
-        eventManager.timeOrder(schedule);
+        eventManager.eventHelper.timeOrder(schedule);
 
         Map<LocalDateTime, Long> freeSlots = new HashMap<>();
 
