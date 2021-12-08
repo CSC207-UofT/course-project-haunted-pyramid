@@ -1,14 +1,13 @@
 package GUISwing;
 
 import controllers.EventController;
-import controllers.UserController;
-import entities.Event;
+
 import interfaces.MeltParentWindow;
 import interfaces.WorkSessionInfoGetter;
-import usecases.events.worksessions.WorkSessionScheduler;
-import usecases.events.worksessions.WorkSessionSchedulerBuilder;
+import usecases.events.worksessions.WorkSessionManager;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +20,7 @@ public class WorkSessionEdit implements ActionListener{
     JLabel sessionlbl = new JLabel("session length: ");
     JComboBox<Long> sessionLength = fromTo(10);
     JButton save = new JButton("save");
+    JButton done = new JButton("done");
     JLabel startlbl = new JLabel("start working ");
     JComboBox<Long> startWorking = fromTo(10);
     JLabel dayslbl = new JLabel("days before deadline");
@@ -28,23 +28,118 @@ public class WorkSessionEdit implements ActionListener{
     UUID event;
     MeltParentWindow parent;
 
-    public WorkSessionEdit(EventController eventController, WorkSessionInfoGetter workSessionInfoGetter,
-                           MeltParentWindow parent, UUID eventID){
+    JPanel pastSessionPanel = new JPanel();
+    JScrollPane pastSessionScroller = new JScrollPane(pastSessionPanel);
+
+    JPanel futureSessionPanel = new JPanel();
+    JScrollPane futureSessionScroller = new JScrollPane(futureSessionPanel);
+
+    WorkSessionInfoGetter workSessionInfoGetter;
+
+    public WorkSessionEdit(EventController eventController, WorkSessionInfoGetter workSessionInfoGetter, MeltParentWindow parent, UUID event){
+        this.workSessionInfoGetter = workSessionInfoGetter;
         this.parent = parent;
-        frame.setVisible(true);
-        frame.setLayout(new FlowLayout());
-        this.event = eventID;
+        this.event = event;
         this.eventController = eventController;
+
+
+        frame.setVisible(true);
+
+        addSettings();
+
+        pastSessionScroller.setBounds(0, 60, frame.getWidth()/2 - 10, frame.getHeight()-70);
+        pastSessionScroller.setVisible(true);
+        futureSessionScroller.setBounds(frame.getWidth()/2 + 5, 60, frame.getWidth()/2 - 10, frame.getHeight()-70);
+        futureSessionScroller.setVisible(true);
+        reset();
+        frame.add(pastSessionScroller);
+        frame.add(futureSessionScroller);
+    }
+
+
+
+    public void addSettings(){
+        startWorking.setSelectedItem(9L);
+        hourslbl.setBounds(10, 5, 100, 20);
+        totalHours.setBounds(110, 5, 50, 20);
+        sessionlbl.setBounds(160, 5, 100, 20);
+        sessionLength.setBounds(260, 5, 50, 20);
+        startlbl.setBounds(10, 30, 100, 20);
+        startWorking.setBounds(110, 30, 50, 20);
+        dayslbl.setBounds(160, 30, 150, 20);
+        save.setBounds(310, 5, frame.getWidth()-315, 25);
+        done.setBounds(310, 30, frame.getWidth()-315, 25);
+
+        frame.add(totalHours);
+        frame.add(sessionLength);
+        frame.add(startWorking);
+        frame.add(startlbl);
+        frame.add(dayslbl);
+        frame.add(hourslbl);
+        frame.add(sessionlbl);
+        frame.add(save);
+        frame.add(done);
+        save.addActionListener(this);
+        done.addActionListener(this);
+    }
+
+    private void reset(){
+        pastWorkSessionsReset();
+        futureWorkSessionsReset();
         totalHours.setSelectedItem(workSessionInfoGetter.getTotalHoursNeeded(event));
         sessionLength.setSelectedItem(workSessionInfoGetter.getEventSessionLength(event));
-        frame.add(hourslbl);
-        frame.add(totalHours);
-        frame.add(sessionlbl);
-        frame.add(sessionLength);
-        save.addActionListener(this);
-
-        frame.add(save);
+        startWorking.setSelectedItem(workSessionInfoGetter.getStartWorking(event));
+        frame.revalidate();
+        frame.repaint();
     }
+
+    private void pastWorkSessionsReset(){
+        pastSessionPanel.removeAll();
+        pastSessionPanel.setLayout(new BoxLayout(pastSessionPanel, BoxLayout.Y_AXIS));
+        Border line = BorderFactory.createTitledBorder("past sessions");
+        pastSessionPanel.setBorder(line);
+
+        for (UUID session: eventController.getPastWorkSessions(event)){
+            JPanel sessionPanel = addWorkSession(session, true);
+            pastSessionPanel.add(sessionPanel);
+        }
+    }
+
+    private void futureWorkSessionsReset(){
+        futureSessionPanel.removeAll();
+        futureSessionPanel.setLayout(new BoxLayout(futureSessionPanel, BoxLayout.Y_AXIS));
+        Border line = BorderFactory.createTitledBorder("upcoming sessions");
+        futureSessionPanel.setBorder(line);
+
+        for (UUID session: eventController.getFutureWorkSessions(event)){
+            JPanel sessionPanel = addWorkSession(session, false);
+            futureSessionPanel.add(sessionPanel);
+        }
+    }
+
+    private JPanel addWorkSession(UUID session, boolean past){
+        JPanel sessionOptions = new JPanel(new FlowLayout());
+        sessionOptions.setPreferredSize(new Dimension(200, 100));
+
+        sessionOptions.add(new JLabel("start: " + eventController.getStart(session)));
+        sessionOptions.add(new JLabel("end: " + eventController.getEnd(session)));
+
+        JButton complete = new JButton("completed (remove)");
+        complete.setPreferredSize(new Dimension(100, 20));
+        sessionOptions.add(complete);
+        complete.setActionCommand("complete: " + session);
+        complete.addActionListener(this);
+        if (past){
+            JButton incomplete = new JButton("incompleted (reschedule)");
+            incomplete.setPreferredSize(new Dimension(100, 20));
+            sessionOptions.add(incomplete);
+            incomplete.setActionCommand("incomplete: " + session);
+            incomplete.addActionListener(this);
+        }
+        return sessionOptions;
+    }
+
+
 
     private JComboBox<Long> fromTo(Integer to){
         Long[] list = new Long[to- (Integer) 0];
@@ -56,9 +151,24 @@ public class WorkSessionEdit implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventController.setTotalHours(event, (Long) totalHours.getSelectedItem());
-        eventController.setSessionLength(event, (Long) sessionLength.getSelectedItem());
-        parent.enableFrame();
-        frame.dispose();
+        if (e.getSource() == save){
+            eventController.setTotalHours(event, (Long) totalHours.getSelectedItem());
+            eventController.setSessionLength(event, (Long) sessionLength.getSelectedItem());
+            eventController.getWorkSessionController().changeStartWorking(event, eventController.getEventManager(), (Long) startWorking.getSelectedItem());
+
+            reset();
+        } else if (e.getSource() == done){
+            eventController.setTotalHours(event, (Long) totalHours.getSelectedItem());
+            eventController.setSessionLength(event, (Long) sessionLength.getSelectedItem());
+            eventController.getWorkSessionController().changeStartWorking(event, eventController.getEventManager(), (Long) startWorking.getSelectedItem());
+            parent.enableFrame();
+            frame.dispose();
+        } else if (e.getActionCommand().split(": ")[0].equalsIgnoreCase("complete")){
+            eventController.markComplete(event, UUID.fromString(e.getActionCommand().split(": ")[1]));
+            reset();
+        } else if (e.getActionCommand().split(": ")[0].equalsIgnoreCase("incomplete")) {
+            eventController.markInComplete(event, UUID.fromString(e.getActionCommand().split(": ")[1]));
+            reset();
+        }
     }
 }

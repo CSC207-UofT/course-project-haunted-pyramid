@@ -95,20 +95,17 @@ public class SettingsMenu extends JMenu implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == freeTime){
-            new FreeTimeWindow(userController);
+            new FreeTimeWindow(userController, parent);
         } else if (e.getSource() == profile){
             ProfileSettings pf = new ProfileSettings(userController, parent);
             pf.display();
         }
          else if (e.getSource() == cram){
             userController.getUserManager().toggleEvenSpacing(userController.getCurrentUser());
-            System.out.println("cram toggled");
         } else if (e.getSource() == procrastinate){
             userController.setProcrastinate(procrastinate.isSelected());
-            System.out.println("Procrastinate toggled");
         } else if(e.getSource() == morningPerson) {
             userController.setMorningPerson(morningPerson.isSelected());
-            System.out.println("morning person toggled");
         } else{
             userController.setSessionSpacing(e.getActionCommand());
         }

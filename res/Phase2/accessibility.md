@@ -17,6 +17,19 @@
 - For console version, we've made it so that users can export different kinds of schedules (monthly, weekly, daily) to iCal format. Currently, GUI version can only export the entire calendar. This will be modified to enhance the flexibility.
 
 3. Simple and Intuitive Use
+<<<<<<< HEAD
+- We use combo boxes for all dates and times, and large buttons with options displayed on them simply. Every process
+follows clear steps to complete for the user, such as adding an event
+- Event title and time are labled on every event when selecting an event to edit
+- In the future, will change event selection so that event buttons are added into the calendar as opposed to a string calendar
+that can't be interacted with so that users can directly edit events by locating them on the calendar
+- In the settings menu, there are a variety of options that can be quickly toggled such as procrastinate - this may not be 
+obvious to a user, and clarification / a popup may be created to help guide a user through setting their autoscheduling
+preferences in the future
+- We will add more intuitive basic options for recursive settings on events for ease of use, 
+but will keep our more flexible recursive UI for users who want to be able to more fully
+customize their schedule
+=======
 - We use combo boxes for all dates and times, and large buttons with options displayed on them simply. Every process follows clear steps to complete for the user, such as adding an event.
 
 
@@ -27,6 +40,7 @@
 
 
 - In the settings menu, there are a variety of options that can be quickly toggled such as auto-scheduling strategies - these may not be obvious to a user, and clarification / a popup may be created to help guide a user through setting their auto-scheduling preferences in the future
+
 
 4. Perceptible Information
 
@@ -80,4 +94,10 @@ Haunted Pyramid, as an all undergraduate student group, aims to fill a void in p
 
 We aim to market this program towards University students, but can see the potential for the program to be desirable for any individual or group who has a lot of autonomy over their work schedule. We would like to market this towards professors in University as we integrate the Event Collections function which allows a User to create a collection of events (such as lectures and deadlines, with recommended time to start working on each) and share it with other users (students in a course) who will then have the collection merged into their schedule and work sessions customized to fit their lifestyle and other commitments.
 
-Our program is less likely to be used by people whose day to day lives do not involve intensive self-regulation or independent work with strict deadlines. For example, people who work in jobs that are fairly routine or unplannable such as someone who works in customer service will not have any need for our program. It is also unlikely to be used by children or retired people/people who are set in their workflows. Our main demographic is students because of the nature of the occupation and due to the willingness to experiment and desperation for improvement to productivity at any cost that we all feel and that drives us to try new ways of staying organized every year. 
+Our program is less likely to be used by people whose day to day lives do not involve intensive self-regulation or independent
+work with strict deadlines. For example, people who work in jobs that are fairly routine or unplannable such as someone 
+who works in customer service will not have any need for our program. It is also unlikely to be used by children or retired
+people/people who are set in their workflows. Our main demographic is students because of the nature of the occupation 
+and due to the willingness to experiment and desperation for improvement to productivity at any cost that we all feel and that
+drives us to try new ways of staying organized every year.
+
