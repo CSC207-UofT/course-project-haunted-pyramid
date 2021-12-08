@@ -196,7 +196,7 @@ public class DailyCalendarDisplay extends CalendarDisplay {
         for (UUID eventID : this.calendarMap.get(this.date)){
             String endTime = timePresenter.getEndTime(eventID, this.year, this.month, this.date);
             String startTime = getStartTime(eventID, endTime);
-            String eventName = em.getName(em.get(eventID));
+            String eventName = em.getDefaultEventInfoGetter().getName(em.get(eventID));
             if (eventName.length() > Constants.DAILY_CAL_SIZE){
                 eventName = eventName.substring(0, Constants.DAILY_CAL_SIZE) + "...";
             }
@@ -290,7 +290,7 @@ public class DailyCalendarDisplay extends CalendarDisplay {
             int tempLength = 0;
             for (UUID eventID : this.calendarMap.get(this.date)) {
                 String eventEndTime = timePresenter.getEndTime(eventID, this.year, this.month, this.date);
-                String eventName = em.getName(this.em.get(eventID));
+                String eventName = em.getDefaultEventInfoGetter().getName(this.em.get(eventID));
                 int eventIntID = this.converter.getIntFromUUID(eventID);
                 eventName += " " + "ID:" + eventIntID + " " + " Start;";
                 String eventStartTime = getStartTime(eventID, eventEndTime);

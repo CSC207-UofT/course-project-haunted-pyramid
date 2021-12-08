@@ -1,6 +1,5 @@
 package usecases.events;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -8,7 +7,7 @@ import java.time.LocalDate;
 
 import entities.Event;
 import entities.recursions.RecursiveEvent;
-import interfaces.EventInfoGetter;
+
 import interfaces.EventListObserver;
 
 /**
@@ -23,7 +22,7 @@ import interfaces.EventListObserver;
  * @author Seo Won Yi
  */
 
-public class EventManager implements EventInfoGetter {
+public class EventManager {
     private final Map<UUID, Event> eventMap;
     private final RepeatedEventManager repeatedEventManager;
     private EventListObserver[] toUpdate;
@@ -97,44 +96,6 @@ public class EventManager implements EventInfoGetter {
     }
 
     /**
-     * returns the ID of an Event (does not have to be in <code>this.eventMap</code>
-     *
-     * @param event any Event
-     * @return the ID of the Event (Event.getID())
-     */
-    @Override
-    public UUID getID(Event event) {
-        return event.getID();
-    }
-
-
-    /**
-     * getDay returns a map of the events in a day
-     *
-     * @param day the day that is being searched for
-     * @return <code>Map<Integer, Event></code> of all events in this day by ID
-     */
-    public Map<UUID, Event> getDay(LocalDate day) {
-        Map<UUID, Event> dayMap = new HashMap<>();
-        for (Event event : eventMap.values()) {
-            if (event.getDay().isEqual(day)) {
-                dayMap.put(event.getID(), event);
-            }
-        }
-        return dayMap;
-    }
-
-    public List<Event> getDay(List<Event> schedule, LocalDate day) {
-        List<Event> dayMap = new ArrayList<>();
-        for (Event event : schedule) {
-            if (event.getDay().isEqual(day)) {
-                dayMap.add(event);
-            }
-        }
-        return dayMap;
-    }
-
-    /**
      * returns an event in <code>this.eventMap</code> with the input ID if it is there, otherwise returns null
      *
      * @param eventID the ID of an event
@@ -144,10 +105,10 @@ public class EventManager implements EventInfoGetter {
         if (this.eventMap.containsKey(eventID)) {
             return eventMap.get(eventID);
         } else {
-            for (Event event: getAllEvents()){
-                if (!event.getWorkSessions().isEmpty()){
-                    for (Event session: event.getWorkSessions()){
-                        if (session.getID().equals(eventID)){
+            for (Event event : getDefaultEventInfoGetter().getAllEvents()) {
+                if (!event.getWorkSessions().isEmpty()) {
+                    for (Event session : event.getWorkSessions()) {
+                        if (session.getID().equals(eventID)) {
                             return session;
                         }
                     }
@@ -157,9 +118,9 @@ public class EventManager implements EventInfoGetter {
         return this.repeatedEventManager.getThisEventFromRecursion(eventID);
     }
 
-    public List<Event> getEvents(List<UUID> eventIDList){
+    public List<Event> getEvents(List<UUID> eventIDList) {
         List<Event> result = new ArrayList<>();
-        for (UUID uuid : eventIDList){
+        for (UUID uuid : eventIDList) {
             result.add(eventMap.get(uuid));
         }
         return result;
@@ -176,7 +137,12 @@ public class EventManager implements EventInfoGetter {
         return eventMap.remove(ID);
     }
 
-    public void removeWithoutUpdate(UUID id){
+    /**
+     * removes the event of this ID from <code>this.eventMap</code> if it is there
+     *
+     * @param id the name to be removed
+     */
+    public void removeWithoutUpdate(UUID id) {
         eventMap.remove(id);
     }
 
@@ -211,7 +177,7 @@ public class EventManager implements EventInfoGetter {
     public UUID addEvent(Event event) {
         this.eventMap.put(event.getID(), event);
         this.update("add", event);
-        return this.getID(event);
+        return this.getDefaultEventInfoGetter().getID(event);
     }
 
     /**
@@ -274,9 +240,9 @@ public class EventManager implements EventInfoGetter {
      * RecursiveEvent object.
      */
 
-    public List<Event> recursiveEventList(RecursiveEvent recursiveEvent){
+    public List<Event> recursiveEventList(RecursiveEvent recursiveEvent) {
         List<Event> result = new ArrayList<>();
-        for(List<Event> events : repeatedEventManager.getRecursiveIdToDateToEventsMap().get(recursiveEvent.getId()).values()){
+        for (List<Event> events : repeatedEventManager.getRecursiveIdToDateToEventsMap().get(recursiveEvent.getId()).values()) {
             result.addAll(events);
         }
         return result;
@@ -293,63 +259,13 @@ public class EventManager implements EventInfoGetter {
         for (Event event : this.flattenWorkSessions(new ArrayList<>(this.eventMap.values()))) {
             events.addAll(this.splitByDay(event));
         }
-        for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()){
+        for (RecursiveEvent recursiveEvent : repeatedEventManager.getRecursiveEventMap().values()) {
             List<Event> repeatedEvents = recursiveEventList(recursiveEvent);
-            for (Event event : repeatedEvents){
+            for (Event event : repeatedEvents) {
                 events.addAll(this.splitByDay(event));
             }
         }
         return events;
-    }
-
-    public List<Event> flatSplitEvents(List<Event> events) {
-        List<Event> splitFlat = new ArrayList<>();
-        for (Event event : this.flattenWorkSessions(events)) {
-            splitFlat.addAll(this.splitByDay(event));
-        }
-        return splitFlat;
-    }
-
-    /**
-     * returns all the values in <code>this.eventMap</code>
-     *
-     * @return list of events (without work sessions, not split)
-     */
-    @Override
-    public List<Event> getAllEvents() {
-        List<Event> allEvents = new ArrayList<>(this.eventMap.values());
-        for(RecursiveEvent recursiveEvent : this.repeatedEventManager.getRecursiveEventMap().values()){
-            allEvents.addAll(recursiveEventList(recursiveEvent));
-        }
-        return this.timeOrder(allEvents);
-    }
-
-    /**
-     * returns the name of any event [event.getName()]
-     *
-     * @param eventID ID of an event
-     * @return the name of the event
-     */
-    @Override
-    public String getName(UUID eventID) {
-        return get(eventID).getName();
-    }
-
-    public String getName(Event event){return event.getName();}
-
-    public void setStart(UUID id, LocalDateTime start) {
-        if (start == null) {
-            this.get(id).setStartTime(this.get(id).getEndTime());
-        }
-        else {
-            this.get(id).setStartTime(start);
-        }
-        this.update("change", this.get(id));
-    }
-
-    public void setEnd(UUID id, LocalDateTime end) {
-        this.get(id).setEndTime(end);
-        this.update("change", this.get(id));
     }
 
     /**
@@ -376,6 +292,11 @@ public class EventManager implements EventInfoGetter {
         this.toUpdate = inter.toArray(new EventListObserver[0]);
     }
 
+    /**
+     * Removes an EventListObserver from list that is updated in update method
+     *
+     * @param obs EventListObserver to be removed
+     */
     public void removeObserver(EventListObserver obs) {
         List<EventListObserver> inter = new ArrayList<>(List.of(this.toUpdate));
         inter.remove(obs);
@@ -442,6 +363,7 @@ public class EventManager implements EventInfoGetter {
 
     /**
      * Orders a list of event IDs chronologically earliest to latest
+     *
      * @param eventIDList the list of event ID to be modified
      * @return the input list, time ordered
      */
@@ -453,11 +375,18 @@ public class EventManager implements EventInfoGetter {
         eventList = timeOrder(eventList);
         List<UUID> sortedEventID = new ArrayList<>();
         for (Event event : eventList) {
-            sortedEventID.add(this.getID(event));
+            sortedEventID.add(this.getDefaultEventInfoGetter().getID(event));
         }
         return sortedEventID;
     }
 
+    /**
+     * returns String representation of event
+     *
+     * @param event UUID of event
+     * @return Event.toString()
+     * @see Event#toString()
+     */
     public String displayEvent(Event event) {
         return event.toString();
     }
@@ -469,72 +398,13 @@ public class EventManager implements EventInfoGetter {
      * @return true if an event with this integer ID is in <code>this.eventMap</code>, false otherwise
      */
     public boolean containsID(UUID eventID) {
-
         return !(this.get(eventID) == null);
     }
 
-    /**
-     * returns all events in <code>this.eventMap</code> whose start times are after input 'from', and whose end times are
-     * before input 'to'
-     *
-     * @param from LocalDate the start day of the range
-     * @param to   LocalDate the end day of the range
-     * @return Map with key LocalDate for each day between or equal to 'from' and 'to' in range, value all the events
-     * in <code>this.eventMap</code> that occur in this day
-     */
-    public Map<LocalDate, List<Event>> getRange(LocalDate from, LocalDate to) {
-        Map<LocalDate, List<Event>> range = new HashMap<>();
-        List<Event> schedule = this.getAllEventsFlatSplit();
-        long current = 0L;
-        while (!from.plusDays(current).isAfter(to)) {
-            range.put(from.plusDays(current), (this.getDay(schedule, from.plusDays(current))));
-            current += 1L;
-        }
-        return range;
-    }
-
-    /**
-     * Sets the name of any event (does not have to be in <code>this.eventMap</code>
-     *
-     * @param event the event to set name
-     * @param name  String of new name
-     */
-    public void setName(UUID event, String name) {
-        get(event).setName(name);
-    }
-
-    /**
-     * Sets the description of an event, does not have to be in <code>this.eventMap</code>
-     *
-     * @param event   the event with description to be set
-     * @param describe String the new description
-     */
-    public void setDescription(UUID event, String describe) {
-        get(event).setDescription(describe);
-    }
-
-    /**
-     * Get description of a specific event
-     * @param eventID ID of the event
-     * @return get description of the event from eventID
-     */
-    @Override
-    public String getDescription(UUID eventID) {
-        if (eventMap.containsKey(eventID)) {
-            if (this.eventMap.get(eventID).getDescription() != null) {
-                return this.eventMap.get(eventID).getDescription();
-            }
-            else {
-                return "No description provided";
-            }
-        }
-        else {
-            return null;
-        }
-    }
 
     /**
      * Return the start time information of the chosen event in string
+     *
      * @param eventID ID of an event to investigate
      * @return the string of the start time
      */
@@ -549,107 +419,41 @@ public class EventManager implements EventInfoGetter {
     }
 
     /**
-     * Return the end time information of the chosen event in string
-     * @param eventID ID of an event to investigate
-     * @return the string of the end time
+     * Adds a list of events to eventMap
+     *
+     * @param events List of Events
      */
-    public String getEndTimeString(UUID eventID) {
-        Event event = this.get(eventID);
-        String[] date = event.getEndTime().toString().split("-");
-        return date[2].substring(3, 8);
-    }
-
-    /**
-     * Return the End date of the event
-     * @param id ID of the event
-     * @return the end date of the event
-     */
-    public LocalDate getEndDate(UUID id) {
-        return this.get(id).getEndTime().toLocalDate();
-    }
-
-    /**
-     * Return the start date of the event
-     * @param id ID of the event
-     * @return the start date of the event
-     */
-    public LocalDate getStartDate(UUID id) {
-        if (this.get(id).hasStart()) {
-            return this.get(id).getStartTime().toLocalDate();
-        } else {
-            return null;
-        }
-    }
-
-
-    /**
-     * Return the end time of the event
-     * @param id ID of the event
-     * @return the end time of the event
-     */
-    public LocalTime getEndTime(UUID id) {
-        return this.get(id).getEndTime().toLocalTime();
-    }
-
-    /**
-     * Return the start time of the event
-     * @param id ID of the event
-     * @return the start time of the event
-     */
-    public LocalTime getStartTime(UUID id) {
-        if (this.get(id).hasStart()) {
-            return this.get(id).getStartTime().toLocalTime();
-        } else {
-            return null;
-        }
-    }
-
-
-
-    /**
-     * Return the end date time of the event
-     * @param event selected event
-     * @return Return the end date time of the event
-     */
-    public LocalDateTime getEnd(Event event){
-        return event.getEndTime();
-    }
-
-    @Override
-    public LocalDateTime getEnd(UUID eventID){
-        return this.get(eventID).getEndTime();
-    }
-
-    public LocalDateTime getStart(Event event){
-        return event.getStartTime();
-    }
-
-    @Override
-    public LocalDateTime getStart(UUID event){
-        return this.get(event).getStartTime();
-    }
-
-    public double getLength(Event event) {
-        return event.getLength();
-    }
-
     public void addAll(List<Event> events) {
-        for (Event event: events){
+        for (Event event : events) {
             this.addEvent(event);
         }
     }
-    public Map<UUID, Event> getEventMap() { return this.eventMap; }
 
-    public void changeStartWorking(UUID event, LocalDate start){
-        this.get(event).setStartWorking(Duration.between(LocalDateTime.of(start, LocalTime.of(0, 0)),
-                LocalDateTime.of(this.getEndDate(event), LocalTime.of(0, 0))).toDays());
+    /**
+     * @return eventMap - Map with key: UUID, value: Event
+     */
+    public Map<UUID, Event> getEventMap() {
+        return this.eventMap;
     }
 
-    public void changeStartWorking(UUID event, Long date){
-        this.get(event).setStartWorking(date);
+    /**
+     * constructs DefaultEventInfoGetter with this EventManager
+     *
+     * @return a new DefaultEventInfoGetter
+     * @see DefaultEventInfoGetter
+     * @see interfaces.EventInfoGetter
+     */
+    public DefaultEventInfoGetter getDefaultEventInfoGetter() {
+        return new DefaultEventInfoGetter(this);
     }
 
+    /**
+     * Long startWorking for Event with UUID event
+     *
+     * @param event UUID of Event
+     * @return Long startWorking
+     */
     public LocalDate getStartWorking(UUID event) {
-        return getEndDate(event).minusDays(get(event).getStartWorking());
+        return getDefaultEventInfoGetter().getEndDate(event).minusDays(get(event).getStartWorking());
     }
 }

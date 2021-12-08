@@ -51,7 +51,7 @@ public abstract class DisplayConflict {
         for (UUID eventID : conflictEvent) {
             int eventIntID = this.converter.getIntFromUUID(eventID);
             notify.append("\n").append("ID:").append(eventIntID)
-                    .append(" ").append(this.em.getName(this.em.get(eventID)));
+                    .append(" ").append(this.em.getDefaultEventInfoGetter().getName(this.em.get(eventID)));
         }
         return notify;
     }

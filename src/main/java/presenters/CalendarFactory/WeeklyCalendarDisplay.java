@@ -327,11 +327,11 @@ public class WeeklyCalendarDisplay extends CalendarDisplay {
      * @return length of the event's information
      */
     private int appendNameGetNameLength(StringBuilder result, int nameLength, UUID eventID, String eventStartTime) {
-        String eventName = em.getName(em.get(eventID));
+        String eventName = em.getDefaultEventInfoGetter().getName(em.get(eventID));
         int eventIntID = this.converter.getIntFromUUID(eventID);
         eventName = "ID:" + eventIntID + " " + eventName;
         int eventNameSize = eventName.length();
-        if (eventStartTime.equals(em.getEndTimeString(eventID))){
+        if (eventStartTime.equals(em.getDefaultEventInfoGetter().getEndTimeString(eventID))){
             eventName = eventName + " Due";
             eventNameSize = eventName.length();
             if (eventNameSize >= Constants.WEEKLY_CAL_NAME_LIMIT){
@@ -427,18 +427,18 @@ public class WeeklyCalendarDisplay extends CalendarDisplay {
         for (int j = index + 1; j < eventIDList.size(); j++){
             String startTimeStringOne = em.getStartTimeString(eventIDList.get(index));
             String startTimeStringTwo = em.getStartTimeString(eventIDList.get(j));
-            String eventName = em.getName(em.get(eventIDList.get(j)));
+            String eventName = em.getDefaultEventInfoGetter().getName(em.get(eventIDList.get(j)));
             eventName = "ID:" + eventIDList.get(j) + " " + eventName;
             if (em.getStartTimeString(eventIDList.get(index)) == null){
-                startTimeStringOne = em.getEndTimeString(eventIDList.get(index));
+                startTimeStringOne = em.getDefaultEventInfoGetter().getEndTimeString(eventIDList.get(index));
             }
             if (em.getStartTimeString(eventIDList.get(j)) == null){
-                startTimeStringTwo = em.getEndTimeString(eventIDList.get(j));
+                startTimeStringTwo = em.getDefaultEventInfoGetter().getEndTimeString(eventIDList.get(j));
                 eventName += " Due";
             }
             if (cf.convertTimeToInt(startTimeStringOne)
                     <= cf.convertTimeToInt(startTimeStringTwo)
-                    && cf.convertTimeToInt(em.getEndTimeString(eventIDList.get(index)))
+                    && cf.convertTimeToInt(em.getDefaultEventInfoGetter().getEndTimeString(eventIDList.get(index)))
                     >= cf.convertTimeToInt(startTimeStringTwo)){
                 totalLength += Math.min(eventName.length() + 2,
                         Constants.WEEKLY_CAL_NAME_LIMIT);

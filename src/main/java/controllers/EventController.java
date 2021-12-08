@@ -239,21 +239,21 @@ public class EventController {
     }
 
     public void changeStartDate(UUID ID, LocalDate newStart) {
-        if (this.eventManager.getStartTime(ID) == null) {
+        if (this.eventManager.getDefaultEventInfoGetter().getStartTime(ID) == null) {
             if (carryToRecursion(ID)) {
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
-                this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
+                this.eventManager.getDefaultEventInfoGetter().setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
             } else {
-                this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
+                this.eventManager.getDefaultEventInfoGetter().setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
             }
         } else {
             if (carryToRecursion(ID)) {
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
-                this.eventManager.setStart(ID, LocalDateTime.of(newStart, this.eventManager.getStartTime(ID)));
+                this.eventManager.getDefaultEventInfoGetter().setStart(ID, LocalDateTime.of(newStart, this.eventManager.getDefaultEventInfoGetter().getStartTime(ID)));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
             } else {
-                this.eventManager.setStart(ID, LocalDateTime.of(newStart, this.eventManager.getStartTime(ID)));
+                this.eventManager.getDefaultEventInfoGetter().setStart(ID, LocalDateTime.of(newStart, this.eventManager.getDefaultEventInfoGetter().getStartTime(ID)));
             }
         }
         workSessionController.refresh(eventManager);
@@ -272,10 +272,10 @@ public class EventController {
     public void changeEndDate(UUID ID, LocalDate newEnd) {
         if (carryToRecursion(ID)) {
             this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
-            this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
+            this.eventManager.getDefaultEventInfoGetter().setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getDefaultEventInfoGetter().getEndTime(ID)));
             this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
         } else {
-            this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
+            this.eventManager.getDefaultEventInfoGetter().setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getDefaultEventInfoGetter().getEndTime(ID)));
         }
         workSessionController.refresh(eventManager);
     }
@@ -293,10 +293,10 @@ public class EventController {
     public void changeEndTime(UUID ID, LocalTime newEnd) {
         if (carryToRecursion(ID)) {
             this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
-            this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
+            this.eventManager.getDefaultEventInfoGetter().setEnd(ID, LocalDateTime.of(this.eventManager.getDefaultEventInfoGetter().getEndDate(ID), newEnd));
             this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
         } else {
-            this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
+            this.eventManager.getDefaultEventInfoGetter().setEnd(ID, LocalDateTime.of(this.eventManager.getDefaultEventInfoGetter().getEndDate(ID), newEnd));
         }
         workSessionController.refresh(eventManager);
     }
@@ -315,18 +315,18 @@ public class EventController {
         if (this.eventManager.get(ID).getStartTime() == null) {
             if (carryToRecursion(ID)) {
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
-                this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
+                this.eventManager.getDefaultEventInfoGetter().setStart(ID, LocalDateTime.of(this.eventManager.getDefaultEventInfoGetter().getEndDate(ID), newStart));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
             } else {
-                this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
+                this.eventManager.getDefaultEventInfoGetter().setStart(ID, LocalDateTime.of(this.eventManager.getDefaultEventInfoGetter().getEndDate(ID), newStart));
             }
         } else {
             if (carryToRecursion(ID)) {
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
-                this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
+                this.eventManager.getDefaultEventInfoGetter().setStart(ID, LocalDateTime.of(this.eventManager.getDefaultEventInfoGetter().getStartDate(ID), newStart));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
             } else {
-                this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
+                this.eventManager.getDefaultEventInfoGetter().setStart(ID, LocalDateTime.of(this.eventManager.getDefaultEventInfoGetter().getStartDate(ID), newStart));
             }
         }
         workSessionController.refresh(eventManager);
@@ -343,7 +343,7 @@ public class EventController {
     }
 
     public void changeDescription(UUID ID, String description) {
-        this.eventManager.setDescription(ID, description);
+        this.eventManager.getDefaultEventInfoGetter().setDescription(ID, description);
     }
 
     /**
@@ -357,7 +357,7 @@ public class EventController {
     }
 
     public void changeName(UUID ID, String name) {
-        this.eventManager.setName(ID, name);
+        this.eventManager.getDefaultEventInfoGetter().setName(ID, name);
     }
 
     /**
@@ -405,10 +405,10 @@ public class EventController {
     }
 
     public LocalDateTime getStart(UUID ID) {
-        return eventManager.getStart(ID);
+        return eventManager.getDefaultEventInfoGetter().getStart(ID);
     }
 
     public LocalDateTime getEnd(UUID ID) {
-        return eventManager.getEnd(ID);
+        return eventManager.getDefaultEventInfoGetter().getEnd(ID);
     }
 }

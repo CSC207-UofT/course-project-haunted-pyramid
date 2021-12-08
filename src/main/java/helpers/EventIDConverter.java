@@ -24,7 +24,7 @@ public class EventIDConverter {
         Map<Integer, UUID> tempMap = new HashMap<>();
         List<Event> eventList = eventManager.getAllEventsFlatSplit();
         for (int i = 1; i <= eventList.size(); i++) {
-            tempMap.put(i, eventManager.getID(eventList.get(i - 1)));
+            tempMap.put(i, eventManager.getDefaultEventInfoGetter().getID(eventList.get(i - 1)));
         }
         this.eventID = tempMap;
     }
