@@ -1,12 +1,10 @@
 package helpers;
 
 import entities.Event;
-import usecases.events.EventManager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class EventHelper {
     /**
@@ -62,23 +60,4 @@ public class EventHelper {
         }
     }
 
-    /**
-     * Orders a list of event IDs chronologically earliest to latest
-     *
-     * @param eventIDList the list of event ID to be modified
-     * @param eventManager
-     * @return the input list, time ordered
-     */
-    public List<UUID> timeOrderID(List<UUID> eventIDList, EventManager eventManager) {
-        List<Event> eventList = new ArrayList<>();
-        for (UUID eventID : eventIDList) {
-            eventList.add(eventManager.get(eventID));
-        }
-        eventList = timeOrder(eventList);
-        List<UUID> sortedEventID = new ArrayList<>();
-        for (Event event : eventList) {
-            sortedEventID.add(eventManager.getDefaultEventInfoGetter().getID(event));
-        }
-        return sortedEventID;
-    }
 }

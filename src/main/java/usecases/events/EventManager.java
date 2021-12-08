@@ -27,7 +27,7 @@ public class EventManager {
     private final Map<UUID, Event> eventMap;
     private final RepeatedEventManager repeatedEventManager;
     private EventListObserver[] toUpdate;
-    public EventHelper eventHelper;
+    public EventHelper eventHelper = new EventHelper();
 
     private Map<UUID, List<Event>> uuidEventsMap;
     private Map<UUID, Map<UUID, RecursiveEvent>> uuidRecursiveEventsMap;
@@ -394,5 +394,24 @@ public class EventManager {
      */
     public LocalDate getStartWorking(UUID event) {
         return getDefaultEventInfoGetter().getEndDate(event).minusDays(get(event).getStartWorking());
+    }
+
+    /**
+     * Orders a list of event IDs chronologically earliest to latest
+     *
+     * @param eventIDList the list of event ID to be modified
+     * @return the input list, time ordered
+     */
+    public List<UUID> timeOrderID(List<UUID> eventIDList) {
+        List<Event> eventList = new ArrayList<>();
+        for (UUID eventID : eventIDList) {
+            eventList.add(get(eventID));
+        }
+        eventList = eventHelper.timeOrder(eventList);
+        List<UUID> sortedEventID = new ArrayList<>();
+        for (Event event : eventList) {
+            sortedEventID.add(getDefaultEventInfoGetter().getID(event));
+        }
+        return sortedEventID;
     }
 }

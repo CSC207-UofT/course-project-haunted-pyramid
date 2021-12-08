@@ -113,7 +113,7 @@ public class DisplayCalendarHelper {
     public void eventSorter(Map<Integer, List<UUID>> calendarMap, EventManager em){
         List<Integer> keyList = new ArrayList<>(calendarMap.keySet());
         for (Integer key:keyList){
-            List<UUID> sortedEventList = em.eventHelper.timeOrderID(calendarMap.get(key), em);
+            List<UUID> sortedEventList = em.timeOrderID(calendarMap.get(key));
             calendarMap.put(key, sortedEventList);
         }
     }
