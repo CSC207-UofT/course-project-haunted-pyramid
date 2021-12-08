@@ -39,7 +39,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
     private final JButton buttonModifyEvent = new JButton("4. Modify an Event");
     private final JButton buttonExport = new JButton("5. Export Entire Calendar to iCal File");
     private final JButton buttonLogOut = new JButton("6. Log Out");
-    private final JButton buttonExit = new JButton("7. Exit");
+    private final JButton buttonExit = new JButton("7. Save and Exit");
 
     /**
      * Set up the main menu GUI
@@ -47,6 +47,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
      */
     public MainMenu(MainController mainController) {
         this.frame = new MainFrameWithMenu(mainController.getUserController(), this);
+        this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.mc = mainController;
         this.ec = mainController.getEventController();
         UserController uc = mainController.getUserController();
@@ -74,6 +75,21 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         frame.add(menuPanel);
         frame.add(welcomePanel);
         buttonSetUp(menuPanel);
+        shutDownCondition();
+    }
+
+    private void shutDownCondition() {
+        this.frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (JOptionPane.showConfirmDialog(frame,
+                        "Current Information will not be saved \n Would you like to close the program?", "Confirm Close",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    exitFrame();
+                }
+            }
+        });
     }
 
     /**
