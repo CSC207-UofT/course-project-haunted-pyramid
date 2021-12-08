@@ -1,7 +1,7 @@
 package entities.recursions;
 
-import helpers.ConstantID;
 import entities.Event;
+import helpers.EventHelper;
 import interfaces.DateGetter;
 import usecases.events.EventManager;
 
@@ -19,6 +19,7 @@ import java.util.UUID;
 public class IntervalDateInput implements DateGetter {
 
     private final LocalDateTime[] periodOfRepetition;
+    private EventHelper eventHelper = new EventHelper();
 
     /**
      * constructor of IntervalDateInput.
@@ -86,8 +87,7 @@ public class IntervalDateInput implements DateGetter {
             Event newEvent = getEventAfterStartDate(event, period);
             result.add(newEvent);
         }
-        EventManager e = new EventManager(new ArrayList<>());
-        return e.timeOrder(result);
+        return eventHelper.timeOrder(result);
     }
 
     /**

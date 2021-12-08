@@ -101,7 +101,7 @@ public class WorkSessionManager implements WorkSessionInfoGetter {
      */
     public List<Event> getTotalWorkSession(UUID eventID) {
         if (eventManager.containsID(eventID)) {
-            return eventManager.timeOrder(eventManager.get(eventID).getWorkSessions());
+            return eventManager.eventHelper.timeOrder(eventManager.get(eventID).getWorkSessions());
         }
         return null;
     }
@@ -126,7 +126,7 @@ public class WorkSessionManager implements WorkSessionInfoGetter {
     public List<UUID> getPastWorkSession(UUID id) {
         if (eventManager.containsID(id)) {
             List<Event> totalWorkSession = eventManager.get(id).getWorkSessions();
-            eventManager.timeOrder(totalWorkSession);
+            eventManager.eventHelper.timeOrder(totalWorkSession);
             List<UUID> pastWorkSession = new ArrayList<>();
             for (Event event : totalWorkSession) {
                 if (event.getEndTime().isBefore(LocalDateTime.now())) {
@@ -148,7 +148,7 @@ public class WorkSessionManager implements WorkSessionInfoGetter {
     public List<UUID> getFutureWorkSession(UUID id) {
         if (eventManager.containsID(id)) {
             List<Event> totalWorkSession = eventManager.get(id).getWorkSessions();
-            eventManager.timeOrder(totalWorkSession);
+            eventManager.eventHelper.timeOrder(totalWorkSession);
             List<UUID> futureWorkSession = new ArrayList<>();
             for (Event event : totalWorkSession) {
                 if (event.getEndTime().isAfter(LocalDateTime.now())) {

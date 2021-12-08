@@ -1,18 +1,12 @@
 package controllers;
 
-import helpers.ConstantID;
-import helpers.Constants;
+
 import helpers.ControllerHelper;
-import interfaces.DateGetter;
-import presenters.MenuStrategies.DisplayMenu;
-import presenters.MenuStrategies.RecursionEditMenuContent;
 import usecases.events.EventManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -75,7 +69,7 @@ public class RecursionController {
 
     private UUID addEventsToRecursiveObject(List<UUID> eventIDList, EventManager eventManager){
         UUID uuid = eventManager.getRepeatedEventManager().recursiveEventConstructor1(
-                eventManager.timeOrder(eventManager.getEvents(eventIDList)));
+                eventManager.eventHelper.timeOrder(eventManager.getEvents(eventIDList)));
         LocalTime firstEventEndTime = eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).
                 getEventsInOneCycle().get(0).getEndTime().toLocalTime();
         LocalDateTime lastEventEndDate = eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).

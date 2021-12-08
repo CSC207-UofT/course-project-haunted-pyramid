@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import entities.Event;
 import entities.recursions.RecursiveEvent;
 
+import helpers.EventHelper;
 import interfaces.EventListObserver;
 
 /**
@@ -26,6 +27,7 @@ public class EventManager {
     private final Map<UUID, Event> eventMap;
     private final RepeatedEventManager repeatedEventManager;
     private EventListObserver[] toUpdate;
+    public EventHelper eventHelper;
 
     private Map<UUID, List<Event>> uuidEventsMap;
     private Map<UUID, Map<UUID, RecursiveEvent>> uuidRecursiveEventsMap;
@@ -315,69 +317,6 @@ public class EventManager {
             hours += event.getLength();
         }
         return hours;
-    }
-
-    /**
-     * computes the earliest startTime in a list of events (chronologically first)
-     *
-     * @param events the list of events over which to compare startTimes
-     * @return the event with the earliest start time
-     */
-    public Event earliest(List<Event> events) {
-        Event earliest = events.get(0);
-        LocalDateTime earliestStartTime = earliest.getEndTime();
-        if (earliest.hasStart()) {
-            earliestStartTime = earliest.getStartTime();
-        }
-        for (Event event : events) {
-            LocalDateTime eventStartTime;
-            if (!event.hasStart()) {
-                eventStartTime = event.getEndTime();
-            } else {
-                eventStartTime = event.getStartTime();
-            }
-            if (eventStartTime.isBefore(earliestStartTime)) {
-                earliest = event;
-                earliestStartTime = eventStartTime;
-            }
-        }
-        return earliest;
-    }
-
-    /**
-     * orders a list of events chronologically earliest to latest
-     *
-     * @param events the list to be modified
-     * @return the input list, time ordered
-     */
-    public List<Event> timeOrder(List<Event> events) {
-        List<Event> sorted = new ArrayList<>();
-        events = new ArrayList<>(events);
-        while (!(events.isEmpty())) {
-            sorted.add(earliest(events));
-            events.remove(earliest(events));
-        }
-        events = sorted;
-        return events;
-    }
-
-    /**
-     * Orders a list of event IDs chronologically earliest to latest
-     *
-     * @param eventIDList the list of event ID to be modified
-     * @return the input list, time ordered
-     */
-    public List<UUID> timeOrderID(List<UUID> eventIDList) {
-        List<Event> eventList = new ArrayList<>();
-        for (UUID eventID : eventIDList) {
-            eventList.add(this.get(eventID));
-        }
-        eventList = timeOrder(eventList);
-        List<UUID> sortedEventID = new ArrayList<>();
-        for (Event event : eventList) {
-            sortedEventID.add(this.getDefaultEventInfoGetter().getID(event));
-        }
-        return sortedEventID;
     }
 
     /**

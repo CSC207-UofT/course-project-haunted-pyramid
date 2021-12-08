@@ -50,7 +50,7 @@ public class DefaultEventInfoGetter implements EventInfoGetter {
         for (RecursiveEvent recursiveEvent : eventManager.getRepeatedEventManager().getRecursiveEventMap().values()) {
             allEvents.addAll(eventManager.recursiveEventList(recursiveEvent));
         }
-        return eventManager.timeOrder(allEvents);
+        return eventManager.eventHelper.timeOrder(allEvents);
     }
 
     /**

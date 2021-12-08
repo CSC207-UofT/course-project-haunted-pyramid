@@ -2,6 +2,7 @@ package entities.recursions;
 
 import entities.Event;
 import entities.User;
+import helpers.EventHelper;
 import interfaces.DateGetter;
 import usecases.events.EventManager;
 
@@ -30,6 +31,7 @@ public class RecursiveEvent implements Serializable {
     private final UUID id;
     private List<Event> eventsInOneCycle;
     private DateGetter methodToGetDate;
+    private EventHelper eventHelper = new EventHelper();
 
     public RecursiveEvent(UUID id, List<Event> events, DateGetter methodToGetDate){
         this.id = id;
@@ -105,23 +107,14 @@ public class RecursiveEvent implements Serializable {
      */
 
 
-    //TODO: this in helper class
-    private LocalDateTime startTimeGetter(Event event){
-        if(event.getStartTime() == null){
-            return event.getEndTime();
-        }
-        else{
-            return event.getStartTime();
-        }
-    }
 
 
     private List<Event> getSpecificCycle(List<Event> allEvents, Event event){
         int cycleLength = this.getCycleLength();
         int cycleNumber = 1;
         try{
-            while(startTimeGetter(event).isAfter(startTimeGetter(allEvents.get(cycleNumber*cycleLength))) ||
-                    startTimeGetter(event).isEqual(startTimeGetter(allEvents.get(cycleNumber*cycleLength)))){
+            while(eventHelper.startTimeGetter(event).isAfter(eventHelper.startTimeGetter(allEvents.get(cycleNumber*cycleLength))) ||
+                    eventHelper.startTimeGetter(event).isEqual(eventHelper.startTimeGetter(allEvents.get(cycleNumber*cycleLength)))){
                 cycleNumber++;
             }
         }
@@ -136,7 +129,7 @@ public class RecursiveEvent implements Serializable {
     private int getNewEventIndex(List<Event> events, Event eventToAdd, String addChangeRemove){
         int indexOfNewEvent = 0;
         if(addChangeRemove.equals("add")){
-            while(startTimeGetter(eventToAdd).isAfter(startTimeGetter(events.get(indexOfNewEvent)))){
+            while(eventHelper.startTimeGetter(eventToAdd).isAfter(eventHelper.startTimeGetter(events.get(indexOfNewEvent)))){
                 indexOfNewEvent++;
             }
         }
@@ -156,15 +149,14 @@ public class RecursiveEvent implements Serializable {
         else{
             events.set(index, event);
         }
-        EventManager eventManager = new EventManager(new ArrayList<>());
-        return eventManager.timeOrder(events);
+        return eventHelper.timeOrder(events);
     }
 
     private List<Event> listOfEventsInNewCycles(List<Event> allEvents, List<Event> newCycle) {
         Event lastEvent = allEvents.get(allEvents.size()-1);
-        LocalDateTime lastEventEndTime = startTimeGetter(lastEvent);
+        LocalDateTime lastEventEndTime = eventHelper.startTimeGetter(lastEvent);
         LocalDateTime[] intervalDates = new LocalDateTime[2];
-        intervalDates[0] = startTimeGetter(newCycle.get(0));
+        intervalDates[0] = eventHelper.startTimeGetter(newCycle.get(0));
         intervalDates[1] = lastEventEndTime.plus(Duration.ofDays(1));
         setIntervalDateDateGetter(intervalDates);
         setEventsInOneCycle(newCycle);
