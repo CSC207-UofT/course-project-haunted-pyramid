@@ -138,15 +138,29 @@ public class UserManager {
         return this.userInfo;
     }
 
+    /**
+     * changes the name of User with UUID currentUser stored in userInfo
+     * @param currentUser UUID of user
+     * @param name String the new Users name
+     */
     public void setName(UUID currentUser, String name) {
         this.getUserInfo().get(currentUser).setName(name);
     }
 
-    public UserPreferences getPreferences (UUID user){
+    /**
+     * gets the UserPreferences object of the user with UUID user
+     * @param user UUID of User
+     * @return UserPreferences of user
+     */
+    public UserPreferences getPreferences(UUID user) {
         return this.userInfo.get(user).getUserPreferences();
     }
 
-    public void toggleWorkSessionSpacing(UUID user){
+    /**
+     * changes the String spacing in this user's preferences
+     * @param user UUID of user
+     */
+    public void toggleWorkSessionSpacing(UUID user) {
         User current = this.userInfo.get(user);
         switch (current.getUserPreferences().getSpacingSameDay()) {
             case "short":
@@ -164,22 +178,27 @@ public class UserManager {
         }
     }
 
+    /**
+     * changes the truth value of Cram in UserPreferences of user
+     * @param user UUID of User
+     */
     public void toggleEvenSpacing(UUID user) {
         this.getPreferences(user).setCram(!this.getPreferences(user).getCram());
     }
 
+    /**
+     * changes truth value of MorningPerson in UserPreferences of user
+     * @param user UUID of user
+     */
     public void toggleMorningPerson(UUID user) {
         this.getPreferences(user).setMorningPerson(!this.getPreferences(user).getMorningPerson());
     }
 
-    public void sendSuggestion(UUID categoryID, UUID adminID, Event event){
+    public void sendSuggestion(UUID categoryID, UUID adminID, Event event) {
         User currentUser = this.userInfo.get(adminID);
         currentUser.addToSuggestions(event, currentUser.getCategories().get(categoryID));
     }
 
-    public void integrateSuggestions(User currentUser, boolean decision, UUID categoryID, Event event){
+    public void integrateSuggestions(User currentUser, boolean decision, UUID categoryID, Event event) {
     }
-
-
-
 }

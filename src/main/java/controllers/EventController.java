@@ -48,7 +48,7 @@ public class EventController {
         if (hasSavedData) {
             this.eventManager =
                     new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()),
-                            ioSerializable.recursiveEventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new HashMap <>()));
+                            ioSerializable.recursiveEventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new HashMap<>()));
         } else {
             this.eventManager = new EventManager(new ArrayList<>());
         }
@@ -69,7 +69,7 @@ public class EventController {
         if (hasSavedData) {
             this.eventManager =
                     new EventManager(ioSerializable.eventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new ArrayList<>()),
-                            ioSerializable.recursiveEventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new HashMap <>()));
+                            ioSerializable.recursiveEventsReadFromSerializable().getOrDefault(userController.getCurrentUser(), new HashMap<>()));
         } else {
             this.eventManager = new EventManager(new ArrayList<>());
         }
@@ -91,7 +91,7 @@ public class EventController {
         this.edit(createDefaultEvent(title, dateTime));
     }
 
-    public UUID createDefaultEvent(String title, LocalDateTime end){
+    public UUID createDefaultEvent(String title, LocalDateTime end) {
         return this.eventManager.addEvent(title, end);
     }
 
@@ -148,7 +148,7 @@ public class EventController {
                 this.addToRecursion(ID);
                 return true;
             case "9":
-                if (this.delete(ID, false)) {
+                if (this.deleteRequest(ID)) {
                     return true;
                 }
                 break;
@@ -159,7 +159,7 @@ public class EventController {
     }
 
 
-    private UUID getRecursiveID(){
+    private UUID getRecursiveID() {
         EventIDConverter converter = new EventIDConverter(this.getEventManager());
         Map<Integer, UUID> eventIDMap = converter.getEventIDMap();
         String eventID = ioController.getAnswer("Enter the ID of an event in the recursion in which you " +
@@ -180,8 +180,7 @@ public class EventController {
         if (this.eventManager.getRepeatedEventManager().getAllEventsFromRecursiveEvent(id) == null) {
             System.out.println("There is no Recursion events set up yet");
             return;
-        }
-        else if (this.eventManager.getRepeatedEventManager().getAllEventsFromRecursiveEvent(id).size() == 0) {
+        } else if (this.eventManager.getRepeatedEventManager().getAllEventsFromRecursiveEvent(id).size() == 0) {
             System.out.println("There is no recursion set up for the given ID");
         }
         this.eventManager.get(id).setRecursiveId(getRecursiveID());
@@ -192,8 +191,8 @@ public class EventController {
     }
 
 
-    private boolean carryToRecursion(UUID ID){
-        if(eventManager.get(ID).getRecursiveId() != null){
+    private boolean carryToRecursion(UUID ID) {
+        if (eventManager.get(ID).getRecursiveId() != null) {
             String recurse = ioController.getAnswer("Do you want to carry this change to the recursion");
             return recurse.equalsIgnoreCase("y");
         }
@@ -206,20 +205,20 @@ public class EventController {
      * @param ID the ID of the event to be deleted
      * @return true if the event was deleted
      */
-    private boolean delete(UUID ID, boolean check) {
+    private boolean deleteRequest(UUID ID) {
         System.out.println("Are you sure you want to delete this event?");
         String confirm = ioController.getAnswer("Please Enter y/n");
         if (confirm.equalsIgnoreCase("y")) {
             delete(ID);
             return true;
         } else if (!confirm.equalsIgnoreCase("n")) {
-            return this.delete(ID, true);
+            return this.deleteRequest(ID);
         }
         return false;
     }
 
-    public void delete(UUID ID){
-        if(carryToRecursion(ID)){
+    public void delete(UUID ID) {
+        if (carryToRecursion(ID)) {
             this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
             this.eventManager.remove(ID);
             this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
@@ -239,23 +238,21 @@ public class EventController {
         changeStartDate(ID, newStart);
     }
 
-    public void changeStartDate(UUID ID, LocalDate newStart){
+    public void changeStartDate(UUID ID, LocalDate newStart) {
         if (this.eventManager.getStartTime(ID) == null) {
-            if(carryToRecursion(ID)){
+            if (carryToRecursion(ID)) {
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
                 this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
-            }
-            else {
+            } else {
                 this.eventManager.setStart(ID, LocalDateTime.of(newStart, LocalTime.of(0, 0)));
             }
         } else {
-            if(carryToRecursion(ID)){
+            if (carryToRecursion(ID)) {
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
                 this.eventManager.setStart(ID, LocalDateTime.of(newStart, this.eventManager.getStartTime(ID)));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
-            }
-            else {
+            } else {
                 this.eventManager.setStart(ID, LocalDateTime.of(newStart, this.eventManager.getStartTime(ID)));
             }
         }
@@ -272,13 +269,12 @@ public class EventController {
         changeEndDate(ID, newEnd);
     }
 
-    public void changeEndDate(UUID ID, LocalDate newEnd){
-        if(carryToRecursion(ID)){
+    public void changeEndDate(UUID ID, LocalDate newEnd) {
+        if (carryToRecursion(ID)) {
             this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
             this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
             this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
-        }
-        else {
+        } else {
             this.eventManager.setEnd(ID, LocalDateTime.of(newEnd, this.eventManager.getEndTime(ID)));
         }
         workSessionController.refresh(eventManager);
@@ -294,13 +290,12 @@ public class EventController {
         changeEndTime(ID, newEnd);
     }
 
-    public void changeEndTime(UUID ID, LocalTime newEnd){
-        if (carryToRecursion(ID)){
+    public void changeEndTime(UUID ID, LocalTime newEnd) {
+        if (carryToRecursion(ID)) {
             this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
             this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
             this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
-        }
-        else{
+        } else {
             this.eventManager.setEnd(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newEnd));
         }
         workSessionController.refresh(eventManager);
@@ -318,22 +313,19 @@ public class EventController {
 
     public void changeStartTime(UUID ID, LocalTime newStart) {
         if (this.eventManager.get(ID).getStartTime() == null) {
-            if(carryToRecursion(ID)){
+            if (carryToRecursion(ID)) {
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
                 this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
-            }
-            else{
+            } else {
                 this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getEndDate(ID), newStart));
             }
-        }
-        else {
-            if (carryToRecursion(ID)){
+        } else {
+            if (carryToRecursion(ID)) {
                 this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
                 this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
                 this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
-            }
-            else {
+            } else {
                 this.eventManager.setStart(ID, LocalDateTime.of(this.eventManager.getStartDate(ID), newStart));
             }
         }
@@ -364,8 +356,8 @@ public class EventController {
         this.changeName(ID, name);
     }
 
-    public void changeName (UUID ID, String name) {
-            this.eventManager.setName(ID, name);
+    public void changeName(UUID ID, String name) {
+        this.eventManager.setName(ID, name);
     }
 
     /**
@@ -378,15 +370,15 @@ public class EventController {
         this.workSessionController.edit(ID, eventManager);
     }
 
-    public void updatePreferences(UserPreferences userPreferences){
+    public void updatePreferences(UserPreferences userPreferences) {
         this.workSessionController.refresh(userPreferences, eventManager);
     }
 
-    public void setSessionLength(UUID ID, Long sessionLength){
+    public void setSessionLength(UUID ID, Long sessionLength) {
         workSessionController.changeSessionLength(ID, eventManager, sessionLength);
     }
 
-    public void setTotalHours(UUID ID, Long totalHours){
+    public void setTotalHours(UUID ID, Long totalHours) {
         workSessionController.changeTotalHour(ID, eventManager, totalHours);
     }
 
@@ -394,31 +386,29 @@ public class EventController {
         return workSessionController;
     }
 
-    public List<UUID> getPastWorkSessions(UUID ID){
+    public List<UUID> getPastWorkSessions(UUID ID) {
         WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
         return workSessionManager.getPastWorkSession(ID);
     }
 
-    public List<UUID> getFutureWorkSessions(UUID ID){
+    public List<UUID> getFutureWorkSessions(UUID ID) {
         WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
         return workSessionManager.getFutureWorkSession(ID);
     }
 
-    public void markComplete(UUID event, UUID session){
+    public void markComplete(UUID event, UUID session) {
         workSessionController.markComplete(event, session, eventManager);
     }
 
-    public void markInComplete(UUID event, UUID session){
+    public void markInComplete(UUID event, UUID session) {
         workSessionController.markInComplete(event, session, eventManager);
     }
 
-    public LocalDateTime getStart(UUID ID){
+    public LocalDateTime getStart(UUID ID) {
         return eventManager.getStart(ID);
     }
 
-    public LocalDateTime getEnd(UUID ID){
+    public LocalDateTime getEnd(UUID ID) {
         return eventManager.getEnd(ID);
     }
-
-    public Long getStartWorking(UUID ID){return workSessionController.getWorkSessionManager(eventManager).getStartWorking(ID);}
 }
