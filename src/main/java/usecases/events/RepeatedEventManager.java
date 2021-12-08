@@ -77,10 +77,6 @@ public class RepeatedEventManager implements EventListObserver {
     }
 
 
-
-
-
-
         /**
      *
      * Given a recursive event id, a list of events in one cycle and a method of repetition, add a recursive event

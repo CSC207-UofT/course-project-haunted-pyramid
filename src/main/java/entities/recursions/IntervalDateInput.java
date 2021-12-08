@@ -33,20 +33,6 @@ public class IntervalDateInput implements DateGetter {
         this.periodOfRepetition[1] = endOfCycles;
     }
 
-    /**
-     * helper method
-     * @param event The date this repetition should begin.
-     * @return the end date if there is no start date, and the start date otherwise.
-     */
-
-    private LocalDateTime startTimeGetter(Event event){
-        if(event.getStartTime() == null){
-            return event.getEndTime();
-        }
-        else{
-            return event.getStartTime();
-        }
-    }
 
     /**
      * helper method.
@@ -57,7 +43,7 @@ public class IntervalDateInput implements DateGetter {
      */
 
     private Event getEventAfterStartDate(Event event, Period period){
-        LocalDateTime startTime = this.startTimeGetter(event);
+        LocalDateTime startTime = eventHelper.startTimeGetter(event);
         Period startEndTimeDifference = Period.between(LocalDate.from(startTime), LocalDate.from(event.getEndTime()));
         LocalDateTime hoursDifference = event.getEndTime().minusHours(startTime.getHour());
         while(startTime.isBefore(this.periodOfRepetition[0])){
@@ -108,7 +94,7 @@ public class IntervalDateInput implements DateGetter {
         Period period = Period.between(LocalDate.from(eventDate1), LocalDate.from(eventDate2));
         List<Event> newEvents = getEventListAfterBeginningOfCycles(events, period);
         List<Event> result = new ArrayList<>();
-        LocalDateTime currentDate = this.startTimeGetter(newEvents.get(0));
+        LocalDateTime currentDate = eventHelper.startTimeGetter(newEvents.get(0));
         if (this.periodOfRepetition[0].isAfter(eventDate1)){
             result.addAll(newEvents);
         }
@@ -135,7 +121,7 @@ public class IntervalDateInput implements DateGetter {
                 eventIndex = 0;
                 i ++;
             }
-            currentDate = this.startTimeGetter(newEvents.get(eventIndex));
+            currentDate = eventHelper.startTimeGetter(newEvents.get(eventIndex));
         }
         events.add(firstEvent2);
         return result;

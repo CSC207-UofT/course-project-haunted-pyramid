@@ -20,7 +20,8 @@ import java.util.UUID;
  * @see EventInfoGetter
  */
 
-public class EditEventWindow implements ActionListener, MeltParentWindow {
+public class RecursionMenu implements ActionListener, MeltParentWindow {
+
     private final MainController mc;
     private final EventInfoGetter eventInfoGetter;
     private final UUID eventID;
@@ -45,7 +46,7 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
      * @param eventID ID of the event to edit on
      * @param parent parent window (prev window)
      */
-    public EditEventWindow(MainController mc, EventInfoGetter eventInfoGetter, UUID eventID, MeltParentWindow parent,
+    public RecursionMenu(MainController mc, EventInfoGetter eventInfoGetter, UUID eventID, MeltParentWindow parent,
                            String option) {
         this.helper = new GUIInfoProvider();
         this.eventID = eventID;
@@ -143,7 +144,7 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         setUpEnd.setBounds(270, 50, 200, 20);
         workSessionButton = new JButton("Add / Modify Work Sessions");
         workSessionButton.setBounds(30, 90, 200, 20);
-        recursionButton = new JButton("Add to a recursion");
+        recursionButton = new JButton("Set Up Recursion");
         recursionButton.setBounds(270, 90, 200, 20);
         saveButton = new JButton("Save");
         saveButton.setBounds(30, 130, 200, 20);
@@ -276,4 +277,5 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
     public void exitFrame() {
         this.frame.dispose();
     }
+
 }
