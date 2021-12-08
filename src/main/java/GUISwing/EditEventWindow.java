@@ -45,7 +45,8 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
      * @param eventID ID of the event to edit on
      * @param parent parent window (prev window)
      */
-    public EditEventWindow(MainController mc, EventInfoGetter eventInfoGetter, UUID eventID, MeltParentWindow parent) {
+    public EditEventWindow(MainController mc, EventInfoGetter eventInfoGetter, UUID eventID, MeltParentWindow parent,
+                           String option) {
         this.helper = new GUIInfoProvider();
         this.eventID = eventID;
         this.parent = parent;
@@ -73,6 +74,9 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         this.frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (option.equalsIgnoreCase("Add")) {
+                    removeEvent(eventID);
+                }
                 parent.enableFrame();
                 exitFrame();
             }
@@ -179,6 +183,14 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         this.timeInfoPanel.setBounds(230, 0, Constants.POPUP_WIDTH - 230, Constants.POPUP_HEIGHT / 3);
         this.timeInfoPanel.setLayout(null);
         this.timeInfoPanel.setBackground(Constants.WINDOW_COLOR);
+    }
+
+    /**
+     * remove the event
+     * @param eventID eventID to be removed
+     */
+    private void removeEvent(UUID eventID) {
+        this.ec.delete(eventID);
     }
 
     /**
