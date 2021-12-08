@@ -18,8 +18,6 @@ public class FreeTimeWindow implements ActionListener {
     private final MenuCreationHelper helper;
 
     private Map<JComboBox<LocalTime>, JComboBox<LocalTime>> freeTimes;
-    JScrollPane slotsScrollPain;
-    JPanel panel = new JPanel(new GridLayout(0, 5));
 
     JButton add = new JButton("add");
     JButton save = new JButton("save");

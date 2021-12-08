@@ -119,16 +119,33 @@ public class WorkSessionController {
         return done;
     }
 
+    /**
+     * prompts the user to enter a new Date to start working then changes the input events' startWorking Long
+     * @param eventID UUID of event
+     * @param eventManager EventManager
+     */
     private void changeStartWorking(UUID eventID, EventManager eventManager) {
         LocalDate startWorking = ioController.getDate("please enter a date to start working on " +
                 "this project");
         changeStartWorking(eventID, eventManager, startWorking);
     }
 
+    /**
+     * changes startWorking of event with Id using workSessionScheduler, so sessions are autoscheduled as well
+     * @param Id UUID of event
+     * @param eventManager EventManager
+     * @param startWorking LocalDate startWorking
+     */
     public void changeStartWorking(UUID Id, EventManager eventManager, LocalDate startWorking){
         workSessionScheduler.changeStartWorking(Id, startWorking, eventManager);
     }
 
+    /**
+     * @see WorkSessionController#changeStartWorking(UUID, EventManager, LocalDate)
+     * @param Id UUID of Event
+     * @param eventManager EventManager
+     * @param startWorking LocalDate startWorking
+     */
     public void changeStartWorking(UUID Id, EventManager eventManager, Long startWorking){
         workSessionScheduler.changeStartWorking(Id, startWorking, eventManager);
     }
@@ -148,12 +165,18 @@ public class WorkSessionController {
         System.out.println("The change has been applied");
     }
 
+    /**
+     * uses the workSessionScheduler to change the totalHours of the event with eventID in eventManager so also autoscheduled
+     * @param eventID UUID of event
+     * @param eventManager EventManager
+     * @param chosenHour Long the new totalHours
+     */
     public void changeTotalHour(UUID eventID, EventManager eventManager, Long chosenHour){
         this.workSessionScheduler.setHoursNeeded(eventID, chosenHour, eventManager);
     }
 
     /**
-     * Change the individual session length
+     * Change the individual session length with prompts and terminal input
      * @param eventID ID of the event to change from
      * @param eventManager eventManager object with the necessary function
      */
@@ -167,6 +190,12 @@ public class WorkSessionController {
         System.out.println("The change has been applied");
     }
 
+    /**
+     * uses workSessionScheduler to changes the preferred session length for Event with eventID
+     * @param eventID UUID of event
+     * @param eventManager EventManager
+     * @param chosenLength Long the new preferred length of sessions
+     */
     public void changeSessionLength(UUID eventID, EventManager eventManager, Long chosenLength){
         this.workSessionScheduler.setSessionLength(eventID, chosenLength, eventManager);
     }
@@ -199,14 +228,31 @@ public class WorkSessionController {
         }
     }
 
+    /**
+     * remove session from event work sessions and lower total hours by the length of the session, then reschedule
+     * @param event UUID of event
+     * @param session Event workSession in event
+     * @param eventManager EventManager
+     */
     public void markComplete(UUID event, UUID session, EventManager eventManager){
         workSessionScheduler.markComplete(event, session, eventManager);
     }
 
+    /**
+     * remove a session from event work sessions without lowering total hours, and reschedule
+     * @param event UUID of event
+     * @param session UUID of workSession in event
+     * @param eventManager EventManager
+     */
     public void markInComplete(UUID event, UUID session, EventManager eventManager){
         workSessionScheduler.markInComplete(event, session, eventManager);
     }
 
+    /**
+     * gets a workSessionManager based on input eventManager
+     * @param eventManager EventManager
+     * @return a new WorkSessionManager
+     */
     public WorkSessionManager getWorkSessionManager(EventManager eventManager) {
         return new WorkSessionManager(eventManager);
     }

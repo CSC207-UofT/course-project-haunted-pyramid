@@ -4,7 +4,6 @@ import controllers.EventController;
 
 import interfaces.MeltParentWindow;
 import interfaces.WorkSessionInfoGetter;
-import usecases.events.worksessions.WorkSessionManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;

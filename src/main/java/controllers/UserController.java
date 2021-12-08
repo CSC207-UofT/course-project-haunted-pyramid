@@ -169,7 +169,12 @@ public class UserController {
         changeName(name);
     }
 
-    public void changeName(String name){
+    /**
+     * uses userManager to change name of currentUser to input name
+     *
+     * @param name new NAme
+     */
+    public void changeName(String name) {
         if (name.equalsIgnoreCase("Return")) {
             return;
         }
@@ -186,7 +191,13 @@ public class UserController {
         addFreeTime(start, end);
     }
 
-    public void addFreeTime(LocalTime start, LocalTime end){
+    /**
+     * usee userManager to add input start and end time to currentUser's UserPreferences freeTime
+     *
+     * @param start LocalTime start time
+     * @param end   LocalTime end time
+     */
+    public void addFreeTime(LocalTime start, LocalTime end) {
         if (start.equals(Constants.RETURN_NOTIFIER)) {
             return;
         }
@@ -206,28 +217,51 @@ public class UserController {
         removeFreeTime(start);
     }
 
-    public void removeFreeTime(LocalTime start){
-        if (start.equals(Constants.RETURN_NOTIFIER)){
+    /**
+     * uses the userManager to access current user's userPreferences and remove free time starting at this start
+     *
+     * @param start LocalTime start time
+     */
+    public void removeFreeTime(LocalTime start) {
+        if (start.equals(Constants.RETURN_NOTIFIER)) {
             return;
         }
         this.userManager.removeFreeTime(this.currentUser, start);
     }
 
-    /**
-     * changes the current user's value for procrastinate (false -> true, true -> false)
-     */
     private void toggleProcrastinate() {
         this.userManager.toggleProcrastinate(this.currentUser);
     }
-    public void setProcrastinate(boolean procrastinate){this.userManager.getPreferences(currentUser).setProcrastinate(procrastinate);}
-    private void toggleMorningPerson(){this.userManager.toggleMorningPerson(this.currentUser);}
-    public void setMorningPerson(boolean morningPerson){this.userManager.getPreferences(currentUser).setMorningPerson(morningPerson);}
-    private void toggleCram(){this.userManager.toggleEvenSpacing(this.currentUser);}
-    public void setCram(boolean cram){this.userManager.getPreferences(currentUser).setCram(cram);}
-    private void toggleSessionSpacing(){this.userManager.toggleWorkSessionSpacing(this.currentUser);}
-    public void setSessionSpacing(String sessionSpacing){this.userManager.getPreferences(currentUser).setSpacingSameDay(sessionSpacing);}
 
-    public UserPreferences getPreferences(){
+    public void setProcrastinate(boolean procrastinate) {
+        this.userManager.getPreferences(currentUser).setProcrastinate(procrastinate);
+    }
+
+    private void toggleMorningPerson() {
+        this.userManager.toggleMorningPerson(this.currentUser);
+    }
+
+    public void setMorningPerson(boolean morningPerson) {
+        this.userManager.getPreferences(currentUser).setMorningPerson(morningPerson);
+    }
+
+    private void toggleCram() {
+        this.userManager.toggleEvenSpacing(this.currentUser);
+    }
+
+    public void setCram(boolean cram) {
+        this.userManager.getPreferences(currentUser).setCram(cram);
+    }
+
+    private void toggleSessionSpacing() {
+        this.userManager.toggleWorkSessionSpacing(this.currentUser);
+    }
+
+    public void setSessionSpacing(String sessionSpacing) {
+        this.userManager.getPreferences(currentUser).setSpacingSameDay(sessionSpacing);
+    }
+
+    public UserPreferences getPreferences() {
         return this.getUserManager().getPreferences(currentUser);
     }
 }
