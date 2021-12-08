@@ -213,10 +213,11 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             this.frame.setEnabled(false);
             UUID newEventID = this.ec.createDefaultEvent("Event Name", LocalDateTime.of(
                     LocalDate.now(), LocalTime.of(23, 59)));
-            new EditEventWindow(this.mc, this.mc.getEventController().getEventManager(), newEventID, this);
+            new EditEventWindow(this.mc, this.mc.getEventController().getEventManager(), newEventID, this, "add");
         }
         else if (e.getSource() == buttonModifyEvent) {
-            new SelectEvent(mc, this, mc.getEventController().getEventManager());
+            this.frame.setEnabled(false);
+            new SelectEvent(mc, mc.getEventController().getEventManager(), this);
         }
         else if (e.getSource() == buttonExport) {
             SaveICalendar saveCalendar = new SaveICalendar();
