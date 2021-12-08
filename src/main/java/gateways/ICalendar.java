@@ -235,10 +235,10 @@ public class ICalendar {
      * @param eventID ID of an event
      */
     private void addEventToFile(BufferedWriter bw, UUID eventID) {
-        LocalDate startDate = eventManager.getStartDate(eventID);
-        LocalTime startTime = eventManager.getStartTime(eventID);
-        LocalDate endDate = eventManager.getEndDate(eventID);
-        LocalTime endTime = eventManager.getEndTime(eventID);
+        LocalDate startDate = eventManager.getDefaultEventInfoGetter().getStartDate(eventID);
+        LocalTime startTime = eventManager.getDefaultEventInfoGetter().getStartTime(eventID);
+        LocalDate endDate = eventManager.getDefaultEventInfoGetter().getEndDate(eventID);
+        LocalTime endTime = eventManager.getDefaultEventInfoGetter().getEndTime(eventID);
         if (startDate == null) {
             startDate = endDate;
         }
@@ -247,8 +247,8 @@ public class ICalendar {
         }
         StringBuilder startDateTime = getTzTimeStamp(startDate, startTime);
         StringBuilder endDateTime = getTzTimeStamp(endDate, endTime);
-        String name = eventManager.getName(eventID);
-        String description = eventManager.getDescription(eventID);
+        String name = eventManager.getDefaultEventInfoGetter().getName(eventID);
+        String description = eventManager.getDefaultEventInfoGetter().getDescription(eventID);
         try {
             String beginEvent = "BEGIN:VEVENT" + iCalSpacer;
             bw.write(beginEvent);

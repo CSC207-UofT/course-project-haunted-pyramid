@@ -33,13 +33,13 @@ public class CalendarTimePresenter {
      */
     public String getStartTime(UUID eventID, int year, int month, int date) {
         LocalDate givenStartDate = LocalDate.of(year, month, date);
-        if (eventManager.getStartTime(eventID) == null) {
+        if (eventManager.getDefaultEventInfoGetter().getStartTime(eventID) == null) {
             return null;
         }
-        else if (eventManager.getStartDate(eventID).isEqual(givenStartDate)) {
+        else if (eventManager.getDefaultEventInfoGetter().getStartDate(eventID).isEqual(givenStartDate)) {
             return eventManager.getStartTimeString(eventID);
         }
-        else if (eventManager.getStartDate(eventID).isBefore(givenStartDate)) {
+        else if (eventManager.getDefaultEventInfoGetter().getStartDate(eventID).isBefore(givenStartDate)) {
             return "00:00";
         }
         return null;
@@ -57,10 +57,10 @@ public class CalendarTimePresenter {
      */
     public String getEndTime(UUID eventID, int year, int month, int date) {
         LocalDate givenEndDate = LocalDate.of(year, month, date);
-        if (eventManager.getEndDate(eventID).isEqual(givenEndDate)) {
-            return eventManager.getEndTimeString(eventID);
+        if (eventManager.getDefaultEventInfoGetter().getEndDate(eventID).isEqual(givenEndDate)) {
+            return eventManager.getDefaultEventInfoGetter().getEndTimeString(eventID);
         }
-        else if (eventManager.getEndDate(eventID).isAfter(givenEndDate)) {
+        else if (eventManager.getDefaultEventInfoGetter().getEndDate(eventID).isAfter(givenEndDate)) {
             return "24:00";
         }
         return null;

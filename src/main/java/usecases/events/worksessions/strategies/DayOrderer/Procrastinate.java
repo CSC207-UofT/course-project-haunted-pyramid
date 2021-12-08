@@ -9,8 +9,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * @see DayOrderer
+ * @author Taite Cullen
+ */
 public class Procrastinate implements DayOrderer{
 
+    /**
+     * orders list of days in order of which is latest
+     * @param deadline      the UUID of deadline event - refers to end time
+     * @param eventManager  EventManager containing deadline
+     * @param eligibleDates list of dates with eligible times
+     * @param schedule      time ordered list of interfering events
+     */
     @Override
     public void order(UUID deadline, EventManager eventManager, List<LocalDate> eligibleDates, Map<LocalDate, List<Event>> schedule) {
         List<LocalDate> ordered = new ArrayList<>();
@@ -20,7 +31,12 @@ public class Procrastinate implements DayOrderer{
         eligibleDates.addAll(ordered);
     }
 
-    public static LocalDate latest(List<LocalDate> dates){
+    /**
+     * helper method determines the latest date in a list of dates and removes it from list
+     * @param dates list of dates
+     * @return the latest date in dates
+     */
+    private LocalDate latest(List<LocalDate> dates){
         LocalDate latest = dates.get(0);
         for (LocalDate date: dates){
             if (date.isAfter(latest)){
@@ -29,14 +45,5 @@ public class Procrastinate implements DayOrderer{
         }
         dates.remove(latest);
         return latest;
-    }
-
-    public static void main(String[] args){
-        ArrayList<LocalDate> test = new ArrayList<>(){
-            {
-                add(LocalDate.now());
-                add(LocalDate.now().plusDays(1));
-                add(LocalDate.now().plusDays(2));
-            }};
     }
 }

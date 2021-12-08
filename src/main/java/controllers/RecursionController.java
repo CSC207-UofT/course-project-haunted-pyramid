@@ -81,7 +81,7 @@ public class RecursionController {
         LocalDateTime lastEventEndDate = eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).
                 getEventsInOneCycle().get(eventIDList.size() - 1).getEndTime();
         LocalDateTime secondFirstEventDateTime = secondFirstEventDateTime(firstEventEndTime, lastEventEndDate);
-        String eventName = eventManager.getName(eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).
+        String eventName = eventManager.getDefaultEventInfoGetter().getName(eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).
                 getEventsInOneCycle().get(0));
         eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).addEventToCycle(
                 eventManager.getEvent(eventName + "-2", secondFirstEventDateTime));
