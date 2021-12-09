@@ -11,10 +11,10 @@ import java.util.UUID;
  * Display conflicted events in the month
  * @author Seo Won Yi
  * @see usecases.ConflictChecker
- * @see DisplayConflict
+ * @see ConflictDisplay
  */
 
-public class DisplayMonthlyConflict extends DisplayConflict {
+public class MonthlyConflictDisplay extends ConflictDisplay {
     private final int year;
     private final int month;
     private final int numOfDays;
@@ -27,7 +27,7 @@ public class DisplayMonthlyConflict extends DisplayConflict {
      * @param month given month
      * @param dateNumber number of days within a month
      */
-    public DisplayMonthlyConflict(CalendarManager cm, EventManager em, int year, int month, int dateNumber) {
+    public MonthlyConflictDisplay(CalendarManager cm, EventManager em, int year, int month, int dateNumber) {
         super(cm, em);
         this.year = year;
         this.month = month;
