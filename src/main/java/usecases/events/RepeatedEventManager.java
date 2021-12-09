@@ -65,7 +65,7 @@ public class RepeatedEventManager implements EventListObserver {
      *
      * @param recursiveEvent The recursive event to add to the repeated event manager.
      */
-    private void addRecursion(RecursiveEvent recursiveEvent){
+    public void addRecursion(RecursiveEvent recursiveEvent){
         this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
         List<Event> events = recursiveEvent.listOfEventsInCycles(recursiveEvent.getEventsInOneCycle());
         this.recursiveIdToDateToEventsMap.put(recursiveEvent.getId(), eventListToMap(events,
