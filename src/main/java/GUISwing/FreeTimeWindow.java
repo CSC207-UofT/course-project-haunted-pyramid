@@ -1,6 +1,7 @@
 package GUISwing;
 
 import controllers.UserController;
+import helpers.Constants;
 import interfaces.MeltParentWindow;
 
 import javax.swing.*;
@@ -50,9 +51,10 @@ public class FreeTimeWindow implements ActionListener {
     private void showFreeTime(){
         freeTimes = new HashMap<>();
         freeTimePanel.setLayout(new BoxLayout(freeTimePanel, BoxLayout.Y_AXIS));
-
+        freeTimePanel.setBackground(Constants.WINDOW_COLOR);
         for (LocalTime start: userController.getCurrentFreeTime().keySet()){
             JPanel freeTime = addFreeTime(start, userController.getCurrentFreeTime().get(start));
+            freeTime.setBackground(Constants.WINDOW_COLOR);
             freeTimePanel.add(freeTime);
         }
         eventScroller.setPreferredSize(new Dimension(150, 100));
@@ -91,6 +93,7 @@ public class FreeTimeWindow implements ActionListener {
      */
     private void saveButton() {
         JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.setBackground(Constants.WINDOW_COLOR);
         buttonPanel.setBounds(0, frame.getHeight()-100, frame.getWidth(), 100);
         save = new JButton("save");
         save.addActionListener(this);
