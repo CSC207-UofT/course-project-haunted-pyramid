@@ -10,6 +10,13 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.YearMonth;
 
+/**
+ * Window that allows the user to choose a specific date of the calendar
+ * @author Seo Won Yi
+ * @see CalendarChoices
+ * @see presenters.CalendarFactory.CalendarDisplayFactory
+ */
+
 public class CalendarDateSelection  implements ActionListener {
     private final JFrame frame;
     private final MenuCreationHelper helper;
@@ -24,6 +31,12 @@ public class CalendarDateSelection  implements ActionListener {
     private final JButton save;
     private final JButton cancel;
 
+    /**
+     * Construct the window with buttons and combo boxes to allow the user to pick necessary information
+     * @param option type of calendar to consider
+     * @param parent parent window (prev window)
+     * @param grandParent grandparent window (previous and previous window)
+     */
     public CalendarDateSelection(String option, MeltParentWindow parent, MainMenu grandParent) {
         this.frame = new PopUpWindowFrame();
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -65,12 +78,19 @@ public class CalendarDateSelection  implements ActionListener {
         this.frame.setVisible(true);
     }
 
+    /**
+     * enable the buttons by setting up the action listener
+     */
     private void enableButtons() {
         yearMonthBox.addActionListener(this);
         save.addActionListener(this);
         cancel.addActionListener(this);
     }
 
+    /**
+     * Set up the option panel that will contain save and cancel buttons
+     * @return the configured JPanel
+     */
     private JPanel optionPanelSetUp() {
         JPanel optionPanel = new JPanel();
         optionPanel.setBackground(Constants.WINDOW_COLOR);
@@ -78,6 +98,10 @@ public class CalendarDateSelection  implements ActionListener {
         return optionPanel;
     }
 
+    /**
+     * Provide instructions for the user
+     * @param textPanel JPanel to contain instructions
+     */
     private void writeInstruction(JPanel textPanel) {
         JLabel instruction = new JLabel("Please select the date information to view Calendar");
         instruction.setHorizontalAlignment(JLabel.CENTER);
@@ -88,6 +112,10 @@ public class CalendarDateSelection  implements ActionListener {
         textPanel.add(instruction);
     }
 
+    /**
+     * Combobox setup for the monthly calendar (allow the user to choose year and month)
+     * @param dateSelectionPanel JPanel to include the information
+     */
     private void monthlyCaseComboBox(JPanel dateSelectionPanel) {
         dateSelectionPanel.setBounds(0, 110, 500, 50);
         dateSelectionPanel.setLayout(null);
@@ -96,6 +124,10 @@ public class CalendarDateSelection  implements ActionListener {
         dateSelectionPanel.add(yearMonthBox);
     }
 
+    /**
+     * Combobox setup for non-monthly calendars (allow the user to choose year, month and date)
+     * @param dateSelectionPanel JPanel to include the information
+     */
     private void nonMonthlyCaseComboBox(JPanel dateSelectionPanel) {
         dateSelectionPanel.add(yearMonthBox);
         dateSelectionPanel.setLayout(new GridLayout(1, 2));
@@ -106,10 +138,17 @@ public class CalendarDateSelection  implements ActionListener {
         dateBox.addActionListener(this);
     }
 
+    /**
+     * exit the frame
+     */
     public void exitFrame() {
         this.frame.dispose();
     }
 
+    /**
+     * Set up the actions to be performed depending on the user's selections
+     * @param e action to be considered from
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == yearMonthBox) {
@@ -145,6 +184,9 @@ public class CalendarDateSelection  implements ActionListener {
         }
     }
 
+    /**
+     * save the calendar and return to the grandparent window
+     */
     private void saveCalendar() {
         if (option.equalsIgnoreCase("Monthly")) {
             this.grandParent.setDateInfo(LocalDate.of(this.year, this.month, 1));

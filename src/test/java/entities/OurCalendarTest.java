@@ -2,12 +2,10 @@ package entities;
 
 import org.junit.Before;
 import org.junit.Test;
-import entities.OurCalendar;
-import entities.Event;
 
+import java.time.YearMonth;
 import java.util.*;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 public class OurCalendarTest {
@@ -15,9 +13,9 @@ public class OurCalendarTest {
     int year;
     int month;
     int date;
+    int numOfDays;
 
     private final UUID UUID1 = UUID.randomUUID();
-    private final UUID UUID2 = UUID.randomUUID();
 
     @Before
     public void setUp(){
@@ -28,69 +26,48 @@ public class OurCalendarTest {
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH) + 1;
         date = cal.get(Calendar.DATE);
-    }
-
-/*    @Test(timeout = 100)
-    public void testUpdateConflict(){
-        assertFalse(calendar.isConflict());
-        Event eventOne = new Event(UUID1, "Test1",
-                2021, 10, 15, 7, 10, 0, 0);
-        Event eventTwo = new Event(UUID2, "Test2",
-                2021, 10, 15, 8, 9, 0, 0);
-        calendar.addEvent(eventOne);
-        calendar.addEvent(eventTwo);
-        calendar.updateConflict();
-        assertTrue(calendar.isConflict());
-
+        YearMonth yearMonth = YearMonth.of(year, month);
+        List<Integer> dateInfoList = new ArrayList<>();
+        numOfDays = yearMonth.lengthOfMonth();
     }
 
     @Test(timeout = 100)
-    public void testAddEvent(){
+    public void testDateInfo() {
+        List<Integer> dateInfoList = new ArrayList<>();
+        dateInfoList.add(year);
+        dateInfoList.add(month);
+        dateInfoList.add(numOfDays);
+        assertEquals(calendar.getDateInfo(), dateInfoList);
+    }
+
+    @Test(timeout = 100)
+    public void testAddEventID(){
         Event eventOne = new Event(UUID1, "Test1",
-                2021, 10, 15, 7, 10, 0, 0);
-        calendar.addEvent(eventOne);
-        Map<Integer, List<Event>> tempMap = new HashMap<>();
-        List<Event> myList  = new ArrayList<>();
-        List<Event> withEvent = new ArrayList<>(){
+                year, month, date, 7, 10, 0, 0);
+        calendar.addEventID(UUID1, date);
+        Map<Integer, List<UUID>> tempMap = new HashMap<>();
+        List<UUID> myList  = new ArrayList<>();
+        List<UUID> withEvent = new ArrayList<>(){
             {
-                add(eventOne);
+                add(eventOne.getID());
             }
         };
-        for (int i = 1; i <= 30; i++){
+        for (int i = 1; i <= numOfDays; i++){
             tempMap.put(i, myList);
         }
-        tempMap.put(15, withEvent);
+        tempMap.put(date, withEvent);
         assertEquals(calendar.getCalendarMap(), tempMap);
     }
 
     @Test(timeout = 100)
-    public void testGetCalendarMap(){
-        Map<Integer, List<Event>> tempMap = new HashMap<>();
-        List<Event> myList  = new ArrayList<>();
+    public void testEmptyCalendarMap(){
+        Map<Integer, List<UUID>> tempMap = new HashMap<>();
+        List<UUID> myList  = new ArrayList<>();
 
-        for (int i = 1; i <= 30; i++){
+        for (int i = 1; i <= numOfDays; i++){
             tempMap.put(i, myList);
         }
         assertEquals(calendar.getCalendarMap(), tempMap);
     }
-
-    @Test(timeout = 100)
-    public void testGetConflictEvent(){
-        Event eventOne = new Event(UUID1, "Test1",
-                2021, 10, 15, 7, 10, 0, 0);
-        Event eventTwo = new Event(UUID2, "Test2",
-                2021, 10, 15, 8, 9, 0, 0);
-        calendar.addEvent(eventOne);
-        calendar.addEvent(eventTwo);
-        calendar.updateConflict();
-        List<Event> myList = new ArrayList<>(){
-            {
-                add(eventOne);
-                add(eventTwo);
-            }
-
-        };
-        assertEquals(calendar.getConflictEvent(), myList);
-    }*/
 }
 

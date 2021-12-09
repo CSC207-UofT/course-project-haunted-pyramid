@@ -8,15 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuCreationHelper {
+
     public JComboBox<LocalTime> timeComboBox() {
-        LocalTime[] timeList = new LocalTime[25];
-        LocalTime first = LocalTime.of(0, 0);
-        for (int index = 0; index < 24; index += 1) {
-            timeList[index] = first;
-            first = first.plusHours(1);
+        List<Integer> hourList = new ArrayList<>();
+        List<Integer> minList = new ArrayList<>();
+        List<LocalTime> timeList = new ArrayList<>();
+        for (int i = 0; i <= 23; i++) {
+            hourList.add(i);
         }
-        timeList[24] = LocalTime.of(23, 59);
-        return new JComboBox<>(timeList);
+        minList.add(0);
+        minList.add(30);
+        for (int hour : hourList) {
+            for (int minute : minList) {
+                LocalTime newTime = LocalTime.of(hour, minute);
+                timeList.add(newTime);
+            }
+        }
+        timeList.add(LocalTime.of(23, 59));
+        LocalTime[] arr = new LocalTime[timeList.size()];
+        return new JComboBox<>(timeList.toArray(arr));
     }
 
     public Integer[] dateList(YearMonth month, boolean canBeNull){

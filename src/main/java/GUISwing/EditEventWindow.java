@@ -216,7 +216,6 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
         }
 
         if (e.getSource() == recursionButton) {
-            // lead to recursion
             this.parent.enableFrame();
             exitFrame();
         }

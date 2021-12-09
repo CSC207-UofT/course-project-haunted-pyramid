@@ -12,8 +12,6 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -240,14 +238,11 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             new SelectEvent(mc, mc.getEventController().getEventManager().getDefaultEventInfoGetter(), this);
         }
         else if (e.getSource() == buttonCreateRecursion) {
-            if(ec.getEventManager().getEventMap().size()>0){
-                Object[] set = this.ec.getEventManager().getEventMap().keySet().toArray();
-                UUID id = this.ec.getEventManager().getEventMap().get(set[0]).getID();
-                this.frame.setEnabled(false);
-                new RecursionMenu(mc, mc.getEventController().getEventManager().getDefaultEventInfoGetter(),
-                        id, this, "modify");
-            }
+            this.lc.logout();
+            frame.dispose();
+            new LogInWindow();
         }
+
         else if (e.getSource() == buttonExport) {
             SaveICalendar saveCalendar = new SaveICalendar();
             saveCalendar.save(this.ec);

@@ -34,7 +34,7 @@ public class TimeSetUp implements ActionListener {
     private final JFrame frame = new PopUpWindowFrame();
     private final JComboBox<YearMonth> yearMonthBox;
     private JComboBox<Integer> dateBox;
-    private final JComboBox<LocalTime> timeBox;
+    private final JComboBox<LocalTime> hourBox;
     private final JButton saveButton;
     private final JButton cancelButton;
     private int year;
@@ -58,9 +58,8 @@ public class TimeSetUp implements ActionListener {
         this.parent = parent;
         this.option = option;
         this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.timeBox = boxHelper.timeComboBox();
+        this.hourBox = boxHelper.timeComboBox();
         this.yearMonthBox = boxHelper.monthComboBox();
-        this.yearMonthBox.setSelectedIndex(3);
         setDefaultTimeLine();
         GUIInfoProvider helper = new GUIInfoProvider();
         JPanel infoPanel = configureInfoPanel();
@@ -90,6 +89,10 @@ public class TimeSetUp implements ActionListener {
         this.frame.setVisible(true);
     }
 
+    /**
+     * Create Option panel that will have save or cancel button
+     * @return JPanel that has been set up for the window
+     */
     private JPanel configureOptionPanel() {
         JPanel optionPanel = new JPanel();
         optionPanel.setLayout(new GridLayout(1,2, 40, 0));
@@ -99,12 +102,36 @@ public class TimeSetUp implements ActionListener {
         return optionPanel;
     }
 
+    /**
+     * Set up the default timeline (year, month, time) for the screen
+     */
     private void setDefaultTimeLine() {
+        yearMonthBox.setSelectedIndex(3);
         year = yearMonthBox.getItemAt(3).getYear();
         month = yearMonthBox.getItemAt(3).getMonthValue();
-        time = timeBox.getItemAt(0);
+        if (option.equalsIgnoreCase("Start")) {
+            if (this.eventInfoGetter.getStart(eventID) == null) {
+                hourBox.setSelectedIndex(LocalTime.now().getHour() * 2);
+                time = hourBox.getItemAt(LocalTime.now().getHour() * 2);
+            }
+            else {
+                int startHour = this.eventInfoGetter.getStart(eventID).getHour();
+                hourBox.setSelectedIndex(startHour * 2);
+                time = hourBox.getItemAt(startHour * 2);
+            }
+        }
+
+        else if (option.equalsIgnoreCase("End")) {
+            int endHour = this.eventInfoGetter.getEnd(eventID).getHour();
+            hourBox.setSelectedIndex(endHour * 2);
+            time = hourBox.getItemAt(endHour * 2);
+        }
     }
 
+    /**
+     * Set up the shutdown condition in case the user clicked escape
+     * @param parent the parent window (prev window)
+     */
     private void shutDownCondition(MeltParentWindow parent) {
         this.frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -120,22 +147,34 @@ public class TimeSetUp implements ActionListener {
         });
     }
 
+    /**
+     * Add buttons and comboboxes to the corresponding panels
+     * @param comboBoxPanel panel for combo boxes (for timeline set up)
+     * @param optionPanel panel for save and cancel button
+     */
     private void addToPanels(JPanel comboBoxPanel, JPanel optionPanel) {
         comboBoxPanel.add(yearMonthBox);
         comboBoxPanel.add(dateBox);
-        comboBoxPanel.add(timeBox);
+        comboBoxPanel.add(hourBox);
         optionPanel.add(saveButton);
         optionPanel.add(cancelButton);
     }
 
+    /**
+     * add action listener to the boxes and buttons
+     */
     private void addActionListener() {
         this.saveButton.addActionListener(this);
         this.cancelButton.addActionListener(this);
         this.yearMonthBox.addActionListener(this);
         this.dateBox.addActionListener(this);
-        this.timeBox.addActionListener(this);
+        this.hourBox.addActionListener(this);
     }
 
+    /**
+     * Configure the box panel with the appropriate size and layout
+     * @return configured box panel that will contain JCombobox
+     */
     private JPanel configureBoxPanel() {
         JPanel comboBoxPanel = new JPanel();
         this.frame.add(comboBoxPanel);
@@ -144,6 +183,10 @@ public class TimeSetUp implements ActionListener {
         return comboBoxPanel;
     }
 
+    /**
+     * Configure the info panel with the appropriate size and layout
+     * @return configured info panel that will contain current event's information
+     */
     private JPanel configureInfoPanel() {
         JPanel infoPanel = new JPanel();
         this.frame.add(infoPanel);
@@ -153,6 +196,13 @@ public class TimeSetUp implements ActionListener {
         return infoPanel;
     }
 
+    /**
+     * Put contents in the info panel
+     * @param infoPanel JPanel that will have contents on
+     * @param currentTimeText JLabel that has text information
+     * @param currentTimeInfo JLabel that has current time information
+     * @param setUpNewTime JLabel that indicates where the new time set up happens
+     */
     private void setUpInfoPanel(JPanel infoPanel, JLabel currentTimeText, JLabel currentTimeInfo, JLabel setUpNewTime) {
         setUpNewTime.setHorizontalAlignment(JLabel.CENTER);
         setUpNewTime.setHorizontalAlignment(JLabel.CENTER);
@@ -170,10 +220,17 @@ public class TimeSetUp implements ActionListener {
         infoPanel.add(setUpNewTime);
     }
 
+    /**
+     * Exit the frame
+     */
     private void exitFrame() {
         this.frame.dispose();
     }
 
+    /**
+     * Set up appropriate actions for the user's choices
+     * @param e action to be considered
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == yearMonthBox) {
@@ -186,8 +243,8 @@ public class TimeSetUp implements ActionListener {
                 }
         }
 
-        if (e.getSource() == timeBox) {
-            this.time = (LocalTime) this.timeBox.getSelectedItem();
+        if (e.getSource() == hourBox) {
+            this.time = (LocalTime) this.hourBox.getSelectedItem();
         }
 
         if (e.getSource() == saveButton) {
@@ -199,6 +256,9 @@ public class TimeSetUp implements ActionListener {
         }
     }
 
+    /**
+     * Set up the new year and month according to user's selection
+     */
     private void setYearMonth() {
         YearMonth choice = (YearMonth) yearMonthBox.getSelectedItem();
         if (choice != null) {
@@ -213,6 +273,9 @@ public class TimeSetUp implements ActionListener {
         }
     }
 
+    /**
+     * Save the information and return to the previous window
+     */
     private void save() {
         if (option.equalsIgnoreCase("Start")) {
             if (dateBox.getSelectedItem() == null) {
@@ -236,6 +299,10 @@ public class TimeSetUp implements ActionListener {
         exitFrame();
     }
 
+    /**
+     * get local date time for the given year month date and time
+     * @return local date time of given year month date and time
+     */
     private LocalDateTime getLocalDateTime() {
         if (dateBox.getSelectedItem() != null) {
             return LocalDateTime.of(year, month, date,
