@@ -254,6 +254,8 @@ public class RepeatedEventManager implements EventListObserver {
      * This method creates a new recursion from an old one, after implementing the change described by the string
      * addRemoveChange.
      *
+     * Conditions for algorithm to work: -
+     *
      * @param addRemoveChange a String describing whether to delete/add or change an event in a particular recursion.
      * @param changed the event to delete/add or change in a particular recursion.
      */

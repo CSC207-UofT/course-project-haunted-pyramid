@@ -105,14 +105,73 @@ public class RecursionController {
     }
 
     /**
+     * This method creates a recursive event and returns its uuid.
+     *
+     * @param eventIDList the list of event IDs which will be part of the first cycle of this recursion
+     * @param eventManager  the event manager containing all events and recursive events.
+     * @param secondFirstEventDateTime the second instance of the first event in the base cycle.
+     * @return the uuid of the newly created recursive event.
+     */
+    private UUID addEventsToRecursiveObject(List<UUID> eventIDList, EventManager eventManager,
+                                            LocalDateTime secondFirstEventDateTime){
+        UUID uuid = eventManager.getRepeatedEventManager().recursiveEventConstructor1(
+                eventManager.eventHelper.timeOrder(eventManager.getEvents(eventIDList)));
+        String eventName = eventManager.getDefaultEventInfoGetter().getName(eventManager.getRepeatedEventManager().
+                getRecursiveEventMap().get(uuid).getEventsInOneCycle().get(0));
+        eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).addEventToCycle(
+                eventManager.getEvent(eventName + "-2", secondFirstEventDateTime));
+        return uuid;
+    }
+
+    /**
      *
      * @param eventIDList the ids of the events to repeat.
      * @param eventManager  the event manager containing all events and recursive events.
-     * This methods prompt the user to create repetitions of events with ids in eventIDList.
+     * This method prompt the user to create repetitions of events with ids in eventIDList.
      */
     public void createNewRecursion(List<UUID> eventIDList, EventManager eventManager){
         UUID uuid = addEventsToRecursiveObject(eventIDList, eventManager);
         setDateGetter(eventManager, uuid);
+        eventManager.getRepeatedEventManager().getRecursiveIdToDateToEventsMap().put(uuid,
+                eventManager.getRepeatedEventManager().eventListToMap(eventManager.
+                        getRepeatedEventManager().getEventsFromRecursion(uuid), eventIDList.size()));
+    }
+
+    /**
+     *
+     * @param eventIDList the ids of the events to repeat.
+     * @param eventManager the event manager containing all events and recursive events.
+     * @param dateTime1 the date this recursion should start.
+     * @param dateTime2 the date this recursion should end.
+     * @param secondFirstEventDateTime the second instance of the first event in the base cycle.
+     * This method create repetitions of events with ids in eventIDList.
+     */
+    public void createNewRecursion(List<UUID> eventIDList, EventManager eventManager, LocalDateTime dateTime1,
+                                   LocalDateTime dateTime2, LocalDateTime secondFirstEventDateTime){
+        UUID uuid = addEventsToRecursiveObject(eventIDList, eventManager, secondFirstEventDateTime);
+        LocalDateTime[] input = new LocalDateTime[2];
+        input[0] = dateTime1;
+        input[1] = dateTime2;
+        eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).
+                setIntervalDateDateGetter(input);
+        eventManager.getRepeatedEventManager().getRecursiveIdToDateToEventsMap().put(uuid,
+                eventManager.getRepeatedEventManager().eventListToMap(eventManager.
+                        getRepeatedEventManager().getEventsFromRecursion(uuid), eventIDList.size()));
+    }
+
+    /**
+     *
+     * @param eventIDList the ids of the events to repeat.
+     * @param eventManager  the event manager containing all events and recursive events.
+     * @param numRepetition the number of times this cycle should repeat.
+     * @param secondFirstEventDateTime the second instance of the first event in the base cycle.
+     * This method create repetitions of events with ids in eventIDList.
+     */
+    public void createNewRecursion(List<UUID> eventIDList, EventManager eventManager, int numRepetition,
+                                   LocalDateTime secondFirstEventDateTime){
+        UUID uuid = addEventsToRecursiveObject(eventIDList, eventManager, secondFirstEventDateTime);
+        eventManager.getRepeatedEventManager().getRecursiveEventMap().get(uuid).
+                setNumberOfRepetitionDateGetter(numRepetition);
         eventManager.getRepeatedEventManager().getRecursiveIdToDateToEventsMap().put(uuid,
                 eventManager.getRepeatedEventManager().eventListToMap(eventManager.
                         getRepeatedEventManager().getEventsFromRecursion(uuid), eventIDList.size()));
