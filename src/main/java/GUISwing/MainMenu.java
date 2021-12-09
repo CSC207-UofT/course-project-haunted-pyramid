@@ -298,6 +298,8 @@ public class MainMenu implements ActionListener, MeltParentWindow {
      */
     @Override
     public void exitFrame() {
+        this.mc.getIoSerializable().usersWriteToSerializable(this.mc.getUserController().getUserManager().getAllUsers());
+        this.mc.getIoSerializable().eventsWriteToSerializable(this.mc.getEventController().getEventManager().getUuidEventsMap());
         this.frame.dispose();
     }
 

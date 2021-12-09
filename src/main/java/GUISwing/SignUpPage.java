@@ -8,6 +8,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ *
+ *
+ * @author Sebin Im
+ * @see LogInWindow
+ */
 public class SignUpPage implements ActionListener {
 
     LoginController loginController;
@@ -26,6 +32,11 @@ public class SignUpPage implements ActionListener {
     JTextField username = new JTextField();
     JPasswordField password = new JPasswordField();
 
+    /**
+     * Create a new frame and add the panel necessary to visualize a sign-up page
+     *
+     * @param loginController to add a new user to the usercontroller
+     */
     public SignUpPage(LoginController loginController) {
         this.loginController = loginController;
 
@@ -48,6 +59,9 @@ public class SignUpPage implements ActionListener {
         this.addToFrame();
     }
 
+    /**
+     * Create the buttons in the signup page
+     */
     public void createButtons() {
         signUpButton.setBounds(135, 190, 100, 25);
         signUpButton.setFocusable(false);
@@ -57,6 +71,9 @@ public class SignUpPage implements ActionListener {
         cancelButton.addActionListener(this);
     }
 
+    /**
+     * Create the labels in the signup page
+     */
     public void createLabels() {
         addInfo.setBounds(80, 20, frame.getX(), 50);
         addInfo.setFont(new Font("Monaco", Font.BOLD, 14));
@@ -69,6 +86,9 @@ public class SignUpPage implements ActionListener {
         addPassword.setFont(new Font("Arial", Font.PLAIN, 12));
     }
 
+    /**
+     * Create the text fields in the signup page
+     */
     public void createFields() {
         name.setBounds(175, 80, 170, 20);
         name.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -78,6 +98,9 @@ public class SignUpPage implements ActionListener {
         password.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
 
+    /**
+     * Add all the necessary components into the frame
+     */
     public void addToFrame() {
         frame.add(signUpButton);
         frame.add(cancelButton);
@@ -90,6 +113,11 @@ public class SignUpPage implements ActionListener {
         frame.add(password);
     }
 
+    /**
+     * Check which buttons or actions are triggered, and perform any actions necessary.
+     *
+     * @param e The action taken (button press)
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == signUpButton) {
