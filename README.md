@@ -25,10 +25,7 @@
 
 ### GUI Version
 
-![image](https://user-images.githubusercontent.com/90633132/145347805-947d9223-991a-4696-8aca-af28f8e3ab87.png)
-
 ![image](https://user-images.githubusercontent.com/90633132/145347861-5adc4a02-68f2-48c1-9536-dc68c81dad50.png)
-
 
 
 #### 5. Make sure to exit at the end to save the new information to the database.
