@@ -73,6 +73,8 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 #### Seo Won Yi
 
 - After phase 1, focused on decoupling Calendar and Event classes by making calendar classes contain map of Events' UUID instead of the objects directly; Refactoring so that instead of calendar possessing Event object, it now possesses UUID of events.
+- Allowed the program to export calendar schedule to iCal formatted file.
+- Built MainMenu, the core of the GUI Program.
 - Implemented iCal export feature to the GUI version of our program.
 - Modified the EditEventWindow for its performance.
 - Built GUI windows and implement functionalities necessary for calendar selection screen which now enables users to select the type of calendars.

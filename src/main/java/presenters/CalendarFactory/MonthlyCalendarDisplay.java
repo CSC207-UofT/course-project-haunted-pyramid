@@ -2,8 +2,8 @@ package presenters.CalendarFactory;
 
 import helpers.Constants;
 import helpers.DisplayCalendarHelper;
-import presenters.ConflictPresenters.DisplayConflict;
-import presenters.ConflictPresenters.DisplayMonthlyConflict;
+import presenters.ConflictPresenters.ConflictDisplay;
+import presenters.ConflictPresenters.MonthlyConflictDisplay;
 import usecases.calendar.CalendarManager;
 import usecases.calendar.MonthlyCalendarByType;
 import usecases.events.EventManager;
@@ -21,7 +21,7 @@ public class MonthlyCalendarDisplay extends CalendarDisplay {
     private final List<Integer> keyList;
     private final Map<Integer, List<UUID>> calendarMap;
     private final DisplayCalendarHelper cf;
-    private final DisplayConflict conflictDisplay;
+    private final ConflictDisplay conflictDisplay;
     List<String> dayOfWeekCollection = new ArrayList<>() {{
         add("SUNDAY");
         add("MONDAY");
@@ -46,7 +46,7 @@ public class MonthlyCalendarDisplay extends CalendarDisplay {
         Collections.sort(this.keyList);
         this.cf = new DisplayCalendarHelper(year, month);
         YearMonth tempYearMonth = YearMonth.of(year, month);
-        this.conflictDisplay = new DisplayMonthlyConflict(cm, em, year, month, tempYearMonth.lengthOfMonth());
+        this.conflictDisplay = new MonthlyConflictDisplay(cm, em, year, month, tempYearMonth.lengthOfMonth());
     }
 
     /**
