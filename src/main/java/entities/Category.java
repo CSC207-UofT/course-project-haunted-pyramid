@@ -47,7 +47,6 @@ public class Category {
     public void setEvents(List<Event> events) {this.events = events;}
     public void setId(UUID id) {this.id = id;}
     public void addRegularUser(User user) {this.regularUsers.add(user);}
-    public void addAdminUser(User user) {this.adminUsers.add(user);}
 
     /**
      * This method removes a regular user from the list

@@ -28,18 +28,6 @@ public class UserManager {
         }
     }
 
-    /**
-     * Set <code>this.userInfo</code> from users.
-     *
-     * @param users a list of users to be entered into <code>this.userInfo</code>
-     */
-    public void setUserInfo(List<User> users) {
-        HashMap<UUID, User> returnUI = new HashMap<>();
-        for (User user : users) {
-            returnUI.put(user.getId(), user);
-        }
-        this.userInfo = returnUI;
-    }
 
     /**
      * changes value of procrastinate for user

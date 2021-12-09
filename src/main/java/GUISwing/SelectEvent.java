@@ -95,6 +95,10 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
         return eventScroller;
     }
 
+    /**
+     * Helper method that displays all the events in event manager.
+     *
+     */
     public void allEventDisplay(JPanel eventPanel) {
         for (Event event: eventInfoGetter.getAllEvents()) {
             String eventName = eventInfoGetter.getName(eventInfoGetter.getID(event));
