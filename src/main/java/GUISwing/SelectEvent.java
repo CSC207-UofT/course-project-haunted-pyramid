@@ -38,7 +38,7 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
         this.eventInfoGetter = eventInfoGetter;
         this.parent = parent;
         JScrollPane eventScroller = displayEvents();
-        eventScroller.setBounds(0, 0, this.getWidth(), 2 * this.getHeight() / 3);
+        eventScroller.setBounds(0, 0, this.getWidth() - 20, 2 * this.getHeight() / 3);
         JPanel returnPanel = setUpReturnPanel();
         returnButton = configureReturnButton(returnPanel);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
