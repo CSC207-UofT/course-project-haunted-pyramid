@@ -224,6 +224,10 @@ public class MainController {
         return this.loginController;
     }
 
+    public IOSerializable getIoSerializable() {
+        return this.ioSerializable;
+    }
+
     public void setEventController(EventController eventController){
         this.eventController = eventController;
         if (this.hasSavedData()) {

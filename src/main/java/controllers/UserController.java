@@ -45,6 +45,11 @@ public class UserController {
         this.ioController = new IOController();
     }
 
+    /**
+     * Merging method to merge the users in local repository with the ones in the Dropbox cloud.
+     *
+     * @param localUsers list of users to unionize the sets from local and current repositories
+     */
     public void merge(List<User> localUsers) {
         List<User> currentUsers = this.userManager.getAllUsers();
         Set<User> returnUsers = new HashSet<>();

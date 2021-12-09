@@ -80,6 +80,11 @@ public class EventController {
         this.workSessionController = new WorkSessionController(userController.getPreferences());
     }
 
+    /**
+     * Merging method to merge the users in local repository with the ones in the Dropbox cloud.
+     *
+     * @param localEvents Map of events to unionize the sets from local and current repositories
+     */
     public void merge(Map<UUID, List<Event>> localEvents) {
         Map<UUID, List<Event>> currentEvents = this.eventManager.getUuidEventsMap();
         for (UUID userUUID : localEvents.keySet()) {
@@ -91,6 +96,13 @@ public class EventController {
         }
     }
 
+    /**
+     * Take two lists of events and return the union of the two lists.
+     *
+     * @param localEvents events in local
+     * @param currentEvents events in current repository
+     * @return union of two events
+     */
     public List<Event> union(List<Event> localEvents, List<Event> currentEvents) {
         Set<Event> returnEvents = new HashSet<>();
         returnEvents.addAll(localEvents);
@@ -109,6 +121,13 @@ public class EventController {
         this.edit(createDefaultEvent(title, dateTime));
     }
 
+    /**
+     * Creates a default event.
+     *
+     * @param title title of the event
+     * @param end end time of the event
+     * @return UUID of the event
+     */
     public UUID createDefaultEvent(String title, LocalDateTime end) {
         return this.eventManager.addEvent(title, end);
     }
@@ -176,7 +195,11 @@ public class EventController {
         return false;
     }
 
-
+    /**
+     * Get ID of the recursive event
+     *
+     * @return ID of the recursive event
+     */
     private UUID getRecursiveID() {
         EventIDConverter converter = new EventIDConverter(this.getEventManager());
         Map<Integer, UUID> eventIDMap = converter.getEventIDMap();
