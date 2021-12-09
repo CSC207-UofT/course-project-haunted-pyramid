@@ -89,7 +89,7 @@ public class ProfileSettings implements ActionListener {
         panel1.setBackground(Color.ORANGE);
         panel1.setPreferredSize(new Dimension(100, 63));
 
-        JLabel text = new JLabel("Set Free Time    ");
+        JLabel text = new JLabel("Add Free Time    ");
         JLabel startText = new JLabel("Start Time: ");
         JLabel endText = new JLabel("End Time: ");
 

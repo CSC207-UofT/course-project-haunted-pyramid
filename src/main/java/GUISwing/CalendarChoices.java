@@ -30,6 +30,7 @@ public class CalendarChoices implements ActionListener, MeltParentWindow {
     public CalendarChoices (MainMenu parent) {
         this.frame = new PopUpWindowFrame();
         this.frame.setLayout(new BorderLayout());
+        this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.parent = parent;
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(null);
@@ -42,15 +43,35 @@ public class CalendarChoices implements ActionListener, MeltParentWindow {
         buttonWeekly.addActionListener(this);
         buttonDaily.addActionListener(this);
         buttonReturn.addActionListener(this);
-
         frame.add(buttonPanel, BorderLayout.CENTER);
+        addButtons(buttonPanel);
+        shutDownCondition(parent);
+        this.frame.setVisible(true);
+    }
+
+    /**
+     * Set up the shutdown condition
+     * @param parent parent class that will get affected upon shutdown of the current window
+     */
+    private void shutDownCondition(MainMenu parent) {
+        this.frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                parent.enableFrame();
+                exitFrame();
+            }
+        });
+    }
+
+    /**
+     * add buttons on the buttonPanel
+     * @param buttonPanel panel that will have buttons added on
+     */
+    private void addButtons(JPanel buttonPanel) {
         buttonPanel.add(buttonMonthly);
         buttonPanel.add(buttonWeekly);
         buttonPanel.add(buttonDaily);
         buttonPanel.add(buttonReturn);
-
-
-        this.frame.setVisible(true);
     }
 
     /**
@@ -74,6 +95,7 @@ public class CalendarChoices implements ActionListener, MeltParentWindow {
             new CalendarDateSelection("Daily", this, this.parent);
         }
         if (e.getSource() == buttonReturn) {
+            parent.enableFrame();
             parent.refresh();
             this.frame.dispose();
         }
