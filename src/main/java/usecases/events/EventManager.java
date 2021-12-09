@@ -246,11 +246,11 @@ public class EventManager {
     }
 
     /**
-     * @param recursiveEvent The RecursiveEvent from which the repeated events should be extracted.
-     * @return Given a RecursiveEvent, this method returns all the events in the period of repetition specified in the
-     * RecursiveEvent object.
+     * Given a recursion, this method returns all the events belonging to that recursion.
+     *
+     * @param recursiveEvent the recursion which events will be returned.
+     * @return the list of all the events in the recursion.
      */
-
     public List<Event> recursiveEventList(RecursiveEvent recursiveEvent) {
         List<Event> result = new ArrayList<>();
         for (List<Event> events : repeatedEventManager.getRecursiveIdToDateToEventsMap().get(recursiveEvent.getId()).values()) {

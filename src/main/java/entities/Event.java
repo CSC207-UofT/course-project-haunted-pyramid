@@ -23,7 +23,7 @@ public class Event implements Serializable {
     private final UUID ID;
     private String name;
     private String description = null;
-    private List<UUID> Categories;
+    private UUID Categories;
     private List<Event> workSessions;
     private Long hoursNeeded;
     private Long sessionLength;
@@ -46,7 +46,6 @@ public class Event implements Serializable {
         this.sessionLength = 1L;
         this.workSessions = new ArrayList<>();
         this.startWorking = 6L;
-        Categories = new ArrayList<>();
     }
 
     /**
@@ -66,7 +65,6 @@ public class Event implements Serializable {
         this.sessionLength = 1L;
         this.workSessions = new ArrayList<>();
         this.startWorking = 6L;
-        Categories = new ArrayList<>();
     }
 
     /**
@@ -91,7 +89,6 @@ public class Event implements Serializable {
         this.sessionLength = 1L;
         this.workSessions = new ArrayList<>();
         this.startWorking = 6L;
-        Categories = new ArrayList<>();
     }
 
     /**
@@ -105,28 +102,32 @@ public class Event implements Serializable {
     }
 
     /**
+     * Setter methods
+     */
+    public void setRecursiveId(UUID recursiveId) {
+        this.recursiveId = recursiveId;
+    }
+    public void setCategories(UUID categories) {Categories = categories;}
+    public void setStartWorking(Long startWorking){
+        this.startWorking = startWorking;
+    }
+
+    /**
+     * Getter methods
+     */
+    public UUID getRecursiveId() {return recursiveId;}
+    public Long getStartWorking(){
+        return this.startWorking;
+    }
+
+
+    /**
      * @return true if this event is not a deadline, i.e. startTime is not null
      */
     public boolean hasStart() {
         return !(this.startTime == null);
     }
 
-    /**
-     * @param recursiveId the new integer recursiveID of the event
-     */
-    public void setRecursiveId(UUID recursiveId) {
-        this.recursiveId = recursiveId;
-    }
-
-    public List<UUID> getCategories() {return Categories;}
-    public void setCategories(List<UUID> categories) {Categories = categories;}
-
-    public void removeCategory(UUID category){
-        this.getCategories().remove(category);
-    }
-    public void addToCategory(UUID category){
-        this.getCategories().add(category);
-    }
 
     /**
      * name of the Event, like the description, is for User benefit - a visual reference to identify an Event
@@ -363,35 +364,6 @@ public class Event implements Serializable {
     }
 
     /**
-     * returns all work sessions contained in this <code>Event</code> whose start time is after the current
-     * <code>LocalDateTime</code>
-     *
-     * @return <code>List<Event></code> - unordered sublist of <code>workSessions</code>
-     */
-    public List<Event> futureWorkSessions() {
-        List<Event> future = new ArrayList<>();
-        for (Event event : this.getWorkSessions()) {
-            if (event.getEndTime().isAfter(LocalDateTime.now())) {
-                future.add(event);
-            }
-        }
-        return future;
-    }
-
-    /**
-     * if event is contained in <code>this.workSessions</code>, it is removed from
-     * <code>this.workSessions</code> and <code>this.hoursNeeded</code> is decreased by the length of the event
-     *
-     * @param event <code>Event</code> object that may be a work session in this <code>Event</code>
-     */
-    public void completeSession(Event event) {
-        if (this.getWorkSessions().contains(event)) {
-            this.getWorkSessions().remove(event);
-            this.hoursNeeded -= (long) (event.getLength());
-        }
-    }
-
-    /**
      * sets <code>this.workSessions</code> to new <code>workSessions</code>
      *
      * @param workSessions new <code>List<Event></code> to be set as workSessions
@@ -436,14 +408,5 @@ public class Event implements Serializable {
                     this.getEndTime().toLocalDate().toString() + "\nend time: " + this.getEndTime().toLocalTime().toString()
                     + "\ndescription: " + this.getDescription();
         }
-
-    }
-
-    public UUID getRecursiveId() {return recursiveId;}
-    public void setStartWorking(Long startWorking){
-        this.startWorking = startWorking;
-    }
-    public Long getStartWorking(){
-        return this.startWorking;
     }
 }

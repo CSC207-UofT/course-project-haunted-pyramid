@@ -37,7 +37,7 @@ public class NumberOfRepetitionInput implements DateGetter, Serializable {
      */
 
     @Override
-    public List<Event> listOfDatesInCycles(List<Event> events) {
+    public List<Event> listOfEventsInTheCycles(List<Event> events) {
         int cycleLength = events.size() - 1;
         Event firstEvent1 = events.get(0);
         Event firstEvent2 = events.get(cycleLength);

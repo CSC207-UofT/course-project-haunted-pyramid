@@ -39,7 +39,7 @@ public class IntervalDateInputTest {
     @org.junit.Test
     public void listOfDatesInCyclesWith3EventsAndStartDateBeforeEvent1() {
         IntervalDateInput x = new IntervalDateInput(l, l2);
-        List<Event> y = x.listOfDatesInCycles(z);
+        List<Event> y = x.listOfEventsInTheCycles(z);
         assertEquals(y.get(0).getEndTime(), LocalDateTime.of(2021, 11, 20, 11,0));
         assertEquals(y.get(1).getEndTime(), LocalDateTime.of(2021, 11, 23, 11,0));
         assertEquals(y.get(y.size()-1).getEndTime(), LocalDateTime.of(2021, 12, 15, 11,0));
@@ -49,7 +49,7 @@ public class IntervalDateInputTest {
     @Test
     public void listOfDatesInCyclesWith3EventsAndStartDateAfterEvent1() {
         IntervalDateInput x = new IntervalDateInput(l2, l3);
-        List<Event> y = x.listOfDatesInCycles(z);
+        List<Event> y = x.listOfEventsInTheCycles(z);
         assertEquals(y.get(0).getEndTime(), LocalDateTime.of(2021, 12, 18, 11,0));
         assertEquals(y.get(1).getEndTime(), LocalDateTime.of(2021, 12, 20, 11,0));
     }

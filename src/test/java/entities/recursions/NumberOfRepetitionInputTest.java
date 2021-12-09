@@ -38,7 +38,7 @@ public class NumberOfRepetitionInputTest {
 
     @Test
     public void listOfDatesInCyclesWith2Events() {
-        List<Event> y = x.listOfDatesInCycles(z);
+        List<Event> y = x.listOfEventsInTheCycles(z);
         assertEquals(y.get(0).getEndTime(), LocalDateTime.of(2021, 11, 18, 11,0));
         assertEquals(y.get(1).getEndTime(), LocalDateTime.of(2021, 11, 21, 11,0));
     }
@@ -46,7 +46,7 @@ public class NumberOfRepetitionInputTest {
     @Test
     public void listOfDatesInCyclesWith3Events() {
         z.add(e3);
-        List<Event> y = x.listOfDatesInCycles(z);
+        List<Event> y = x.listOfEventsInTheCycles(z);
         assertEquals(y.get(1).getEndTime(), LocalDateTime.of(2021, 11, 23, 11,0));
         assertEquals(y.get(2).getEndTime(), LocalDateTime.of(2021, 11, 25, 11,0));
     }

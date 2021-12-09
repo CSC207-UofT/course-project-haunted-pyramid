@@ -19,20 +19,29 @@ public class RecursionController {
     private final ControllerHelper helper = new ControllerHelper();
 
 
-
-
+    /**
+     * This method prompt the user to enter the date the first event of the cycle repeats for the second time. It catches
+     * if the input is incorrect.
+     *
+     * @param firstEventTime the time of the first event in the cycle.
+     * @param lastEventInCycleDate the last day in the cycle, the input sate must be after this one.
+     * @return the date the first event of the cycle repeats for the second time
+     */
     private LocalDateTime secondFirstEventDateTime(LocalTime firstEventTime, LocalDateTime lastEventInCycleDate){
         System.out.println("Please enter the Second Occurrence date of the first event");
         LocalDate secondFirstEventDate = ioController.getDate("Enter the Date of the Occurrence");
         LocalDateTime secondFirstEventDateTime = LocalDateTime.of(secondFirstEventDate, firstEventTime);
         while (secondFirstEventDateTime.isBefore(lastEventInCycleDate)){
-            System.out.println("Please enter a date after: " + lastEventInCycleDate.toString());
+            System.out.println("Please enter a date after: " + lastEventInCycleDate);
             secondFirstEventDate = ioController.getDate("Enter the Date of the Occurrence");
             secondFirstEventDateTime = LocalDateTime.of(secondFirstEventDate, firstEventTime);
         }
         return secondFirstEventDateTime;
     }
 
+    /**
+     * @return The two dates between which the cycle of the recursion should repeat.
+     */
     private LocalDateTime[] intervalDateGetterDates() {
         LocalDateTime[] result = new LocalDateTime[2];
         LocalDate firstDate = ioController.getDate("Enter the date when this cycle should begin");
@@ -43,6 +52,12 @@ public class RecursionController {
         return result;
     }
 
+    /**
+     * Set the recursive pattern for the recursive event with ID uuid.
+     *
+     * @param eventManager  the event manager containing all events and recursive events.
+     * @param uuid  the uuid of the recursive event for which this recursive pattern will be added.
+     */
     private void setDateGetter(EventManager eventManager, UUID uuid){
         String repetitionMethod = ioController.getAnswer("Enter either: 'num' if there is a " +
                 "number of times you want to repeat the events you selected, or 'dates' if there are two dates " +
@@ -67,6 +82,13 @@ public class RecursionController {
         }
     }
 
+    /**
+     * This method creates a recursive event and returns its uuid.
+     *
+     * @param eventIDList the list of event IDs which will be part of the first cycle of this recursion
+     * @param eventManager  the event manager containing all events and recursive events,
+     * @return the uuid of the newly created recursive event.
+     */
     private UUID addEventsToRecursiveObject(List<UUID> eventIDList, EventManager eventManager){
         UUID uuid = eventManager.getRepeatedEventManager().recursiveEventConstructor1(
                 eventManager.eventHelper.timeOrder(eventManager.getEvents(eventIDList)));
@@ -85,11 +107,9 @@ public class RecursionController {
     /**
      *
      * @param eventIDList the ids of the events to repeat.
-     * @param eventManager the event manager containing all the events of this user
+     * @param eventManager  the event manager containing all events and recursive events.
      * This methods prompt the user to create repetitions of events with ids in eventIDList.
      */
-
-
     public void createNewRecursion(List<UUID> eventIDList, EventManager eventManager){
         UUID uuid = addEventsToRecursiveObject(eventIDList, eventManager);
         setDateGetter(eventManager, uuid);
@@ -97,14 +117,4 @@ public class RecursionController {
                 eventManager.getRepeatedEventManager().eventListToMap(eventManager.
                         getRepeatedEventManager().getEventsFromRecursion(uuid), eventIDList.size()));
     }
-
-
-
-
-    /**
-     *
-     * @return A helper method that return a DateGetter given a user input.
-     */
-
-
 }
