@@ -1,4 +1,5 @@
 # Design Document
+
 ## Haunted Pyramid Productivity V 1.0
 
 ### SOLID

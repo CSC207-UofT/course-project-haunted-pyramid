@@ -1,4 +1,5 @@
 ## School Scheduler
+
 ### By Haunted Pyramid
 Create a program that allows a student to view and store their events, as well as have work period events automatically scheduled for them based on input hours they would like to spend working before a given event.
 
