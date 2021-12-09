@@ -84,7 +84,7 @@ customize their schedule
 
 - We will further develop our program into android app, allowing further size and space for approach and use for the users.
 
-### Program Market Targetting Discussion
+### Program Market Targeting Discussion
 
 Haunted Pyramid, as an all undergraduate student group, aims to fill a void in productivity automation we have felt is lacking - automatic scheduling of time to work individually to meet goals.
 
