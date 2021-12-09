@@ -68,7 +68,8 @@ public class RepeatedEventManager implements EventListObserver {
     private void addRecursion(RecursiveEvent recursiveEvent){
         this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
         List<Event> events = recursiveEvent.listOfEventsInCycles(recursiveEvent.getEventsInOneCycle());
-        this.recursiveIdToDateToEventsMap.put(recursiveEvent.getId(), eventListToMap(events, recursiveEvent.getCycleLength()));
+        this.recursiveIdToDateToEventsMap.put(recursiveEvent.getId(), eventListToMap(events,
+                recursiveEvent.getCycleLength()));
     }
 
     /**
@@ -120,7 +121,8 @@ public class RepeatedEventManager implements EventListObserver {
                     events.subList(cycleLength*(i-1), cycleLength*i));
             i++;
         }
-        datesAndEvents.put(eventHelper.startTimeGetter(events.get(cycleLength*(i-1))), events.subList(cycleLength*(i-1), endLoop));
+        datesAndEvents.put(eventHelper.startTimeGetter(events.get(cycleLength*(i-1))), events.subList(cycleLength*(i-1),
+                endLoop));
         return datesAndEvents;
         }
         catch (IndexOutOfBoundsException e){
@@ -234,7 +236,8 @@ public class RepeatedEventManager implements EventListObserver {
         Map<LocalDateTime, List<Event>> thisRecursionDates = this.recursiveIdToDateToEventsMap.get(id);
         List<LocalDateTime> results = new ArrayList<>();
         for(LocalDateTime localDateTime : thisRecursionDates.keySet()){
-            if(eventHelper.startTimeGetter(changed).isAfter(localDateTime) || eventHelper.startTimeGetter(changed).isEqual(localDateTime)){
+            if(eventHelper.startTimeGetter(changed).isAfter(localDateTime) ||
+                    eventHelper.startTimeGetter(changed).isEqual(localDateTime)){
                 results.add(localDateTime);
             }
         }
@@ -268,12 +271,14 @@ public class RepeatedEventManager implements EventListObserver {
             uuid = newRecursiveEventForUpdate(inputForNewRecursion.get(0), newCycles);
         }
         else if (addRemoveChange.equalsIgnoreCase("add")) {
-            inputForNewRecursion = this.recursiveEventMap.get(id).cycleAfterAdditionChange(changed, "add", allEvents);
+            inputForNewRecursion = this.recursiveEventMap.get(id).cycleAfterAdditionChange(changed, "add",
+                    allEvents);
             newCycles = inputForNewRecursion.get(1);
             uuid = newRecursiveEventForUpdate(inputForNewRecursion.get(0), newCycles);
         }
         else if (addRemoveChange.equalsIgnoreCase("change")){
-            inputForNewRecursion = this.recursiveEventMap.get(id).cycleAfterAdditionChange(changed, "Change", allEvents);
+            inputForNewRecursion = this.recursiveEventMap.get(id).cycleAfterAdditionChange(changed, "Change",
+                    allEvents);
             newCycles = inputForNewRecursion.get(1);
             uuid = newRecursiveEventForUpdate(inputForNewRecursion.get(0), newCycles);
         }
@@ -281,7 +286,8 @@ public class RepeatedEventManager implements EventListObserver {
             newCycles = newOneEventCycle(changed);
             uuid = id;
         }
-        this.recursiveIdToDateToEventsMap.get(uuid).put(eventHelper.startTimeGetter(newCycles.get(0)), newCycles.subList(0,newCycles.size() - 1));
+        this.recursiveIdToDateToEventsMap.get(uuid).put(eventHelper.startTimeGetter(newCycles.get(0)),
+                newCycles.subList(0,newCycles.size() - 1));
         recursionModifier(changed, id, newCycles);
     }
 
@@ -307,20 +313,9 @@ public class RepeatedEventManager implements EventListObserver {
         intervalDates[0] = eventHelper.startTimeGetter(this.recursiveEventMap.get(id).getEventsInOneCycle().get(0));
         intervalDates[1] = firstTime;
         this.recursiveEventMap.get(id).setIntervalDateDateGetter(intervalDates);
-        if (newCycles.size()>1 && firstTime.isAfter(eventHelper.startTimeGetter(this.recursiveEventMap.get(id).getLastEvent()))){
+        if (newCycles.size()>1 && firstTime.isAfter(eventHelper.startTimeGetter(this.recursiveEventMap.
+                get(id).getLastEvent()))){
             this.addRecursion(this.recursiveEventMap.get(id));
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
