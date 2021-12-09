@@ -1,5 +1,6 @@
 package GUISwing;
 
+import com.sun.tools.javac.Main;
 import controllers.*;
 import gateways.IOSerializable;
 import helpers.Constants;
@@ -30,8 +31,31 @@ public class LogInWindow implements ActionListener {
     /**
      * Construct the log in window for users to sign up or sign in
      */
-    public LogInWindow(){
+    public LogInWindow() {
         this.mainController = new MainController();
+        this.loginController = this.mainController.getLoginController();
+        this.eventController = this.mainController.getEventController();
+        JPanel imagePanel = createImagePanel();
+        addImage(imagePanel);
+        JPanel contributorPanel = createContributorPanel();
+        addTeamName(imagePanel);
+        addContributors(contributorPanel);
+        JPanel logInPanel = new JPanel();
+        this.frame.add(logInPanel);
+        logInPanel.setBounds(0, Constants.WINDOW_HEIGHT/3, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT/3);
+        logInPanel.setBackground(Constants.WINDOW_COLOR);
+        logInPanel.setLayout(null);
+        updateLogInPanel(logInPanel);
+        setUpUserNameLabel();
+        setUpPasswordLabel();
+        addLogInMessage();
+        buttonSetUp();
+        this.frame.getRootPane().setDefaultButton(btnLogIn);
+        frame.setVisible(true);
+    }
+
+    public LogInWindow(MainController mainController) {
+        this.mainController = mainController;
         this.loginController = this.mainController.getLoginController();
         this.eventController = this.mainController.getEventController();
         JPanel imagePanel = createImagePanel();
