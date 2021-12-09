@@ -215,7 +215,7 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
 
         if (e.getSource() == workSessionButton) {
             this.frame.setEnabled(false);
-            new WorkSessionEdit(this.ec, this.ec.getWorkSessionController()
+            new WorkSessionEdit(this.ec, this.eventInfoGetter, this.ec.getWorkSessionController()
                     .getWorkSessionManager(this.ec.getEventManager()), this, eventID);
         }
 
