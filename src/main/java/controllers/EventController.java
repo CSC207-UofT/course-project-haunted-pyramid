@@ -196,9 +196,9 @@ public class EventController {
     }
 
     /**
-     * Get ID of the recursive event
+     * Prompt the user to input the id of an event which belongs to the recursion to which a new event will be added.
      *
-     * @return ID of the recursive event
+     * @return the uuid of the recursion to which the inputted event belongs to.
      */
     private UUID getRecursiveID() {
         EventIDConverter converter = new EventIDConverter(this.getEventManager());
@@ -213,9 +213,13 @@ public class EventController {
         return this.eventManager.get(uuid).getRecursiveId();
     }
 
-    public EventManager getEventManager() {
-        return this.eventManager;
-    }
+    /**
+     * allows determines by a list of actions which method to complete next
+     *
+     * @param id the uuid of the event which will be added to the recursion, which uuid will be gotten from the user
+     *  using the method getRecursiveID.
+     */
+
 
     private void addToRecursion(UUID id) {
         if (this.eventManager.getRepeatedEventManager().getAllEventsFromRecursiveEvent(id) == null) {
@@ -231,7 +235,12 @@ public class EventController {
         this.eventManager.removeObserver(this.eventManager.getRepeatedEventManager());
     }
 
-
+    /**
+     * Asks the user if he/she wants to carry the change to the event to the whole recursion.
+     *
+     * @param ID      the ID of the event being passed to the next method.
+     * @return returns true if the response is yes, returns false otherwise.
+     */
     private boolean carryToRecursion(UUID ID) {
         if (eventManager.get(ID).getRecursiveId() != null) {
             String recurse = ioController.getAnswer("Do you want to carry this change to the recursion");
@@ -451,5 +460,9 @@ public class EventController {
 
     public LocalDateTime getEnd(UUID ID) {
         return eventManager.getDefaultEventInfoGetter().getEnd(ID);
+    }
+
+    public EventManager getEventManager() {
+        return this.eventManager;
     }
 }

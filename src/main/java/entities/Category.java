@@ -15,6 +15,13 @@ public class Category {
     private List<User> adminUsers;
     private List<User> regularUsers;
 
+    /**
+     * Constructor for a Category.
+     *
+     * @param id the uuid of this category
+     * @param name the name of this category
+     * @param adminUser the user who created this category.
+     */
     public Category(UUID id, String name, User adminUser){
         this.id = id;
         this.name = name;
@@ -24,31 +31,48 @@ public class Category {
         this.regularUsers = new ArrayList<>();
     }
 
+    /**
+     * Getter methods.
+     */
     public UUID getId() {return id;}
     public String getName() {return name;}
     public List<Event> getEvents() {return events;}
-    public List<User> getAdminUsers() {return adminUsers;}
 
+    /**
+     * Setter methods.
+     */
     public void setName(String name) {this.name = name;}
     public void setEvents(List<Event> events) {this.events = events;}
     public void setId(UUID id) {this.id = id;}
-    public void setRegularUsers(List<User> users) {this.regularUsers = users;}
 
-    public void removeEvent(Event event){
-        this.events.remove(event);
-        event.removeCategory(this.id);
-    }
+    /**
+     * Adds an event to this category.
+     *
+     * @param event the event to add to this category.
+     */
     public void addEvent(Event event){
         this.events.add(event);
-        event.addToCategory(this.id);
+        event.setCategories(this.id);
     }
 
-    public void removeRegularUser(User user){
+    /**
+     * This method removes a regular user from the list
+     *
+     * @param user the regular user to remove
+     */
+    private void removeRegularUser(User user){
             this.regularUsers.remove(user);
         }
 
-
-    public void removeAdmin(User user, User regularToBeAdminUser){
+    /**
+     * This method removes an admin user from the list, if there is one admin, it chooses a random regular user and
+     * render it an admin. If there are no regular users, this category is just deleted.
+     *
+     * @param user admin user to delete
+     * @param regularToBeAdminUser the regular user which can be chosen to become the admin in the event the user to
+     * remove is the only admin.
+     */
+    private void removeAdmin(User user, User regularToBeAdminUser){
         if(this.adminUsers.size() == 1 && this.regularUsers.contains(regularToBeAdminUser)){
             this.adminUsers.remove(user);
             this.regularUsers.remove(regularToBeAdminUser);
@@ -66,6 +90,13 @@ public class Category {
         }
     }
 
+    /**
+     * Removes the user based on whether it is an admin or not.
+     *
+     * @param user admin user to delete
+     * @param regularToBeAdminUser the regular user which can be chosen to become the admin in the event the user to
+     * remove is the only admin.
+     */
     public void removeUser(User user, User regularToBeAdminUser){
         if(this.adminUsers.contains(user)){
             this.removeAdmin(user, regularToBeAdminUser);
@@ -74,12 +105,4 @@ public class Category {
             this.removeRegularUser(user);
         }
     }
-
-
-
-
-
-
-
-
 }
