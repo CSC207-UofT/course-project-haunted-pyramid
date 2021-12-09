@@ -235,7 +235,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         }
         else if (e.getSource() == buttonModifyEvent) {
             this.frame.setEnabled(false);
-            new SelectEvent(mc, mc.getEventController().getEventManager().getDefaultEventInfoGetter(), this);
+            new SelectEvent(mc, mc.getEventController().getEventManager().getDefaultEventInfoGetter(), this, false);
         }
         else if (e.getSource() == buttonCreateRecursion) {
             this.frame.setEnabled(false);
