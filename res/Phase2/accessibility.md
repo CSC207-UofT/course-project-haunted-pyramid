@@ -1,14 +1,15 @@
 # Accessibility Report
 
-1. Equitable Use
+### 1. Equitable Use
 
-- Our program provides the fixed sized screen as an initial approach. We decided on a screen size so that most users these can use. However, it would be better if we could make the size flexible, so anyone can use. This was mainly due to us being unfamiliar with Java Swing tools. As first time users, we tried our best to make the program to not discriminate any users, but the capabilities were limited. In the future, we may also support users with different language.
+- Our program provides the fixed sized screen as an initial approach. We decided on a screen size so that most users can use the program. However, it would be better if we could make the size flexible, so anyone can use it. This was mainly due to us being unfamiliar with Java Swing tools. As first time users, we tried our best to make the program to not discriminate any users, but the capabilities were limited. In the future, we may also support users with different language.
 
-2. Flexibility in use
+### 2. Flexibility in use
+
 - Future: implement dark mode or high contrast mode to allow users to change the display
 
 
-- Our current GUI program only allows time set up in hours without any minute configurations. This will be improved in the future for more flexibility.
+- Our current GUI program only allows time set up in hours with 30 min fixed intervals. This will be improved in the future for more flexibility.
 
 
 - Right now, users can change their settings for how they like events to be automatically scheduled - they can be a morning person or evening person, they can choose to procrastinate or not, cram, have spacing between events, etc. They can also decide when in the day they have free time (lunch, dinner, sleeping, etc.). The users can also choose to view different kinds of calendars for their schedules. Currently, monthly, weekly and daily calendars are available for the view.
@@ -16,19 +17,7 @@
 
 - For console version, we've made it so that users can export different kinds of schedules (monthly, weekly, daily) to iCal format. Currently, GUI version can only export the entire calendar. This will be modified to enhance the flexibility.
 
-3. Simple and Intuitive Use
-
-- We use combo boxes for all dates and times, and large buttons with options displayed on them simply. Every process
-follows clear steps to complete for the user, such as adding an event
-- Event title and time are labeled on every event when selecting an event to edit
-- In the future, will change event selection so that event buttons are added into the calendar as opposed to a string calendar
-that can't be interacted with so that users can directly edit events by locating them on the calendar
-- In the settings menu, there are a variety of options that can be quickly toggled such as procrastinate - this may not be 
-obvious to a user, and clarification / a popup may be created to help guide a user through setting their autoscheduling
-preferences in the future
-- We will add more intuitive basic options for recursive settings on events for ease of use, 
-but will keep our more flexible recursive UI for users who want to be able to more fully
-customize their schedule
+### 3. Simple and Intuitive Use
 
 - We use combo boxes for all dates and times, and large buttons with options displayed on them simply. Every process follows clear steps to complete for the user, such as adding an event.
 
@@ -36,44 +25,50 @@ customize their schedule
 - Event title and time are labeled on every event when selecting an event to edit.
 
 
-- In the future, we will change event selection so that event buttons are added into the calendar as opposed to a String calendar that can't be interacted with so that users can directly edit events by locating them on the calendar.
+- In the future, will change event selection so that event buttons are added into the calendar as opposed to a string calendar that can't be interacted with, so that users can directly edit events by locating them on the calendar.
 
 
-- In the settings menu, there are a variety of options that can be quickly toggled such as auto-scheduling strategies - these may not be obvious to a user, and clarification / a popup may be created to help guide a user through setting their auto-scheduling preferences in the future
+- In the settings menu, there are a variety of options that can be quickly toggled such as procrastinate - this may not be obvious to a user, and clarification / a popup may be created to help guide a user through setting their auto-scheduling preferences in the future
 
 
-4. Perceptible Information
+- We will add more intuitive basic options for recursive settings on events for ease of use, 
+but will keep our more flexible recursive UI for users who want to be able to more fully
+customize their schedule
+
+
+### 4. Perceptible Information
 
 - We've made it so that the strings of calendars can be flexible to help users' legibility. However, due to the fixed sized screen and using the console version calendar directly, there are limitations for the certain aspects of the calendar (i.e. monthly calendar is only vertically flexible). By making the calendar size resizable according to user's preferences, we could enhance the perceptible information that the user can receive.
 
 
 - In the future, we will implement button sizes for events that are proportional to their length
 
+
 - Everything that has a time is always in chronological order
 
 
 - Conflicts between events are displayed clearly below to avoid confusion to help users' understandings of their schedule.
 
-5. Tolerance for Error
+### 5. Tolerance for Error
 
 - Most of the actions are done within the given options. Checks are done for the information received (such as file name for exporting a file.)
 
 
-- In creating or editing an event, there is no way for a user invalid information, as everything is controlled in combo boxes.
+- In creating or editing an event, there is no way for a user to provide with invalid information, as everything is controlled in combo boxes.
 
 
 - It is the same in work sessions - everything is controlled in combo boxes with all legal options, and every combination is allowed.
 
 
-- Simple mistakes such as a start time after an end time are corrected automatically.
+- Simple mistakes such as a start time after an end time are corrected automatically by switching them.
 
 
-- In order to prevent users from executing multiple works simultaneously, before the most works, we've frozen the previous screen that was running.
+- In order to prevent users from executing multiple works simultaneously, before the most works, we disable the previous screens from user's approach.
 
 
 - Confirmation is required to delete an event, since it is not recoverable.
 
-6. Low Physical Effort
+### 6. Low Physical Effort
 
 - Our program only requires mouse and keyboard to be functional.
 
@@ -81,7 +76,7 @@ customize their schedule
 
 - We've simplified the pages as much as we can, so the users do not have to direct themselves to complicated steps.
 
-7. Size and Space for Approach and Use
+### 7. Size and Space for Approach and Use
 
 - As mentioned above, our app has a fixed size which is runnable for most users with relatively recent technologies. However, we will try to make our app resizable to accompany even more users.
 
@@ -89,6 +84,7 @@ customize their schedule
 
 - We will further develop our program into android app, allowing further size and space for approach and use for the users.
 
+### Program Market Targetting Discussion
 
 Haunted Pyramid, as an all undergraduate student group, aims to fill a void in productivity automation we have felt is lacking - automatic scheduling of time to work individually to meet goals.
 
