@@ -17,10 +17,10 @@
 - For console version, we've made it so that users can export different kinds of schedules (monthly, weekly, daily) to iCal format. Currently, GUI version can only export the entire calendar. This will be modified to enhance the flexibility.
 
 3. Simple and Intuitive Use
-<<<<<<< HEAD
+
 - We use combo boxes for all dates and times, and large buttons with options displayed on them simply. Every process
 follows clear steps to complete for the user, such as adding an event
-- Event title and time are labled on every event when selecting an event to edit
+- Event title and time are labeled on every event when selecting an event to edit
 - In the future, will change event selection so that event buttons are added into the calendar as opposed to a string calendar
 that can't be interacted with so that users can directly edit events by locating them on the calendar
 - In the settings menu, there are a variety of options that can be quickly toggled such as procrastinate - this may not be 
