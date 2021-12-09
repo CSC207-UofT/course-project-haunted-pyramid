@@ -92,7 +92,8 @@ public class MainController {
             switch (firstChoice) {
                 case "1":
                     this.userController.editProfile();
-                    this.eventController.updatePreferences(this.userController.getPreferences());
+                    this.eventController.getWorkSessionController().refresh(this.userController.getPreferences(),
+                            eventController.getEventManager());
                     break;
                 case "2":
                     this.calendarController.showCalendar(this.eventController);

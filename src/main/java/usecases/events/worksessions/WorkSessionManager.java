@@ -235,4 +235,16 @@ public class WorkSessionManager implements WorkSessionInfoGetter {
     public void changeStartWorking(UUID event, Long date) {
         eventManager.get(event).setStartWorking(date);
     }
+
+    @Override
+    public List<UUID> getPastWorkSessions(UUID ID) {
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        return workSessionManager.getPastWorkSession(ID);
+    }
+
+    @Override
+    public List<UUID> getFutureWorkSessions(UUID ID) {
+        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
+        return workSessionManager.getFutureWorkSession(ID);
+    }
 }

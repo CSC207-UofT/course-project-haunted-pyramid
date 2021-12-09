@@ -270,7 +270,8 @@ public class MainMenu implements ActionListener, MeltParentWindow {
      */
     @Override
     public void refresh() {
-        this.mc.getEventController().updatePreferences(this.mc.getUserController().getPreferences());
+        this.ec.getWorkSessionController().refresh(this.mc.getUserController().getPreferences(),
+                this.ec.getEventManager());
         this.welcomePanel.removeAll();
         this.welcomeMessage = new JLabel();
         setUpWelcomeMessage(this.mc.getUserController().getCurrentUsername());

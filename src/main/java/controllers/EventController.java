@@ -1,13 +1,11 @@
 package controllers;
 
-import entities.UserPreferences;
 import gateways.IOSerializable;
 import helpers.ControllerHelper;
 import helpers.EventIDConverter;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.EventEditMenuContent;
 import usecases.events.EventManager;
-import usecases.events.worksessions.WorkSessionManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -189,8 +187,6 @@ public class EventController {
      * @param id the uuid of the event which will be added to the recursion, which uuid will be gotten from the user
      *  using the method getRecursiveID.
      */
-
-
     private void addToRecursion(UUID id) {
         if (this.eventManager.getRepeatedEventManager().getAllEventsFromRecursiveEvent(id) == null) {
             System.out.println("There is no Recursion events set up yet");
@@ -237,6 +233,10 @@ public class EventController {
         return false;
     }
 
+    /**
+     * delete the event from eventManager and update accordingly
+     * @param ID ID of an event
+     */
     public void delete(UUID ID) {
         if (carryToRecursion(ID)) {
             this.eventManager.addObserver(this.eventManager.getRepeatedEventManager());
@@ -257,6 +257,7 @@ public class EventController {
         LocalDate newStart = ioController.getDate("Please Enter a New Start Date");
         changeStartDate(ID, newStart);
     }
+
 
     public void changeStartDate(UUID ID, LocalDate newStart) {
         if (this.eventManager.getDefaultEventInfoGetter().getStartTime(ID) == null) {
@@ -390,46 +391,8 @@ public class EventController {
         this.workSessionController.edit(ID, eventManager);
     }
 
-    public void updatePreferences(UserPreferences userPreferences) {
-        this.workSessionController.refresh(userPreferences, eventManager);
-    }
-
-    public void setSessionLength(UUID ID, Long sessionLength) {
-        workSessionController.changeSessionLength(ID, eventManager, sessionLength);
-    }
-
-    public void setTotalHours(UUID ID, Long totalHours) {
-        workSessionController.changeTotalHour(ID, eventManager, totalHours);
-    }
-
     public WorkSessionController getWorkSessionController() {
         return workSessionController;
-    }
-
-    public List<UUID> getPastWorkSessions(UUID ID) {
-        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
-        return workSessionManager.getPastWorkSession(ID);
-    }
-
-    public List<UUID> getFutureWorkSessions(UUID ID) {
-        WorkSessionManager workSessionManager = new WorkSessionManager(eventManager);
-        return workSessionManager.getFutureWorkSession(ID);
-    }
-
-    public void markComplete(UUID event, UUID session) {
-        workSessionController.markComplete(event, session, eventManager);
-    }
-
-    public void markInComplete(UUID event, UUID session) {
-        workSessionController.markInComplete(event, session, eventManager);
-    }
-
-    public LocalDateTime getStart(UUID ID) {
-        return eventManager.getDefaultEventInfoGetter().getStart(ID);
-    }
-
-    public LocalDateTime getEnd(UUID ID) {
-        return eventManager.getDefaultEventInfoGetter().getEnd(ID);
     }
 
     public EventManager getEventManager() {
