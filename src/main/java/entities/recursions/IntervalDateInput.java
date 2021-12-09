@@ -3,7 +3,6 @@ package entities.recursions;
 import entities.Event;
 import helpers.EventHelper;
 import interfaces.DateGetter;
-import usecases.events.EventManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

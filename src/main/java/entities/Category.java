@@ -37,6 +37,8 @@ public class Category {
     public UUID getId() {return id;}
     public String getName() {return name;}
     public List<Event> getEvents() {return events;}
+    public List<User> getAdminUsers() {return adminUsers;}
+    public List<User> getRegularUsers() {return regularUsers;}
 
     /**
      * Setter methods.
@@ -44,16 +46,8 @@ public class Category {
     public void setName(String name) {this.name = name;}
     public void setEvents(List<Event> events) {this.events = events;}
     public void setId(UUID id) {this.id = id;}
-
-    /**
-     * Adds an event to this category.
-     *
-     * @param event the event to add to this category.
-     */
-    public void addEvent(Event event){
-        this.events.add(event);
-        event.setCategories(this.id);
-    }
+    public void addRegularUser(User user) {this.regularUsers.add(user);}
+    public void addAdminUser(User user) {this.adminUsers.add(user);}
 
     /**
      * This method removes a regular user from the list
