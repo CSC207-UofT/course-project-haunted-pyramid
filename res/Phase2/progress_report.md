@@ -8,7 +8,9 @@ Our final head count is 5, almost half of what was allowed in the beginning of t
 Nevertheless, we were able to accomplish our goals, through time investment and great dedication from our fellow groupmates.\
 Another elephant in the room we must remark is the fact that we decided to make the program executable.\
 It was difficult for us, in such a short amount of time, to learn and successfully implement such a complex library into our program, such that it is not only runnable but also capable of handling the intricate tasks in our program.\
-Indeed, both syntax and logic errors that arose during Phase 2 were also more perplexing to resolve, as our program got bigger and convoluted.
+Indeed, both syntax and logic errors that arose during Phase 2 were also more perplexing to resolve, as our program got bigger and convoluted.\
+The correct implementation of the safehold was not able to be fully implemented since local repository serialization is impossible when the client is not connected to wifi, or when the local repository is actually greater in file size than those in the cloud.\
+Unfortunately, we decided to scrap the local repo serialization, since it was not perfect on submission, we thought that it would be better than to submit a buggy one.
 
 
 ### Perks
