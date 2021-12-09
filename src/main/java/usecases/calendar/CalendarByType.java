@@ -17,7 +17,7 @@ public abstract class CalendarByType {
      * @param cm calendarManager object to consider from
      * @return map of the calendar (key: date, value: list of event)
      */
-    protected abstract Map<Integer, List<UUID>> getCalendar(CalendarManager cm);
+    public abstract Map<Integer, List<UUID>> getCalendar(CalendarManager cm);
 
     /**
      * adjust the month according to the year

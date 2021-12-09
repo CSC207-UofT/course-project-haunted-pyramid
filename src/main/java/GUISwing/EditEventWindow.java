@@ -77,6 +77,10 @@ public class EditEventWindow implements ActionListener, MeltParentWindow {
                 if (option.equalsIgnoreCase("Add")) {
                     removeEvent(eventID);
                 }
+                else {
+                    JOptionPane.showMessageDialog(frame, "Any changes made have been stored");
+                }
+                parent.refresh();
                 parent.enableFrame();
                 exitFrame();
             }
