@@ -52,7 +52,7 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 
 ### Simplified Summary And Plans Of The Project Since Phase 1
 
-- Added Recursive Events
+- Added updates of Recursive Events
 - Added UserPreferences
 - Refactored MainController and changed in precedence of instantiation of other controllers
 - Refactored presenter classes to be used more often and legitimately
@@ -74,6 +74,10 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 ### Brief Summary of what each member has been working on since phase 1
 
 #### Malik Lahlou
+- Implemented the algorithms to update recursions in case a user decides to add/change or delete an event from a recursion.
+- Refactored RecursiveController so that it respects clean architecture. Split the single huge method into 5 smaller methods that accomplish one task.
+- Implemented GUI for Recursions. 
+- Started working on the design and implementation of the Category class.
 
 #### Shahzada Muhammad Shameel
 - Worked on improving the runtime of worksession scheduler. The main problem was being caused by a method freeSlots being used. Changed implementation of method.
@@ -114,9 +118,7 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 - Created the algorithms that are used to update recursions 
 https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/b553ffeccb2760796014a3ec68361660145616c3
 https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/366f3a92ddd81e831ba55c5d8c564fa279fd64ed
-- Refactoring of the recursiveController class, split the one huge method into multiple small ones.
-https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/525b3284a4676986f4ece240388e9a5e76ddf076
-- Fixing the recursive event update methods and start implementing the Category class.
+- Refactoring of the recursiveController class and Fixing the recursive event update methods and start implementing the Category class.
 https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/9661a9a14a74bfbb277c09882c8c4a9a5b8dd57e
 
 
