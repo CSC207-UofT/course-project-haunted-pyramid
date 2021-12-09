@@ -29,10 +29,10 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
     private final GUIInfoProvider helper;
     private final JFrame frame;
     private final EventController ec;
-    private JTextField eventName;
-    private JTextArea eventDescription;
+    private JTextField setNumRepetition;
+    private JTextArea setIntervalDates;
     private final JPanel timeInfoPanel;
-    private JButton setUpStart;
+    private JButton addEventToRecursion;
     private JButton setUpEnd;
     private JButton workSessionButton;
     private JButton recursionButton;
@@ -43,13 +43,11 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
      * Construct the EditEventWindow
      * @param mc MainController with access to every controller
      * @param eventInfoGetter Interface used for obtaining event information
-     * @param eventID ID of the event to edit on
      * @param parent parent window (prev window)
      */
-    public RecursionMenu(MainController mc, EventInfoGetter eventInfoGetter, UUID eventID, MeltParentWindow parent,
-                           String option) {
+    public RecursionMenu(MainController mc, EventInfoGetter eventInfoGetter, MeltParentWindow parent) {
         this.helper = new GUIInfoProvider();
-        this.eventID = eventID;
+        this.eventID = UUID.randomUUID();
         this.parent = parent;
         this.eventInfoGetter = eventInfoGetter;
         this.frame = new PopUpWindowFrame();
@@ -72,19 +70,54 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
         this.frame.add(textInfoPanel);
         this.frame.add(timeInfoPanel);
         this.frame.add(buttonPanel);
-        this.frame.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                if (option.equalsIgnoreCase("Add")) {
-                    removeEvent(eventID);
-                }
-                parent.enableFrame();
-                exitFrame();
-            }
-        });
-
         this.frame.setVisible(true);
     }
+
+    /**
+     * Set up the buttons to be used
+     */
+    private void setUpButtons() {
+        addEventToRecursion = new JButton("Modify Start Time");
+        addEventToRecursion.setBounds(30, 50, 200, 20);
+        setUpEnd = new JButton("Modify End Time");
+        setUpEnd.setBounds(270, 50, 200, 20);
+        workSessionButton = new JButton("Add / Modify Work Sessions");
+        workSessionButton.setBounds(30, 90, 200, 20);
+        recursionButton = new JButton("Set Up Recursion");
+        recursionButton.setBounds(270, 90, 200, 20);
+        saveButton = new JButton("Save");
+        saveButton.setBounds(30, 130, 200, 20);
+        deleteButton = new JButton("Delete");
+        deleteButton.setBounds(270, 130, 200, 20);
+    }
+
+    /**
+     * Enable actions with buttons
+     */
+    private void addActionLister() {
+        addEventToRecursion.addActionListener(this);
+        setUpEnd.addActionListener(this);
+        workSessionButton.addActionListener(this);
+        recursionButton.addActionListener(this);
+        saveButton.addActionListener(this);
+        deleteButton.addActionListener(this);
+    }
+
+    /**
+     * Add buttons to the panel
+     * @param buttonPanel panel that contains all the buttons
+     */
+    private void addButtons(JPanel buttonPanel) {
+        buttonPanel.add(addEventToRecursion);
+        buttonPanel.add(setUpEnd);
+        buttonPanel.add(workSessionButton);
+        buttonPanel.add(recursionButton);
+        buttonPanel.add(saveButton);
+        buttonPanel.add(deleteButton);
+    }
+
+
+
 
     /**
      * Set up the text info panel that will have text information such as name and description
@@ -121,61 +154,20 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
      * @param panel panel to contain the text information
      */
     private void setUpTextInfo(JPanel panel) {
-        eventName = new JTextField(eventInfoGetter.getName(this.eventID));
-        eventName.setBounds(30, 17, 200, 20);
-        eventDescription = new JTextArea(eventInfoGetter.getDescription(this.eventID));
+        setNumRepetition = new JTextField(eventInfoGetter.getName(this.eventID));
+        setNumRepetition.setBounds(30, 17, 200, 20);
+        setIntervalDates = new JTextArea(eventInfoGetter.getDescription(this.eventID));
         //eventDescription.setBounds(30, 47, 200, 50);
-        eventDescription.setWrapStyleWord(true);
-        eventDescription.setLineWrap(true);
-        JScrollPane descriptionPane = new JScrollPane(eventDescription, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+        setIntervalDates.setWrapStyleWord(true);
+        setIntervalDates.setLineWrap(true);
+        JScrollPane descriptionPane = new JScrollPane(setIntervalDates, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         descriptionPane.setBounds(30, 47, 200, 50);
-        panel.add(eventName);
+        panel.add(setNumRepetition);
         this.frame.add(descriptionPane);
     }
 
-    /**
-     * Set up the buttons to be used
-     */
-    private void setUpButtons() {
-        setUpStart = new JButton("Modify Start Time");
-        setUpStart.setBounds(30, 50, 200, 20);
-        setUpEnd = new JButton("Modify End Time");
-        setUpEnd.setBounds(270, 50, 200, 20);
-        workSessionButton = new JButton("Add / Modify Work Sessions");
-        workSessionButton.setBounds(30, 90, 200, 20);
-        recursionButton = new JButton("Set Up Recursion");
-        recursionButton.setBounds(270, 90, 200, 20);
-        saveButton = new JButton("Save");
-        saveButton.setBounds(30, 130, 200, 20);
-        deleteButton = new JButton("Delete");
-        deleteButton.setBounds(270, 130, 200, 20);
-    }
 
-    /**
-     * Enable actions with buttons
-     */
-    private void addActionLister() {
-        setUpStart.addActionListener(this);
-        setUpEnd.addActionListener(this);
-        workSessionButton.addActionListener(this);
-        recursionButton.addActionListener(this);
-        saveButton.addActionListener(this);
-        deleteButton.addActionListener(this);
-    }
-
-    /**
-     * Add buttons to the panel
-     * @param buttonPanel panel that contains all the buttons
-     */
-    private void addButtons(JPanel buttonPanel) {
-        buttonPanel.add(setUpStart);
-        buttonPanel.add(setUpEnd);
-        buttonPanel.add(workSessionButton);
-        buttonPanel.add(recursionButton);
-        buttonPanel.add(saveButton);
-        buttonPanel.add(deleteButton);
-    }
 
     /**
      * Set up the time information panel
@@ -186,13 +178,7 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
         this.timeInfoPanel.setBackground(Constants.WINDOW_COLOR);
     }
 
-    /**
-     * remove the event
-     * @param eventID eventID to be removed
-     */
-    private void removeEvent(UUID eventID) {
-        this.ec.delete(eventID);
-    }
+
 
     /**
      * configuration of button actions
@@ -200,7 +186,7 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == setUpStart) {
+        if (e.getSource() == addEventToRecursion) {
             this.frame.setEnabled(false);
             new TimeSetUp(this.mc, this.eventInfoGetter, this.eventID,this, "Start");
         }
@@ -223,8 +209,8 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
         }
 
         if (e.getSource() == saveButton) {
-            this.ec.changeName(this.eventID, eventName.getText());
-            this.ec.changeDescription(this.eventID, eventDescription.getText());
+            this.ec.changeName(this.eventID, setNumRepetition.getText());
+            this.ec.changeDescription(this.eventID, setIntervalDates.getText());
             this.parent.enableFrame();
             this.parent.refresh();
             this.exitFrame();

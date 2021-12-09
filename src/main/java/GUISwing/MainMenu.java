@@ -238,9 +238,8 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             new SelectEvent(mc, mc.getEventController().getEventManager().getDefaultEventInfoGetter(), this);
         }
         else if (e.getSource() == buttonCreateRecursion) {
-            this.lc.logout();
-            frame.dispose();
-            new LogInWindow();
+            this.frame.setEnabled(false);
+            new RecursionMenu(this.mc, mc.getEventController().getEventManager().getDefaultEventInfoGetter(), this);
         }
 
         else if (e.getSource() == buttonExport) {

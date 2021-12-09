@@ -77,7 +77,7 @@ All the menu strategies implement MenuContent interface. The interface is used a
 
 A strategy pattern is implemented by the WorkSessionScheduler class, which sorts days and times according to an ordered list of day sorters, and comes up with unsorted schedules using a modifiable time getter.
 
-RecursiveEvent utilizes strategy pattern to get different 'rules' to recurse over events. Depending on the user choice, recursiveEvent can repeat a set of events a fixed amount of times, or repeat them over and over again between two dates. More ways of repetition can be added latter on by creating a class that implements the DateGetter interface and override the method listOfDatesInCycles, which returns a list of repetitions of input events, given the repetition 'rule' of this new class.
+RecursiveEvent utilizes strategy pattern to get different 'rules' to recurse over events. Depending on the user choice, recursiveEvent can repeat a set of events a fixed amount of times, or repeat them over and over again between two dates. More ways of repetition can be added latter on by creating a class that implements the DateGetter interface and override the method listOfEventsInTheCycles, which returns a list of repetitions of input events, given the repetition 'rule' of this new class.
 
 - Factory Method Pattern
 
@@ -87,8 +87,8 @@ By running the overridden method displayCalendar(), the image gets displayed.
 
 - Observer Pattern
 
-To keep workSchedules updated by due date and Recursion up to date with exceptions eventually, every time an event is changed in event manager it updates all observing managers which adjust accordingly.
-We created the EventListObserver interface and an update method in EventManager, but we still need to implement the update method in EventManager observers. Our goal it to allow users, in case they edit or delete an event, to carry this change the recursion the modified event is part of, and to modify study session according to the new change as well.
+To keep workSchedules updated by due date and update a recursion pattern when one of its events is modified, every time an event is changed in event manager it updates all observing managers which adjust accordingly.
+We created the EventListObserver interface and an update method in EventManager. So, in case a user edits or deletes an event, this change carries to the recursion the modified event is part of, and the study sessions are modified according to the new change as well.
 
 - Builder Pattern
 
