@@ -18,7 +18,7 @@ The RecursiveController contains a UserSpecific RecursiveController, and user th
 
 The EventManager performs many functions, all related to the sorting, finding, filtering, modifying and creating of events.
 
-To better adhere to the Single Responsibility principle, some methods for sorting and returning lists of events should be part of a different Classes. Using strategies for sorting and returning sub-lists and information about the relationships between events in EventManager would make this Class smaller and easier to understand.
+To better adhere to the Single Responsibility principle, some methods for sorting and returning lists of events have been delegated to different Classes - the `WorkSessionManager` and `DefaultEventInformationGetter`. Using strategies for sorting and returning sub-lists and information about the relationships between events in EventManager would make this Class smaller and easier to understand.
 
 - Open / Closed Principle
 
@@ -44,6 +44,8 @@ implementations of methods in an interface it inherits from.
 
 Interfaces are utilized, but not necessarily for DIP.
 
+`interface EventInfoGetter` is used so that classes that need to access information about events from their UUID's 
+without directly accessing the Event class can be passed a general `EventInfoGetter` (i.e. `DefaultEventInfoGetter`).
 
 #### Clean Architecture
 

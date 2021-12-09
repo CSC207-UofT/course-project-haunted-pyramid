@@ -29,7 +29,7 @@ preferences in the future
 - We will add more intuitive basic options for recursive settings on events for ease of use, 
 but will keep our more flexible recursive UI for users who want to be able to more fully
 customize their schedule
-=======
+
 - We use combo boxes for all dates and times, and large buttons with options displayed on them simply. Every process follows clear steps to complete for the user, such as adding an event.
 
 
