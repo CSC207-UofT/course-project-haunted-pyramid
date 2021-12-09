@@ -17,7 +17,7 @@ import java.util.*;
  */
 public class UserManager {
 
-    private final HashMap<UUID, User> userInfo;
+    private HashMap<UUID, User> userInfo;
 
     /**
      * @param users a list of users to be entered into <code>this.userInfo</code>
@@ -27,6 +27,19 @@ public class UserManager {
         for (User user : users) {
             this.userInfo.put(user.getId(), user);
         }
+    }
+
+    /**
+     * Set <code>this.userInfo</code> from users.
+     *
+     * @param users a list of users to be entered into <code>this.userInfo</code>
+     */
+    public void setUserInfo(List<User> users) {
+        HashMap<UUID, User> returnUI = new HashMap<>();
+        for (User user : users) {
+            returnUI.put(user.getId(), user);
+        }
+        this.userInfo = returnUI;
     }
 
     /**

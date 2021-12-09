@@ -1,18 +1,18 @@
 package controllers;
 
+// For type casting only, thus not violating Clean Architecture
+import entities.User;
 import entities.UserPreferences;
+
 import gateways.IOSerializable;
 import helpers.Constants;
 import helpers.ControllerHelper;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.ProfileMenuContent;
 import usecases.UserManager;
-import usecases.events.worksessions.WorkSessionScheduler;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * A controller for accessing (after login) User info and allowing a user to edit their profile
@@ -43,6 +43,14 @@ public class UserController {
         }
         this.helper = new ControllerHelper();
         this.ioController = new IOController();
+    }
+
+    public void merge(List<User> localUsers) {
+        List<User> currentUsers = this.userManager.getAllUsers();
+        Set<User> returnUsers = new HashSet<>();
+        returnUsers.addAll(localUsers);
+        returnUsers.addAll(currentUsers);
+        this.userManager.setUserInfo(new ArrayList<>(returnUsers));
     }
 
     /**

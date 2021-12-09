@@ -3,8 +3,8 @@ package controllers;
 // Just to type cast, never uses any variables or methods in entities.User
 import entities.Event;
 import entities.User;
-
 import entities.recursions.RecursiveEvent;
+
 import gateways.ICalendar;
 import gateways.IOSerializable;
 
@@ -14,6 +14,7 @@ import presenters.MenuStrategies.BasicMenuContent;
 import usecases.events.EventManager;
 import usecases.UserManager;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -40,14 +41,26 @@ public class MainController {
 
     private final DisplayMenu displayMenu;
 
+    private Map<UUID, List<Event>> localEvents = new HashMap<>();
+
     /**
      * Initialize the entire program as this class is being initialized.
      * First, initialize and run IOSerializable, to retrieve serialized data from the dropbox repository.
      * Then asks the user to log in, which then will provide the user with the rest of the program.
      */
     public MainController() {
-        this.ioSerializable = new IOSerializable(true);
+        boolean hasLocalData = this.hasSavedData();
+        List<User> localUsers = new ArrayList<>();
+        if (hasLocalData) {
+            IOSerializable tempIOSerializable = new IOSerializable(true, true);
+            this.localEvents = tempIOSerializable.eventsReadFromSerializable();
+            localUsers = tempIOSerializable.usersReadFromSerializable();
+        }
+        this.ioSerializable = new IOSerializable(true, false);
         this.userController = new UserController(this.ioSerializable.hasSavedData(), this.ioSerializable);
+        if (hasLocalData) {
+            this.userController.merge(localUsers);
+        }
         this.loginController = new LoginController(this.userController);
         this.calendarController = new CalendarController();
         this.displayMenu = new DisplayMenu();
@@ -73,6 +86,9 @@ public class MainController {
             }
         }
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable, this.userController);
+        if (this.hasSavedData()) {
+            this.eventController.merge(this.localEvents);
+        }
         System.out.println("WELCOME " + this.userController.getCurrentUsername() + "!");
     }
 
@@ -83,6 +99,9 @@ public class MainController {
     public void displayScreen() {
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
                 this.userController);
+        if (this.hasSavedData()) {
+            this.eventController.merge(this.localEvents);
+        }
         while (this.loginController.isLoggedIn()) {
             System.out.println(this.calendarController.showDefaultCalendar(this.eventController));
             System.out.println("Please choose your action");
@@ -152,26 +171,27 @@ public class MainController {
     }
 
     /**
-     * Used to make sure the Event files that are being imported into the dropbox is up-to-date with any new data that
-     * were added whilst the program was running.
+     * Checks if the user has save files for all supported data types.
+     * Returns true if and only if all data types are saved.
      *
-     * @return ArrayList of the union set of all events in the dropbox repository and this program
+     * @return A boolean whether the user has save files
      */
-    public ArrayList<Event> combineTwoEventFileContents(EventManager em1, EventManager em2) {
-        ArrayList<Event> arrayListEM1 = new ArrayList<>(em1.getAllEventsFlatSplit());
-        ArrayList<Event> arrayListEM2 = new ArrayList<>(em2.getAllEventsFlatSplit());
-        Set<Event> set = new HashSet<>();
-        set.addAll(arrayListEM1);
-        set.addAll(arrayListEM2);
-        return new ArrayList<>(set);
+    public boolean hasSavedData() {
+        List<String> paths = List.of("events.ser", "users.ser");
+        for (String path : paths) {
+            if (!new File(path).exists()) return false;
+        }
+        return true;
     }
 
     /**
-     * Save and exit the program. Only save students into students.ser for now.
+     * Save and exit the program.
+     * Make sure the file saves the union set of localized serialized files and also the perhaps newly serialized files
+     * in the Dropbox cloud repository, that may have been saved while this local program was running.
      */
     public void saveAndExitProgram() {
         // Variables below are only for the final serialization process
-        IOSerializable tempIoSerializable = new IOSerializable(false);
+        IOSerializable tempIoSerializable = new IOSerializable(false, false);
         UserController tempUserController = new UserController(true, tempIoSerializable);
         if (this.eventController != null) {
             Map<UUID, List<Event>> map = this.eventController.getEventManager().getUuidEventsMap();
@@ -189,22 +209,25 @@ public class MainController {
     }
 
     public CalendarController getCalendarController() {
-        return calendarController;
+        return this.calendarController;
     }
 
     public EventController getEventController() {
-        return eventController;
+        return this.eventController;
     }
 
     public UserController getUserController() {
-        return userController;
+        return this.userController;
     }
 
     public LoginController getLoginController() {
-        return loginController;
+        return this.loginController;
     }
 
     public void setEventController(EventController eventController){
         this.eventController = eventController;
+        if (this.hasSavedData()) {
+            this.eventController.merge(this.localEvents);
+        }
     }
 }

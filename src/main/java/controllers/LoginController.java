@@ -17,6 +17,11 @@ public class LoginController {
     private final UserController userController;
     private final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Constructor for this class.
+     *
+     * @param userController getting all users to verify that user is in the repository.
+     */
     public LoginController(UserController userController) {
         this.userController = userController;
         this.loggedIn = false;
@@ -42,6 +47,12 @@ public class LoginController {
         checkUser(username, password);
     }
 
+    /**
+     * Check if the user is able to log in successfully.
+     *
+     * @param username username of the login procedure
+     * @param password password of the login procedure
+     */
     private void checkUser(String username, String password) {
         if (this.userController.getUserManager().checkUsernameAndPassword(username, password) != null) {
             this.loggedIn = true;
@@ -53,6 +64,9 @@ public class LoginController {
         }
     }
 
+    /**
+     * Log out of the program.
+     */
     public void logout() {
         this.loggedIn = false;
     }

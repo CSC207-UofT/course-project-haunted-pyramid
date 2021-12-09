@@ -79,7 +79,11 @@ public class EventManager {
         return this.uuidEventsMap;
     }
 
-
+    /**
+     * Get this RecursiveEvents map
+     *
+     * @return A map of UUID of users as keys and list of events of that user as values
+     */
     public Map<UUID, Map<UUID, RecursiveEvent>> getUuidRecursiveEventsMap() {
         return uuidRecursiveEventsMap;
     }
@@ -93,6 +97,11 @@ public class EventManager {
         this.uuidEventsMap = map;
     }
 
+    /**
+     * Set this RecursiveEvents map to the parameter
+     *
+     * @param uuidRecursiveEventsMap A map of UUID of maps of UUID as keys and list of events of that user as values
+     */
     public void setUuidRecursiveEventsMap(Map<UUID, Map<UUID, RecursiveEvent>> uuidRecursiveEventsMap) {
         this.uuidRecursiveEventsMap = uuidRecursiveEventsMap;
     }
