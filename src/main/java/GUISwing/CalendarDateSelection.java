@@ -133,7 +133,8 @@ public class CalendarDateSelection  implements ActionListener {
         dateSelectionPanel.setLayout(new GridLayout(1, 2));
         dateSelectionPanel.setBounds(0, 100, Constants.POPUP_WIDTH - 17, Constants.POPUP_HEIGHT / 7);
         dateBox = new JComboBox<>(helper.dateList(this.yearMonthBox.getItemAt(3), false));
-        this.date = dateBox.getItemAt(0);
+        dateBox.setSelectedIndex(LocalDate.now().getDayOfMonth() - 1);
+        this.date = dateBox.getItemAt(LocalDate.now().getDayOfMonth() - 1);
         dateSelectionPanel.add(dateBox);
         dateBox.addActionListener(this);
     }
@@ -201,6 +202,7 @@ public class CalendarDateSelection  implements ActionListener {
             this.grandParent.setCalendarMode("Daily");
         }
         this.parent.enableFrame();
+        this.grandParent.enableFrame();
         this.grandParent.refresh();
         this.parent.exitFrame();
         exitFrame();

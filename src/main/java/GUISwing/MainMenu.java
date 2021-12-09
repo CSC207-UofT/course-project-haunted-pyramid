@@ -225,6 +225,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             sM.display();
         }
         else if (e.getSource() == buttonCalendar) {
+            this.frame.setEnabled(false);
             new CalendarChoices(this);
         }
         else if (e.getSource() == buttonAddEvent) {
