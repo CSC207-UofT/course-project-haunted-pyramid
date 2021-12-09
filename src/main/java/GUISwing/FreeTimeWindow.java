@@ -27,6 +27,11 @@ public class FreeTimeWindow implements ActionListener {
 
     MeltParentWindow parent;
 
+    /**
+     * Constructor for FreeTimeWindow
+     * @param userController Controller for User entity
+     * @param parent parent window
+     */
     public FreeTimeWindow(UserController userController, MeltParentWindow parent) {
         this.parent = parent;
         this.userController = userController;
@@ -39,6 +44,9 @@ public class FreeTimeWindow implements ActionListener {
         frame.setVisible(true);
     }
 
+    /**
+     * Method which shows the current free time for the user.
+     */
     private void showFreeTime(){
         freeTimes = new HashMap<>();
         freeTimePanel.setLayout(new BoxLayout(freeTimePanel, BoxLayout.Y_AXIS));
@@ -52,6 +60,12 @@ public class FreeTimeWindow implements ActionListener {
         eventScroller.setVisible(true);
     }
 
+    /**
+     * Method for adding new free time for the user
+     * @param start Start time of free time
+     * @param end End time of free time
+     * @return A panel
+     */
     private JPanel addFreeTime(LocalTime start, LocalTime end){
         JPanel freeTime = new JPanel(new FlowLayout());
         freeTime.setPreferredSize(new Dimension(200, 30));
@@ -72,7 +86,9 @@ public class FreeTimeWindow implements ActionListener {
     }
 
 
-
+    /**
+     * Method for adding buttons onto frame
+     */
     private void saveButton() {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBounds(0, frame.getHeight()-100, frame.getWidth(), 100);
@@ -86,6 +102,9 @@ public class FreeTimeWindow implements ActionListener {
         frame.add(buttonPanel);
     }
 
+    /**
+     * Method for refreshing the frame
+     */
     private void refresh(){
       freeTimePanel.removeAll();
       showFreeTime();
