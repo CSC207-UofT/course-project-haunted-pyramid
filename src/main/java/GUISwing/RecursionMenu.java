@@ -11,7 +11,6 @@ import interfaces.MeltParentWindow;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -19,9 +18,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Event editing page
- * @author Seo Won Yi
- * @author Taite Cullen
+ * Recursion creation page
+ * @author Malik Lahlou
  * @see EventController
  * @see EventInfoGetter
  */
@@ -34,7 +32,7 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
     private final JFrame frame;
     private final EventController ec;
     private JTextField setNumRepetition;
-    private JTextField setSecondFirstTime;
+    private JTextArea setSecondFirstTime;
     private JTextArea setFirstIntervalDates;
     private JTextArea setSecondIntervalDates;
     private JButton addEventToRecursion;
@@ -123,10 +121,12 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
     private void setUpTextInfo(JPanel panel) {
         setNumRepetition = new JTextField("Enter the number of time you wish to repeat the event you chose");
         setNumRepetition.setBounds(30, 17, 200, 50);
-        setSecondFirstTime = new JTextField("Enter the date the first event you selected repeat for the first time");
-        setSecondFirstTime.setBounds(70, 17, 200, 50);
+        setSecondFirstTime = new JTextArea("Enter the date the first event you selected repeat for the first time");
+        setSecondFirstTime.setBounds(240, 17, 200, 50);
         setFirstIntervalDates = new JTextArea("Enter the date this repetition begin");
-        setSecondIntervalDates = new JTextArea("Enter the date this repetition begin");
+        setSecondIntervalDates = new JTextArea("Enter the date this repetition end  ");
+        setSecondFirstTime.setLineWrap(true);
+        setSecondFirstTime.setWrapStyleWord(true);
         setFirstIntervalDates.setWrapStyleWord(true);
         setFirstIntervalDates.setLineWrap(true);
         setSecondIntervalDates.setWrapStyleWord(true);
@@ -135,12 +135,13 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         JScrollPane intervalDatePanel2 = new JScrollPane(setSecondIntervalDates, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        intervalDatePanel.setBounds(30, 47, 200, 50);
-        intervalDatePanel2.setBounds(70, 47, 200, 50);
+        intervalDatePanel.setBounds(30, 70, 200, 50);
+        intervalDatePanel2.setBounds(240, 70, 200, 50);
         panel.add(setNumRepetition);
         panel.add(setSecondFirstTime);
         this.frame.add(intervalDatePanel);
         this.frame.add(intervalDatePanel2);
+        this.frame.add(setSecondFirstTime);
     }
 
 
@@ -150,7 +151,6 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        List<UUID> eventsInOneCycle = new ArrayList<>();
         if (e.getSource() == addEventToRecursion) {
             this.frame.setEnabled(false);
             SelectEvent selectEvent = new SelectEvent(mc, eventInfoGetter, this, true);
@@ -159,26 +159,42 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
             eventPanel.setBackground(Constants.WINDOW_COLOR);
             selectEvent.allEventDisplay(eventPanel);
         }
-
         if (e.getSource() == saveButton) {
             RecursionController recursionController = new RecursionController();
             eventsInOneCycle = this.ec.getEventManager().timeOrderID(eventsInOneCycle);
             IOController ioController = new IOController();
             if(isNumeric(setNumRepetition.getText())){
-                LocalDateTime secondFirstTime = LocalDateTime.of(ioController.stringToDate(setSecondFirstTime.getText()), LocalTime.of(12,0));
-                recursionController.createNewRecursion(eventsInOneCycle, ec.getEventManager(),
-                        Integer.parseInt(setNumRepetition.getText()), secondFirstTime);
+                try{
+                    LocalDateTime secondFirstTime = LocalDateTime.of(ioController.stringToDate(setSecondFirstTime.getText()), LocalTime.of(12,0));
+                    recursionController.createNewRecursion(eventsInOneCycle, ec.getEventManager(),
+                            Integer.parseInt(setNumRepetition.getText()), secondFirstTime);
+                    this.parent.enableFrame();
+                    this.parent.refresh();
+                    this.exitFrame();
+                }
+                catch (NumberFormatException | NullPointerException numberFormatException){
+                    JOptionPane.showConfirmDialog(frame, "The input of the dates should be in the following " +
+                                    "format YYYY-MM-DD and you have to choose events to add to the recursion",
+                            "Note", JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.PLAIN_MESSAGE);
+                }
             }
-            else{
-                LocalDateTime secondFirstTime = LocalDateTime.of(ioController.stringToDate(setSecondFirstTime.getText()), LocalTime.of(12,0));
-                LocalDateTime time1 = LocalDateTime.of(ioController.stringToDate(setFirstIntervalDates.getText()), LocalTime.of(12,0));
-                LocalDateTime time2 = LocalDateTime.of(ioController.stringToDate(setSecondIntervalDates.getText()), LocalTime.of(12,0));
-                recursionController.createNewRecursion(eventsInOneCycle, ec.getEventManager(), time1, time2, secondFirstTime);
+            else {
+                try {
+                    LocalDateTime secondFirstTime = LocalDateTime.of(ioController.stringToDate(setSecondFirstTime.getText()), LocalTime.of(12,0));
+                    LocalDateTime time1 = LocalDateTime.of(ioController.stringToDate(setFirstIntervalDates.getText()), LocalTime.of(12,0));
+                    LocalDateTime time2 = LocalDateTime.of(ioController.stringToDate(setSecondIntervalDates.getText()), LocalTime.of(12,0));
+                    recursionController.createNewRecursion(eventsInOneCycle, ec.getEventManager(), time1, time2, secondFirstTime);
+                    this.parent.enableFrame();
+                    this.parent.refresh();
+                    this.exitFrame();
+                }
+                catch (NumberFormatException | NullPointerException numberFormatException){
+                    JOptionPane.showConfirmDialog(frame, "The input of the dates should be in the following " +
+                            "format YYYY-MM-DD and you have to choose events to add to the recursion", "Note", JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.PLAIN_MESSAGE);
+                }
             }
-            recursionController.createNewRecursion(eventsInOneCycle, ec.getEventManager());
-            this.parent.enableFrame();
-            this.parent.refresh();
-            this.exitFrame();
         }
 
         if (e.getSource() == returnButton) {
@@ -231,7 +247,7 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
             return false;
         }
         try {
-            Integer d = Integer.parseInt(strNum);
+            Integer.parseInt(strNum);
         } catch (NumberFormatException nfe) {
             return false;
         }
