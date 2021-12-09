@@ -58,7 +58,7 @@ public class FreeTimeWindow implements ActionListener {
             freeTimePanel.add(freeTime);
         }
         eventScroller.setPreferredSize(new Dimension(150, 100));
-        eventScroller.setBounds(0, 0, frame.getWidth(), frame.getHeight()-100);
+        eventScroller.setBounds(0, 0, frame.getWidth() - 20, frame.getHeight() - 100);
         eventScroller.setVisible(true);
     }
 
@@ -70,6 +70,7 @@ public class FreeTimeWindow implements ActionListener {
      */
     private JPanel addFreeTime(LocalTime start, LocalTime end){
         JPanel freeTime = new JPanel(new FlowLayout());
+        freeTime.setBackground(Constants.WINDOW_COLOR);
         freeTime.setPreferredSize(new Dimension(200, 30));
         JComboBox<LocalTime> startTime = helper.timeComboBox();
         JComboBox<LocalTime> endTime = helper.timeComboBox();
