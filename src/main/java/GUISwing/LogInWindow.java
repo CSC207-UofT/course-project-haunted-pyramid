@@ -8,10 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-/**
- * @author Sean Yi
- * @author Sebin Im
- */
 public class LogInWindow implements ActionListener {
     JFrame frame = new MainFrame();
     JTextField fldUserName = new JTextField();
@@ -46,18 +42,6 @@ public class LogInWindow implements ActionListener {
         buttonSetUp();
         this.frame.getRootPane().setDefaultButton(btnLogIn);
         frame.setVisible(true);
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                if (JOptionPane.showConfirmDialog(frame,
-                        "Are you sure you want to close this window?", "Close Window?",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
-                    exitFrame();
-                }
-            }
-        });
     }
 
     private void addImage(JPanel imagePanel) {
@@ -181,12 +165,4 @@ public class LogInWindow implements ActionListener {
         lblLoginMessage.setVisible(true);
     }
 
-    /**
-     * exit the frame
-     */
-    public void exitFrame() {
-        this.mainController.getIoSerializable().usersWriteToSerializable(this.mainController.getUserController().
-                getUserManager().getAllUsers());
-        this.frame.dispose();
-    }
 }
