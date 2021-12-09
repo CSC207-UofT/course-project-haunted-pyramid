@@ -76,7 +76,7 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 #### Malik Lahlou
 - Implemented the algorithms to update recursions in case a user decides to add/change or delete an event from a recursion.
 - Refactored RecursiveController so that it respects clean architecture. Split the single huge method into 5 smaller methods that accomplish one task.
-- Implemented GUI for Recursions. 
+- Implemented GUI for Recursions. As explained in the accessibility report, this class has low tolerance for error. I only had time to create the menu and make it create recursive events; I wasn't able to quickly figure out why the new recursive events could npt be accessed (they can be accessed in the consol).
 - Started working on the design and implementation of the Category class.
 
 #### Shahzada Muhammad Shameel

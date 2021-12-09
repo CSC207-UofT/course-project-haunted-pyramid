@@ -249,6 +249,9 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
     }
 
 
+    /**
+     * returns true if the string represent an integer.
+     */
     public boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;

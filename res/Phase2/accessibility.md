@@ -68,6 +68,8 @@ customize their schedule
 
 - Confirmation is required to delete an event, since it is not recoverable.
 
+- The Recursive menu has low tolerance for errors. Events created by this menu (recursions) can't be accessed afterwards and trying to do so raises a NullPointerException. There was barely enough time to create the menu and make it work if all inputs are correct, so polishing and debugging this class was left out. 
+
 ### 6. Low Physical Effort
 
 - Our program only requires mouse and keyboard to be functional.
