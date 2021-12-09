@@ -12,12 +12,12 @@ import java.util.UUID;
  * abstract class that is used for displaying conflicted events
  * @author Seo Won Yi
  * @see ConflictChecker
- * @see DisplayDailyConflict
- * @see DisplayWeeklyConflict
- * @see DisplayMonthlyConflict
+ * @see DailyConflictDisplay
+ * @see WeeklyConflictDisplay
+ * @see MonthlyConflictDisplay
  */
 
-public abstract class DisplayConflict {
+public abstract class ConflictDisplay {
     public CalendarManager cm;
     public EventManager em;
     public ConflictChecker conflictChecker;
@@ -28,7 +28,7 @@ public abstract class DisplayConflict {
      * @param cm CalendarManager object to explore
      * @param em EventManager object to get event information from
      */
-    public DisplayConflict(CalendarManager cm, EventManager em){
+    public ConflictDisplay(CalendarManager cm, EventManager em){
         this.cm = cm;
         this.em = em;
         this.conflictChecker = new ConflictChecker(this.em, this.cm);

@@ -84,16 +84,12 @@ customize their schedule
 
 - We will further develop our program into android app, allowing further size and space for approach and use for the users.
 
-### Program Market Targetting Discussion
+### Program Market Targeting Discussion
 
 Haunted Pyramid, as an all undergraduate student group, aims to fill a void in productivity automation we have felt is lacking - automatic scheduling of time to work individually to meet goals.
 
 We aim to market this program towards University students, but can see the potential for the program to be desirable for any individual or group who has a lot of autonomy over their work schedule. We would like to market this towards professors in University as we integrate the Event Collections function which allows a User to create a collection of events (such as lectures and deadlines, with recommended time to start working on each) and share it with other users (students in a course) who will then have the collection merged into their schedule and work sessions customized to fit their lifestyle and other commitments.
 
-Our program is less likely to be used by people whose day to day lives do not involve intensive self-regulation or independent
-work with strict deadlines. For example, people who work in jobs that are fairly routine or unplannable such as someone 
-who works in customer service will not have any need for our program. It is also unlikely to be used by children or retired
-people/people who are set in their workflows. Our main demographic is students because of the nature of the occupation 
-and due to the willingness to experiment and desperation for improvement to productivity at any cost that we all feel and that
-drives us to try new ways of staying organized every year.
+Our program is less likely to be used by people whose day to day lives do not involve intensive self-regulation or independent work with strict deadlines. For example, people who work in jobs that are fairly routine or unplannable such as someone who works in customer service will not have any need for our program. It is also unlikely to be used by children or retired
+people/people who are set in their workflows. Our main demographic is students because of the nature of the occupation and due to the willingness to experiment and desperation for improvement to productivity at any cost that we all feel and that drives us to try new ways of staying organized every year.
 

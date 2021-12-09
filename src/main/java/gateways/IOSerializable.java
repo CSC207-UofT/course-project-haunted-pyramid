@@ -42,10 +42,10 @@ public class IOSerializable {
     private static final String ACCESS_TOKEN = "EfBUX9G7zxkAAAAAAAAAAaXr-kGtiOL1cwBhwIe7BcI0hvt-uH5LBsEh4FXJ31Ry";
 
     // A public Dropbox link where the serialized files are stored
-    private static final String eventsURL = "https://www.dropbox.com/s/3krckp5u9j35hmj/events.ser?dl=1";
-    private static final String usersURL = "https://www.dropbox.com/s/hy6hjenqm2cfl15/users.ser?dl=1";
+    private static final String eventsURL = "https://www.dropbox.com/s/ay2sdwru6onh8wc/events.ser?dl=1";
+    private static final String usersURL = "https://www.dropbox.com/s/co8t7aykti8smx0/users.ser?dl=1";
 
-    private static final String recursiveEventsURL = "https://www.dropbox.com/s/lgwx4io3qzongue/recursive_events.ser?dl=1";
+    private static final String recursiveEventsURL = "https://www.dropbox.com/s/zcpnpjh4ve6k1mt/recursive_events.ser?dl=1";
 
     /**
      * Initialize an instance of IOSerializable.
@@ -231,9 +231,11 @@ public class IOSerializable {
 
     /**
      * Read the file contents from the serialized files obtained from the dropbox repository.
-     * Then type cast them into an ArrayList of Events.
+     * Then type cast them into a Map with keys user uuid and values maps with recursive events uuid as keys and
+     * recursive events as values.
      *
-     * @return an ArrayList of all Events stored in the file
+     * @return a map with keys user uuid and values maps with recursive events uuid as keys and
+     * recursive events as values.
      */
     public Map<UUID, Map<UUID, RecursiveEvent>> recursiveEventsReadFromSerializable() {
         try {
@@ -255,9 +257,11 @@ public class IOSerializable {
 
     /**
      * Write the serialized file to the filepath as specified.
-     * The written object should be an ArrayList of Events.
+     * The written object should be a map with keys user uuid and values maps with recursive events uuid as keys and
+     * recursive events as values.
      *
-     * @param userIdToEvents an ArrayList of events to be serialized
+     * @param userIdToEvents a map with keys user uuid and values maps with recursive events uuid as keys and
+     * recursive events as values.
      */
     public void recursiveEventsWriteToSerializable(Map<UUID, Map<UUID, RecursiveEvent>> userIdToEvents) {
         try {
@@ -342,6 +346,5 @@ public class IOSerializable {
 
         Boolean c = recursiveEventsSer.delete();
     }
-
 
 }

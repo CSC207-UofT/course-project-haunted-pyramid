@@ -2,8 +2,8 @@ package presenters.CalendarFactory;
 
 import helpers.Constants;
 import helpers.DisplayCalendarHelper;
-import presenters.ConflictPresenters.DisplayConflict;
-import presenters.ConflictPresenters.DisplayDailyConflict;
+import presenters.ConflictPresenters.ConflictDisplay;
+import presenters.ConflictPresenters.DailyConflictDisplay;
 import usecases.calendar.CalendarManager;
 import usecases.calendar.DailyCalendarByType;
 import usecases.events.EventManager;
@@ -25,7 +25,7 @@ public class DailyCalendarDisplay extends CalendarDisplay {
     private final Map<Integer, List<UUID>> calendarMap;
     private List<String> timeLine;
     private final String dayOfWeek;
-    private final DisplayConflict conflictDisplay;
+    private final ConflictDisplay conflictDisplay;
 
     /**
      * Set up the DisplayDailyCalendar
@@ -40,7 +40,7 @@ public class DailyCalendarDisplay extends CalendarDisplay {
         DailyCalendarByType dc = new DailyCalendarByType();
         this.calendarMap = dc.getCalendar(cm, year, month, date);
         this.dayOfWeek = cf.findStartDayOfWeekString(year, this.month, this.date);
-        this.conflictDisplay = new DisplayDailyConflict(cm, em, year, month, date);
+        this.conflictDisplay = new DailyConflictDisplay(cm, em, year, month, date);
     }
 
     /**

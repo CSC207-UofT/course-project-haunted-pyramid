@@ -2,8 +2,8 @@ package presenters.CalendarFactory;
 
 import helpers.Constants;
 import helpers.DisplayCalendarHelper;
-import presenters.ConflictPresenters.DisplayConflict;
-import presenters.ConflictPresenters.DisplayWeeklyConflict;
+import presenters.ConflictPresenters.ConflictDisplay;
+import presenters.ConflictPresenters.WeeklyConflictDisplay;
 import usecases.calendar.CalendarManager;
 import usecases.events.EventManager;
 import usecases.calendar.WeeklyCalendarByType;
@@ -18,7 +18,7 @@ public class WeeklyCalendarDisplay extends CalendarDisplay {
     private final Map<Integer, List<UUID>> calendarMap;
     private final List<String> defaultTimeLine = new ArrayList<>();
     private final DisplayCalendarHelper cf;
-    private final DisplayConflict conflictDisplay;
+    private final ConflictDisplay conflictDisplay;
 
     /**
      * Initialize the class by setting
@@ -38,7 +38,7 @@ public class WeeklyCalendarDisplay extends CalendarDisplay {
             this.defaultTimeLine.add(j+ ":00");
         }
         this.cf = new DisplayCalendarHelper(this.year, this.month);
-        this.conflictDisplay = new DisplayWeeklyConflict(cm, em, year, month, date);
+        this.conflictDisplay = new WeeklyConflictDisplay(cm, em, year, month, date);
     }
 
     /**
