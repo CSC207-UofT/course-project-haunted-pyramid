@@ -65,6 +65,13 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
         addActionLister();
         this.frame.add(textInfoPanel);
         this.frame.add(buttonPanel);
+        this.frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                parent.enableFrame();
+                exitFrame();
+            }
+        });
         this.frame.setVisible(true);
     }
 
@@ -124,7 +131,7 @@ public class RecursionMenu implements ActionListener, MeltParentWindow {
         setSecondFirstTime = new JTextArea("Enter the date the first event you selected repeat for the first time");
         setSecondFirstTime.setBounds(240, 17, 200, 50);
         setFirstIntervalDates = new JTextArea("Enter the date this repetition begin");
-        setSecondIntervalDates = new JTextArea("Enter the date this repetition end  ");
+        setSecondIntervalDates = new JTextArea("Enter the date this repetition end");
         setSecondFirstTime.setLineWrap(true);
         setSecondFirstTime.setWrapStyleWord(true);
         setFirstIntervalDates.setWrapStyleWord(true);

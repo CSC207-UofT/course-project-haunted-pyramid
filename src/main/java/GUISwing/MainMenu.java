@@ -239,6 +239,10 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             new SelectEvent(mc, mc.getEventController().getEventManager().getDefaultEventInfoGetter(), this, false);
         }
         else if (e.getSource() == buttonCreateRecursion) {
+            JOptionPane.showMessageDialog(frame, "The implementation of this function is not complete! " +
+                            "\n Please do not try to modify Events created through this " +
+                            "\n (We recommend not utilizing this function yet)",
+                    "Prototype Warning", JOptionPane.WARNING_MESSAGE);
             this.frame.setEnabled(false);
             new RecursionMenu(this.mc, mc.getEventController().getEventManager().getDefaultEventInfoGetter(), this);
         }
