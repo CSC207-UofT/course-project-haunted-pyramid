@@ -7,6 +7,9 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Taite Cullen
+ */
 public class MenuCreationHelper {
 
     public JComboBox<LocalTime> timeComboBox() {

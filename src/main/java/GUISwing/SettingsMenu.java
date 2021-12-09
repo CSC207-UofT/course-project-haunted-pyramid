@@ -8,6 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 
+/**
+ * @author Taite Cullen
+ */
 public class SettingsMenu extends JMenu implements ActionListener {
     JMenuItem profile;
     JMenuItem freeTime;
@@ -100,6 +103,15 @@ public class SettingsMenu extends JMenu implements ActionListener {
         }
     }
 
+    /**
+     * freeTime opens FreeTimeWindow
+     * profile opens ProfileWindow
+     * cram changes truth value of cram in UserPreferences for current user
+     * procrastinate changes truth value of Procrastinate in UserPreferences for current user
+     * morningPerson changes truth value of Procrastinate in UserPreferences for current user
+     * the session spacing radio buttons set the String spacing in UserPreferences to be equal to their text
+     * @param e Action
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == freeTime){
