@@ -22,6 +22,7 @@ public class PopUpWindowFrame extends JFrame {
         this.setLayout(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setSize(Constants.POPUP_WIDTH, Constants.POPUP_HEIGHT);
+        this.setLocationRelativeTo(null);
         this.setVisible(false);
     }
 }
