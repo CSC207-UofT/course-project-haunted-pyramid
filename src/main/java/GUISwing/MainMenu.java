@@ -84,7 +84,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 if (JOptionPane.showConfirmDialog(frame,
-                        "Current Information will not be saved \n Would you like to close the program?", "Confirm Close",
+                        "Current Information will not be saved to the database \n Would you like to close the program?", "Confirm Close",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                     exitFrame();
