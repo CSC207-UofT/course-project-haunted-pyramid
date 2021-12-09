@@ -115,11 +115,10 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 
 #### Malik Lahlou
 
-- Created the algorithms that are used to update recursions 
-https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/b553ffeccb2760796014a3ec68361660145616c3
+- Created the algorithms that are used to update recursions
 https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/366f3a92ddd81e831ba55c5d8c564fa279fd64ed
-- Refactoring of the recursiveController class and Fixing the recursive event update methods and start implementing the Category class.
-https://github.com/CSC207-UofT/course-project-haunted-pyramid/commit/9661a9a14a74bfbb277c09882c8c4a9a5b8dd57e
+- Implemented the menu to create recursions.
+https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/330
 
 
 #### Shahzada Muhammad Shameel

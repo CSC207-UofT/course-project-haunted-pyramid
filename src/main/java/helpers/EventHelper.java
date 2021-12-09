@@ -2,7 +2,6 @@ package helpers;
 
 import entities.Event;
 
-import java.awt.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
