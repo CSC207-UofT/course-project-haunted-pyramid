@@ -1,7 +1,6 @@
 package controllers;
 
 // For type casting only, thus not violating Clean Architecture
-import entities.User;
 import entities.UserPreferences;
 
 import gateways.IOSerializable;
@@ -45,18 +44,7 @@ public class UserController {
         this.ioController = new IOController();
     }
 
-    /**
-     * Merging method to merge the users in local repository with the ones in the Dropbox cloud.
-     *
-     * @param localUsers list of users to unionize the sets from local and current repositories
-     */
-    public void merge(List<User> localUsers) {
-        List<User> currentUsers = this.userManager.getAllUsers();
-        Set<User> returnUsers = new HashSet<>();
-        returnUsers.addAll(localUsers);
-        returnUsers.addAll(currentUsers);
-        this.userManager.setUserInfo(new ArrayList<>(returnUsers));
-    }
+
 
     /**
      * Get the UUID of the user that is currently logged in to the program
@@ -262,9 +250,6 @@ public class UserController {
         this.userManager.toggleEvenSpacing(this.currentUser);
     }
 
-    public void setCram(boolean cram) {
-        this.userManager.getPreferences(currentUser).setCram(cram);
-    }
 
     private void toggleSessionSpacing() {
         this.userManager.toggleWorkSessionSpacing(this.currentUser);

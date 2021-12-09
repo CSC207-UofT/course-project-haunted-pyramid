@@ -1,6 +1,5 @@
 package controllers;
 
-import entities.Event;
 import entities.UserPreferences;
 import gateways.IOSerializable;
 import helpers.ControllerHelper;
@@ -80,35 +79,6 @@ public class EventController {
         this.workSessionController = new WorkSessionController(userController.getPreferences());
     }
 
-    /**
-     * Merging method to merge the users in local repository with the ones in the Dropbox cloud.
-     *
-     * @param localEvents Map of events to unionize the sets from local and current repositories
-     */
-    public void merge(Map<UUID, List<Event>> localEvents) {
-        Map<UUID, List<Event>> currentEvents = this.eventManager.getUuidEventsMap();
-        for (UUID userUUID : localEvents.keySet()) {
-            if (!currentEvents.containsKey(userUUID)) {
-                currentEvents.put(userUUID, localEvents.get(userUUID));
-                continue;
-            }
-            currentEvents.replace(userUUID, union(localEvents.get(userUUID), currentEvents.get(userUUID)));
-        }
-    }
-
-    /**
-     * Take two lists of events and return the union of the two lists.
-     *
-     * @param localEvents events in local
-     * @param currentEvents events in current repository
-     * @return union of two events
-     */
-    public List<Event> union(List<Event> localEvents, List<Event> currentEvents) {
-        Set<Event> returnEvents = new HashSet<>();
-        returnEvents.addAll(localEvents);
-        returnEvents.addAll(currentEvents);
-        return new ArrayList<>(returnEvents);
-    }
 
     /**
      * allows the user to create a default event through terminal - asks for title, start date, start time,

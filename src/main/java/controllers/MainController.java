@@ -11,10 +11,8 @@ import gateways.IOSerializable;
 import helpers.ControllerHelper;
 import presenters.MenuStrategies.DisplayMenu;
 import presenters.MenuStrategies.BasicMenuContent;
-import usecases.events.EventManager;
 import usecases.UserManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -152,19 +150,7 @@ public class MainController {
         return new ArrayList<>(set);
     }
 
-    /**
-     * Checks if the user has save files for all supported data types.
-     * Returns true if and only if all data types are saved.
-     *
-     * @return A boolean whether the user has save files
-     */
-    public boolean hasSavedData() {
-        List<String> paths = List.of("events.ser", "users.ser");
-        for (String path : paths) {
-            if (!new File(path).exists()) return false;
-        }
-        return true;
-    }
+
 
     /**
      * Save and exit the program.
@@ -190,9 +176,6 @@ public class MainController {
         System.exit(0);
     }
 
-    public CalendarController getCalendarController() {
-        return this.calendarController;
-    }
 
     public EventController getEventController() {
         return this.eventController;
