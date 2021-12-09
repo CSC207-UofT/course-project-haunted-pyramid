@@ -3,6 +3,7 @@
 
 ### Struggles:
 
+
 First and foremost, it is quite important to note that our group heavily lacked manpower; meaning that we were severely "understaffed" in finishing this project in time whilst also managing to keep up with other personal responsibilities.
 
 Our final head count is 5, almost half of what was allowed in the beginning of the project.
@@ -14,6 +15,9 @@ Another elephant in the room we must remark is the fact that we decided to make 
 It was difficult for us, in such a short amount of time, to learn and successfully implement Java Swing library into our program, such that it is not only runnable but also capable of handling the intricate tasks in our program.
 
 Indeed, both syntax and logic errors that arose during Phase 2 were also more perplexing to resolve, as our program got bigger and convoluted.
+
+The correct implementation of the safehold was not able to be fully implemented since local repository serialization is impossible when the client is not connected to wifi, or when the local repository is actually greater in file size than those in the cloud.\
+Unfortunately, we decided to scrap the local repo serialization, since it was not perfect on submission, we thought that it would be better than to submit a buggy one.
 
 
 ### Perks
