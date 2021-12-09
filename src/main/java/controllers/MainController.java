@@ -41,26 +41,14 @@ public class MainController {
 
     private final DisplayMenu displayMenu;
 
-    private Map<UUID, List<Event>> localEvents = new HashMap<>();
-
     /**
      * Initialize the entire program as this class is being initialized.
      * First, initialize and run IOSerializable, to retrieve serialized data from the dropbox repository.
      * Then asks the user to log in, which then will provide the user with the rest of the program.
      */
     public MainController() {
-        boolean hasLocalData = this.hasSavedData();
-        List<User> localUsers = new ArrayList<>();
-        if (hasLocalData) {
-            IOSerializable tempIOSerializable = new IOSerializable(true, true);
-            this.localEvents = tempIOSerializable.eventsReadFromSerializable();
-            localUsers = tempIOSerializable.usersReadFromSerializable();
-        }
         this.ioSerializable = new IOSerializable(true, false);
         this.userController = new UserController(this.ioSerializable.hasSavedData(), this.ioSerializable);
-        if (hasLocalData) {
-            this.userController.merge(localUsers);
-        }
         this.loginController = new LoginController(this.userController);
         this.calendarController = new CalendarController();
         this.displayMenu = new DisplayMenu();
@@ -86,9 +74,6 @@ public class MainController {
             }
         }
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable, this.userController);
-        if (this.hasSavedData()) {
-            this.eventController.merge(this.localEvents);
-        }
         System.out.println("WELCOME " + this.userController.getCurrentUsername() + "!");
     }
 
@@ -99,9 +84,6 @@ public class MainController {
     public void displayScreen() {
         this.eventController = new EventController(this.ioSerializable.hasSavedData(), this.ioSerializable,
                 this.userController);
-        if (this.hasSavedData()) {
-            this.eventController.merge(this.localEvents);
-        }
         while (this.loginController.isLoggedIn()) {
             System.out.println(this.calendarController.showDefaultCalendar(this.eventController));
             System.out.println("Please choose your action");
@@ -230,8 +212,5 @@ public class MainController {
 
     public void setEventController(EventController eventController){
         this.eventController = eventController;
-        if (this.hasSavedData()) {
-            this.eventController.merge(this.localEvents);
-        }
     }
 }

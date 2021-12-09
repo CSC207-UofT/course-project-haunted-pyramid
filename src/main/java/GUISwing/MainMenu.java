@@ -250,7 +250,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
         else if (e.getSource() == buttonLogOut) {
             this.lc.logout();
             frame.dispose();
-            new LogInWindow();
+            new LogInWindow(this.mc);
         }
         else if (e.getSource() == buttonExit) {
             mc.saveAndExitProgram();
