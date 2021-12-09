@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * @author Taite Cullen
+ */
 public class FreeTimeWindow implements ActionListener {
     UserController userController;
     final JFrame frame;
@@ -117,6 +120,12 @@ public class FreeTimeWindow implements ActionListener {
     }
 
 
+    /**
+     * add button adds a free time slot from 0:00 - 0:00 and refreshes
+     * save button saves all free time currently displayed as the total set of User free time
+     * delete buttons pass start times (keys in freetime map), these keys are removed and the frame is refreshed
+     * @param e Action
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == add){
