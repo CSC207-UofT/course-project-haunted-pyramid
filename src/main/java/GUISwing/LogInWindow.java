@@ -149,7 +149,7 @@ public class LogInWindow implements ActionListener {
             }
             loginController.login(fldUserName.getText(), String.valueOf(fldPassword.getPassword()));
             if (loginController.isLoggedIn()){
-                IOSerializable ioSerializable = new IOSerializable(true);
+                IOSerializable ioSerializable = new IOSerializable(true, false);
                 this.mainController.setEventController(new EventController(ioSerializable.hasSavedData(), ioSerializable,
                         mainController.getUserController()));
                 MainMenu mainMenu = new MainMenu(mainController);

@@ -42,18 +42,20 @@ public class IOSerializable {
     private static final String ACCESS_TOKEN = "EfBUX9G7zxkAAAAAAAAAAaXr-kGtiOL1cwBhwIe7BcI0hvt-uH5LBsEh4FXJ31Ry";
 
     // A public Dropbox link where the serialized files are stored
-    private static final String eventsURL = "https://www.dropbox.com/s/ne4kycxz18ea4yt/events.ser?dl=1";
-    private static final String usersURL = "https://www.dropbox.com/s/oi2hj5c1e52fbq4/users.ser?dl=1";
+    private static final String eventsURL = "https://www.dropbox.com/s/kl6ynyp22o9v3j8/events.ser?dl=1";
+    private static final String usersURL = "https://www.dropbox.com/s/g66ymutyudqvvsu/users.ser?dl=1";
 
-    private static final String recursiveEventsURL = "https://www.dropbox.com/s/c63593o03pmto9f/recursive_events.ser?dl=1";
+    private static final String recursiveEventsURL = "https://www.dropbox.com/s/lgwx4io3qzongue/recursive_events.ser?dl=1";
 
     /**
      * Initialize an instance of IOSerializable.
      *
      * @param intro boolean value of the process being in introduction or conclusion
      */
-    public IOSerializable(Boolean intro) {
-        readFromDropbox(intro);
+    public IOSerializable(Boolean intro, Boolean hasLocalFile) {
+        if (!hasLocalFile) {
+            readFromDropbox(intro);
+        }
     }
 
     /**
@@ -340,5 +342,6 @@ public class IOSerializable {
 
         Boolean c = recursiveEventsSer.delete();
     }
+
 
 }

@@ -1,10 +1,7 @@
 package entities;
 
-import interfaces.EventListObserver;
-
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -37,6 +34,25 @@ public class User implements Serializable {
         this.userPreferences = new UserPreferences();
         categories = new HashMap<>();
         suggestions = new HashMap<>();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) &&
+                Objects.equals(username, user.username) && Objects.equals(password, user.password) &&
+                Objects.equals(birthDate, user.birthDate) && Objects.equals(email, user.email) &&
+                Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(homeAddress, user.homeAddress) &&
+                Objects.equals(events, user.events) && Objects.equals(userPreferences, user.userPreferences) &&
+                Objects.equals(categories, user.categories) && Objects.equals(suggestions, user.suggestions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, username, password, birthDate, email, phoneNumber, homeAddress, events,
+                userPreferences, categories, suggestions);
     }
 
     public UUID getId() {

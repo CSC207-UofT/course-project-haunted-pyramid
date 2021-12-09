@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -136,8 +137,6 @@ public class Event implements Serializable {
         this.name = name;
     }
 
-
-
     /**
      * returns a String with a description of the EVent as set by User - not required to be meaningful, no
      * standard format
@@ -148,9 +147,19 @@ public class Event implements Serializable {
         return this.description;
     }
 
+    /**
+     * Hashcode generation using all variables.
+     *
+     * @return a Hashcode for this object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(startTime, endTime, ID, name, description, Categories, workSessions, hoursNeeded,
+                sessionLength, startWorking, recursiveId);
+    }
 
     /**
-     * To Events are considered equal if all attributes have the same value
+     * Two Events are considered equal if all attributes have the same value
      *
      * @param object the object event is being compared to
      * @return whether it is equal to this object
