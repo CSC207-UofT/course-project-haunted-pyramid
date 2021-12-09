@@ -4,40 +4,38 @@ Create a program that allows a human student to view and store their events, as 
 scheduled for them based on input hours they would like to spend working before a given event.
 
 A User will log in to access their 'account' and see a calendar of the current month with their saved events listed by
-name and start/end time on each day. The User will be able to add events with a given end time by default, as well as being
-able to remove events, modify the starts and end times of events, and change their view of the calendar to a different month (in
-a range of 7 months). They will be able to choose events to edit by changing their calendar
-to a weekly or daily view for a specified week or day. When adding events, a user will be able to choose what kind of
-event from a list - Assignment, Lecture, Tutorial, Test, etc. Events such as Assignment will require the user to input a
-typical work session length and a number of hours total they would like to spend before the due date on the assignment.
-The program will create work session events for the user and automatically schedule
+name and start/end time on each day. The User is able to add events, as well as
+remove events, modify the starts and end times of events, modify the descriptions and names of events, and change their view of the calendar to a different month (in
+a range of 7 months). The program will create work session events for the user and automatically schedule
 and reschedule them based on the users' future scheduling. The program allows the user to mark work sessions as complete
 or incomplete and have the sessions rescheduled accordingly. The user can specify their free time during which work sessions
-are prohibited to be scheduled, and their preffered method of scheduling (procrastinating or not).
-When the user logs off, their profile info and events should be serialized and saved to a dropbox.
+are prohibited to be scheduled, their preferred method of scheduling according to settings that can be modified and saved.
+When the user logs off, their profile info and events are serialized and saved to a dropbox.
 
 ### Changes from Phase 1
 
 #### Presentation
 
-In phase 0, the presentation was only available for monthly calendar. Now, you can view weekly and daily calendars.
-Instead of typing fixed texts, we've added menu screen to visually improve the user experience. For what we have tested,
-any form of inputs do not halt the program from operating and we will kindly ask you to retype in the right format.
+In phase 1, the presenters were exclusively formatted strings sent to the text terminal leading a user through processes
+and re-presenting information after the processes were fully complete. Since then we have implemented a fully functioning Java Swing GUI. 
+Windows that present information refresh when information is changed, and the order in which processes occur is much more fluid with
+the use of Actions.
 
 #### Functionality 
 
-In phase 0, only limited amount of work could be done (add event). Now, you can add / remove / modify information of
-the event as well as add additional functions such as make recursion (repetition) or set up work sessions to prepare the
-event. We have implemented basic algorithm that will set up the work sessions for the available times indicated by the user automatically.
+The Calendar can now be formatted and exported to ICal files. Also, WorkSessionScheduling has been updated significantly since Phase 1. Now several combinable options are available to the 
+user to specify how they prefer workSessions to be scheduled in general, as well as a specific option for how long before each due date they want to start their work.
 
 #### Data storage
 
-In phase 0, we were storing data in local serializable files. Now, the files exist in DropBox. We've performed
-testings to proudly confirm that the files save and load successfully and we've made it so that any file that were
-copied to read the data gets deleted as you exit the program.
+In phase 1, we ensured that data would be serialized and saved to a dropbox upon exit. Now, recursive information is
+also serialized and saved, and a UserPreferences object has been added to the User object which is serialized along with their
+personal information, specifying their preferred settings when setting up their version of the program.
 
 #### Cooperation
 
-In phase 0, we've dealt with individual classes separately and tried to have single responsibility for each person.
-In phase 1, we had multiple people working on the same goal (developing and implementing various features of event) by
-fully utilizing the github features. We've had frequent meetings to keep up everyone's motivation and share opinions. 
+We set specific personal due dates at the beginning of phase 2 to clarify each persons' individual responsibilities and hour overall
+goals for the course of the phase. We started using Git Issues and different branches for different aspects of the program so that
+multiple people could collaborate on one aspect and it was clear which branches contributed to which classes.
+We continued to use Discord to communicate frequently and keep each other updated and let each other know of changes in personal deadlines.
+

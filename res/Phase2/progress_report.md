@@ -78,7 +78,13 @@ We also made sure to critically analyze, expand, improve and refactor our progra
 - Built GUI windows and implement functionalities necessary for calendar selection screen which now enables users to select the type of calendars.
 
 #### Taite Cullen
-
+- After Phase 1, implemented switch from Event use of integer ID to UUID
+- Designed and implemented Work Session Scheduling strategies and builder pattern
+- Updated User to use UserPreferences object for modifying and saving preferred setup of program 
+- Refactored EventManager to delegate to DefaultEventInfoGetter
+- Designed and implemented aspects of the Java Swing GUI:
+  - Add/Edit, Select event to add/edit window, work session editing
+  - Settings menu with options for updating UserPreferences, and free time window
 
 ### Significant Pull Requests
 
@@ -124,9 +130,8 @@ Built main menu GUI that would act as a core part of GUI version of our program.
 
 #### Taite Cullen
 
-https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/210#issue-1068833602
-
-
+Implemented WorkSessionScheduler Strategies and Builder Pattern: 
+- https://github.com/CSC207-UofT/course-project-haunted-pyramid/pull/210#issue-1068833602
 
 
 
