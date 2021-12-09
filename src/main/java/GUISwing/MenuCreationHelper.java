@@ -8,10 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Helper class that produces timeline combo boxes
  * @author Taite Cullen
  */
 public class MenuCreationHelper {
-
+    /**
+     * Create combo box that has time information
+     * @return JComboBox with Time information
+     */
     public JComboBox<LocalTime> timeComboBox() {
         List<Integer> hourList = new ArrayList<>();
         List<Integer> minList = new ArrayList<>();
@@ -32,6 +36,13 @@ public class MenuCreationHelper {
         return new JComboBox<>(timeList.toArray(arr));
     }
 
+    /**
+     * return a list of days in a month
+     * if canBeNull is true, add null at the end
+     * @param month month that will be considered from
+     * @param canBeNull if true add null at the end of the list
+     * @return list of days in the given month
+     */
     public Integer[] dateList(YearMonth month, boolean canBeNull){
         int days = month.lengthOfMonth();
         List<Integer> dayList = new ArrayList<>();
@@ -52,6 +63,10 @@ public class MenuCreationHelper {
         return dayList.toArray(arr);
     }
 
+    /**
+     * Create combo box for the available year-month information (7 months range)
+     * @return JComboBox with year and month information
+     */
     public JComboBox<YearMonth> monthComboBox(){
         ArrayList<YearMonth> months = new ArrayList<>();
         months.add(YearMonth.of(LocalDate.now().minusMonths(3).getYear(), LocalDate.now().minusMonths(3).getMonth()));

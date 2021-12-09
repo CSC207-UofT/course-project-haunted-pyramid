@@ -8,8 +8,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.AreaAveragingScaleFilter;
 import java.time.LocalTime;
+import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -17,19 +21,17 @@ import java.util.Objects;
  * @author Taite Cullen
  */
 public class FreeTimeWindow implements ActionListener {
-    UserController userController;
-    final JFrame frame;
+    private final UserController userController;
+    private final JFrame frame;
     private final MenuCreationHelper helper;
-
-    private Map<JComboBox<LocalTime>, JComboBox<LocalTime>> freeTimes;
-
-    JButton add = new JButton("add");
-    JButton save = new JButton("save");
-
-    JPanel freeTimePanel = new JPanel();
-    JScrollPane eventScroller = new JScrollPane(freeTimePanel);
-
-    MeltParentWindow parent;
+    private Map<JPanel, List<JComboBox<LocalTime>>> freeTimes;
+    private JButton add = new JButton("add");
+    private JButton save = new JButton("save");
+    private final JPanel freeTimePanel = new JPanel();
+    private final JScrollPane eventScroller = new JScrollPane(freeTimePanel);
+    private final MeltParentWindow parent;
+    private String buttonNum;
+    private List<JPanel> panelList;
 
     /**
      * Constructor for FreeTimeWindow
@@ -44,7 +46,6 @@ public class FreeTimeWindow implements ActionListener {
         showFreeTime();
         frame.add(eventScroller);
         saveButton();
-
         frame.setVisible(true);
     }
 
@@ -52,13 +53,15 @@ public class FreeTimeWindow implements ActionListener {
      * Method which shows the current free time for the user.
      */
     private void showFreeTime(){
+        buttonNum = "0";
+        panelList = new ArrayList<>();
         freeTimes = new HashMap<>();
         freeTimePanel.setLayout(new BoxLayout(freeTimePanel, BoxLayout.Y_AXIS));
         freeTimePanel.setBackground(Constants.WINDOW_COLOR);
         for (LocalTime start: userController.getCurrentFreeTime().keySet()){
-            JPanel freeTime = addFreeTime(start, userController.getCurrentFreeTime().get(start));
-            freeTime.setBackground(Constants.WINDOW_COLOR);
-            freeTimePanel.add(freeTime);
+            JPanel extraFreeTime = addFreeTime(start, userController.getCurrentFreeTime().get(start), buttonNum);
+            freeTimePanel.add(extraFreeTime);
+            buttonNum = String.valueOf(Integer.parseInt(buttonNum) + 1);
         }
         eventScroller.setPreferredSize(new Dimension(150, 100));
         eventScroller.setBounds(0, 0, frame.getWidth() - 20, frame.getHeight() - 100);
@@ -71,24 +74,28 @@ public class FreeTimeWindow implements ActionListener {
      * @param end End time of free time
      * @return A panel
      */
-    private JPanel addFreeTime(LocalTime start, LocalTime end){
-        JPanel freeTime = new JPanel(new FlowLayout());
-        freeTime.setBackground(Constants.WINDOW_COLOR);
-        freeTime.setPreferredSize(new Dimension(200, 30));
+    private JPanel addFreeTime(LocalTime start, LocalTime end, String buttonNum){
+        JPanel extraFreeTime = new JPanel(new FlowLayout());
+        extraFreeTime.setBackground(Constants.WINDOW_COLOR);
+        extraFreeTime.setPreferredSize(new Dimension(200, 30));
         JComboBox<LocalTime> startTime = helper.timeComboBox();
         JComboBox<LocalTime> endTime = helper.timeComboBox();
         startTime.setSelectedItem(start);
         endTime.setSelectedItem(end);
         JButton delete = new JButton("delete");
-        freeTime.add(new JLabel("start: "));
-        freeTime.add(startTime);
-        freeTime.add(new JLabel("end: "));
-        freeTime.add(endTime);
-        freeTime.add(delete);
-        delete.setActionCommand("delete-" + Objects.requireNonNull(startTime.getSelectedItem()));
+        extraFreeTime.add(new JLabel("start: "));
+        extraFreeTime.add(startTime);
+        extraFreeTime.add(new JLabel("end: "));
+        extraFreeTime.add(endTime);
+        extraFreeTime.add(delete);
+        panelList.add(extraFreeTime);
+        delete.setActionCommand(buttonNum);
         delete.addActionListener(this);
-        freeTimes.put(startTime, endTime);
-        return freeTime;
+        List<JComboBox<LocalTime>> timeInfo = new ArrayList<>();
+        timeInfo.add(startTime);
+        timeInfo.add(endTime);
+        freeTimes.put(extraFreeTime, timeInfo);
+        return extraFreeTime;
     }
 
 
@@ -110,17 +117,6 @@ public class FreeTimeWindow implements ActionListener {
     }
 
     /**
-     * Method for refreshing the frame
-     */
-    private void refresh(){
-      freeTimePanel.removeAll();
-      showFreeTime();
-      frame.revalidate();
-      frame.repaint();
-    }
-
-
-    /**
      * add button adds a free time slot from 0:00 - 0:00 and refreshes
      * save button saves all free time currently displayed as the total set of User free time
      * delete buttons pass start times (keys in freetime map), these keys are removed and the frame is refreshed
@@ -128,23 +124,39 @@ public class FreeTimeWindow implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == add){
-            freeTimePanel.add(addFreeTime(LocalTime.of(0, 0), LocalTime.of(0, 0)));
+        if (e.getSource() == add) {
+            List<LocalTime> timeList = new ArrayList<>();
+            for (JPanel timePanel: freeTimes.keySet()) {
+                timeList.add((LocalTime) Objects.requireNonNull(freeTimes.get(timePanel).get(0).getSelectedItem()));
+            }
+            LocalTime temp = LocalTime.of(0,0);
+            while (timeList.contains(temp)) {
+                temp = temp.plusMinutes(30);
+                if (temp == LocalTime.of(23,0)) {
+                    break;
+                }
+            }
+            freeTimePanel.add(addFreeTime(temp, temp, buttonNum));
+            buttonNum = String.valueOf(Integer.parseInt(buttonNum) + 1);
             frame.revalidate();
             frame.repaint();
-        } else if(e.getSource() == save){
+        }
+
+        else if (e.getSource() == save) {
             userController.getCurrentFreeTime().clear();
-            for(JComboBox<LocalTime> start: freeTimes.keySet()){
-                userController.addFreeTime(( LocalTime) Objects.requireNonNull(start.getSelectedItem()),
-                        (LocalTime) freeTimes.get(start).getSelectedItem());
+            for (JPanel timePanel : freeTimes.keySet()) {
+                userController.addFreeTime((LocalTime) Objects.requireNonNull(freeTimes.get(timePanel).get(0).getSelectedItem()),
+                        (LocalTime) freeTimes.get(timePanel).get(1).getSelectedItem());
             }
             parent.refresh();
             frame.dispose();
-        } else{
-            String key = e.getActionCommand().split("-")[1];
-            String[] hourMin = key.split(":");
-            userController.getCurrentFreeTime().remove(LocalTime.of(Integer.parseInt(hourMin[0]), Integer.parseInt(hourMin[1])));
-            refresh();
+        }
+
+        else {
+            freeTimePanel.remove(panelList.get(Integer.parseInt(e.getActionCommand())));
+            freeTimes.remove(panelList.get(Integer.parseInt(e.getActionCommand())));
+            frame.revalidate();
+            frame.repaint();
         }
     }
 }
