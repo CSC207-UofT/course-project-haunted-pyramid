@@ -231,9 +231,11 @@ public class IOSerializable {
 
     /**
      * Read the file contents from the serialized files obtained from the dropbox repository.
-     * Then type cast them into an ArrayList of Events.
+     * Then type cast them into a Map with keys user uuid and values maps with recursive events uuid as keys and
+     * recursive events as values.
      *
-     * @return an ArrayList of all Events stored in the file
+     * @return a map with keys user uuid and values maps with recursive events uuid as keys and
+     * recursive events as values.
      */
     public Map<UUID, Map<UUID, RecursiveEvent>> recursiveEventsReadFromSerializable() {
         try {
@@ -255,9 +257,11 @@ public class IOSerializable {
 
     /**
      * Write the serialized file to the filepath as specified.
-     * The written object should be an ArrayList of Events.
+     * The written object should be a map with keys user uuid and values maps with recursive events uuid as keys and
+     * recursive events as values.
      *
-     * @param userIdToEvents an ArrayList of events to be serialized
+     * @param userIdToEvents a map with keys user uuid and values maps with recursive events uuid as keys and
+     * recursive events as values.
      */
     public void recursiveEventsWriteToSerializable(Map<UUID, Map<UUID, RecursiveEvent>> userIdToEvents) {
         try {

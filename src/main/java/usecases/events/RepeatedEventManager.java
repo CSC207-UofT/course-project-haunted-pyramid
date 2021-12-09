@@ -61,21 +61,21 @@ public class RepeatedEventManager implements EventListObserver {
     public Map<UUID, RecursiveEvent> getRecursiveEventMap() {return recursiveEventMap;}
 
     /**
-     * allows determines by a list of actions which method to complete next
+     * Adds a recursive event to the two maps of the repeated event manager in the appropriate way.
      *
-     * @param recursiveEvent number from 1-10 completes corresponding command from list
+     * @param recursiveEvent The recursive event to add to the repeated event manager.
      */
-    public void addRecursion(RecursiveEvent recursiveEvent){
+    private void addRecursion(RecursiveEvent recursiveEvent){
         this.recursiveEventMap.put(recursiveEvent.getId(), recursiveEvent);
         List<Event> events = recursiveEvent.listOfEventsInCycles(recursiveEvent.getEventsInOneCycle());
         this.recursiveIdToDateToEventsMap.put(recursiveEvent.getId(), eventListToMap(events, recursiveEvent.getCycleLength()));
     }
 
     /**
-     * allows determines by a list of actions which method to complete next
-     *
-     * @param uuid number from 1-10 completes corresponding command from list
-     * @return true if event was saved (or deleted), false otherwise
+     * This method search all events in the repeated event manager and returns the event who matches the ID uuid (if
+     * there is one).
+     * @param uuid the ID of the event of interest
+     * @return the events with ID uuid, or null if there is no such event in any recursion.
      */
     public Event getThisEventFromRecursion(UUID uuid){
         for(UUID uuid1 : this.recursiveIdToDateToEventsMap.keySet()){
@@ -104,11 +104,11 @@ public class RepeatedEventManager implements EventListObserver {
     }
 
     /**
-     * allows determines by a list of actions which method to complete next
+     * @param events all the events in a recursion
+     * @param cycleLength the length of one cycle in this recursion.
      *
-     * @param events number from 1-10 completes corresponding command from list
-     * @param cycleLength      the ID of the event being passed to the next method
-     * @return true if event was saved (or deleted), false otherwise
+     * @return a map whose values are the event in some individual cycle of the recursion, and keys the date of the
+     * first event of this particular cycle.
      */
     public Map<LocalDateTime, List<Event>> eventListToMap(List<Event> events, int cycleLength){
         Map<LocalDateTime, List<Event>> datesAndEvents = new HashMap<>();
@@ -129,11 +129,13 @@ public class RepeatedEventManager implements EventListObserver {
     }
 
     /**
-     * allows determines by a list of actions which method to complete next
+     * Gets all the events in the recursiveEvent and use the eventListToMap to create a map with dates as keys and
+     * list of events as values, then add this map to the recursiveIdToDateToEventsMap map with the recursiveEvent
+     * uuid as its key.
      *
-     * @param recursiveEvent number from 1-10 completes corresponding command from list
+     * @param recursiveEvent a particular recursive event.
      */
-    public void addEventsFromRecursiveEvent(RecursiveEvent recursiveEvent){
+    private void addEventsFromRecursiveEvent(RecursiveEvent recursiveEvent){
         int cycleLength = recursiveEvent.getCycleLength();
         List<Event> allEventsInCycles = recursiveEvent.listOfEventsInCycles(recursiveEvent.getEventsInOneCycle());
         Map<LocalDateTime, List<Event>> datesAndEvents = eventListToMap(allEventsInCycles, cycleLength);
@@ -142,11 +144,11 @@ public class RepeatedEventManager implements EventListObserver {
     }
 
     /**
-     * allows determines by a list of actions which method to complete next
+     * Constructs a recursiveEvent with interval dates as a recursive pattern.
      *
-     * @param eventsInCycle number from 1-10 completes corresponding command from list
-     * @param periodOfRepetition      the ID of the event being passed to the next method
-     * @return true if event was saved (or deleted), false otherwise
+     * @param eventsInCycle the list of events in the base cycle.
+     * @param periodOfRepetition the two date between which the events in eventsInCycle repeat.
+     * @return The constructed recursiveEvent.
      */
     private RecursiveEvent recursiveEventConstructor(List<Event> eventsInCycle, LocalDateTime[] periodOfRepetition){
         RecursiveEvent recursiveEvent = new RecursiveEvent(UUID.randomUUID());
@@ -159,10 +161,10 @@ public class RepeatedEventManager implements EventListObserver {
     }
 
     /**
-     * allows determines by a list of actions which method to complete next
+     * Constructs a recursiveEvent with events as a base cycle but with no recursion pattern.
      *
-     * @param events number from 1-10 completes corresponding command from list
-     * @return true if event was saved (or deleted), false otherwise
+     * @param events the list of events in the base cycle.
+     * @return the uuid of the newly constructed recursive event.
      */
     public UUID recursiveEventConstructor1(List<Event> events){
         UUID uuid = UUID.randomUUID();
@@ -172,11 +174,12 @@ public class RepeatedEventManager implements EventListObserver {
     }
 
     /**
-     * allows determines by a list of actions which method to complete next
+     * Constructs a recursiveEvent with interval dates as a recursive pattern then add it to the two maps of the
+     * repeated event manager in the appropriate way.
      *
-     * @param eventsInCycle number from 1-10 completes corresponding command from list
-     * @param periodOfRepetition      the ID of the event being passed to the next method
-     * @return true if event was saved (or deleted), false otherwise
+     * @param eventsInCycle the list of events in the base cycle.
+     * @param periodOfRepetition the two date between which the events in eventsInCycle repeat.
+     * @return the uuid of the newly constructed recursive event.
      */
     private UUID addEventsFromRecursiveEvent(List<Event> eventsInCycle, LocalDateTime[] periodOfRepetition){
         RecursiveEvent recursiveEvent = recursiveEventConstructor(eventsInCycle, periodOfRepetition);
