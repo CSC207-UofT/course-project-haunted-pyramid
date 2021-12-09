@@ -138,7 +138,7 @@ public class RecursionController {
     }
 
     /**
-     *
+     * Creates a recursive event for Recursive menu.
      * @param eventIDList the ids of the events to repeat.
      * @param eventManager the event manager containing all events and recursive events.
      * @param dateTime1 the date this recursion should start.
@@ -160,7 +160,7 @@ public class RecursionController {
     }
 
     /**
-     *
+     * Creates a recursive event for Recursive menu.
      * @param eventIDList the ids of the events to repeat.
      * @param eventManager  the event manager containing all events and recursive events.
      * @param numRepetition the number of times this cycle should repeat.
