@@ -37,7 +37,7 @@ public class MainMenu implements ActionListener, MeltParentWindow {
     private final JButton buttonCalendar = new JButton("2. Change Calendar");
     private final JButton buttonAddEvent = new JButton("3. Add a new Event");
     private final JButton buttonModifyEvent = new JButton("4. Modify an Event");
-    private final JButton buttonCreateRecursion = new JButton("5. CreateRecursion");
+    private final JButton buttonCreateRecursion = new JButton("5. Create Recursion");
     private final JButton buttonExport = new JButton("6. Export Entire Calendar to iCal File");
     private final JButton buttonLogOut = new JButton("7. Log Out");
     private final JButton buttonExit = new JButton("8. Save and Exit");
