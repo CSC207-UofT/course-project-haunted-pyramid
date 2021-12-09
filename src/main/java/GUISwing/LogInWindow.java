@@ -8,6 +8,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * Log In window
+ * @author Seo Won Yi
+ * @author Taite Cullen
+ */
+
 public class LogInWindow implements ActionListener {
     JFrame frame = new MainFrame();
     JTextField fldUserName = new JTextField();
@@ -21,6 +27,9 @@ public class LogInWindow implements ActionListener {
     LoginController loginController;
     EventController eventController;
 
+    /**
+     * Construct the log in window for users to sign up or sign in
+     */
     public LogInWindow(){
         this.mainController = new MainController();
         this.loginController = this.mainController.getLoginController();
@@ -44,6 +53,10 @@ public class LogInWindow implements ActionListener {
         frame.setVisible(true);
     }
 
+    /**
+     * add image of awesome team logo on the window
+     * @param imagePanel panel to have image on
+     */
     private void addImage(JPanel imagePanel) {
         JLabel imageLabel = new JLabel();
         ImageIcon hauntedPyramid = new ImageIcon("res/Haunted_Pyramid_Logo.png");
@@ -56,6 +69,9 @@ public class LogInWindow implements ActionListener {
         imageLabel.setBounds(200, 150, Constants.WINDOW_WIDTH - 444, Constants.WINDOW_HEIGHT - 800);
     }
 
+    /**
+     * set up the buttons for log in and sign up
+     */
     private void buttonSetUp() {
         btnLogIn.setBounds(1164/2 + 30, 200, 100, 30);
         btnSignUp.setBounds(1164/2 + 135, 200, 100, 30);
@@ -63,6 +79,9 @@ public class LogInWindow implements ActionListener {
         btnSignUp.addActionListener(this);
     }
 
+    /**
+     * Add log in messages to be displayed in appropriate location
+     */
     private void addLogInMessage() {
         lblLoginMessage.setLayout(null);
         lblLoginMessage.setHorizontalAlignment(JLabel.CENTER);
@@ -72,6 +91,9 @@ public class LogInWindow implements ActionListener {
         lblLoginMessage.setBounds(1044/2, 170, 400, 20);
     }
 
+    /**
+     * set up the password label to enable users to type passwords
+     */
     private void setUpPasswordLabel() {
         lblPassword.setBounds(1220/2, 135, 100, 25);
         lblPassword.setFont(new Font("Times New Roman", Font.ITALIC | Font.BOLD, 15));
@@ -79,6 +101,9 @@ public class LogInWindow implements ActionListener {
         fldPassword.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
 
+    /**
+     * set up the username label to enable users to type usernames
+     */
     private void setUpUserNameLabel() {
         lblUserName.setBounds(1220/2, 100, 100, 25);
         lblUserName.setFont(new Font("Times New Roman", Font.ITALIC | Font.BOLD, 15));
@@ -86,6 +111,10 @@ public class LogInWindow implements ActionListener {
         fldUserName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
 
+    /**
+     * add the components on the JPanel
+     * @param logInPanel panel that includes all the functional components
+     */
     private void updateLogInPanel(JPanel logInPanel) {
         logInPanel.add(lblUserName);
         logInPanel.add(lblPassword);
@@ -96,6 +125,10 @@ public class LogInWindow implements ActionListener {
         logInPanel.add(lblLoginMessage);
     }
 
+    /**
+     * Create the image panel for the awesome team logo
+     * @return JPanel that will have the image on
+     */
     private JPanel createImagePanel() {
         JPanel imagePanel = new JPanel();
         this.frame.add(imagePanel);
@@ -105,6 +138,10 @@ public class LogInWindow implements ActionListener {
         return imagePanel;
     }
 
+    /**
+     * Create a panel which will include all the contributors' names
+     * @return JPanel that has contributors' names
+     */
     private JPanel createContributorPanel() {
         JPanel contributorPanel = new JPanel();
         this.frame.add(contributorPanel);
@@ -114,6 +151,10 @@ public class LogInWindow implements ActionListener {
         return contributorPanel;
     }
 
+    /**
+     * Add the team name on the image panel
+     * @param imagePanel panel to have team name on
+     */
     private void addTeamName(JPanel imagePanel) {
         JLabel teamName = new JLabel();
         teamName.setText("Haunted Pyramid Calendar App");
@@ -126,6 +167,10 @@ public class LogInWindow implements ActionListener {
         teamName.setBounds(200, 50, 1000, 50);
     }
 
+    /**
+     * add contributors names to the corresponding panel
+     * @param contributorPanel panel to have cotnributors name on
+     */
     private void addContributors(JPanel contributorPanel) {
         JLabel contributors = new JLabel("Contributors:  Malik Lahlou,  Shahzada Muhammad Shameel Farooq,  Sebin Im,  Seo Won Yi,  Taite Cullen");
         contributors.setFont(new Font("Times New Roman", Font.ITALIC | Font.BOLD, 20));
@@ -137,6 +182,10 @@ public class LogInWindow implements ActionListener {
         contributors.setVerticalTextPosition(JLabel.CENTER);
     }
 
+    /**
+     * perform the actions corresponding to the users' choices
+     * @param e action to be considered from
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnLogIn) {
