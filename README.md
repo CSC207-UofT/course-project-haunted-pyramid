@@ -25,9 +25,9 @@
 
 ### GUI Version
 
-![image](https://user-images.githubusercontent.com/90633132/144815998-483328be-06cb-46af-9526-f24bb0095161.png)
+![image](https://user-images.githubusercontent.com/90633132/145347805-947d9223-991a-4696-8aca-af28f8e3ab87.png)
 
-![image](https://user-images.githubusercontent.com/90633132/144816277-435fba15-381b-499c-83c9-404044af0eee.png)
+![image](https://user-images.githubusercontent.com/90633132/145347861-5adc4a02-68f2-48c1-9536-dc68c81dad50.png)
 
 
 
@@ -39,7 +39,7 @@
 
 ### GUI Version
 
-![image](https://user-images.githubusercontent.com/90633132/144816365-739c3606-c916-47e3-bc56-cb2af24f64ff.png)
+![image](https://user-images.githubusercontent.com/90633132/145347920-85f546dc-867b-4599-ac92-3017a82f8189.png)
 
 
 ## Phase 0 Other Resources
