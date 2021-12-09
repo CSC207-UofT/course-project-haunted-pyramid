@@ -3,6 +3,10 @@ package helpers;
 import java.awt.*;
 import java.time.LocalTime;
 
+/**
+ * Constants to be used in the program
+ */
+
 public class Constants {
     // CALENDAR_SIZE CAN ONLY INCREASE BY MULTIPLES OF 14
     // CAL_ROW_SPACER AND WEEKLY_CAL_NAME_LIMIT CAN BE INCREASED IFF CALENDAR_SIZE INCREASES
@@ -22,6 +26,4 @@ public class Constants {
     public static final int POPUP_WIDTH = 500;
     public static final int POPUP_HEIGHT = 300;
     public static final Color WINDOW_COLOR = new Color(233, 161, 161);
-    public static final Color CONTRAST_WINDOW_COLOR = new Color(20, 20, 20);
-    public static final Color CONTRAST_TEXT_COLOR = new Color(200, 200, 50);
 }

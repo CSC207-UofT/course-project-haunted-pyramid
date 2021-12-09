@@ -14,12 +14,25 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 
+/**
+ * Menu that allows the users to select events to view and modify
+ * @author Seo Won Yi
+ * @author Taite Cullen
+ * @see EditEventWindow
+ */
+
 public class SelectEvent extends PopUpWindowFrame implements ActionListener {
     private final MainController mc;
     private final EventInfoGetter eventInfoGetter;
     private final MeltParentWindow parent;
     private final JButton returnButton;
 
+    /**
+     * Construct the window by placing the appropriate components
+     * @param mc MainController object that allows access to every other controllers
+     * @param eventInfoGetter Abstraction used for getting information of a given event
+     * @param parent parent window (prev window)
+     */
     public SelectEvent (MainController mc, EventInfoGetter eventInfoGetter, MeltParentWindow parent) {
         this.mc = mc;
         this.eventInfoGetter = eventInfoGetter;
@@ -37,6 +50,11 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
         this.setVisible(true);
     }
 
+    /**
+     * Configure the Return Button and place it appropriately
+     * @param returnPanel panel to contain the button
+     * @return configured JButton object
+     */
     private JButton configureReturnButton(JPanel returnPanel) {
         final JButton returnButton;
         returnButton = new JButton("Return");
@@ -46,6 +64,10 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
         return returnButton;
     }
 
+    /**
+     * Set up the panel that will contain return button
+     * @return configured JPanel
+     */
     private JPanel setUpReturnPanel() {
         JPanel returnPanel = new JPanel();
         returnPanel.setLayout(new BoxLayout(returnPanel, BoxLayout.Y_AXIS));
@@ -55,6 +77,10 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
         return returnPanel;
     }
 
+    /**
+     * Display all the stored events to allow the user to choose
+     * @return JScrollPane that contains every event as options to choose from
+     */
     private JScrollPane displayEvents(){
         JPanel eventPanel = new JPanel();
         eventPanel.setLayout(new BoxLayout(eventPanel, BoxLayout.Y_AXIS));
@@ -84,6 +110,12 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
         return eventScroller;
     }
 
+    /**
+     * Configure the event buttons
+     * @param eventPanel panel that contains all the event buttons
+     * @param event event object to be considered from
+     * @param btn button that will be configured
+     */
     private void configureButton(JPanel eventPanel, Event event, JButton btn) {
         btn.setMaximumSize(new Dimension(180, 50));
         btn.setActionCommand(eventInfoGetter.getID(event).toString());
@@ -92,6 +124,14 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
         eventPanel.add(Box.createVerticalStrut(10));
     }
 
+    /**
+     * add information to a JButton
+     * @param event event object with information
+     * @param eventName name of the event
+     * @param eventEndDate end date of the event
+     * @param eventEndTime end time of the event
+     * @return JButton that contains the event information
+     */
     private JButton getEventInfoButton(Event event, String eventName, LocalDate eventEndDate, LocalTime eventEndTime) {
         JButton btn;
         LocalDate eventStartDate = eventInfoGetter.getStart(eventInfoGetter.getID(event)).toLocalDate();
@@ -102,16 +142,18 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
         return btn;
     }
 
-
+    /**
+     * Perform actions upon user's selection
+     * @param e action to be considered from
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == returnButton) {
             parent.enableFrame();
-            this.dispose();
         }
         else {
             new EditEventWindow(mc, eventInfoGetter, UUID.fromString(e.getActionCommand()), parent, "modify");
-            this.dispose();
         }
+        this.dispose();
     }
 }

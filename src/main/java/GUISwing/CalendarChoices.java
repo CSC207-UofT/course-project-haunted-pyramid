@@ -1,6 +1,5 @@
 package GUISwing;
 
-import controllers.MainController;
 import helpers.Constants;
 import interfaces.MeltParentWindow;
 
@@ -8,6 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+/**
+ * A window that lets the user choose the type of calendar that they would like to view
+ * @author Seo Won Yi
+ * @see presenters.CalendarFactory.CalendarDisplayFactory
+ * @see CalendarDateSelection
+ */
 
 public class CalendarChoices implements ActionListener, MeltParentWindow {
     private final JFrame frame;
@@ -17,6 +23,10 @@ public class CalendarChoices implements ActionListener, MeltParentWindow {
     private final JButton buttonDaily = new JButton("View Calendar By Daily");
     private final JButton buttonReturn = new JButton("Return to the Main Menu");
 
+    /**
+     * construct the window by setting up the option buttons (type of calendars)
+     * @param parent MainMenu object that will be altered depending on the user's choice
+     */
     public CalendarChoices (MainMenu parent) {
         this.frame = new PopUpWindowFrame();
         this.frame.setLayout(new BorderLayout());
@@ -43,6 +53,10 @@ public class CalendarChoices implements ActionListener, MeltParentWindow {
         this.frame.setVisible(true);
     }
 
+    /**
+     * Set up the appropriate actions according to user's choices
+     * @param e action to be considered from
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttonMonthly) {
@@ -65,22 +79,35 @@ public class CalendarChoices implements ActionListener, MeltParentWindow {
         }
     }
 
+    /**
+     * refresh the screen
+     */
     @Override
     public void refresh() {
         this.frame.revalidate();
         this.frame.repaint();
     }
 
+    /**
+     * enable the frame
+     */
     @Override
     public void enableFrame() {
         this.frame.setEnabled(true);
     }
 
+    /**
+     * exit the frame
+     */
     @Override
     public void exitFrame() {
         this.frame.dispose();
     }
 
+    /**
+     * get parent object
+     * @return the parent object (prev window)
+     */
     @Override
     public MeltParentWindow getParent() {
         return this.parent;

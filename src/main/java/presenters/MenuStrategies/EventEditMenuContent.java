@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventEditMenuContent implements MenuContent {
-    private Event event;
+
+    private final Event event;
+
     public EventEditMenuContent(Event event){
         this.event = event;
     }

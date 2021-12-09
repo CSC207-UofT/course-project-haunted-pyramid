@@ -2,7 +2,6 @@ package entities;
 
 import java.util.*;
 import java.time.YearMonth;
-import helpers.IsOverlapped;
 
 /**
  * Basic class that deals with calendar behaviour
@@ -86,10 +85,18 @@ public class OurCalendar {
         return this.calendarMap;
     }
 
+    /**
+     * Set the conflict to the result
+     * @param result boolean to indicate the conflict status
+     */
     public void setConflict(boolean result) {
         this.conflict = result;
     }
 
+    /**
+     * set the conflict events to the given list
+     * @param conflictEvent list of conflicted events
+     */
     public void setConflictEvent(List<UUID> conflictEvent) {
         this.conflictEvent = conflictEvent;
     }

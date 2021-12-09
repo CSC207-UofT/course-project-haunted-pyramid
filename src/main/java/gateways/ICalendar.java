@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Export to iCal file format (only as VEvent)
+ * Export using iCal file format (only as VEvent)
  * @author Seo Won Yi
  *
  */
