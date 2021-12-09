@@ -124,7 +124,7 @@ public class IOController {
      *                               to an integer
      * @throws DateTimeException     if YYYY-MM-DD is an invalid date (not a real month or day)
      */
-    private LocalDate stringToDate(String date) throws NumberFormatException, DateTimeException {
+    public LocalDate stringToDate(String date) throws NumberFormatException, DateTimeException {
         String[] dates = date.split("-");
         if (dates.length != 3) {
             throw new NumberFormatException();

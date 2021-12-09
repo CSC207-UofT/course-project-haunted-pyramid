@@ -26,6 +26,7 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
     private final EventInfoGetter eventInfoGetter;
     private final MeltParentWindow parent;
     private final JButton returnButton;
+    private boolean recursion;
 
     /**
      * Construct the window by placing the appropriate components
@@ -33,8 +34,9 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
      * @param eventInfoGetter Abstraction used for getting information of a given event
      * @param parent parent window (prev window)
      */
-    public SelectEvent (MainController mc, EventInfoGetter eventInfoGetter, MeltParentWindow parent) {
+    public SelectEvent (MainController mc, EventInfoGetter eventInfoGetter, MeltParentWindow parent, boolean recursion) {
         this.mc = mc;
+        this.recursion = recursion;
         this.eventInfoGetter = eventInfoGetter;
         this.parent = parent;
         JScrollPane eventScroller = displayEvents();
@@ -85,6 +87,15 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
         JPanel eventPanel = new JPanel();
         eventPanel.setLayout(new BoxLayout(eventPanel, BoxLayout.Y_AXIS));
         eventPanel.setBackground(Constants.WINDOW_COLOR);
+        allEventDisplay(eventPanel);
+        JScrollPane eventScroller = new JScrollPane(eventPanel);
+        eventScroller.setPreferredSize(new Dimension(150, 100));
+        add(eventScroller);
+        setVisible(true);
+        return eventScroller;
+    }
+
+    public void allEventDisplay(JPanel eventPanel) {
         for (Event event: eventInfoGetter.getAllEvents()) {
             String eventName = eventInfoGetter.getName(eventInfoGetter.getID(event));
             if (eventName.length() > 20) {
@@ -103,11 +114,6 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
             }
             configureButton(eventPanel, event, btn);
         }
-        JScrollPane eventScroller = new JScrollPane(eventPanel);
-        eventScroller.setPreferredSize(new Dimension(150, 100));
-        add(eventScroller);
-        setVisible(true);
-        return eventScroller;
     }
 
     /**
@@ -150,6 +156,12 @@ public class SelectEvent extends PopUpWindowFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == returnButton) {
             parent.enableFrame();
+        }
+        else if(recursion){
+            RecursionMenu parent = (RecursionMenu) this.parent;
+            parent.addIDToEventInOneCycle(UUID.fromString(e.getActionCommand()));
+            this.parent.enableFrame();
+            this.parent.refresh();
         }
         else {
             new EditEventWindow(mc, eventInfoGetter, UUID.fromString(e.getActionCommand()), parent, "modify");
