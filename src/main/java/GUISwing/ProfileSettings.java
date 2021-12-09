@@ -11,22 +11,32 @@ import java.awt.event.ActionListener;
 import java.time.LocalTime;
 import java.util.Objects;
 
+/**
+ * Profile Settings page
+ * @author Shameel Farooq
+ * @see UserController
+ */
+
 public class ProfileSettings implements ActionListener {
 
     private final UserController userController;
     private final MeltParentWindow parent;
     private final JFrame frame = new PopUpWindowFrame();
-    private final MenuCreationHelper helper;
     private final JButton saveFT = new JButton("save");
     private final JButton saveName = new JButton("save name");
     private final JTextField changeName = new JTextField();
     private final JComboBox<LocalTime> startTime;
     private final JComboBox<LocalTime> endTime;
 
+    /**
+     * Constructor for ProfileSettings
+     * @param uc UserController
+     * @param parent MeltParentWindow
+     */
     public ProfileSettings(UserController uc, MeltParentWindow parent){
         this.userController = uc;
         this.parent = parent;
-        this.helper = new MenuCreationHelper();
+        MenuCreationHelper helper = new MenuCreationHelper();
         startTime = helper.timeComboBox();
         endTime = helper.timeComboBox();
         frame.setTitle("Profile Settings");
@@ -55,6 +65,9 @@ public class ProfileSettings implements ActionListener {
         }
     }
 
+    /**
+     * Method for setting free time according to the input of the user
+     */
     private void freeTime(){
         LocalTime start = (LocalTime) Objects.requireNonNull(startTime.getSelectedItem());
         LocalTime end = (LocalTime) Objects.requireNonNull(endTime.getSelectedItem());
@@ -63,6 +76,9 @@ public class ProfileSettings implements ActionListener {
         System.out.println("Free time saved successfully!");
     }
 
+    /**
+     * Method for changing name according to the input of the user
+     */
     private void changeName(){
         this.userController.getUserManager().setName(userController.getCurrentUser(), changeName.getText());
         System.out.println("Changed Name Successfully!");
@@ -89,6 +105,10 @@ public class ProfileSettings implements ActionListener {
         frame.add(panel1, BorderLayout.NORTH);
     }
 
+    /**
+     * Method for adding the panel which contains the information of different preferences. The preferences are
+     * procrastinate, cram and morning person. These preferences allow the work sessions to be scheduled accordingly.
+     */
     public void setCheckItems(){
         JPanel panel2 = new JPanel();
         panel2.setBackground(Color.GRAY);
@@ -102,10 +122,6 @@ public class ProfileSettings implements ActionListener {
         JLabel instructions4b = new JLabel("    will be scheduled with spacing between according to 'work session ");
         JLabel instructions4c = new JLabel(     "(if it is null, they will be merged).");
 
-
-//        panel2.add(procrastinate);
-//        panel2.add(cram);
-//        panel2.add(morningPerson);
         panel2.add(instructions1);
         panel2.add(instructions2);
         panel2.add(instructions3);
@@ -117,6 +133,10 @@ public class ProfileSettings implements ActionListener {
         frame.add(panel2, BorderLayout.CENTER);
     }
 
+    /**
+     * Method which adds a new panel to the bottom of the window. Panel contains the text box in which the user can
+     * input the name they would like.
+     */
     public void setChangeNameField(){
         JPanel panel3 = new JPanel();
         panel3.setBackground(Color.GREEN);
@@ -131,6 +151,9 @@ public class ProfileSettings implements ActionListener {
         frame.add(panel3, BorderLayout.SOUTH);
     }
 
+    /**
+     * Method which changes displays the pop up window of the Profile settings.
+     */
     public void display(){
         frame.setVisible(true);
     }

@@ -19,6 +19,11 @@ public class SettingsMenu extends JMenu implements ActionListener {
 
     MeltParentWindow parent;
 
+    /**
+     * Constructor for SettingsMenu
+     * @param userController controller for User entity
+     * @param parent parent window
+     */
     public SettingsMenu(UserController userController, MeltParentWindow parent){
         this.userController = userController;
         this.parent = parent;
@@ -65,6 +70,11 @@ public class SettingsMenu extends JMenu implements ActionListener {
     }
 
 
+    /**
+     * Method which gets the cram button
+     * @param spacing A string which specifies the spacing
+     * @param spacings A ButtonGroup
+     */
     private void getCramButton(String spacing, ButtonGroup spacings){
         JRadioButtonMenuItem none = new JRadioButtonMenuItem("none");
         JRadioButtonMenuItem small = new JRadioButtonMenuItem("small");
